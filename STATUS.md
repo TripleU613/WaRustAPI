@@ -10552,3 +10552,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   settlement to the original account authority, with offline reopen/rollback
   regression. Consumption and historical cache provenance remain separate.
   See docs/protocol/media-network-outcomes.md. No live operation.
+
+- New upload owner records now include full local account-authority fingerprints,
+  closing same-phone/generation JID and Signal identity changes at reservation,
+  cached-owner validation and final promotion. Legacy identity provenance stays
+  unknown. Offline rollback regressions extended; no live upload performed.

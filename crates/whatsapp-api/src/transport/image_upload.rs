@@ -573,6 +573,9 @@ fn locations(response: &serde_json::Value) -> Result<(String, String)> {
 struct UploadOwner {
     generation: crate::model::ids::AccountGeneration,
     phone: crate::model::phone::PhoneNumber,
+    // New local ownership proof; legacy v1 owners retain unknown identity provenance.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    authority: Option<[u8; 32]>,
 }
 
 fn upload_owner(
@@ -585,6 +588,10 @@ fn upload_owner(
     Ok(UploadOwner {
         generation,
         phone: account.phone.clone().ok_or(Error::NotRegistered)?,
+        authority: Some(super::account_authority::fingerprint(
+            generation,
+            Some(account),
+        )?),
     })
 }
 
@@ -601,7 +608,12 @@ fn check_upload_owner(saved: &serde_json::Value, expected: &UploadOwner) -> Resu
         (Some(version), Some(value)) if version.as_u64() == Some(1) => {
             let owner: UploadOwner =
                 serde_json::from_value(value.clone()).map_err(|_| corrupt())?;
-            if &owner != expected {
+            if owner.generation != expected.generation
+                || owner.phone != expected.phone
+                || owner
+                    .authority
+                    .is_some_and(|authority| Some(authority) != expected.authority)
+            {
                 return Err(invalid("saved upload belongs to another account"));
             }
             Ok(())
@@ -1127,6 +1139,32 @@ async fn upload_prepared(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn upload_owner_identity_proof_is_prospective_and_legacy_is_not_backfilled() {
+        use super::*;
+        let config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        let mut account = crate::session::AccountRecord {
+            phone: Some(config.phone),
+            registration: crate::session::RegistrationStatus::Registered,
+            ..Default::default()
+        };
+        let generation = account.generation;
+        let owner = upload_owner(&account, generation).unwrap();
+        let mut saved = serde_json::json!({"upload_owner_version":1,"upload_owner":serde_json::to_value(&owner).unwrap()});
+        account.own_jid = Some(crate::model::jid::Jid::parse("100@s.whatsapp.net").unwrap());
+        let changed = upload_owner(&account, generation).unwrap();
+        assert!(check_upload_owner(&saved, &changed).is_err());
+        saved["upload_owner"]
+            .as_object_mut()
+            .unwrap()
+            .remove("authority");
+        let legacy = saved.clone();
+        check_upload_owner(&saved, &changed).unwrap();
+        assert_eq!(saved, legacy);
+        saved["upload_owner"]["authority"] = serde_json::json!([1, 2]);
+        assert!(check_upload_owner(&saved, &changed).is_err());
+    }
     #[tokio::test]
     async fn missing_upload_user_agent_refuses_new_work_and_preserves_saved_outcomes() {
         use crate::session::{AccountRecord, RegistrationStatus};
@@ -1491,6 +1529,9 @@ mod tests {
             "revoked",
             "phone",
             "generation",
+            "jid",
+            "signal-registration",
+            "signal-identity",
             "row-replaced",
             "owner-corrupt",
             "owner-missing",
@@ -1539,6 +1580,19 @@ mod tests {
                         "revoked" => current.registration = RegistrationStatus::Revoked,
                         "phone" => current.phone = Some(PhoneNumber::new(1, "5555550199")?),
                         "generation" => current.generation.0 += 1,
+                        "jid" => {
+                            current.own_jid =
+                                Some(crate::model::jid::Jid::parse("100@s.whatsapp.net")?)
+                        }
+                        "signal-registration" => current.signal_registration_id = Some(42),
+                        "signal-identity" => {
+                            current.signal_identity = Some(crate::session::SignalIdentityKey(
+                                crate::session::KeyMaterial {
+                                    public: [3; 32],
+                                    private: [4; 32],
+                                },
+                            ))
+                        }
                         "auth-observation" => current.last_authenticated_at = Some(Timestamp(123)),
                         _ => {}
                     }
@@ -1728,6 +1782,8 @@ mod tests {
                 "missing-account",
                 "revoked",
                 "phone",
+                "jid",
+                "signal-registration",
                 "builder",
             ] {
                 let dir = tempfile::tempdir().unwrap();
@@ -1808,12 +1864,17 @@ mod tests {
                             "missing-account" => {
                                 tx.delete(Table::Account, b"account")?;
                             }
-                            "revoked" | "phone" => {
+                            "revoked" | "phone" | "jid" | "signal-registration" => {
                                 let mut current = account.clone();
                                 if change == "revoked" {
                                     current.registration = RegistrationStatus::Revoked;
-                                } else {
+                                } else if change == "phone" {
                                     current.phone = Some(PhoneNumber::new(1, "5555550199")?);
+                                } else if change == "jid" {
+                                    current.own_jid =
+                                        Some(crate::model::jid::Jid::parse("100@s.whatsapp.net")?);
+                                } else {
+                                    current.signal_registration_id = Some(42);
                                 }
                                 current.save(tx)?;
                             }

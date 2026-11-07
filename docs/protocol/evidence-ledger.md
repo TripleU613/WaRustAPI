@@ -9530,3 +9530,8 @@ Local public upload eligibility omission corrected at shared entry, including ca
   local authority and recheck it transactionally; offline reopen/rollback cases
   cover JID, registration and registration ID changes. See
   [media lifecycle](media-network-outcomes.md#view-once-download-account-fencing).
+
+- Confirmed Rust source gap at `367d7826`: UploadOwner compared only phone and
+  generation. New optional authority digest closes identity changes for new rows
+  and operation reservation/promotion; legacy rows are not backfilled. See
+  [upload ownership](media-network-outcomes.md#upload-identity-authority-beyond-phone-and-generation).

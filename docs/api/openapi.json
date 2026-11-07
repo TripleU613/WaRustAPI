@@ -1,4 +1,11 @@
 {
+  "x-media-upload-identity-authority": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/media-network-outcomes.md#upload-identity-authority-beyond-phone-and-generation",
+    "behavior": "New upload owner records carry local account authority for reservation, cached validation and final descriptor promotion. Legacy missing digests retain unknown identity provenance; HTTP observations stay independent."
+  },
   "x-view-once-download-account-fencing": {
     "x-cli": false,
     "x-transport": true,

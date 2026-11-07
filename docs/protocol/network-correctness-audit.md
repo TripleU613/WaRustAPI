@@ -5915,3 +5915,35 @@ both downloaded-unopened and HTTP-refused settlement. Changed owners preserve
 all checkpoint rows and journal head; an additional reservation with the stale
 owner also refuses. Same-owner controls settle normally. No live CDN request or
 view-once consumption is performed.
+
+## Upload identity authority beyond phone and generation
+
+**Confirmed Rust source defect, corrected offline.** At baseline `367d7826`,
+UploadOwner contained account generation and phone only. Reservation/promotion
+therefore caught those changes and logout but not same-generation own-JID,
+Signal registration-ID or Signal identity changes. A late upload descriptor
+could be adopted under a changed identity with the same phone/generation.
+This is a local authority defect, not APK evidence of a mandatory wire field or
+observed restriction trigger.
+
+New upload owners additionally carry the existing local account-authority digest
+in optional `authority`. Reservation and promotion compare full newly captured
+owners; cached new-owner rows validate the saved digest against the current
+owner. Final promotion still requires unchanged owner fields in the next row
+and an exact response-state snapshot. Raw identity material is only hash input,
+not recorded in the owner or transmitted as a new field.
+
+Version-1 historical owner rows without `authority` retain the existing
+phone/generation policy and unknown identity provenance; reads do not backfill
+the field. Fully unbound historical rows retain their prior separate policy.
+Malformed provided digests fail deserialization. Response observations remain
+independent and can be retained even when final descriptor adoption is refused.
+These guards do not recall an already transmitted upload or establish full
+historical identity ownership.
+
+Existing transactional reservation and response-promotion regressions now include
+same-phone/generation JID and Signal registration-ID changes, plus Signal identity
+change at promotion. They retain exact checkpoint/journal rollback and reopen
+checks. The observation-only timestamp control remains admitted. A separate
+regression checks rejection of a new saved digest after identity change, legacy
+no-backfill behavior and malformed digest refusal. No live POST is performed.
