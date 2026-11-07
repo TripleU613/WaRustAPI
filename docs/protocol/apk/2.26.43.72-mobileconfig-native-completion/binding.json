@@ -1,0 +1,32 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "member_bytes": 852440,
+  "class_span_va": "0x1b7ed",
+  "class_span_bytes": 52,
+  "class_name": "com/facebook/mobileconfig/MobileConfigFetcherHandler",
+  "table": [
+    {
+      "slot_va": "0xd1f20",
+      "raw_file_word": "0x0",
+      "relative_addend": "0x184a5"
+    },
+    {
+      "slot_va": "0xd1f28",
+      "raw_file_word": "0x0",
+      "relative_addend": "0x1e248"
+    },
+    {
+      "slot_va": "0xd1f30",
+      "raw_file_word": "0x0",
+      "relative_addend": "0x59574"
+    }
+  ],
+  "method": "onCompletion",
+  "signature": "(ZLjava/lang/String;)V",
+  "entry": "0x59574",
+  "direct_call_va": "0x595e4",
+  "direct_call_target": "0x5971c",
+  "indirect_call_va": "0x59748",
+  "indirect_instruction": "blr x8",
+  "remaining_target": "runtime stored callable, not resolved here"
+}

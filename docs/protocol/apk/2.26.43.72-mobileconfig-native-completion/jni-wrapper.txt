@@ -1,0 +1,149 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   59574:      	paciasp
+   59578:      	sub	sp, sp, #0x80
+   5957c:      	stp	x29, x30, [sp, #0x50]
+   59580:      	bl	0xcac00 <JNI_OnLoad+0x5ba60>
+   59584:      	add	x29, sp, #0x50
+   59588:      	bl	0xca15c <JNI_OnLoad+0x5afbc>
+   5958c:      	mov	x20, x3
+   59590:      	mov	w19, w2
+   59594:      	bl	0xca3cc <JNI_OnLoad+0x5b22c>
+   59598:      	bl	0xcca90 <_ZN8facebook3jni6detail12JniEnvCacherC1EP7_JNIEnv@plt>
+   5959c:      	str	x21, [sp, #0x18]
+   595a0:      	adrp	x8, 0xdc000
+   595a4:      	add	x8, x8, #0x88
+   595a8:      	ldarb	w8, [x8]
+   595ac:      	tbz	w8, #0x0, 0x59614 <.text+0xd1b4>
+   595b0:      	adrp	x8, 0xdc000
+   595b4:      	ldr	x1, [x8, #0x80]
+   595b8:      	add	x0, sp, #0x18
+   595bc:      	bl	0x50a40 <.text+0x45e0>
+   595c0:      	mov	x21, x0
+   595c4:      	str	x20, [sp, #0x28]
+   595c8:      	sub	x8, x29, #0x20
+   595cc:      	add	x0, sp, #0x28
+   595d0:      	bl	0xcc990 <_ZNK8facebook3jni7JString11toStdStringEv@plt>
+   595d4:      	tst	w19, #0xff
+   595d8:      	ldr	x0, [x21, #0x30]
+   595dc:      	cset	w1, ne
+   595e0:      	sub	x2, x29, #0x20
+   595e4:      	bl	0x5971c <.text+0xd2bc>
+   595e8:      	sub	x0, x29, #0x20
+   595ec:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   595f0:      	mov	x0, sp
+   595f4:      	bl	0xccab0 <_ZN8facebook3jni6detail12JniEnvCacherD1Ev@plt>
+   595f8:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   595fc:      	b.ne	0x59718 <.text+0xd2b8>
+   59600:      	bl	0xcad84 <JNI_OnLoad+0x5bbe4>
+   59604:      	ldp	x29, x30, [sp, #0x50]
+   59608:      	add	sp, sp, #0x80
+   5960c:      	autiasp
+   59610:      	ret
+   59614:      	adrp	x0, 0xdc000
+   59618:      	add	x0, x0, #0x88
+   5961c:      	bl	0xccfe0 <__wrap___cxa_guard_acquire@plt>
+   59620:      	cbz	w0, 0x595b0 <.text+0xd150>
+   59624:      	add	x0, sp, #0x20
+   59628:      	add	x1, sp, #0x18
+   5962c:      	bl	0x4eec8 <.text+0x2a68>
+   59630:      	ldr	x8, [sp, #0x20]
+   59634:      	stur	x8, [x29, #-0x20]
+   59638:      	sub	x0, x29, #0x20
+   5963c:      	bl	0x50bb0 <.text+0x4750>
+   59640:      	tbz	w0, #0x0, 0x5964c <.text+0xd1ec>
+   59644:      	mov	x0, xzr
+   59648:      	b	0x59664 <.text+0xd204>
+   5964c:      	add	x0, sp, #0x28
+   59650:      	bl	0x597b0 <.text+0xd350>
+   59654:      	bl	0xcb6cc <JNI_OnLoad+0x5c52c>
+   59658:      	add	x0, sp, #0x28
+   5965c:      	bl	0x50c70 <.text+0x4810>
+   59660:      	cbz	x0, 0x59684 <.text+0xd224>
+   59664:      	adrp	x21, 0xdc000
+   59668:      	add	x21, x21, #0x80
+   5966c:      	str	x0, [x21], #0x8
+   59670:      	add	x0, sp, #0x20
+   59674:      	bl	0x55630 <.text+0x91d0>
+   59678:      	mov	x0, x21
+   5967c:      	bl	0xccf20 <__wrap___cxa_guard_release@plt>
+   59680:      	b	0x595b0 <.text+0xd150>
+   59684:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   59688:      	b.ne	0x59718 <.text+0xd2b8>
+   5968c:      	bl	0x50b90 <.text+0x4730>
+   59690:      	bl	0xcae20 <JNI_OnLoad+0x5bc80>
+   59694:      	bl	0x55630 <.text+0x91d0>
+   59698:      	adrp	x0, 0xdc000
+   5969c:      	add	x0, x0, #0x88
+   596a0:      	bl	0xccf50 <__wrap___cxa_guard_abort@plt>
+   596a4:      	b	0x596b8 <.text+0xd258>
+   596a8:      	bl	0xcb644 <JNI_OnLoad+0x5c4a4>
+   596ac:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   596b0:      	b	0x596b8 <.text+0xd258>
+   596b4:      	mov	x19, x0
+   596b8:      	mov	x0, x19
+   596bc:      	bl	0xccef0 <__wrap___cxa_begin_catch@plt>
+   596c0:      	add	x8, sp, #0x20
+   596c4:      	bl	0xcced0 <__wrap__ZSt17current_exceptionv@plt>
+   596c8:      	add	x0, sp, #0x20
+   596cc:      	bl	0xccf40 <__wrap__ZNSt13exception_ptrD1Ev@plt>
+   596d0:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   596d4:      	b.ne	0x59718 <.text+0xd2b8>
+   596d8:      	bl	0xcd530 <__wrap___cxa_rethrow@plt>
+   596dc:      	mov	x19, x0
+   596e0:      	bl	0xccf60 <__wrap___cxa_end_catch@plt>
+   596e4:      	mov	x0, x19
+   596e8:      	bl	0xccef0 <__wrap___cxa_begin_catch@plt>
+   596ec:      	bl	0xccaa0 <_ZN8facebook3jni43translatePendingCppExceptionToJavaExceptionEv@plt>
+   596f0:      	bl	0xccf60 <__wrap___cxa_end_catch@plt>
+   596f4:      	b	0x595f0 <.text+0xd190>
+   596f8:      	mov	x19, x0
+   596fc:      	bl	0xccf60 <__wrap___cxa_end_catch@plt>
+   59700:      	mov	x0, sp
+   59704:      	bl	0xccab0 <_ZN8facebook3jni6detail12JniEnvCacherD1Ev@plt>
+   59708:      	bl	0xca264 <JNI_OnLoad+0x5b0c4>
+   5970c:      	b.ne	0x59718 <.text+0xd2b8>
+   59710:      	mov	x0, x19
+   59714:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   59718:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   5971c:      	paciasp
+   59720:      	sub	sp, sp, #0x30
+   59724:      	stp	x29, x30, [sp, #0x10]
+   59728:      	str	x19, [sp, #0x20]
+   5972c:      	add	x29, sp, #0x10
+   59730:      	bl	0xcaa70 <JNI_OnLoad+0x5b8d0>
+   59734:      	strb	w1, [sp, #0x4]
+   59738:      	cbz	x0, 0x59768 <.text+0xd308>
+   5973c:      	ldr	x8, [x0]
+   59740:      	add	x1, sp, #0x4
+   59744:      	ldr	x8, [x8, #0x30]
+   59748:      	blr	x8
+   5974c:      	bl	0xca70c <JNI_OnLoad+0x5b56c>
+   59750:      	b.ne	0x59774 <.text+0xd314>
+   59754:      	ldp	x29, x30, [sp, #0x10]
+   59758:      	ldr	x19, [sp, #0x20]
+   5975c:      	add	sp, sp, #0x30
+   59760:      	autiasp
+   59764:      	ret
+   59768:      	bl	0xca70c <JNI_OnLoad+0x5b56c>
+   5976c:      	b.ne	0x59774 <.text+0xd314>
+   59770:      	bl	0x59778 <.text+0xd318>
+   59774:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   59778:      	paciasp
+   5977c:      	stp	x29, x30, [sp, #-0x10]!
+   59780:      	mov	x29, sp
+   59784:      	mov	w0, #0x8                // =8
+   59788:      	bl	0xccf00 <__wrap___cxa_allocate_exception@plt>
+   5978c:      	adrp	x8, 0xd6000
+   59790:      	adrp	x1, 0xd6000
+   59794:      	adrp	x2, 0xd6000
+   59798:      	ldr	x8, [x8, #0xb58]
+   5979c:      	add	x8, x8, #0x10
+   597a0:      	str	x8, [x0]
+   597a4:      	ldr	x1, [x1, #0xb50]
+   597a8:      	ldr	x2, [x2, #0xb48]
+   597ac:      	bl	0xccf80 <__wrap___cxa_throw@plt>

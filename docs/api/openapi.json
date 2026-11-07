@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-native-completion-evidence": {
+    "x-cli": "pinned ELF inspection and static disassembly/REA observations; no product command or HTTP route",
+    "x-transport": "research only; concrete stored callback/persistence and effective configuration remain unresolved",
+    "x-live": false,
+    "description": "Validated APK43.72 reconstructed member RELATIVE relocations bind onCompletion(Z,String) to59574. The wrapper converts string/normalizes boolean and reaches stored virtual callable at59748; absent callable throws bad_function_call. Complete bounded REA command observations retain an empty string-xref negative and unchanged artifact digests; ELF relocation proof resolves the binding independently. No JSON commit, cache activation, Rust sender or live operation established.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-native-completion/README.md"
+  },
   "x-mobileconfig-null-variables-evidence": {
     "x-cli": "existing static DEX exports and qualified synthetic JSON shape; no product command or HTTP route",
     "x-transport": "research only; selected non-Pando variables prediction does not establish Pando or live wire behavior",

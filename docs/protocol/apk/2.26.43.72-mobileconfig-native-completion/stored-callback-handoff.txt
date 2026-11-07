@@ -1,0 +1,43 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   5971c:      	paciasp
+   59720:      	sub	sp, sp, #0x30
+   59724:      	stp	x29, x30, [sp, #0x10]
+   59728:      	str	x19, [sp, #0x20]
+   5972c:      	add	x29, sp, #0x10
+   59730:      	bl	0xcaa70 <JNI_OnLoad+0x5b8d0>
+   59734:      	strb	w1, [sp, #0x4]
+   59738:      	cbz	x0, 0x59768 <.text+0xd308>
+   5973c:      	ldr	x8, [x0]
+   59740:      	add	x1, sp, #0x4
+   59744:      	ldr	x8, [x8, #0x30]
+   59748:      	blr	x8
+   5974c:      	bl	0xca70c <JNI_OnLoad+0x5b56c>
+   59750:      	b.ne	0x59774 <.text+0xd314>
+   59754:      	ldp	x29, x30, [sp, #0x10]
+   59758:      	ldr	x19, [sp, #0x20]
+   5975c:      	add	sp, sp, #0x30
+   59760:      	autiasp
+   59764:      	ret
+   59768:      	bl	0xca70c <JNI_OnLoad+0x5b56c>
+   5976c:      	b.ne	0x59774 <.text+0xd314>
+   59770:      	bl	0x59778 <.text+0xd318>
+   59774:      	bl	0xcd9f0 <__stack_chk_fail@plt>
+   59778:      	paciasp
+   5977c:      	stp	x29, x30, [sp, #-0x10]!
+   59780:      	mov	x29, sp
+   59784:      	mov	w0, #0x8                // =8
+   59788:      	bl	0xccf00 <__wrap___cxa_allocate_exception@plt>
+   5978c:      	adrp	x8, 0xd6000
+   59790:      	adrp	x1, 0xd6000
+   59794:      	adrp	x2, 0xd6000
+   59798:      	ldr	x8, [x8, #0xb58]
+   5979c:      	add	x8, x8, #0x10
+   597a0:      	str	x8, [x0]
+   597a4:      	ldr	x1, [x1, #0xb50]
+   597a8:      	ldr	x2, [x2, #0xb48]
+   597ac:      	bl	0xccf80 <__wrap___cxa_throw@plt>

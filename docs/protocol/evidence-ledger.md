@@ -1,3 +1,8 @@
+**MobileConfig Java/native completion binding now reaches a stored callable.**
+Verified member relocations bindonCompletion to59574; argument conversion reaches
+an indirect callback at59748. Missing callable throws; persistence remains unproven.
+[REA observations, ELF proof and next boundary](apk/2.26.43.72-mobileconfig-native-completion/README.md). No runtime request or account operation.
+
 **MobileConfig list/null setter ambiguity is narrowed.**
 queries becomes an empty list; query_hash/query_string retain null. Reused pinned
 Android JSON evidence predicts[]/null/null on the selected non-Pando route.

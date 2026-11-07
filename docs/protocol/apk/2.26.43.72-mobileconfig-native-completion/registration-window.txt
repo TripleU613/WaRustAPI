@@ -1,0 +1,98 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   6eec0:      	add	x1, x1, #0x732
+   6eec4:      	sub	x0, x29, #0x20
+   6eec8:      	mov	w2, #0x36               // =54
+   6eecc:      	bl	0xcb198 <JNI_OnLoad+0x5bff8>
+   6eed0:      	bl	0xcc9c0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+   6eed4:      	bl	0xca788 <JNI_OnLoad+0x5b5e8>
+   6eed8:      	sub	x8, x29, #0x28
+   6eedc:      	bl	0xcca80 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+   6eee0:      	sub	x0, x29, #0x20
+   6eee4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   6eee8:      	bl	0xcbd20 <JNI_OnLoad+0x5cb80>
+   6eeec:      	mov	w2, #0x7                // =7
+   6eef0:      	bl	0x4f0f8 <.text+0x2c98>
+   6eef4:      	sub	x0, x29, #0x28
+   6eef8:      	bl	0x54fd0 <.text+0x8b70>
+   6eefc:      	nop
+   6ef00:      	adr	x1, 0xd1c88
+   6ef04:      	mov	x0, sp
+   6ef08:      	mov	w2, #0x48               // =72
+   6ef0c:      	bl	0xcd9d0 <memcpy@plt>
+   6ef10:      	adrp	x1, 0x1b000
+   6ef14:      	add	x1, x1, #0x6ff
+   6ef18:      	sub	x0, x29, #0x20
+   6ef1c:      	mov	w2, #0x30               // =48
+   6ef20:      	bl	0xcb198 <JNI_OnLoad+0x5bff8>
+   6ef24:      	bl	0xcc9c0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+   6ef28:      	bl	0xca788 <JNI_OnLoad+0x5b5e8>
+   6ef2c:      	sub	x8, x29, #0x28
+   6ef30:      	bl	0xcca80 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+   6ef34:      	sub	x0, x29, #0x20
+   6ef38:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   6ef3c:      	bl	0xcbd20 <JNI_OnLoad+0x5cb80>
+   6ef40:      	mov	w2, #0x3                // =3
+   6ef44:      	mov	x19, sp
+   6ef48:      	bl	0x4f0f8 <.text+0x2c98>
+   6ef4c:      	sub	x0, x29, #0x28
+   6ef50:      	bl	0x54fd0 <.text+0x8b70>
+   6ef54:      	nop
+   6ef58:      	adr	x8, 0xd1f20
+   6ef5c:      	adrp	x1, 0x1b000
+   6ef60:      	add	x1, x1, #0x7ed
+   6ef64:      	ldr	q0, [x8]
+   6ef68:      	ldr	x8, [x8, #0x10]
+   6ef6c:      	mov	x0, sp
+   6ef70:      	mov	w2, #0x34               // =52
+   6ef74:      	stp	xzr, xzr, [sp]
+   6ef78:      	stur	q0, [x29, #-0x20]
+   6ef7c:      	stur	x8, [x29, #-0x10]
+   6ef80:      	str	xzr, [sp, #0x10]
+   6ef84:      	bl	0xcc9c0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+   6ef88:      	ldrb	w8, [sp]
+   6ef8c:      	ldr	x9, [sp, #0x10]
+   6ef90:      	bl	0xcb61c <JNI_OnLoad+0x5c47c>
+   6ef94:      	sub	x8, x29, #0x28
+   6ef98:      	bl	0xcca80 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+   6ef9c:      	mov	x0, sp
+   6efa0:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   6efa4:      	sub	x0, x29, #0x28
+   6efa8:      	sub	x1, x29, #0x20
+   6efac:      	mov	w2, #0x1                // =1
+   6efb0:      	sub	x19, x29, #0x20
+   6efb4:      	bl	0x4f0f8 <.text+0x2c98>
+   6efb8:      	sub	x0, x29, #0x28
+   6efbc:      	bl	0x55630 <.text+0x91d0>
+   6efc0:      	bl	0x6aaa0 <.text+0x1e640>
+   6efc4:      	bl	0x6aaa0 <.text+0x1e640>
+   6efc8:      	nop
+   6efcc:      	adr	x1, 0xd1a50
+   6efd0:      	mov	x0, sp
+   6efd4:      	mov	w2, #0x1c8              // =456
+   6efd8:      	bl	0xcd9d0 <memcpy@plt>
+   6efdc:      	adrp	x1, 0x1b000
+   6efe0:      	add	x1, x1, #0x84e
+   6efe4:      	sub	x0, x29, #0x20
+   6efe8:      	mov	w2, #0x42               // =66
+   6efec:      	bl	0xcb198 <JNI_OnLoad+0x5bff8>
+   6eff0:      	bl	0xcc9c0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm@plt>
+   6eff4:      	bl	0xca788 <JNI_OnLoad+0x5b5e8>
+   6eff8:      	sub	x8, x29, #0x28
+   6effc:      	bl	0xcca80 <_ZN8facebook3jni14findClassLocalEPKc@plt>
+   6f000:      	sub	x0, x29, #0x20
+   6f004:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   6f008:      	bl	0xcbd20 <JNI_OnLoad+0x5cb80>
+   6f00c:      	mov	w2, #0x13               // =19
+   6f010:      	bl	0x4f0f8 <.text+0x2c98>
+   6f014:      	sub	x0, x29, #0x28
+   6f018:      	bl	0x54fd0 <.text+0x8b70>
+   6f01c:      	adrp	x8, 0xdc000
+   6f020:      	add	x8, x8, #0x100
+   6f024:      	ldarb	w8, [x8]
+   6f028:      	tbz	w8, #0x0, 0x6f080 <.text+0x22c20>
+   6f02c:      	nop

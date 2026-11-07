@@ -1,0 +1,46 @@
+{
+  "README.md": {
+    "bytes": 4679,
+    "sha256": "676264e5e44f6158e125f03c247b42fecf04f197bb8df660da416e2be7c7865b"
+  },
+  "binding.json": {
+    "bytes": 873,
+    "sha256": "afa8658185ad638c36a67587aec769ca22518fb8d3368720554b0023ddbaf6ca"
+  },
+  "inspect-binding.py": {
+    "bytes": 2966,
+    "sha256": "d46df4c65c7014f27e5d9b0582cdfb1d5e9eb7f708719c200602be0d65c73527"
+  },
+  "jni-wrapper.txt": {
+    "bytes": 6137,
+    "sha256": "941fa48edf842f398123feea12c9e5aab13918432403e33d6b79c05426d57081"
+  },
+  "rea-negative-xref.json": {
+    "bytes": 2793,
+    "sha256": "756f35decdb213198160fef0eeafa5ca379c5640e8133917460cca04fc7e95cc"
+  },
+  "rea-thunk-window.json": {
+    "bytes": 44227,
+    "sha256": "043d497dda54e84fe916197fe275563ca7a5a9831c1533f2ee52891299ec6f2f"
+  },
+  "registration-call.txt": {
+    "bytes": 924,
+    "sha256": "89b970be6756369629eaf0810ab08bf6ebaf4eafc08c452f835f63e5e0d469fe"
+  },
+  "registration-window.txt": {
+    "bytes": 4394,
+    "sha256": "e45a41297a6b684ee91bade33c1d2a4d78003e7861da7b0c9e69a0f31dbad50e"
+  },
+  "selected-relocations.txt": {
+    "bytes": 592,
+    "sha256": "8df314a5df98379090b29c12a19a3e07c967062cdcc7127d9c6be8faf1d6052f"
+  },
+  "stack-guard-helper.txt": {
+    "bytes": 311,
+    "sha256": "4d678aea68603f3d48df86f13ee59e091c2ad97bee582df57160ec9b3c187aab"
+  },
+  "stored-callback-handoff.txt": {
+    "bytes": 1572,
+    "sha256": "c28789aebce418bb90f9c013048d6edb8b3f78e0739d79742bd11e60a7496aa7"
+  }
+}

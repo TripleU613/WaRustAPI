@@ -347,3 +347,13 @@ query_hash/query_string null setters retain null scalars. ReusedMap/JSONObject
 and Android16 platform source predict[]/null/null on the selected non-Pando JSON
 route. Pando/platform runtime and full wire remain unknown; no request enabled.
 [Methods and qualified synthetic shape](apk/2.26.43.72-mobileconfig-null-variables/README.md).
+
+## Native completion entry follow-up —2026-11-07
+
+The verified reconstructed library binds handleronCompletion via RELATIVE method
+records to59574, normalizes the boolean/converts the string, then invokes a stored
+callable through5971c. Missing callable throwsbad_function_call. An empty provider
+xref result was refuted as absence evidence by the relocation binding. Concrete
+callback ownership, parsing/commit and effective activation remain open.
+[Native windows and reproducible ELF checks](apk/2.26.43.72-mobileconfig-native-completion/README.md).
+No Rust or live operation changed.
