@@ -220,3 +220,25 @@ fetch application, mandatory startup order, every collection/cursor transition,
 legacy account provenance or server acceptance. No native policy or wait value
 is invented; fixture backoff is a synthetic preserved response. No request is
 transmitted and no live account operation is performed.
+
+## Real-producer late wait at the writer boundary
+
+**Confirmed current Rust behavior, offline integration coverage added**, baseline
+`1fa976fc`. Existing ActionWriteGuard coverage isolated patch/held-fetch writer
+admission using relabeled generic rows. This follow-up uses the actual full
+fetch, push-name patch and held-version fetch producers and their normal owned
+reservation path before exercising NodeLink's queued writer preparation.
+
+For each producer, a synthetic active wait is installed after durable reservation
+and before queued.prepare (the final local encoding boundary). The queued write
+is refused and its send future returns failure, with checkpoint rows and journal
+unchanged. An expired synthetic wait control permits the mocked writer completion.
+Both outcomes retain the original Sent reservation: reopen plus reserve_pending
+returns no replay and does not change checkpoints. The held fetch includes its
+real held collection baseline/admission sidecar; no kind relabeling is used.
+
+No socket, server or account operation is involved; the positive control supplies
+an in-process writer completion, not a server ACK. The synthetic wait is not an
+instruction to alter a live server deadline. This verifies existing local gating
+and uncertainty retention, not native complete scheduling/timing parity or full
+fetch response application. No production runtime policy changed.

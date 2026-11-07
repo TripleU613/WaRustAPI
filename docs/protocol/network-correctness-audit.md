@@ -6087,3 +6087,9 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   change and reopen. Recovery preserves old outcomes; same-owner/observation
   controls promote normally. No runtime change. See
   [settled authority](app-state-patch-atomicity.md#settled-response-account-adoption-verified).
+
+- Verified real app-state fetch/patch/held-fetch producers against a late stored
+  wait at queued writer preparation, beyond generic relabeled-row coverage.
+  Active waits refuse without changing rows/journal; expired fixture controls
+  complete locally and neither outcome replays after reopen. See
+  [writer verification](app-state-patch-atomicity.md#real-producer-late-wait-at-the-writer-boundary).

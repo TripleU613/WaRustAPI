@@ -10607,3 +10607,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   account replacement after reopen, with positive observation-only controls.
   Checkpoint/journal rollback retained. No runtime policy or live request change;
   full fetch application/cursor parity remains incomplete.
+
+- Real app-state fetch/patch/held-fetch writer-boundary regression now verifies
+  late active waits block encoding and preserve original reservations through
+  reopen. Expired fixture controls use mocked completion, not server ACK.
+  No runtime policy or live operation changed.

@@ -3080,6 +3080,81 @@ mod server_backoff_tests {
             .unwrap()
     }
 
+    #[tokio::test]
+    async fn real_app_state_producers_observe_late_backoff_at_writer_boundary_without_replay() {
+        for producer in [FETCH_ACTION_KIND, PATCH_ACTION_KIND, HELD_FETCH_ACTION_KIND] {
+            for active in [false, true] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("late-real-producer.redb");
+                let store = Arc::new(open(&path));
+                let id = match producer {
+                    FETCH_ACTION_KIND => queue_fetch(&store).unwrap(),
+                    PATCH_ACTION_KIND => queue(&store),
+                    _ => {
+                        let mut baseline =
+                            crate::signal::app_state_collection::CollectionState::empty("regular")
+                                .unwrap()
+                                .to_saved();
+                        baseline.version = 7;
+                        store
+                            .write(|tx| {
+                                tx.put_json(
+                                    Table::Checkpoints,
+                                    held_key(Collection::Regular).as_bytes(),
+                                    1,
+                                    &baseline,
+                                )
+                            })
+                            .unwrap();
+                        held_fetch::queue(&store, &[Collection::Regular]).unwrap()
+                    }
+                };
+                let action = super::super::actions::reserve_next_owned(&store)
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(
+                    action.node.get_attr("id").and_then(|v| v.as_text()),
+                    Some(id.as_str())
+                );
+                let (_input, incoming) = tokio::sync::mpsc::channel(1);
+                let (outgoing, mut writes) = tokio::sync::mpsc::channel(1);
+                let link = super::super::connection::NodeLink::new(incoming, outgoing);
+                let worker = store.clone();
+                let task = tokio::spawn(async move { link.send_action(&worker, &action).await });
+                let queued = writes.recv().await.unwrap();
+                // Synthetic local wait arrives after reservation, before encoding.
+                store
+                    .write(|tx| {
+                        tx.put_json(
+                            Table::Checkpoints,
+                            SERVER_BACKOFF,
+                            1,
+                            &Timestamp(if active { i64::MAX } else { 1 }),
+                        )
+                    })
+                    .unwrap();
+                let before = snapshot(&store);
+                let journal = store.journal_head().unwrap();
+                let prepared = queued.prepare();
+                assert_eq!(prepared.is_none(), active, "{producer}");
+                if let Some((_node, written)) = prepared {
+                    written.send(Ok(())).unwrap();
+                }
+                assert_eq!(task.await.unwrap().is_err(), active);
+                assert!(writes.recv().await.is_none());
+                assert_eq!(snapshot(&store), before);
+                assert_eq!(store.journal_head().unwrap(), journal);
+                drop(store);
+                let store = open(&path);
+                assert!(
+                    super::super::actions::reserve_pending(&store)
+                        .unwrap()
+                        .is_empty()
+                );
+                assert_eq!(snapshot(&store), before);
+            }
+        }
+    }
     #[test]
     fn prospective_held_fetch_keeps_shared_refusal_backoff_and_safe_inspection() {
         let dir = tempfile::tempdir().unwrap();

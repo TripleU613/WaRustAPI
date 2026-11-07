@@ -1,4 +1,11 @@
 {
+  "x-app-state-real-producer-writer-verification": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/app-state-patch-atomicity.md#real-producer-late-wait-at-the-writer-boundary",
+    "finding": "Offline actual-producer writer tests verify late backoff blocks app-state fetch/patch/held-fetch encoding without replay; expired fixtures complete in-process only. No runtime policy change or server ACK claim."
+  },
   "x-app-state-settled-owner-verification": {
     "x-cli": false,
     "x-transport": false,
