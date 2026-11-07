@@ -1,0 +1,62 @@
+{
+  "README.md": {
+    "bytes": 7448,
+    "sha256": "ee5fa3654bedcd558879f202f818f00d578158171679b79e49a1e9b26e7c4666"
+  },
+  "compare-args.txt": {
+    "bytes": 215,
+    "sha256": "d498b9600610a928492831fd072ea53e48f5cc3f2c10d912c7e1b23fb74c8883"
+  },
+  "followup-entry.txt": {
+    "bytes": 4757,
+    "sha256": "d9f7ab98aa974564ccbf6e1f1dc6c98903eebd6a79fc28be0d9e37dfa3e272b7"
+  },
+  "inspect-upgrade.py": {
+    "bytes": 3193,
+    "sha256": "9d30b5609d307c2687fae4f8416fdff096a44c549eca1852219383ae005ca613"
+  },
+  "normalized-args.txt": {
+    "bytes": 215,
+    "sha256": "b5df2085acd62f975d6bf7b55c6a0444081c1b0b2bc9beaa71c39e49cbd4c4de"
+  },
+  "rea-upgrade.json": {
+    "bytes": 7857,
+    "sha256": "ecffa07ab8550d4cb5148706cda5a35f05d9d8b3aab6d9c90191a4f9bf012f89"
+  },
+  "schema-count.txt": {
+    "bytes": 583,
+    "sha256": "c579a33c307978b945159805083235f248120b242db757a3425ddb0ad3832fdc"
+  },
+  "schema-input-args.txt": {
+    "bytes": 275,
+    "sha256": "cf8a40d47d37a8d275e025c8ba2f98a11f4688825e7abd340f65d41c67a4019f"
+  },
+  "schema-result.txt": {
+    "bytes": 6261,
+    "sha256": "13b7dd28c7f828825ff1d78de8e70a3a9fd15fafd12bd58ba16dcf328a7d8d6e"
+  },
+  "translation-dispatch.txt": {
+    "bytes": 2861,
+    "sha256": "3bebde5c0cb50bddcdaab30cf46e0b37bbb293a960bea10907d3944f0c6aabdb"
+  },
+  "translation-entry.txt": {
+    "bytes": 5003,
+    "sha256": "26af51626640d0b20b8580f5cf32fce931bcb3cca31efc5e563555afc618880f"
+  },
+  "upgrade-entry.txt": {
+    "bytes": 10924,
+    "sha256": "b531506e8c993e004d139970ef854d7b8e00876f23b3fb91e5b4817decfdeb2a"
+  },
+  "upgrade-finish.txt": {
+    "bytes": 4154,
+    "sha256": "71b11bf2661fb1cb267ccb32205e90c1516fa8ca56476a785bcf886bbd0ef200"
+  },
+  "upgrade-swap.txt": {
+    "bytes": 16113,
+    "sha256": "9a0e0f4d9a974bda7974f210e8db3cc45938f2dce72196d8f7beb1292ca86d7d"
+  },
+  "upgrade.json": {
+    "bytes": 1891,
+    "sha256": "c03c15a847d0796fd03b2c6c9125332ae69f5f20f194edb0601dfe2fed488a2d"
+  }
+}

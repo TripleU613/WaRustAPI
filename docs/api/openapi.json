@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-upgrade-dispatch-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-upgrade-dispatch/inspect-upgrade.py <pinned-library>",
+    "x-transport": "offline load/upgrade research; no enabled Rust transport or HTTP route",
+    "x-live": false,
+    "description": "Confirmed selected static MobileConfig load continuation reaches upgrade/swap and translation-table build paths. The callers use schema-result bit0 versus a low16>=256 test differently; failed swap upgrades invoke cleanup and UpdateFailed diagnostics. Neither returned internal codes nor global attempt bytes prove active configuration. Reader validation, normalization and installation remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-upgrade-dispatch/README.md"
+  },
   "x-mobileconfig-restore-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-restore/inspect-restore.py <pinned-library>",
     "x-transport": "offline restoration research; no Rust transport or HTTP route enabled",

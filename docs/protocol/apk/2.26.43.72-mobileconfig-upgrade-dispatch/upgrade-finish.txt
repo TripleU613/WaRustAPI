@@ -1,0 +1,106 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   85b4c:      	mov	x0, x20
+   85b50:      	bl	0x8acd0 <JNI_OnLoad+0x1bb30>
+   85b54:      	tbnz	w0, #0x0, 0x85bc0 <JNI_OnLoad+0x16a20>
+   85b58:      	ldr	x22, [x20, #0xf8]
+   85b5c:      	ldr	w23, [x20, #0x5c]
+   85b60:      	adrp	x1, 0x1a000
+   85b64:      	add	x1, x1, #0x891
+   85b68:      	add	x0, sp, #0x200
+   85b6c:      	add	x24, sp, #0x200
+   85b70:      	bl	0x4d9a0 <.text+0x1540>
+   85b74:      	adrp	x1, 0x16000
+   85b78:      	add	x1, x1, #0xe85
+   85b7c:      	add	x0, x24, #0x18
+   85b80:      	bl	0x4d9a0 <.text+0x1540>
+   85b84:      	add	x0, sp, #0x1d0
+   85b88:      	add	x1, sp, #0x200
+   85b8c:      	mov	w2, #0x1                // =1
+   85b90:      	bl	0x728c0 <JNI_OnLoad+0x3720>
+   85b94:      	bl	0xcc588 <JNI_OnLoad+0x5d3e8>
+   85b98:      	add	x3, sp, #0x1d0
+   85b9c:      	mov	x0, x22
+   85ba0:      	movk	w1, #0xd0, lsl #16
+   85ba4:      	mov	w2, w23
+   85ba8:      	ldr	x8, [x8, #0x40]
+   85bac:      	blr	x8
+   85bb0:      	add	x0, sp, #0x1d0
+   85bb4:      	bl	0x509d4 <.text+0x4574>
+   85bb8:      	add	x0, sp, #0x200
+   85bbc:      	bl	0x5fa3c <.text+0x135dc>
+   85bc0:      	movi	v0.2d, #0000000000000000
+   85bc4:      	bl	0xcacdc <JNI_OnLoad+0x5bb3c>
+   85bc8:      	add	x0, sp, #0x10
+   85bcc:      	stp	q0, q0, [sp, #0x210]
+   85bd0:      	stp	q0, q0, [sp, #0x230]
+   85bd4:      	str	q0, [sp, #0x200]
+   85bd8:      	bl	0x4d9a0 <.text+0x1540>
+   85bdc:      	add	x0, sp, #0x200
+   85be0:      	add	x3, sp, #0x10
+   85be4:      	mov	w1, wzr
+   85be8:      	mov	w2, wzr
+   85bec:      	bl	0x60484 <.text+0x14024>
+   85bf0:      	add	x0, sp, #0x10
+   85bf4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   85bf8:      	add	x2, sp, #0x200
+   85bfc:      	mov	x0, x20
+   85c00:      	mov	w1, wzr
+   85c04:      	bl	0x8ada0 <JNI_OnLoad+0x1bc00>
+   85c08:      	bl	0xcd190 <_ZNSt6__ndk16chrono12system_clock3nowEv@plt>
+   85c0c:      	sub	w21, w0, w21
+   85c10:      	adrp	x1, 0x16000
+   85c14:      	add	x1, x1, #0xbfd
+   85c18:      	add	x0, sp, #0x1d0
+   85c1c:      	bl	0x4d9a0 <.text+0x1540>
+   85c20:      	ldr	x0, [x20, #0xf8]
+   85c24:      	ldr	w1, [x20, #0x408]
+   85c28:      	add	x2, sp, #0x1d0
+   85c2c:      	mov	w3, w21
+   85c30:      	bl	0x8bc04 <JNI_OnLoad+0x1ca64>
+   85c34:      	add	x0, sp, #0x1d0
+   85c38:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   85c3c:      	adrp	x1, 0x1a000
+   85c40:      	add	x1, x1, #0xb3b
+   85c44:      	add	x0, sp, #0x1d0
+   85c48:      	add	x23, sp, #0x1d0
+   85c4c:      	bl	0x4d9a0 <.text+0x1540>
+   85c50:      	ldr	x0, [x20, #0xf8]
+   85c54:      	ldr	w1, [x20, #0x408]
+   85c58:      	add	x2, sp, #0x1d0
+   85c5c:      	mov	w3, #0x1                // =1
+   85c60:      	mov	w21, #0x1               // =1
+   85c64:      	bl	0x8bc04 <JNI_OnLoad+0x1ca64>
+   85c68:      	add	x0, sp, #0x1d0
+   85c6c:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   85c70:      	ldr	x22, [x20, #0xf8]
+   85c74:      	bl	0xcc0c4 <JNI_OnLoad+0x5cf24>
+   85c78:      	add	x0, sp, #0x1d0
+   85c7c:      	bl	0x4d9a0 <.text+0x1540>
+   85c80:      	adrp	x1, 0x1a000
+   85c84:      	add	x1, x1, #0xac4
+   85c88:      	add	x0, x23, #0x18
+   85c8c:      	bl	0x4d9a0 <.text+0x1540>
+   85c90:      	add	x0, sp, #0x128
+   85c94:      	add	x1, sp, #0x1d0
+   85c98:      	mov	w2, #0x1                // =1
+   85c9c:      	bl	0x728c0 <JNI_OnLoad+0x3720>
+   85ca0:      	bl	0xcc588 <JNI_OnLoad+0x5d3e8>
+   85ca4:      	add	x3, sp, #0x128
+   85ca8:      	mov	x0, x22
+   85cac:      	bl	0xcb050 <JNI_OnLoad+0x5beb0>
+   85cb0:      	ldr	x8, [x8, #0x40]
+   85cb4:      	blr	x8
+   85cb8:      	add	x0, sp, #0x128
+   85cbc:      	bl	0x509d4 <.text+0x4574>
+   85cc0:      	add	x0, sp, #0x1d0
+   85cc4:      	bl	0x5fa3c <.text+0x135dc>
+   85cc8:      	mov	w8, #0x6                // =6
+   85ccc:      	add	x0, sp, #0x200
+   85cd0:      	strb	w8, [x19]
+   85cd4:      	bl	0x60510 <.text+0x140b0>
+   85cd8:      	add	x0, sp, #0x70
