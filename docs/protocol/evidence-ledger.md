@@ -9540,3 +9540,8 @@ Local public upload eligibility omission corrected at shared entry, including ca
   checks when bridging saved uploads into references/payloads. Shared owner
   validation and transactional creation fencing added, with offline reopen
   regression. See [bridge admission](media-network-outcomes.md#uploaded-media-bridge-account-admission).
+
+- Confirmed Rust source gap at `8508943d`: upload owner admission did not bind
+  reference creation to the validated upload-row snapshot. Transactional snapshot
+  checks now prevent stale reference installation. See
+  [snapshot binding](media-network-outcomes.md#atomic-upload-snapshot-binding-for-reference-creation).

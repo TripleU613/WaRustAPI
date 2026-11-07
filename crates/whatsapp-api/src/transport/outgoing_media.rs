@@ -81,16 +81,31 @@ fn check_reference_owner_in(
     super::image_upload::check_saved_upload_owner(&saved, tx.generation(), account.as_ref())
 }
 
-fn public_uploaded(
-    store: &ProtocolStore,
+type PublicUpload = (Zeroizing<Vec<u8>>, MediaKind, u64, serde_json::Value);
+type MessageUpload = (Zeroizing<Vec<u8>>, MediaKind, serde_json::Value);
+
+fn check_reference_source_in(
+    tx: &crate::store::WriteTx<'_>,
     key: &str,
-) -> Result<(Zeroizing<Vec<u8>>, MediaKind, u64)> {
+    expected: &serde_json::Value,
+) -> Result<()> {
+    let current: Option<serde_json::Value> = tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?;
+    if current.as_ref() != Some(expected) {
+        return Err(Error::invalid(
+            "outbox_media",
+            "upload changed before reference creation",
+        ));
+    }
+    Ok(())
+}
+
+fn public_uploaded(store: &ProtocolStore, key: &str) -> Result<PublicUpload> {
     use sha2::{Digest, Sha256};
     let suffix = key.strip_prefix("media-upload:").ok_or_else(bad)?;
     if suffix.len() != 64 || !suffix.bytes().all(|b| b.is_ascii_hexdigit()) {
         return Err(bad());
     }
-    let mut saved = owned_upload(store, key)?;
+    let saved = owned_upload(store, key)?;
     let hash = saved["hash"].as_str().ok_or_else(bad)?;
     if saved["status"] != "uploaded"
         || saved["to"] != ""
@@ -105,22 +120,23 @@ fn public_uploaded(
         .filter(|n| *n > 0 && *n <= 8 * 1024 * 1024)
         .ok_or_else(bad)?;
     let payload = Zeroizing::new(
-        serde_json::from_value::<Vec<u8>>(saved["protobuf"].take()).map_err(|_| bad())?,
+        serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).map_err(|_| bad())?,
     );
     if payload.is_empty() || payload.len() > 32768 {
         return Err(bad());
     }
-    Ok((payload, kind, length))
+    Ok((payload, kind, length, saved))
 }
 
 #[cfg(any(test, feature = "comparison-client"))]
 pub(crate) fn upload_reference(store: &ProtocolStore, key: &str) -> Result<MediaReference> {
     use sha2::{Digest, Sha256};
     let owner = operation_owner(store)?;
-    let (payload, kind, length) = public_uploaded(store, key)?;
+    let (payload, kind, length, source) = public_uploaded(store, key)?;
     let checkpoint = format!("{key}:reference");
     store.write(|tx| {
         check_reference_owner_in(tx, owner, key)?;
+        check_reference_source_in(tx, key, &source)?;
         if let Some(reference) = tx.get_json(Table::Checkpoints, checkpoint.as_bytes(), 1)? {
             // No nested store read/write: verify the saved envelope against this
             // confirmed upload directly while holding the transaction.
@@ -181,11 +197,7 @@ fn reference_key(id: &ClientRequestId) -> String {
     format!("outbox-media-reference:{}", id.as_str())
 }
 
-fn uploaded(
-    store: &ProtocolStore,
-    id: &ClientRequestId,
-    peer: &Jid,
-) -> Result<(Zeroizing<Vec<u8>>, MediaKind)> {
+fn uploaded(store: &ProtocolStore, id: &ClientRequestId, peer: &Jid) -> Result<MessageUpload> {
     if store
         .read(|tx| {
             tx.get(
@@ -220,7 +232,7 @@ fn uploaded(
     if payload.is_empty() || payload.len() > 32768 {
         return Err(bad());
     }
-    Ok((payload, kind))
+    Ok((payload, kind, saved))
 }
 
 /// Create or reuse a stable sealed reference to one successful upload. Call
@@ -246,7 +258,7 @@ pub fn reference(
         ));
     }
     let owner = operation_owner(store)?;
-    let (payload, kind) = uploaded(store, id, peer)?;
+    let (payload, kind, source) = uploaded(store, id, peer)?;
     let old: Option<MediaReference> =
         store.read(|tx| tx.get_json(Table::Checkpoints, reference_key(id).as_bytes(), 1))?;
     if let Some(old) = old {
@@ -262,7 +274,9 @@ pub fn reference(
         length: None,
     };
     store.write(|tx| {
-        check_reference_owner_in(tx, owner, &format!("message:{}:upload", id.as_str()))?;
+        let upload_key = format!("message:{}:upload", id.as_str());
+        check_reference_owner_in(tx, owner, &upload_key)?;
+        check_reference_source_in(tx, &upload_key, &source)?;
         if tx
             .get(Table::Checkpoints, reference_key(id).as_bytes(), 1)?
             .is_some()
@@ -287,11 +301,11 @@ pub(super) fn resolve(
 ) -> Result<(Zeroizing<Vec<u8>>, &'static str)> {
     if let Ok(binding) = store.open_media_reference(UPLOAD_BINDING, &reference.sealed) {
         let binding: UploadBinding = serde_json::from_slice(&binding).map_err(|_| bad())?;
-        let (payload, kind, length) = public_uploaded(store, &binding.key)?;
+        let (payload, kind, length, _) = public_uploaded(store, &binding.key)?;
         verify_upload_binding(store, reference, &binding.key, &payload, kind, length)?;
         return Ok((payload, stanza_media_type(kind)));
     }
-    let (uploaded, kind) = uploaded(store, id, peer)?;
+    let (uploaded, kind, _) = uploaded(store, id, peer)?;
     let payload = store.open_media_reference(&binding(id, peer), &reference.sealed)?;
     let (mime, media_type) = (kind_mime(kind), stanza_media_type(kind));
     if payload != uploaded
@@ -311,6 +325,87 @@ mod tests {
         model::ids::AccountId,
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
+    #[test]
+    fn reference_creation_rejects_replaced_upload_snapshot_without_writing_after_reopen() {
+        use sha2::{Digest, Sha256};
+        for public in [false, true] {
+            for change in ["same", "payload", "status", "metadata", "removed"] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("reference-snapshot.redb");
+                let open = |create| {
+                    ProtocolStore::open(OpenOptions {
+                        path: path.clone(),
+                        account_id: AccountId::new("test").unwrap(),
+                        create,
+                        key_source: std::sync::Arc::new(StaticKeySource::new(
+                            MasterKey::from_bytes([8; 32]),
+                        )),
+                    })
+                    .unwrap()
+                };
+                let store = open(true);
+                let id = ClientRequestId::new("snapshot").unwrap();
+                let peer = Jid::parse("15550000000@s.whatsapp.net").unwrap();
+                let hash = "ptt:synthetic";
+                let key = if public {
+                    format!(
+                        "media-upload:{}",
+                        hex::encode(Sha256::digest(hash.as_bytes()))
+                    )
+                } else {
+                    "message:snapshot:upload".to_owned()
+                };
+                let initial = serde_json::json!({"status":"uploaded","to":if public { "" } else { &peer.user },
+                    "hash":hash,"protobuf":[66,0],"plaintext_len":2});
+                store
+                    .write(|tx| tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &initial))
+                    .unwrap();
+                let source = if public {
+                    public_uploaded(&store, &key).unwrap().3
+                } else {
+                    uploaded(&store, &id, &peer).unwrap().2
+                };
+                let owner = operation_owner(&store).unwrap();
+                let mut changed = initial.clone();
+                match change {
+                    "payload" => changed["protobuf"] = serde_json::json!([66, 1, 0]),
+                    "status" => changed["status"] = "outcome_unknown".into(),
+                    "metadata" => changed["extra"] = true.into(),
+                    _ => {}
+                }
+                store
+                    .write(|tx| {
+                        if change == "removed" {
+                            tx.delete(Table::Checkpoints, key.as_bytes()).map(|_| ())
+                        } else {
+                            tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &changed)
+                        }
+                    })
+                    .unwrap();
+                drop(store);
+                let store = open(false);
+                let before = store
+                    .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                    .unwrap();
+                let journal = store.journal_head().unwrap();
+                let outcome = store.write(|tx| {
+                    check_reference_owner_in(tx, owner, &key)?;
+                    check_reference_source_in(tx, &key, &source)?;
+                    tx.put_json(Table::Checkpoints, b"reference-proof", 1, &true)
+                });
+                assert_eq!(outcome.is_ok(), change == "same");
+                if change != "same" {
+                    assert_eq!(
+                        store
+                            .read(|tx| tx.scan(Table::Checkpoints, 1, 100))
+                            .unwrap(),
+                        before
+                    );
+                    assert_eq!(store.journal_head().unwrap(), journal);
+                }
+            }
+        }
+    }
     #[test]
     fn uploaded_bridge_rechecks_identity_for_references_and_resolution_after_reopen() {
         use crate::session::{AccountRecord, RegistrationStatus};

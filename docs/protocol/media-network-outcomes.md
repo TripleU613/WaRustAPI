@@ -1973,3 +1973,28 @@ store and checks both creation/reuse and resolution. Changed owners refuse with
 unchanged checkpoint rows and journal head; a same-owner control succeeds. The
 write-transaction operation-owner check is also exercised. No network request
 or live account operation occurs.
+
+## Atomic upload snapshot binding for reference creation
+
+**Confirmed Rust source defect, corrected offline.** At baseline `8508943d`,
+reference creation loaded and validated an uploaded payload outside its write
+transaction, then checked current owner without comparing the upload row to the
+validated snapshot. A same-account row replacement could install a reference
+sealed against stale payload data; later resolution could refuse that reference.
+This is a local consistency defect, not an APK wire requirement or server result.
+
+Both public and message-bound upload loaders now return the original decoded
+upload-row snapshot with the validated payload. Reference creation/reuse compares
+that snapshot with the current decoded row in the same transaction that saves
+or reuses the reference, after account admission. Any difference, including
+payload, status or metadata replacement, refuses with
+`upload changed before reference creation`; deletion also refuses. The existing
+read-only message-reference reuse path still resolves against current upload
+content and does not create a new row. This does not freeze upload rows forever
+or hold a lock through a later send.
+
+The offline regression exercises both upload families, loads their actual
+validated source snapshots, changes payload/status/metadata or removes the row,
+reopens the encrypted store, and attempts the guarded reference-write transaction.
+Rejected cases preserve all checkpoint rows and journal head; unchanged controls
+allow the write. No HTTP request, send or account operation is performed.

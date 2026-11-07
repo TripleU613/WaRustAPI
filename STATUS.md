@@ -10562,3 +10562,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   payload reads/reference resolution and rechecks operation owner transactionally
   at reference creation. Public/message-bound offline reopen regressions cover
   identity/logout changes. Legacy provenance remains unknown; no live operation.
+
+- Upload-reference creation now compares the exact validated decoded upload
+  snapshot in its write transaction, refusing same-account row replacement.
+  Offline public/message upload rollback cases cover payload/status/metadata
+  changes and removal after reopen. No live operation.

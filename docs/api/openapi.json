@@ -1,4 +1,11 @@
 {
+  "x-upload-reference-snapshot-binding": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/media-network-outcomes.md#atomic-upload-snapshot-binding-for-reference-creation",
+    "behavior": "Upload-reference writes compare the current decoded upload row to the validated source snapshot transactionally; replaced/deleted sources refuse without installing a stale reference."
+  },
   "x-outgoing-upload-bridge-account-admission": {
     "x-cli": false,
     "x-transport": true,
