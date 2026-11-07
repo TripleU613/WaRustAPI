@@ -347,3 +347,15 @@ without error, no parse-error NACK, correctly attributed facts with unknown time
 rather than fabricated supplied0, valid0/BMP controls, preserved send state,
 reopen and duplicate idempotency. Complete native row/carrier/other-handler and
 live behavior remain open; no account operation.
+
+## Required time precedes offline item status conversion (2026-11-06)
+
+**Confirmed static / fixed offline:** [complete status converter and non-parse error handler](apk/2.26.43.72-receipt-item-status-order/README.md)
+bind F10.A03 order: required actor, optional type string/default, required time,
+then F10.A00 conversion. Rust now parses required item time before refusing an
+unknown kind, so a missing/malformed time is not masked and retains its487
+response. With valid time, unknown/empty kind conversion is non-LIL, outside the
+487 classifier. Native queued500 versus legacy rethrow remains a separate policy
+gap; no new500 response is added. Codec cause/ACK precedence and actor-priority
+controls pass alongside aggregate atomic-refusal tests. No new fact kind, query,
+resend, identity change or live account operation.

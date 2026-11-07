@@ -1,4 +1,11 @@
 {
+  "x-offline-item-time-status-precedence": {
+    "x-cli": "existing receive paths; no new command or flag",
+    "x-transport": "offline message_id receipt item required-time/status conversion ordering",
+    "x-live": false,
+    "description": "Pinned F10.A03 obtains required actor, reads type/default, parses required time, then converts status through F10.A00. Rust now follows that precedence: unknown/empty item kind cannot mask an earlier native timestamp error487. With valid time, unknown status remains a generic refusal; native converter throws IllegalArgumentException rather than LIL. Queued1ic.A0E/1rg.A00 code500 and legacy rethrow are retained as separate unported wrapper/lifecycle policy, not generalized to local errors. Codec cause/ACK tests retain root response fields and higher actor-error precedence; existing atomic/store/actor checks remain. No new fact kind, request, identity, HTTP route or account operation. Full wrapper, opaque carrier, storage and live acceptance remain open.",
+    "evidence": "docs/protocol/apk/2.26.43.72-receipt-item-status-order/README.md"
+  },
   "x-ordinary-root-time-lenient-verification": {
     "x-cli": "existing local status/send fact inspection; no new command or flag",
     "x-transport": "ordinary root receipt timestamp handling verified; no production behavior change",

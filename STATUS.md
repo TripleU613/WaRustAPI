@@ -1,3 +1,10 @@
+2026-11-06 — **Corrected offline receipt timestamp/status error precedence.**
+Required item time is parsed before unknown status conversion, matching the APK.
+An unknown kind no longer masks an earlier timestamp487 cause. Valid-time unknown
+kinds remain outside487; native queued500 versus legacy rethrow is retained as a
+separate unported policy rather than guessed into the wire behavior.
+[Read-order/exception evidence, failing-before regression and boundaries](docs/protocol/apk/2.26.43.72-receipt-item-status-order/README.md). No live account operation.
+
 2026-11-06 — **Verified lenient ordinary root timestamp handling in the current APK.**
 The root parser defaults missing/empty/malformed/overflow time to0 instead of
 throwing aggregate-style parse errors. Existing runtime policy is retained;

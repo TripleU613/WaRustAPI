@@ -1558,12 +1558,6 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
                 .as_text()
                 .ok_or_else(|| invalid("invalid participant type"))?,
         };
-        if !matches!(
-            kind,
-            "delivery" | "read" | "played" | "sender" | "inactive" | "read-self" | "played-self"
-        ) {
-            return Err(invalid("unknown participant type"));
-        }
         // APK43.72 F10.A03 ->0Tp.A07/A0L/A09: missing text or
         // Long.parseLong failure throws LIL; opaque local values are separate.
         let time = match item.get_attr("t") {
@@ -1582,6 +1576,15 @@ fn offline_aggregate(node: &Node, participants: &Node) -> Result<Vec<Node>> {
                 })?
             }
         };
+        // APK43.72 F10.A03 reads t at00b0 before F10.A00(kind) at00ca.
+        // Unknown item type then throws IllegalArgumentException, not LIL;
+        // do not let that later conversion mask a prior timestamp parse error.
+        if !matches!(
+            kind,
+            "delivery" | "read" | "played" | "sender" | "inactive" | "read-self" | "played-self"
+        ) {
+            return Err(invalid("unknown participant type"));
+        }
         if matches!(kind, "delivery" | "read" | "played") {
             receipts.push(
                 Node::new("receipt")
@@ -4634,6 +4637,69 @@ mod tests {
                 Ok(ticket.local_id)
             })
             .unwrap()
+    }
+
+    #[test]
+    fn offline_item_timestamp_error_precedes_unknown_status_conversion() {
+        let make = |kind: &str, time: Option<&str>| {
+            let mut item = Node::new("participant")
+                .attr("jid", "15555550100@s.whatsapp.net")
+                .attr("type", kind);
+            if let Some(time) = time {
+                item = item.attr("t", time);
+            }
+            Node::new("receipt")
+                .attr("id", "ROOT-ORDER")
+                .attr("from", "15555550100@s.whatsapp.net")
+                .attr("type", "read")
+                .children(vec![
+                    Node::new("participants")
+                        .attr("message_id", "INNER")
+                        .children(vec![item]),
+                ])
+        };
+        for kind in ["unknown-status", ""] {
+            for time in [None, Some("bad"), Some("9223372036854775808")] {
+                let input = make(kind, time);
+                let wire = crate::binary::Encoder::new(
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                )
+                .encode(&input)
+                .unwrap();
+                let input = decode(&wire).unwrap();
+                let error = validate(&input).unwrap_err();
+                assert!(matches!(
+                    error,
+                    Error::InvalidInput {
+                        field: NATIVE_TIMESTAMP_FIELD,
+                        ..
+                    }
+                ));
+                let ack =
+                    super::super::messaging::received_parse_error_confirmation(&input).unwrap();
+                assert_eq!(ack.get_attr("error").and_then(|v| v.as_text()), Some("487"));
+                assert_eq!(ack.get_attr("type").and_then(|v| v.as_text()), Some("read"));
+            }
+            let input = make(kind, Some("20"));
+            assert!(validate(&input).is_err());
+            assert!(super::super::messaging::received_parse_error_confirmation(&input).is_none());
+            let input = make(kind, None).children(vec![
+                Node::new("participants")
+                    .attr("message_id", "INNER")
+                    .children(vec![
+                        Node::new("participant")
+                            .attr("jid", "12345:100@lid")
+                            .attr("type", kind),
+                    ]),
+            ]);
+            assert!(matches!(
+                validate(&input).unwrap_err(),
+                Error::InvalidInput {
+                    field: NATIVE_REQUIRED_DEVICE_FIELD,
+                    ..
+                }
+            ));
+        }
     }
 
     #[test]
