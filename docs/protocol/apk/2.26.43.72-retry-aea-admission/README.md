@@ -113,3 +113,7 @@ Reproduce apk-smali with signatures/exceptions for Em2.A00/A01/A02,EoQ.<init>,
 E7b.<clinit>,F3k.A0A,F1d.<clinit>,08u.<clinit>,2L7.A1T,1nr.A05,DBc.A1S.
 Referenced complete same-build caller methods retain their earlier manifests.
 [checksums.json](checksums.json) pins all files here.
+
+Follow-up: [later chat classification and local cooldown transaction](../2.26.43.72-retry-chat-aea-storage/README.md)
+now retains ExG/DDs storage boundaries, transition guards and transaction paths.
+Full policy, callback/cache recovery and whole-retry atomicity remain open.

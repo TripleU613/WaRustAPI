@@ -1,0 +1,42 @@
+{
+  "README.md": {
+    "bytes": 5894,
+    "sha256": "07585cb1dae7838300cce790eb24e5496de2e96db8a57b150c506b4631bbc683"
+  },
+  "chat-policy.txt": {
+    "bytes": 6489,
+    "sha256": "83218d7dba943ca25b39041912485f4fe356788896b01c01be94e3111d0ae9c9"
+  },
+  "chat-states.txt": {
+    "bytes": 5321,
+    "sha256": "b185b5e81c037161a1b5a960a6eb6a7a692e5d10c6dd6230805b22a5014cd387"
+  },
+  "chat-update.txt": {
+    "bytes": 13627,
+    "sha256": "bb3592ebc4b9d29ca1867e0d5c33e752c9d703cfb8a88429587b580fa95b2f9b"
+  },
+  "classification-write.txt": {
+    "bytes": 21077,
+    "sha256": "e1276aa4d663c346e2ceb2857da3a49f6bf5b34036d231d09b925d1bfcff6dce"
+  },
+  "one-helper.txt": {
+    "bytes": 428,
+    "sha256": "5796b66eba71c974c1a2feb760d0a5cee2bdc24ef72a105bbc0ac014d39b1a55"
+  },
+  "resolved-states.txt": {
+    "bytes": 1094,
+    "sha256": "01bb14b86538701c6bdef405020acef1d0d0050bb618717e9dcfd35547f505e9"
+  },
+  "state-read.txt": {
+    "bytes": 1727,
+    "sha256": "0329b30a78a31a75872880401d7977360d36877836a4631730e4e9e5932b4eee"
+  },
+  "transaction-callback.txt": {
+    "bytes": 986,
+    "sha256": "e2d49eb8be1f175c28e9be6e9fab47443f8dd34fa7ba92a9d02c6eabc5c31088"
+  },
+  "update-wrapper.txt": {
+    "bytes": 435,
+    "sha256": "64b92e9aa8287ea7402d447bde53f998a7348e67853d1d577a9787a710eae09a"
+  }
+}

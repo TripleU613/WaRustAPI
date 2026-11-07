@@ -1,5 +1,9 @@
 # Network correctness audit
 
+**Later AEA chat storage traced.** Distinct chat classification, transition
+guards and optional local cooldown share a guarded transaction. Cache/callback
+recovery and whole-retry atomicity remain open. [Evidence](retry-answers.md#post-session-aea-updates-chat-classification-2026-11-07). Research only.
+
 **Strict store-failure scope located.** The traced flag setter wraps migration
 bootstrap decryption and restores prior thread context. Persistence exceptions
 remain distinct from content failures; ordinary retry linkage is unproven.

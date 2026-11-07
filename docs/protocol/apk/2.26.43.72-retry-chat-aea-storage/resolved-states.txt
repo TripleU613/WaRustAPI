@@ -1,0 +1,28 @@
+
+# class: LX/DDs;
+# extends: LX/07o;
+
+.method public <clinit>(V)  # .registers 7
+    # full signature: LX/DDs;-><clinit>()V
+    0000..0002  const/4  v6, #0x0
+    0002..0004  const/4  v5, #0x1
+    0004..0006  const/4  v4, #0x2
+    0006..0008  const/4  v3, #0x3
+    0008..000a  const/4  v2, #0x4
+    000a..000c  const/4  v0, #0x5
+    000c..0010  new-array  v1, v0, [LX/0i7;
+    0010..0014  sget-object  v0, LX/0i7;->A02:LX/0i7;
+    0014..0018  aput-object  v0, v1, v6
+    0018..001c  sget-object  v0, LX/0i7;->A05:LX/0i7;
+    001c..0020  aput-object  v0, v1, v5
+    0020..0024  sget-object  v0, LX/0i7;->A04:LX/0i7;
+    0024..0028  aput-object  v0, v1, v4
+    0028..002c  sget-object  v0, LX/0i7;->A0F:LX/0i7;
+    002c..0030  aput-object  v0, v1, v3
+    0030..0034  sget-object  v0, LX/0i7;->A03:LX/0i7;
+    0034..003a  invoke-static  {v0, v1, v2}, LX/3q4;->A0t(Ljava/lang/Object;[Ljava/lang/Object;I)Ljava/util/Set;
+    003a..003c  move-result-object  v0
+    003c..0040  sput-object  v0, LX/DDs;->A0L:Ljava/util/Set;
+    0040..0042  return-void
+    # exception table: 0 try range(s)
+.end method

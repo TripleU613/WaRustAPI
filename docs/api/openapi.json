@@ -1,4 +1,11 @@
 {
+  "x-retry-chat-aea-storage-static-boundary": {
+    "x-cli": "research through existing APK inspection commands; no new command",
+    "x-transport": "research only; receipt-key adoption remains unsupported",
+    "x-live": false,
+    "description": "Selected post-session Em2/ExG/DDs path updates mapped chat encryption classification and optional local AEA cooldown, separately from identity-table E7b. Per-chat locking and resolved-to-unresolved/unchanged guards precede local chat/classification/cooldown transaction. Selected write failures skip success marking; cached objects and callback registration precede handle close. Whole-retry atomicity/cache rollback, cooldown timing and full policy remain unproven. No server restriction meaning, runtime adoption or live operation established.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-chat-aea-storage/README.md"
+  },
   "x-strict-signal-store-failure-static-boundary": {
     "x-cli": "research through existing APK inspection commands; no new command",
     "x-transport": "research only; no migration support or receipt-key adoption added",

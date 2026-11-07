@@ -1,0 +1,365 @@
+
+# class: LX/DEm;
+# extends: Ljava/lang/Object;
+
+.method public A02(ZLJ)  # .registers 19
+    # full signature: LX/DEm;->A02(LX/0aq;J)Z
+    0000..0002  const/4  v5, #0x1
+    0002..0006  move-object/from16  v6, v16
+    0006..000a  iget-object  v3, v6, LX/0aq;->A02:LX/0KU;
+    000a..000e  iget-object  v2, v3, LX/0KU;->A02:Landroid/database/sqlite/SQLiteDatabase;
+    000e..0014  invoke-virtual  {v2}, Landroid/database/sqlite/SQLiteDatabase;->inTransaction()Z
+    0014..0016  move-result  v0
+    0016..001a  if-eqz  v0, +0x29f
+    001a..001e  iget-object  v8, v15, LX/DEm;->A00:LX/05a;
+    001e..0022  iget-object  v9, v8, LX/05a;->A00:LX/00x;
+    0022..0028  invoke-static  {v9}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    0028..002a  move-result-object  v0
+    002a..002e  sget-object  v7, LX/0HA;->A05:LX/00f;
+    002e..0034  invoke-static  {v0, v7}, LX/00E;->A0F(LX/00E;LX/00f;)Z
+    0034..0036  move-result  v0
+    0036..003a  if-eqz  v0, +0x274
+    003a..0040  invoke-static  {v8}, LX/05a;->A00(LX/05a;)LX/00E;
+    0040..0042  move-result-object  v0
+    0042..0046  sget-object  v1, LX/0HA;->A0J:LX/0AB;
+    0046..004c  invoke-static  {v0, v1}, LX/2L7;->A00(LX/00E;LX/0AB;)I
+    004c..004e  move-result  v0
+    004e..0054  invoke-static  {v0}, LX/8t4;->A00(I)I
+    0054..0056  move-result  v0
+    0056..005a  if-eqz  v0, +0x264
+    005a..005c  const/4  v4, #0x0
+    005c..0062  invoke-static  {v9}, LX/2L6;->A0d(LX/00x;)LX/00E;
+    0062..0064  move-result-object  v0
+    0064..006a  invoke-virtual  {v0, v7}, LX/00E;->A17(LX/00f;)Z
+    006a..006c  move-result  v0
+    006c..0070  if-eqz  v0, +0x273
+    0070..0076  invoke-static  {v8}, LX/05a;->A00(LX/05a;)LX/00E;
+    0076..0078  move-result-object  v0
+    0078..007e  invoke-static  {v0, v1}, LX/2L7;->A00(LX/00E;LX/0AB;)I
+    007e..0080  move-result  v0
+    0080..0086  invoke-static  {v0}, LX/8t4;->A00(I)I
+    0086..0088  move-result  v1
+    0088..008c  if-lez  v1, +0x265
+    008c..0090  const-string  v0, "simple_db_migration_chat_encryption_classification_population"
+    0090..0096  invoke-static  {v3, v0, v4}, LX/0MJ;->A00(LX/0KU;Ljava/lang/String;I)I
+    0096..0098  move-result  v0
+    0098..009c  if-ne  v0, v1, +0x25d
+    009c..00a0  const-wide/16  v13, #0x0
+    00a0..00a2  const/4  v6, #0x0
+    00a2..00a4  const/4  v7, #0x0
+    00a4..00aa  invoke-virtual  {v2}, Landroid/database/sqlite/SQLiteDatabase;->inTransaction()Z
+    00aa..00ac  move-result  v0
+    00ac..00b0  if-eqz  v0, +0x234
+    00b0..00b4  sget-object  v2, LX/DEm;->A05:Ljava/lang/String;
+    00b4..00ba  invoke-static/range  {v17..v18}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    00ba..00bc  move-result-object  v0
+    00bc..00c0  new-array  v1, v5, [Ljava/lang/String;
+    00c0..00c2  const/4  v8, #0x0
+    00c2..00c6  aput-object  v0, v1, v4
+    00c6..00ca  const-string  v0, "ChatEncryptionClassificationStore/SELECT_COPIED_CLASSIFICATION"
+    00ca..00d0  invoke-virtual  {v3, v2, v0, v1}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    00d0..00d2  move-result-object  v2
+    00d2..00d8  invoke-interface  {v2}, Landroid/database/Cursor;->moveToFirst()Z
+    00d8..00da  move-result  v0
+    00da..00de  if-nez  v0, +0x4
+    00de..00e0  const/4  v0, #0x0
+    00e0..00e2  goto  +0x60
+    00e2..00e6  const-string  v0, "classification_type"
+    00e6..00ec  invoke-interface  {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    00ec..00ee  move-result  v1
+    00ee..00f4  invoke-interface  {v2, v1}, Landroid/database/Cursor;->isNull(I)Z
+    00f4..00f6  move-result  v0
+    00f6..00fa  if-eqz  v0, +0x4
+    00fa..00fc  move-object  v4, v6
+    00fc..00fe  goto  +0x5
+    00fe..0104  invoke-static  {v2, v1}, LX/6oh;->A16(Landroid/database/Cursor;I)Ljava/lang/Integer;
+    0104..0106  move-result-object  v4
+    0106..010a  const-string  v0, "chat_row_id"
+    010a..0110  invoke-static  {v2, v0}, LX/1Xl;->A0F(Landroid/database/Cursor;Ljava/lang/String;)J
+    0110..0112  move-result-wide  v13
+    0112..0116  const-string  v0, "contributing_jid_row_id"
+    0116..011c  invoke-interface  {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    011c..011e  move-result  v1
+    011e..0124  invoke-interface  {v2, v1}, Landroid/database/Cursor;->isNull(I)Z
+    0124..0126  move-result  v0
+    0126..012a  if-nez  v0, +0x6
+    012a..0130  invoke-static  {v2, v1}, LX/2L8;->A1F(Landroid/database/Cursor;I)Ljava/lang/Long;
+    0130..0132  move-result-object  v7
+    0132..0136  if-eqz  v4, +0x2c
+    0136..013c  invoke-virtual  {v4}, Ljava/lang/Number;->intValue()I
+    013c..013e  move-result  v4
+    013e..0140  const/4  v0, #0xff (-1)
+    0140..0144  if-eq  v4, v0, +0x25
+    0144..0148  sget-object  v0, LX/DEn;->A00:LX/06B;
+    0148..014e  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    014e..0150  move-result-object  v1
+    0150..0156  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0156..0158  move-result  v0
+    0158..015c  if-eqz  v0, +0x10
+    015c..0162  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0162..0164  move-result-object  v6
+    0164..0166  move-object  v0, v6
+    0166..016a  check-cast  v0, LX/DEn;
+    016a..016e  iget  v0, v0, LX/DEn;->databaseValue:I
+    016e..0172  if-ne  v0, v4, -0xf
+    0172..0176  check-cast  v6, LX/DEn;
+    0176..0178  goto  +0x3
+    0178..017a  const/4  v6, #0x0
+    017a..017c  goto  -0x4
+    017c..0180  if-nez  v6, +0x7
+    0180..0186  invoke-static  {}, LX/2L8;->A1C()Ljava/lang/IllegalStateException;
+    0186..0188  move-result-object  v0
+    0188..018a  throw  v0
+    018a..018e  const-string  v0, "is_supported"
+    018e..0194  invoke-static  {v2, v0}, LX/1Xl;->A02(Landroid/database/Cursor;Ljava/lang/String;)I
+    0194..0196  move-result  v0
+    0196..019c  invoke-static  {v0}, LX/2L9;->A1M(I)Z
+    019c..019e  move-result  v4
+    019e..01a0  const/4  v0, #0x1
+    01a0..01a6  invoke-interface  {v2}, Landroid/database/Cursor;->close()V
+    01a6..01aa  if-eqz  v0, +0x1ae
+    01aa..01ae  if-eqz  v4, +0x1ac
+    01ae..01b2  if-eqz  v7, +0x124
+    01b2..01b8  invoke-virtual  {v7}, Ljava/lang/Number;->longValue()J
+    01b8..01ba  move-result-wide  v0
+    01ba..01be  new-instance  v7, LX/KmB;
+    01be..01c4  invoke-direct  {v7}, LX/KmB;-><init>()V
+    01c4..01ca  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    01ca..01cc  move-result-object  v4
+    01cc..01d2  invoke-virtual  {v7, v4}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    01d2..01d8  invoke-static  {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    01d8..01da  move-result-object  v10
+    01da..01de  new-array  v2, v5, [Ljava/lang/String;
+    01de..01e2  aput-object  v10, v2, v8
+    01e2..01e6  const-string  v1, "ChatEncryptionClassificationStore/GET_JID_BY_LID"
+    01e6..01ea  const-string  v0, "\n          SELECT \n            jid_row_id\n          FROM \n            jid_map\n          WHERE \n            lid_row_id = ?\n      "
+    01ea..01f0  invoke-virtual  {v3, v0, v1, v2}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    01f0..01f2  move-result-object  v9
+    01f2..01f6  const-string  v0, "jid_row_id"
+    01f6..01fc  invoke-interface  {v9, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    01fc..01fe  move-result  v2
+    01fe..0204  invoke-interface  {v9}, Landroid/database/Cursor;->moveToNext()Z
+    0204..0206  move-result  v0
+    0206..020a  if-eqz  v0, +0xe
+    020a..0210  invoke-interface  {v9, v2}, Landroid/database/Cursor;->getLong(I)J
+    0210..0212  move-result-wide  v0
+    0212..0218  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0218..021a  move-result-object  v0
+    021a..0220  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0220..0222  goto  -0x11
+    0222..0228  invoke-interface  {v9}, Landroid/database/Cursor;->close()V
+    0228..022c  new-array  v2, v5, [Ljava/lang/String;
+    022c..0230  aput-object  v10, v2, v8
+    0230..0234  const-string  v1, "ChatEncryptionClassificationStore/GET_LIDS_BY_JID"
+    0234..0238  const-string  v0, "\n          SELECT \n            lid_row_id, \n            sort_id\n          FROM \n            jid_map\n          WHERE \n            jid_row_id = ?\n          ORDER BY \n            sort_id DESC, \n            lid_row_id DESC\n        "
+    0238..023e  invoke-virtual  {v3, v0, v1, v2}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    023e..0240  move-result-object  v9
+    0240..0244  const-string  v0, "lid_row_id"
+    0244..024a  invoke-interface  {v9, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    024a..024c  move-result  v2
+    024c..0252  invoke-interface  {v9}, Landroid/database/Cursor;->moveToNext()Z
+    0252..0254  move-result  v0
+    0254..0258  if-eqz  v0, +0xe
+    0258..025e  invoke-interface  {v9, v2}, Landroid/database/Cursor;->getLong(I)J
+    025e..0260  move-result-wide  v0
+    0260..0266  invoke-static  {v0, v1}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0266..0268  move-result-object  v0
+    0268..026e  invoke-virtual  {v7, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    026e..0270  goto  -0x11
+    0270..0276  invoke-interface  {v9}, Landroid/database/Cursor;->close()V
+    0276..027c  invoke-static  {v7}, LX/06c;->A00(Ljava/util/Set;)LX/KmB;
+    027c..027e  move-result-object  v9
+    027e..0284  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0284..0286  move-result-object  v7
+    0286..028c  invoke-virtual  {v9}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    028c..028e  move-result-object  v11
+    028e..0294  invoke-interface  {v11}, Ljava/util/Iterator;->hasNext()Z
+    0294..0296  move-result  v0
+    0296..029a  if-eqz  v0, +0x4d
+    029a..02a0  invoke-interface  {v11}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    02a0..02a2  move-result-object  v0
+    02a2..02a6  check-cast  v0, Ljava/lang/Number;
+    02a6..02ac  invoke-virtual  {v0}, Ljava/lang/Number;->longValue()J
+    02ac..02ae  move-result-wide  v0
+    02ae..02b4  invoke-static  {v13, v14}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    02b4..02b6  move-result-object  v10
+    02b6..02bc  invoke-static  {v0, v1}, Ljava/lang/String;->valueOf(J)Ljava/lang/String;
+    02bc..02be  move-result-object  v1
+    02be..02c0  const/4  v0, #0x2
+    02c0..02c4  new-array  v2, v0, [Ljava/lang/String;
+    02c4..02c8  aput-object  v10, v2, v8
+    02c8..02cc  aput-object  v1, v2, v5
+    02cc..02d0  const-string  v1, "ChatEncryptionClassificationStore/SELECT_TYPES_BY_CHAT_AND_CONTRIBUTOR"
+    02d0..02d4  const-string  v0, "\n          SELECT classification_type\n          FROM chat_encryption_classification\n          WHERE chat_row_id = ?\n            AND contributing_jid_row_id = ?\n        "
+    02d4..02da  invoke-virtual  {v3, v0, v1, v2}, LX/0KU;->A0A(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Landroid/database/Cursor;
+    02da..02dc  move-result-object  v2
+    02dc..02e0  const-string  v0, "classification_type"
+    02e0..02e6  invoke-interface  {v2, v0}, Landroid/database/Cursor;->getColumnIndexOrThrow(Ljava/lang/String;)I
+    02e6..02e8  move-result  v10
+    02e8..02ec  const/16  v0, #0xa
+    02ec..02f0  new-instance  v1, LX/16f;
+    02f0..02f6  invoke-direct  {v1, v0}, LX/16f;-><init>(I)V
+    02f6..02fc  invoke-interface  {v2}, Landroid/database/Cursor;->moveToNext()Z
+    02fc..02fe  move-result  v0
+    02fe..0302  if-eqz  v0, +0xe
+    0302..0308  invoke-interface  {v2, v10}, Landroid/database/Cursor;->getInt(I)I
+    0308..030a  move-result  v0
+    030a..0310  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    0310..0312  move-result-object  v0
+    0312..0318  invoke-virtual  {v1, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0318..031a  goto  -0x11
+    031a..0320  invoke-static  {v1}, LX/01h;->A03(Ljava/util/List;)LX/16f;
+    0320..0322  move-result-object  v0
+    0322..0328  invoke-interface  {v2}, Landroid/database/Cursor;->close()V
+    0328..032e  invoke-static  {v0, v7}, LX/07W;->A0M(Ljava/lang/Iterable;Ljava/util/Collection;)V
+    032e..0330  goto  -0x50
+    0330..0336  invoke-static  {}, LX/1Xl;->A18()Ljava/util/ArrayList;
+    0336..0338  move-result-object  v2
+    0338..033e  invoke-virtual  {v7}, Ljava/util/AbstractCollection;->iterator()Ljava/util/Iterator;
+    033e..0340  move-result-object  v12
+    0340..0346  invoke-interface  {v12}, Ljava/util/Iterator;->hasNext()Z
+    0346..0348  move-result  v0
+    0348..034c  if-eqz  v0, +0x31
+    034c..0352  invoke-interface  {v12}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0352..0354  move-result-object  v11
+    0354..0356  move-object  v0, v11
+    0356..035a  check-cast  v0, Ljava/lang/Number;
+    035a..0360  invoke-virtual  {v0}, Ljava/lang/Number;->intValue()I
+    0360..0362  move-result  v10
+    0362..0366  sget-object  v0, LX/DEn;->A00:LX/06B;
+    0366..036c  invoke-interface  {v0}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    036c..036e  move-result-object  v7
+    036e..0374  invoke-interface  {v7}, Ljava/util/Iterator;->hasNext()Z
+    0374..0376  move-result  v0
+    0376..037a  if-eqz  v0, -0x1b
+    037a..0380  invoke-interface  {v7}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    0380..0382  move-result-object  v1
+    0382..0384  move-object  v0, v1
+    0384..0388  check-cast  v0, LX/DEn;
+    0388..038c  iget  v0, v0, LX/DEn;->databaseValue:I
+    038c..0390  if-ne  v0, v10, -0xf
+    0390..0394  if-eqz  v1, -0x28
+    0394..039a  invoke-virtual  {v2, v11}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    039a..039c  goto  -0x2d
+    039c..039e  move-exception  v0
+    039e..03a0  throw  v0
+    03a0..03a2  move-exception  v1
+    03a2..03a8  invoke-static  {v9, v0}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    03a8..03aa  throw  v1
+    03aa..03ae  if-eqz  v6, +0xa9
+    03ae..03b2  iget  v0, v6, LX/DEn;->databaseValue:I
+    03b2..03b8  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    03b8..03ba  move-result-object  v1
+    03ba..03be  if-nez  v1, +0x8
+    03be..03c4  invoke-virtual  {v2}, Ljava/util/AbstractCollection;->isEmpty()Z
+    03c4..03c6  move-result  v0
+    03c6..03ca  if-nez  v0, +0x18
+    03ca..03d0  invoke-virtual  {v2}, Ljava/util/AbstractCollection;->size()I
+    03d0..03d2  move-result  v0
+    03d2..03d6  if-ne  v0, v5, +0x14
+    03d6..03dc  invoke-static  {v2}, LX/07Z;->A0y(Ljava/util/List;)Ljava/lang/Object;
+    03dc..03de  move-result-object  v0
+    03de..03e4  invoke-static  {v0}, LX/000;->A00(Ljava/lang/Object;)I
+    03e4..03e6  move-result  v0
+    03e6..03ea  if-eqz  v1, +0xa
+    03ea..03f0  invoke-virtual  {v1}, Ljava/lang/Number;->intValue()I
+    03f0..03f2  move-result  v1
+    03f2..03f6  if-ne  v0, v1, +0x4
+    03f6..03f8  const/4  v0, #0x1
+    03f8..03fa  return  v0
+    03fa..0400  invoke-interface  {v9}, Ljava/util/Set;->size()I
+    0400..0402  move-result  v1
+    0402..0406  sget-object  v10, LX/DEn;->A00:LX/06B;
+    0406..040c  invoke-interface  {v10}, Ljava/util/List;->size()I
+    040c..040e  move-result  v0
+    040e..0414  invoke-static  {v1}, LX/0gR;->A00(I)Ljava/lang/String;
+    0414..0416  move-result-object  v1
+    0416..041c  invoke-static  {v0}, LX/0gR;->A00(I)Ljava/lang/String;
+    041c..041e  move-result-object  v2
+    041e..0422  const-string  v0, "\n          DELETE FROM chat_encryption_classification\n          WHERE chat_row_id = ?\n            AND contributing_jid_row_id IN\n              "
+    0422..0428  invoke-static  {v0, v1}, LX/000;->A05(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0428..042a  move-result-object  v1
+    042a..042e  const-string  v0, "\n            AND classification_type IN\n              "
+    042e..0434  invoke-virtual  {v1, v0}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    0434..043a  invoke-virtual  {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+    043a..043e  const-string  v0, "\n        "
+    043e..0444  invoke-static  {v0, v1}, LX/1Xl;->A0z(Ljava/lang/String;Ljava/lang/StringBuilder;)Ljava/lang/String;
+    0444..0446  move-result-object  v7
+    0446..044c  invoke-static  {}, LX/2LC;->A1E()LX/16f;
+    044c..044e  move-result-object  v2
+    044e..0454  invoke-static  {v13, v14}, Ljava/lang/Long;->valueOf(J)Ljava/lang/Long;
+    0454..0456  move-result-object  v5
+    0456..045c  invoke-virtual  {v2, v5}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    045c..0462  invoke-virtual  {v2, v9}, Ljava/util/AbstractCollection;->addAll(Ljava/util/Collection;)Z
+    0462..0468  invoke-interface  {v10}, Ljava/util/List;->iterator()Ljava/util/Iterator;
+    0468..046a  move-result-object  v1
+    046a..0470  invoke-interface  {v1}, Ljava/util/Iterator;->hasNext()Z
+    0470..0472  move-result  v0
+    0472..0476  if-eqz  v0, +0x12
+    0476..047c  invoke-interface  {v1}, Ljava/util/Iterator;->next()Ljava/lang/Object;
+    047c..047e  move-result-object  v0
+    047e..0482  check-cast  v0, LX/DEn;
+    0482..0486  iget  v0, v0, LX/DEn;->databaseValue:I
+    0486..048c  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    048c..048e  move-result-object  v0
+    048e..0494  invoke-virtual  {v2, v0}, Ljava/util/AbstractCollection;->add(Ljava/lang/Object;)Z
+    0494..0496  goto  -0x15
+    0496..049c  invoke-static  {v2}, LX/01h;->A03(Ljava/util/List;)LX/16f;
+    049c..049e  move-result-object  v1
+    049e..04a2  new-array  v0, v8, [Ljava/lang/Object;
+    04a2..04a8  invoke-virtual  {v1, v0}, Ljava/util/AbstractCollection;->toArray([Ljava/lang/Object;)[Ljava/lang/Object;
+    04a8..04aa  move-result-object  v1
+    04aa..04ae  const-string  v0, "ChatEncryptionClassificationStore/DELETE_KNOWN_BY_CHAT_AND_CONTRIBUTOR"
+    04ae..04b4  invoke-virtual  {v3, v7, v0, v1}, LX/0KU;->A0I(Ljava/lang/String;Ljava/lang/String;[Ljava/lang/Object;)V
+    04b4..04b8  if-eqz  v6, -0x5f
+    04b8..04be  invoke-static  {}, LX/2LA;->A06()Landroid/content/ContentValues;
+    04be..04c0  move-result-object  v2
+    04c0..04c4  const-string  v0, "chat_row_id"
+    04c4..04ca  invoke-virtual  {v2, v0, v5}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    04ca..04ce  iget  v0, v6, LX/DEn;->databaseValue:I
+    04ce..04d4  invoke-static  {v0}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
+    04d4..04d6  move-result-object  v1
+    04d6..04da  const-string  v0, "classification_type"
+    04da..04e0  invoke-virtual  {v2, v0, v1}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Integer;)V
+    04e0..04e4  const-string  v0, "contributing_jid_row_id"
+    04e4..04ea  invoke-virtual  {v2, v0, v4}, Landroid/content/ContentValues;->put(Ljava/lang/String;Ljava/lang/Long;)V
+    04ea..04ee  const-string  v1, "ChatEncryptionClassificationStore/INSERT_CLASSIFICATION"
+    04ee..04f2  const-string  v0, "chat_encryption_classification"
+    04f2..04f8  invoke-virtual  {v3, v0, v1, v2}, LX/0KU;->A06(Ljava/lang/String;Ljava/lang/String;Landroid/content/ContentValues;)J
+    04f8..04fc  goto/16  -0x81
+    04fc..04fe  const/4  v1, #0x0
+    04fe..0502  goto/16  -0xa0
+    0502..0504  const/4  v0, #0x0
+    0504..0506  return  v0
+    0506..0508  move-exception  v0
+    0508..050a  throw  v0
+    050a..050c  move-exception  v1
+    050c..0512  invoke-static  {v2, v0}, LX/08N;->A00(Ljava/io/Closeable;Ljava/lang/Throwable;)V
+    0512..0514  throw  v1
+    0514..051a  invoke-static  {}, LX/DBb;->A0r()Ljava/lang/IllegalStateException;
+    051a..051c  move-result-object  v1
+    051c..051e  throw  v1
+    051e..0520  const/4  v0, #0x0
+    0520..0524  const-string  v4, "simple_db_migration_chat_encryption_classification_population"
+    0524..052a  invoke-static  {v3, v4, v0}, LX/0MJ;->A00(LX/0KU;Ljava/lang/String;I)I
+    052a..052c  move-result  v0
+    052c..0530  if-eqz  v0, +0x13
+    0530..0534  const-wide/16  v1, #0x0
+    0534..0538  const-string  v0, "ChatEncryptionClassificationStore"
+    0538..053e  invoke-static  {v3, v4, v0, v1, v2}, LX/0MJ;->A04(LX/0KU;Ljava/lang/String;Ljava/lang/String;J)V
+    053e..0542  const/16  v1, #0x1f
+    0542..0546  new-instance  v0, LX/Fea;
+    0546..054c  invoke-direct  {v0, v15, v1}, LX/Fea;-><init>(Ljava/lang/Object;I)V
+    054c..0552  invoke-virtual  {v6, v0, v4}, LX/0aq;->A05(Ljava/lang/Runnable;Ljava/lang/Object;)V
+    0552..0554  return  v5
+    0554..055a  invoke-static  {}, LX/DBb;->A0r()Ljava/lang/IllegalStateException;
+    055a..055c  move-result-object  v1
+    055c..055e  throw  v1
+    # exception table: 6 try range(s)
+    # catch <all> code_units 0069..00cb -> 0283
+    # catch <all> code_units 00f9..0111 -> 01ce
+    # catch <all> code_units 0120..0138 -> 01ce
+    # catch <all> code_units 016e..0191 -> 0283
+    # catch <all> code_units 01cf..01d0 -> 01d0
+    # catch <all> code_units 0284..0285 -> 0285
+.end method

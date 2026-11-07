@@ -659,3 +659,15 @@ ordinary decrypt failure. Rust already preserves the content-versus-transaction
 error distinction; no runtime defect newly demonstrated.
 [Complete methods, dispatch, timeout and scope limits](apk/2.26.43.72-strict-signal-store-failure/README.md).
 Research only; receipt-key adoption remains unsupported and no live operation.
+
+## Post-session AEA updates chat classification (2026-11-07)
+
+**Confirmed selected static:** the later Em2/ExG/DDs path manages a distinct
+chat-state enum, mapped address and optional local aea_chat_state cooldown.
+DDs locks per chat, guards resolved-to-unresolved transitions and unchanged state,
+and groups chat/classification/optional cooldown writes in a local transaction.
+Selected failures skip success marking. Cache mutation/callback occur before
+handle close; outer rollback/cache recovery remain unproven. This cooldown is
+not established as a server restriction signal. Rust receipt-key refusal remains.
+[Complete evidence and open integration requirements](apk/2.26.43.72-retry-chat-aea-storage/README.md).
+Research only; no live account operation.
