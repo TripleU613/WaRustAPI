@@ -9550,3 +9550,8 @@ Local public upload eligibility omission corrected at shared entry, including ca
   all resolver errors. Shared preflight now preserves non-InvalidInput errors,
   with an encrypted-store malformed-checkpoint regression. See
   [preflight errors](media-network-outcomes.md#media-preflight-preserves-operational-errors).
+
+- Source/test verification at `d5d44555`: group-media preflight already preserves
+  operational errors. Integration regression verifies encrypted-store corruption
+  cannot reserve membership work after send-path claim; no runtime fix claimed.
+  See [group preflight](media-network-outcomes.md#group-media-preflight-corruption-boundary-verified).

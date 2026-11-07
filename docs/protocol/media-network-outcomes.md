@@ -2022,3 +2022,29 @@ synthetic malformed JSON upload into the encrypted store, reopens it and checks
 that preflight returns Storage error without changing checkpoint rows or journal
 head. No live account/network operation is performed. This is source-level
 error-propagation evidence, not APK evidence of server restriction causality.
+
+## Group-media preflight corruption boundary verified
+
+**Confirmed current Rust behavior, offline regression added.** At baseline
+`d5d44555`, group preparation already distinguished InvalidInput from operational
+errors. `outgoing_group::payload` propagates uploaded-media resolution failures;
+`begin_selected` treats only InvalidInput as unsupported and propagates other
+errors before writing its preparation row or queuing group-info. The later
+payload-preparation branch also propagates operational errors rather than
+turning them into ReferenceChanged. No production policy change is needed here.
+
+The integration regression creates a valid message-bound uploaded-media reference
+and queued group intent, corrupts the saved upload JSON, reopens the encrypted
+store, and invokes the actual `begin_selected`. Storage failure propagates;
+outbox, Signal sessions, peer identities, sender keys, checkpoints and journal
+remain unchanged, with no group-preparation row/membership reservation. An
+explicit offline fixture repair then lets the same queued intent reserve its
+membership query, showing the negative result was corruption-specific rather
+than a permanently unsupported media path. No query is transmitted.
+
+Scope matters: `begin_selected` legitimately claims the outbox send path before
+payload admission. The test establishes that claim before taking its snapshot,
+so it does not claim a completely fresh call has no local side effects. It
+proves corruption does not reserve protocol work after that claim. The repaired
+control is test setup, not automatic production recovery. This is source/test
+evidence, not new APK behavior or proof of full group-send/network parity.

@@ -1,4 +1,11 @@
 {
+  "x-group-media-preflight-verification": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/media-network-outcomes.md#group-media-preflight-corruption-boundary-verified",
+    "finding": "Offline integration regression verifies existing group-media preflight propagates corrupt-upload storage errors before membership reservation, after established local send-path claim. No production policy change."
+  },
   "x-media-preflight-operational-errors": {
     "x-cli": false,
     "x-transport": true,

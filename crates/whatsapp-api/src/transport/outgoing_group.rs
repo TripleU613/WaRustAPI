@@ -37,6 +37,69 @@ pub(super) mod tests {
         },
         signal::{direct, group},
     };
+    #[tokio::test]
+    async fn corrupt_group_media_preflight_propagates_before_membership_reservation() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("corrupt-media-preflight.redb");
+        let store = group_fanout::tests::open(&path);
+        let f = group_fanout::tests::fixture();
+        let request_id = ClientRequestId::new("group-corrupt-media").unwrap();
+        let source_key = b"message:group-corrupt-media:upload";
+        let uploaded = serde_json::json!({"status":"uploaded","to":f.plan.chat.to_string(),
+            "hash":"fixture","protobuf":[26,0]});
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, source_key, 1, &uploaded))
+            .unwrap();
+        let reference =
+            super::super::outgoing_media::reference(&store, &request_id, &f.plan.chat).unwrap();
+        let request = SendRequest {
+            client_request_id: request_id.clone(),
+            chat: ChatId::from_jid(&f.plan.chat).unwrap(),
+            content: MessageContent::Media {
+                reference,
+                caption: None,
+                file_name: None,
+                quoted: None,
+            },
+        };
+        let id = store
+            .write(|tx| {
+                Ok(Outbox::new("media-fixture", Limits::default())
+                    .enqueue(tx, &request)?
+                    .0
+                    .local_id)
+            })
+            .unwrap();
+        // begin_selected legitimately claims a send path before payload admission.
+        // Establish it first so the corruption assertion isolates protocol work.
+        super::super::send_path::claim(
+            &store,
+            &request_id,
+            super::super::send_path::SendPath::Outbox,
+        )
+        .unwrap();
+        store
+            .write(|tx| tx.put(Table::Checkpoints, source_key, 1, b"not-json"))
+            .unwrap();
+        drop(store);
+        let store = group_fanout::tests::open(&path);
+        let before = rows(&store);
+        let journal = store.journal_head().unwrap();
+        assert!(matches!(begin_selected(&store, id), Err(Error::Storage(_))));
+        assert_eq!(rows(&store), before);
+        assert_eq!(store.journal_head().unwrap(), journal);
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, key(id).as_bytes(), 1))
+                .unwrap()
+                .is_none()
+        );
+        // Offline fixture repair is explicit; no automatic recovery/retry occurs.
+        store
+            .write(|tx| tx.put_json(Table::Checkpoints, source_key, 1, &uploaded))
+            .unwrap();
+        assert!(begin_selected(&store, id).unwrap().is_some());
+    }
     pub(in crate::transport) fn enqueue(
         store: &ProtocolStore,
         chat: &Jid,

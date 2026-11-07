@@ -10572,3 +10572,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   failures instead of silently classifying every resolution error as unsupported.
   Missing/invalid references retain local refusal. Offline corruption/reopen
   regression verifies unchanged state; no network operation.
+
+- Verified group-media preflight already propagates operational failures. New
+  actual begin_selected corruption/reopen regression proves no membership
+  reservation or preparation row after the established local send-path claim;
+  repaired offline control reserves normally. No production policy/live change.
