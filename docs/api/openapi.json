@@ -1,4 +1,11 @@
 {
+  "x-message-ack-account-ownership": {
+    "x-cli": "existing normal direct/group outbox and transport flows; no new command or flag",
+    "x-transport": "private exact-wire/account ACK owner captured with final normal ciphertext reservation and checked before successful or failed ordinary ACK mutation",
+    "x-live": false,
+    "description": "Two offline red runs using real encrypted direct preparation reproduced success and failure adoption after saved registration ID replacement. Normal direct/group final reservation now freezes exact wire ID and account/store digest in a private checkpoint. Ordinary matching ACK settlement rechecks inside its write transaction before Failed progress, distribution adoption, token work or facts. Tests cover unchanged persisted state/journal, reopen, no query replay and original-owner once-only completion. Missing legacy provenance preserves existing behavior without backfill; other adapters remain separate scope. No wire change, reset or live account operation.",
+    "evidence": "docs/protocol/message-ack-account-ownership.md"
+  },
   "x-distribution-ack-account-ownership": {
     "x-cli": "existing group outbox/transport and inspection flows; no new command or flag",
     "x-transport": "new private PendingAck account authority checked before successful distribution ACK consumption and delivered-device mutation",

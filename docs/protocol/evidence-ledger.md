@@ -1,3 +1,8 @@
+**Normal outbox message ACKs now retain reservation account ownership.**
+Direct and group ciphertext reservation freeze the original owner; successful
+and failed ACKs refuse drift before outbox facts or dependent work can change.
+[Encrypted regression evidence and legacy limits](message-ack-account-ownership.md). No live operation.
+
 **Sender-key distribution ACKs now retain reservation account ownership.**
 Owner drift refuses before consuming the pending ACK or marking devices delivered;
 ordinary successful group ACK settlement shares that transaction with outbox facts.

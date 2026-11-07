@@ -29,7 +29,9 @@ and sender-key state, then original-owner once-only completion.
 field and preserves their existing behavior. Missing ownership is not backfilled
 or presented as confirmed. Direct sends without a distribution PendingAck and
 ordinary failed message ACKs do not gain account binding from this change.
-Binding their complete outbox reservation/ACK lifecycle remains separate work.
+Normal outbox reservation/ACK binding is subsequently addressed in the
+[ordinary message ACK audit](message-ack-account-ownership.md), with explicit
+legacy and adapter limits.
 Separate parent/child transactions and old distribution-state reuse likewise
 require their own audit; this does not establish full network parity.
 

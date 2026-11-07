@@ -25,6 +25,63 @@ fn query_key(id: LocalMessageId) -> String {
     format!("outbox-key-query:{id}")
 }
 
+#[derive(serde::Serialize, serde::Deserialize)]
+struct AckOwner {
+    wire_id: MessageId,
+    account_authority: [u8; 32],
+}
+fn ack_owner_key(id: LocalMessageId) -> String {
+    format!("outbox-message-ack-owner:{id}")
+}
+/// Freeze callback ownership in the same transaction as ciphertext and InFlight.
+/// This is local provenance, not a new APK field or permission to resend.
+pub(super) fn reserve_ack_owner_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    id: LocalMessageId,
+    wire_id: &MessageId,
+) -> Result<()> {
+    let key = ack_owner_key(id);
+    if tx.get(Table::Checkpoints, key.as_bytes(), 1)?.is_some() {
+        return Err(Error::invalid(
+            "outbox",
+            "message ACK owner already reserved",
+        ));
+    }
+    let account = AccountRecord::load_in_write(tx)?;
+    let owner = AckOwner {
+        wire_id: wire_id.clone(),
+        account_authority: super::account_authority::fingerprint(
+            tx.generation(),
+            account.as_ref(),
+        )?,
+    };
+    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &owner)
+}
+fn check_ack_owner_in(
+    tx: &crate::store::WriteTx<'_>,
+    id: LocalMessageId,
+    wire_id: &MessageId,
+) -> Result<()> {
+    let Some(owner): Option<AckOwner> =
+        tx.get_json(Table::Checkpoints, ack_owner_key(id).as_bytes(), 1)?
+    else {
+        // Historical/manual reservations have unknown preparation provenance.
+        // Preserve existing behavior; never backfill from the replying account.
+        return Ok(());
+    };
+    let account = AccountRecord::load_in_write(tx)?;
+    if owner.wire_id != *wire_id
+        || super::account_authority::fingerprint(tx.generation(), account.as_ref())?
+            != owner.account_authority
+    {
+        return Err(Error::invalid(
+            "outbox",
+            "message ACK reservation account changed",
+        ));
+    }
+    Ok(())
+}
+
 /// Apply native message mutation metadata after payload encryption, shared by
 /// direct and group sends. Use the original reference's direction, as the
 /// keep protobuf's fromMe does, rather than the add-on's own sender. This
@@ -1272,7 +1329,9 @@ impl Pending {
             // A peer that cannot decrypt asks for this exact message again
             // (retry_answer); the stanza alone holds only old ciphertext.
             super::retry_answer::keep_source_in(tx, &wire_id, payload)?;
-            current.wire_id = Some(MessageId::new(wire_id)?);
+            let reserved_id = MessageId::new(wire_id)?;
+            reserve_ack_owner_in(tx, self.local_id, &reserved_id)?;
+            current.wire_id = Some(reserved_id);
             current.attempts.push(AttemptRecord {
                 index: 0,
                 prepared_at: Timestamp::now(),
@@ -1556,6 +1615,7 @@ pub fn acknowledge(store: &ProtocolStore, node: &Node) -> Result<bool> {
             }) {
                 return Ok(false);
             }
+            check_ack_owner_in(tx, entry.local_id, &wire_id)?;
             if kind == DeliveryFactKind::Failed {
                 outbox().set_progress(tx, &mut entry, AttemptProgress::Failed)?;
             } else {
@@ -1651,6 +1711,97 @@ mod tests {
             })
             .unwrap()
     }
+    #[tokio::test]
+    async fn prepared_direct_ack_keeps_original_account_for_success_and_failure() {
+        for refused in [true, false] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("prepared-ack-owner.redb");
+            let store = open(&path);
+            let mut f = super::super::group_fanout::tests::fixture();
+            f.alice.generation = store.generation();
+            store.write(|tx| f.alice.save(tx)).unwrap();
+            let peer = f.plan.devices[0].clone();
+            let local_id = store
+                .write(|tx| {
+                    Ok(outbox()
+                        .enqueue(
+                            tx,
+                            &SendRequest {
+                                client_request_id: ClientRequestId::new("prepared-ack-owner")?,
+                                chat: ChatId::from_jid(&peer)?,
+                                content: MessageContent::Text {
+                                    body: "offline fixture".into(),
+                                    quoted: None,
+                                    style: Default::default(),
+                                },
+                            },
+                        )?
+                        .0
+                        .local_id)
+                })
+                .unwrap();
+            let (pending, _) = begin_selected(&store, Some(local_id)).unwrap().unwrap();
+            let reply = Node::new("iq")
+                .attr("type", "result")
+                .attr("id", pending.query_id.as_str())
+                .children(vec![Node::new("list").children(vec![
+                    f.reply.child("list").unwrap().child_nodes()[0].clone(),
+                ])]);
+            let sent = pending
+                .prepare(&store, &f.alice, &reply, ConnectionEpoch(1))
+                .await
+                .unwrap()
+                .unwrap();
+            let mut ack = Node::new("ack")
+                .attr("class", "message")
+                .attr("id", sent.get_attr("id").unwrap().as_text().unwrap())
+                .attr("from", peer);
+            if refused {
+                ack = ack.attr("error", "500");
+            }
+            let mut changed = f.alice.clone();
+            changed.signal_registration_id = Some(32);
+            store.write(|tx| changed.save(tx)).unwrap();
+            let before = store
+                .read(|tx| {
+                    Ok((
+                        tx.scan_after(Table::Outbox, 1, None, 4096)?,
+                        tx.scan_after(Table::Checkpoints, 1, None, 4096)?,
+                    ))
+                })
+                .unwrap();
+            let head = store.journal_head().unwrap();
+            assert!(acknowledge(&store, &ack).is_err(), "refused={refused}");
+            assert_eq!(
+                store
+                    .read(|tx| Ok((
+                        tx.scan_after(Table::Outbox, 1, None, 4096)?,
+                        tx.scan_after(Table::Checkpoints, 1, None, 4096)?
+                    )))
+                    .unwrap(),
+                before
+            );
+            assert_eq!(store.journal_head().unwrap(), head);
+            drop(store);
+            let store = open(&path);
+            assert!(acknowledge(&store, &ack).is_err());
+            assert!(begin_selected(&store, Some(local_id)).unwrap().is_none());
+            store.write(|tx| f.alice.save(tx)).unwrap();
+            assert!(acknowledge(&store, &ack).unwrap());
+            assert!(!acknowledge(&store, &ack).unwrap());
+            let entry = store
+                .read(|tx| outbox().get(tx, local_id))
+                .unwrap()
+                .unwrap();
+            assert!(entry.facts.iter().any(|fact| fact.kind
+                == if refused {
+                    DeliveryFactKind::Failed
+                } else {
+                    DeliveryFactKind::ServerAccepted
+                }));
+        }
+    }
+
     #[tokio::test]
     async fn direct_reply_cannot_change_intent_after_account_replacement() {
         let dir = tempfile::tempdir().unwrap();
@@ -4227,6 +4378,7 @@ mod tests {
                 )?;
                 let mut entry = outbox().get_mut(tx, ticket.local_id)?.unwrap();
                 entry.wire_id = Some(MessageId::new("group-owner-wire")?);
+                reserve_ack_owner_in(tx, entry.local_id, entry.wire_id.as_ref().unwrap())?;
                 outbox().set_progress(tx, &mut entry, AttemptProgress::InFlight)?;
                 super::super::sender_key_distribution::reserve_in(
                     tx,
@@ -4258,6 +4410,7 @@ mod tests {
             .unwrap();
         let head = store.journal_head().unwrap();
         assert!(acknowledge(&store, &ack).is_err());
+        assert!(acknowledge(&store, &ack.clone().attr("error", "500")).is_err());
         assert_eq!(
             store
                 .read(|tx| outbox().status(tx, local_id))

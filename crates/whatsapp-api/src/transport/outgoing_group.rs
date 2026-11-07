@@ -2587,7 +2587,9 @@ impl Pending {
                     prepared.reserve_in(tx, archive.as_bytes())?;
                     prepared.await_ack_in(tx, &wire_id)?;
                     super::send_versions::capture_in(tx, self.entry.local_id, &plan.devices)?;
-                    current.wire_id = Some(MessageId::new(wire_id)?);
+                    let reserved_id = MessageId::new(wire_id)?;
+                    super::outgoing::reserve_ack_owner_in(tx, self.entry.local_id, &reserved_id)?;
+                    current.wire_id = Some(reserved_id);
                     current.attempts.push(AttemptRecord {
                         index: 0,
                         prepared_at: Timestamp::now(),
