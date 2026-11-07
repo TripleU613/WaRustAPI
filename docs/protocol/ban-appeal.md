@@ -140,3 +140,34 @@ exact-boundary acceptance across chunks and one-byte overflow refusal. No socket
 or account operation is used. These are local configuration/resource invariants,
 not APK/server timeout requirements. The fixed appeal hard ceiling, request
 construction, retry policy and server acceptance unknowns otherwise remain.
+
+## Active-session failure token account ownership
+
+**Confirmed Rust credential ownership defect, corrected offline**, baseline
+`e9672f9e`. The normal connection receive loop captured terminal failure nodes,
+then copied appeal_token into whichever AccountRecord existed at that moment,
+creating a default account when missing and discarding persistence errors.
+The fake-link regression reproduced token attachment after a changed own JID.
+This is local credential misattribution, not a proven server restriction cause.
+
+The credential update now compares the initiating receive session's existing
+account-authority fingerprint with the current saved account in the same write
+transaction as token persistence. Changed authority refuses with a fixed redacted
+error; a missing account is never created. Persistence faults propagate instead
+of being discarded. The authenticated failure capture precedes this optional
+credential update and remains preserved. All outcomes still end the connection
+without recoverable reconnect, ACK or an appeal submission. Existing first-token/
+64-credential policy and observation-timestamp tolerance are unchanged.
+
+The actual receive-loop fake-link regression activates the session, changes/removes
+the account, delivers a synthetic failure with an appeal token and awaits worker
+termination. Same-account/observation-only controls save the credential; changed
+JID/missing-account cases leave the Account table byte-identical. Diagnostics omit
+the token, no outbound stanza is produced, and captured refusal plus account state
+survive encrypted-store reopen. No real socket or server is used.
+
+This fence covers the active receive-loop failure path only. Historical capture
+recovery, old stored-token provenance, initial-login adapters and appeal submission
+binding are separate audit boundaries; they are not retroactively authenticated
+by this change. No server challenge/refusal is bypassed and no live account
+operation or retry is added.

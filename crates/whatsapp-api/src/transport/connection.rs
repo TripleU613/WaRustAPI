@@ -697,6 +697,43 @@ pub async fn run(
     .await
 }
 
+// The authenticated failure was captured before this optional credential update.
+// Never attach its token to another account or synthesize a replacement account.
+fn persist_live_failure_token(
+    store: &ProtocolStore,
+    initiating_account: &AccountRecord,
+    token: &str,
+) -> Result<()> {
+    let expected =
+        super::account_authority::fingerprint(store.generation(), Some(initiating_account))?;
+    let token_bytes = zeroize::Zeroizing::new(token.as_bytes().to_vec());
+    let now = Timestamp::now();
+    store.write(|tx| {
+        let mut account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
+        if super::account_authority::fingerprint(tx.generation(), Some(&account))? != expected {
+            return Err(Error::invalid(
+                "connection",
+                "account changed before failure token persistence",
+            ));
+        }
+        if account.credentials.len() < 64
+            && !account
+                .credentials
+                .iter()
+                .any(|credential| credential.name == "noise_appeal_token")
+        {
+            account.credentials.push(ObservedCredential {
+                name: "noise_appeal_token".into(),
+                value: token_bytes,
+                observed_at: now,
+                source_step: Some("failure".into()),
+            });
+            AccountRecord::save(&account, tx)?;
+        }
+        Ok(())
+    })
+}
+
 #[derive(Default)]
 // Keep manual action pacing outside select handlers: a whole reserved batch
 // previously blocked inbound processing during each inter-action sleep.
@@ -1016,23 +1053,7 @@ pub(crate) async fn drive(
                     if node.description == "failure"
                         && let Some(token) = node.get_attr("appeal_token").and_then(|v| v.as_text())
                     {
-                        let token_bytes = zeroize::Zeroizing::new(token.as_bytes().to_vec());
-                        let now = Timestamp::now();
-                        let _ = store.write(|tx| {
-                            let mut account = AccountRecord::load_in_write(tx)?.unwrap_or_default();
-                            if account.credentials.len() < 64
-                                && !account.credentials.iter().any(|c| c.name == "noise_appeal_token")
-                            {
-                                account.credentials.push(ObservedCredential {
-                                    name: "noise_appeal_token".into(),
-                                    value: token_bytes,
-                                    observed_at: now,
-                                    source_step: Some("failure".into()),
-                                });
-                                AccountRecord::save(&account, tx)?;
-                            }
-                            Ok(())
-                        });
+                        persist_live_failure_token(&store, &account, token)?;
                     }
                     return Err(Error::invalid("connection", "server ended session; reason preserved encrypted; no reconnect"));
                 }
@@ -4691,6 +4712,101 @@ mod tests {
             next.activate().await;
             next.nothing_written(Duration::from_millis(100)).await;
             next.stop_cleanly().await;
+        }
+    }
+
+    #[tokio::test]
+    async fn terminal_failure_token_never_attaches_to_changed_or_missing_account() {
+        for change in ["same", "observation", "jid", "missing"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("terminal-token-owner.redb");
+            let store = open(&path);
+            let mut fake = start(&store, false, None);
+            fake.activate().await;
+            tokio::time::timeout(Duration::from_secs(5), &mut fake.ready)
+                .await
+                .unwrap()
+                .unwrap();
+            store
+                .write(|tx| {
+                    let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                    match change {
+                        "jid" => {
+                            account.own_jid =
+                                Some(Jid::parse("15555550999@s.whatsapp.net").unwrap())
+                        }
+                        "missing" => {
+                            tx.delete(Table::Account, b"account")?;
+                            return Ok(());
+                        }
+                        "observation" => account.last_authenticated_at = Some(Timestamp(123)),
+                        _ => {}
+                    }
+                    account.save(tx)
+                })
+                .unwrap();
+            let before = store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap();
+            let ended = Node::new("failure")
+                .attr("reason", "403")
+                .attr("appeal_token", "offline-private-token-sentinel");
+            let wire = encode(&ended).unwrap();
+            fake.deliver(ended).await;
+            let error = tokio::time::timeout(Duration::from_secs(5), &mut fake.task)
+                .await
+                .unwrap()
+                .unwrap()
+                .unwrap_err();
+            assert!(!error.is_recoverable_by_reconnect());
+            assert!(!error.to_string().contains("offline-private"));
+            let key = format!(
+                "inbound:sha256:{}",
+                hex::encode(sha2::Sha256::digest(&wire))
+            );
+            assert!(
+                store
+                    .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
+            if matches!(change, "same" | "observation") {
+                let account = store.read(AccountRecord::load).unwrap().unwrap();
+                assert!(
+                    account
+                        .credentials
+                        .iter()
+                        .any(|credential| credential.name == "noise_appeal_token")
+                );
+            } else {
+                assert_eq!(
+                    store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap(),
+                    before,
+                    "{change}: terminal token rebound"
+                );
+            }
+            assert!(matches!(
+                fake.from_worker.try_recv(),
+                Err(mpsc::error::TryRecvError::Disconnected)
+            ));
+            let saved_accounts = store.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap();
+            drop(fake);
+            drop(store);
+            let reopened = ProtocolStore::open(OpenOptions {
+                path,
+                account_id: AccountId::new("test").unwrap(),
+                create: false,
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([4; 32]))),
+            })
+            .unwrap();
+            assert_eq!(
+                reopened.read(|tx| tx.scan(Table::Account, 1, 100)).unwrap(),
+                saved_accounts
+            );
+            assert!(
+                reopened
+                    .read(|tx| tx.get(Table::Checkpoints, key.as_bytes(), 1))
+                    .unwrap()
+                    .is_some()
+            );
         }
     }
 

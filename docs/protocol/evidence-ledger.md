@@ -9723,3 +9723,10 @@ Local public upload eligibility omission corrected at shared entry, including ca
   helper as public preflight. Direct/group reopen controls cover non-readable,
   consumed and malformed rows with no mutation; explicit policy/wire unchanged.
   See [atomic eligibility](read-receipt-policy-current.md#automatic-eligibility-rechecked-in-the-preparation-transaction).
+
+- Confirmed active-session failure token misattribution at `e9672f9e`: fake-link
+  JID change reproduced credential attachment to the replacement account.
+  Persistence now atomically checks initiating account authority, never creates
+  a missing account, and propagates faults. Terminal capture/no-reconnect remain;
+  receive-loop/reopen controls retain refusal and account state. See
+  [failure token ownership](ban-appeal.md#active-session-failure-token-account-ownership).

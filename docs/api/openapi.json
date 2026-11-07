@@ -1,4 +1,11 @@
 {
+  "x-live-failure-token-account-ownership": {
+    "x-cli": false,
+    "x-transport": true,
+    "x-live": false,
+    "evidence": "docs/protocol/ban-appeal.md#active-session-failure-token-account-ownership",
+    "behavior": "Active receive-loop failure token persistence atomically checks initiating account authority, refuses changed/missing account and propagates persistence faults after terminal capture. No appeal submission, ACK or reconnect added; historical token provenance separate."
+  },
   "x-automatic-read-transactional-content-eligibility": {
     "x-cli": false,
     "x-transport": true,

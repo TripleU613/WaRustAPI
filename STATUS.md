@@ -10706,3 +10706,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   its preparation transaction, closing stale preflight admission. Direct/group
   staged-inspection/reopen regression covers non-readable/consumed/malformed rows
   and unchanged controls. No live operation, wire or explicit-read policy change.
+
+- Fixed active-session terminal failure appeal-token account misattribution:
+  update checks initiating authority, never creates a default account and surfaces
+  persistence errors after capture. Fake-link/reopen controls retain terminal
+  no-reconnect behavior and unchanged wrong/missing account state. No live request.
