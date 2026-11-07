@@ -1,0 +1,38 @@
+
+# class: LX/0AI;
+# extends: LX/07o;
+
+.method public <init>(V)  # .registers 6
+    # full signature: LX/0AI;-><init>()V
+    0000..0004  const/16  v0, #0x1d2c
+    0004..000a  invoke-static  {v0}, LX/00D;->A05(I)Ljava/util/Set;
+    000a..000c  move-result-object  v4
+    000c..0010  const/16  v0, #0x1e01
+    0010..0016  invoke-static  {v0}, LX/00T;->A05(I)Ljava/util/Set;
+    0016..0018  move-result-object  v2
+    0018..001a  const/4  v0, #0x2
+    001a..001e  new-array  v1, v0, [Ljava/util/Set;
+    001e..0020  const/4  v3, #0x0
+    0020..0024  aput-object  v4, v1, v3
+    0024..0026  const/4  v0, #0x1
+    0026..002a  aput-object  v2, v1, v0
+    002a..0030  invoke-static  {v1}, LX/0AJ;->A00([Ljava/util/Set;)LX/0AJ;
+    0030..0032  move-result-object  v2
+    0032..0034  const/4  v1, #0x0
+    0034..0038  new-instance  v0, LX/00y;
+    0038..003e  invoke-direct  {v0, v2, v1}, LX/00y;-><init>(Ljava/lang/Object;LX/00v;)V
+    003e..0044  invoke-direct  {v5, v0, v3}, LX/07o;-><init>(LX/00x;Z)V
+    0044..0046  const/4  v0, #0x3
+    0046..004a  iput  v0, v5, LX/0AI;->A04:I
+    004a..004e  new-instance  v0, Landroid/os/ConditionVariable;
+    004e..0054  invoke-direct  {v0, v3}, Landroid/os/ConditionVariable;-><init>(Z)V
+    0054..0058  iput-object  v0, v5, LX/0AI;->A00:Landroid/os/ConditionVariable;
+    0058..005a  const/4  v0, #0xff (-1)
+    005a..005e  iput  v0, v5, LX/0AI;->A02:I
+    005e..0062  const/16  v0, #0x6f
+    0062..0068  invoke-static  {v0}, LX/00D;->A00(I)LX/05h;
+    0068..006a  move-result-object  v0
+    006a..006e  iput-object  v0, v5, LX/0AI;->A01:LX/00x;
+    006e..0070  return-void
+    # exception table: 0 try range(s)
+.end method

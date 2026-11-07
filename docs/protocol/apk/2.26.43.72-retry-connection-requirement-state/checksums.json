@@ -1,0 +1,30 @@
+{
+  "README.md": {
+    "bytes": 4626,
+    "sha256": "1582fa2495b28ff38f582a14c316d87a81962a2a9534de25b88765ab25ede991"
+  },
+  "boolean-transition.txt": {
+    "bytes": 1070,
+    "sha256": "08062266bd912d52bbdc20ca2f9f81de40c965aa32db303f727eeaae48dd5473"
+  },
+  "disconnect-state.txt": {
+    "bytes": 8882,
+    "sha256": "becfc888cdc5e749a4932933016fa63a1755a3629f054b26ddd3eb58716ca60e"
+  },
+  "initial-state.txt": {
+    "bytes": 1660,
+    "sha256": "624272d3639cae54424e011c6726c2d270b9f6b18df1bf335998307929c4a754"
+  },
+  "state-four.txt": {
+    "bytes": 990,
+    "sha256": "319f26f083128532ba2fd102a6c0a17c6e86db81d9833dcd6346ac7666437ef1"
+  },
+  "state-two-callers.txt": {
+    "bytes": 140,
+    "sha256": "dac70cf8c5340f0b6a7a320df51efb972fee0b4bd15d1069e2c75209978b432f"
+  },
+  "state-writers.txt": {
+    "bytes": 397,
+    "sha256": "355f2a61f632d3e59294ce62c03d4d1ed5016ea56fb0f3eba867fe433a665501"
+  }
+}

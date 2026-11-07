@@ -6173,3 +6173,10 @@ evidence, not new APK behavior or proof of full group-send/network parity.
   budget100; ChatConnectionRequirement resolves to0AI.A04==2. Protocol count is
   separate. No automatic Rust retry or live operation. See
   [job failure policy](apk/2.26.43.72-retry-receipt-job-failure-policy/README.md).
+
+- Confirmed pinned connection-requirement invalidation: all five exact A04 write
+  sites classified as initial/disconnect3, connecting1, ready2 and separate state4.
+  Existing ready producer reused; new disconnect/other-state body binding shows
+  the retry job requirement is not latched true. Global ordering/provider/wake
+  semantics remain unknown. Research only. See
+  [state writer binding](apk/2.26.43.72-retry-connection-requirement-state/README.md).

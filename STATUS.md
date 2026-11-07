@@ -10671,3 +10671,8 @@ network/timing or ban-prevention guarantee is claimed. No live operations.
   attempt/requirement checks, persistent grouped budget100 and concrete required
   internal state2. State writers/queue scheduling/carried-key lifecycle remain
   unresolved. Research only; Rust uncertain-write no-replay policy unchanged.
+
+- Pinned retry connection requirement state writers now classify ready2 versus
+  initial/disconnect3, connecting1 and separate state4. Disconnect closes its
+  condition variable; global failure/state ordering and observer wake remain
+  unproven. Compact evidence retained; no runtime or live operation changed.

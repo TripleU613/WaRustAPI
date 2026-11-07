@@ -1,4 +1,11 @@
 {
+  "x-retry-connection-requirement-state-evidence": {
+    "x-cli": false,
+    "x-transport": false,
+    "x-live": false,
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-connection-requirement-state/README.md",
+    "behavior": "Pinned static connection requirement writer binding: only state2 qualifies; initial/disconnect3, connecting1 and state4 do not. No global atomic ordering or Rust retry capability claimed."
+  },
   "x-retry-receipt-job-failure-policy-evidence": {
     "x-cli": false,
     "x-transport": false,

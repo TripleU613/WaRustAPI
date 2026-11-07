@@ -536,3 +536,12 @@ persistent/grouped with default job budget100, distinct from incoming protocol
 retryCount. ChatConnectionRequirement's concrete predicate is0AI.A04==2; full
 state writers and scheduling remain open. [Exact binding and no-replay boundary](apk/2.26.43.72-retry-receipt-job-failure-policy/README.md).
 No runtime retry/defer behavior changed; no live account operation.
+
+## Connection requirement invalidation
+
+**Confirmed selected static:** all five direct writes of0AI.A04 now bind initial/
+server-disconnect state3, connecting state1, ready state2 and separate state4.
+Only2 satisfies ChatConnectionRequirement. Existing readiness work is reused;
+state clearing and the distant connecting-handler join are now classified.
+[Exact bodies and concurrent-ordering limits](apk/2.26.43.72-retry-connection-requirement-state/README.md).
+No Rust reconnect/replay behavior or live account operation changed.
