@@ -1,0 +1,31 @@
+Bounded helper 0xcc840..0xcc84c
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cc840:      	ldp	x9, x8, [x8]
+   cc844:      	cmp	x9, x8
+   cc848:      	ret
+Bounded helper 0xcbbec..0xcbbf8
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cbbec:      	adrp	x0, 0x19000
+   cbbf0:      	add	x0, x0, #0x452
+   cbbf4:      	ret
+Bounded helper 0xcb600..0xcb610
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   cb600:      	ldrb	w9, [x8, #0x98]
+   cb604:      	add	x8, x8, #0x20
+   cb608:      	cmp	w9, #0x0
+   cb60c:      	ret

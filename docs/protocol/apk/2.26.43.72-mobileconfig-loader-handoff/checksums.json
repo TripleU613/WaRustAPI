@@ -1,0 +1,38 @@
+{
+  "README.md": {
+    "bytes": 5438,
+    "sha256": "eca3ed9550975756d6162590d5121837ca83da1f1ccc6839a539f2d21dff9f32"
+  },
+  "configuration-constructor.txt": {
+    "bytes": 6230,
+    "sha256": "b86fc00056803f2bf0a8aef37de60f3364da21826d6bfff235ffb50b029014ca"
+  },
+  "enclosing-setup-discovery.txt": {
+    "bytes": 1436,
+    "sha256": "ed6d86160ac1967f5f152f06abb0b8dd1cc527be1ceb79483efd29ee2f7d3214"
+  },
+  "first-loader-handoff.txt": {
+    "bytes": 4613,
+    "sha256": "8191423a8867b174762c2fa6df264a196e3cd8ad9cfb2e7fc1ef73ef9fd0500f"
+  },
+  "handoff.json": {
+    "bytes": 1277,
+    "sha256": "048bc00c68fe86716296571d3caad1de40e62ac5eb267fb73b82dd236adb684d"
+  },
+  "inspect-handoff.py": {
+    "bytes": 1802,
+    "sha256": "6f37bc732e9da7de100e0f8a482b90c59bc0ecb502fb560c53b0cee0473eefe0"
+  },
+  "outlined-helpers.txt": {
+    "bytes": 936,
+    "sha256": "c8848827b314c909ab8ad3209a2d915dba6e05410070bae8d70c03857262ded5"
+  },
+  "rea-loader-handoff.json": {
+    "bytes": 9117,
+    "sha256": "cf34e664e6d8e58ec71c975456af068e1812acd49d19825dab67ec325e133c7d"
+  },
+  "second-loader-handoff.txt": {
+    "bytes": 8334,
+    "sha256": "cbb1f245451adc0feb71ededefc2712b4c29b22667055833af84caed71d84ac0"
+  }
+}

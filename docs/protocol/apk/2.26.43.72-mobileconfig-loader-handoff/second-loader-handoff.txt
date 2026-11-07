@@ -1,0 +1,206 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   5a3f0:      	ldr	x0, [sp, #0x268]
+   5a3f4:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   5a3f8:      	ldr	x8, [sp, #0x1e8]
+   5a3fc:      	cbz	x8, 0x5a5b4 <.text+0xe154>
+   5a400:      	ldrb	w8, [x8, #0x50]
+   5a404:      	cmp	w8, #0x1
+   5a408:      	b.ne	0x5a5b4 <.text+0xe154>
+   5a40c:      	bl	0xcc274 <JNI_OnLoad+0x5d0d4>
+   5a410:      	add	x0, sp, #0x260
+   5a414:      	add	x1, x19, #0x2b0
+   5a418:      	bl	0xcca30 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEC2ERKS5_@plt>
+   5a41c:      	ldrb	w8, [sp, #0x260]
+   5a420:      	ldr	x9, [sp, #0x268]
+   5a424:      	bl	0xca4a8 <JNI_OnLoad+0x5b308>
+   5a428:      	cbz	x8, 0x5a438 <.text+0xdfd8>
+   5a42c:      	ldr	x0, [sp, #0x1e8]
+   5a430:      	add	x1, sp, #0x260
+   5a434:      	bl	0xbb28c <JNI_OnLoad+0x4c0ec>
+   5a438:      	ldrb	w8, [x19, #0x308]
+   5a43c:      	ldr	x9, [x19, #0x310]
+   5a440:      	bl	0xca4a8 <JNI_OnLoad+0x5b308>
+   5a444:      	cbz	x8, 0x5a51c <.text+0xe0bc>
+   5a448:      	add	x0, x19, #0x308
+   5a44c:      	str	xzr, [sp, #0x238]
+   5a450:      	str	xzr, [sp, #0x230]
+   5a454:      	str	xzr, [sp, #0x240]
+   5a458:      	bl	0x5b8d8 <.text+0xf478>
+   5a45c:      	stp	x0, x1, [sp, #0x170]
+   5a460:      	add	x0, sp, #0x230
+   5a464:      	add	x2, sp, #0x170
+   5a468:      	mov	w1, #0x3a               // =58
+   5a46c:      	bl	0x5b908 <.text+0xf4a8>
+   5a470:      	ldr	x21, [sp, #0x230]
+   5a474:      	ldr	x25, [sp, #0x238]
+   5a478:      	cmp	x21, x25
+   5a47c:      	b.eq	0x5a514 <.text+0xe0b4>
+   5a480:      	ldr	x0, [sp, #0xc0]
+   5a484:      	bl	0x5b8d8 <.text+0xf478>
+   5a488:      	ldp	x8, x22, [sp, #0x1e8]
+   5a48c:      	mov	x20, x0
+   5a490:      	ldp	x24, x28, [x21]
+   5a494:      	mov	x23, x1
+   5a498:      	stp	x8, x22, [sp, #0x190]
+   5a49c:      	cbz	x22, 0x5a4ac <.text+0xe04c>
+   5a4a0:      	add	x1, x22, #0x8
+   5a4a4:      	mov	w0, #0x1                // =1
+   5a4a8:      	bl	0x4c570 <.text+0x110>
+   5a4ac:      	ldrb	w5, [x19, #0x2c9]
+   5a4b0:      	ldp	x8, x7, [sp, #0xa8]
+   5a4b4:      	add	x4, sp, #0x190
+   5a4b8:      	ldr	x6, [sp, #0xb8]
+   5a4bc:      	mov	x0, x20
+   5a4c0:      	mov	x1, x23
+   5a4c4:      	mov	x2, x24
+   5a4c8:      	mov	x3, x28
+   5a4cc:      	str	x8, [sp, #0x8]
+   5a4d0:      	ldr	w8, [sp, #0xa4]
+   5a4d4:      	strb	w8, [sp]
+   5a4d8:      	bl	0x5b914 <.text+0xf4b4>
+   5a4dc:      	mov	w20, w0
+   5a4e0:      	mov	x0, x22
+   5a4e4:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   5a4e8:      	cmp	w20, #0x1
+   5a4ec:      	b.lt	0x5a50c <.text+0xe0ac>
+   5a4f0:      	adrp	x8, 0x16000
+   5a4f4:      	add	x9, x8, #0xe69
+   5a4f8:      	mov	w8, #0x27               // =39
+   5a4fc:      	stp	x9, x8, [sp, #0x170]
+   5a500:      	add	x0, sp, #0x200
+   5a504:      	add	x1, sp, #0x170
+   5a508:      	bl	0x5c6e8 <.text+0x10288>
+   5a50c:      	add	x21, x21, #0x10
+   5a510:      	b	0x5a478 <.text+0xe018>
+   5a514:      	add	x0, sp, #0x230
+   5a518:      	bl	0x59c4c <.text+0xd7ec>
+   5a51c:      	ldr	x0, [sp, #0x1e8]
+   5a520:      	ldrb	w8, [x0, #0x50]
+   5a524:      	tbnz	w8, #0x0, 0x5a544 <.text+0xe0e4>
+   5a528:      	mov	w8, #0x23               // =35
+   5a52c:      	str	x26, [sp, #0x230]
+   5a530:      	str	x8, [sp, #0x238]
+   5a534:      	add	x0, sp, #0x200
+   5a538:      	add	x1, sp, #0x230
+   5a53c:      	bl	0x5c6e8 <.text+0x10288>
+   5a540:      	ldr	x0, [sp, #0x1e8]
+   5a544:      	bl	0xbfe18 <JNI_OnLoad+0x50c78>
+   5a548:      	ldr	x8, [sp, #0x1e8]
+   5a54c:      	ldr	x9, [x8, #0x28]
+   5a550:      	add	x8, x8, #0x8
+   5a554:      	ldrb	w10, [x9, #0x98]
+   5a558:      	add	x9, x9, #0x20
+   5a55c:      	cmp	w10, #0x0
+   5a560:      	csel	x1, x9, x8, ne
+   5a564:      	add	x0, sp, #0x1b0
+   5a568:      	bl	0xccbb0 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEaSERKS5_@plt>
+   5a56c:      	ldr	x1, [sp, #0x1e8]
+   5a570:      	add	x0, sp, #0x230
+   5a574:      	bl	0xbfc6c <JNI_OnLoad+0x50acc>
+   5a578:      	add	x0, sp, #0x1c8
+   5a57c:      	add	x1, sp, #0x230
+   5a580:      	bl	0x5b7d8 <.text+0xf378>
+   5a584:      	ldr	x0, [sp, #0x238]
+   5a588:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   5a58c:      	ldr	x1, [sp, #0x1e8]
+   5a590:      	add	x0, sp, #0x230
+   5a594:      	bl	0x5c900 <.text+0x104a0>
+   5a598:      	add	x0, sp, #0x1d8
+   5a59c:      	add	x1, sp, #0x230
+   5a5a0:      	bl	0x5b7d8 <.text+0xf378>
+   5a5a4:      	ldr	x0, [sp, #0x238]
+   5a5a8:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   5a5ac:      	add	x0, sp, #0x260
+   5a5b0:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   5a5b4:      	ldr	x8, [sp, #0x1c8]
+   5a5b8:      	cbz	x8, 0x5a5d8 <.text+0xe178>
+   5a5bc:      	bl	0xcc840 <JNI_OnLoad+0x5d6a0>
+   5a5c0:      	b.ne	0x5a600 <.text+0xe1a0>
+   5a5c4:      	bl	0xcbbec <JNI_OnLoad+0x5ca4c>
+   5a5c8:      	adrp	x1, 0x19000
+   5a5cc:      	add	x1, x1, #0xe42
+   5a5d0:      	bl	0x5cbd8 <.text+0x10778>
+   5a5d4:      	b	0x5a600 <.text+0xe1a0>
+   5a5d8:      	adrp	x20, 0x1a000
+   5a5dc:      	add	x20, x20, #0xa5f
+   5a5e0:      	bl	0xcbbec <JNI_OnLoad+0x5ca4c>
+   5a5e4:      	mov	x1, x20
+   5a5e8:      	bl	0x5cbd8 <.text+0x10778>
+   5a5ec:      	bl	0xcc4e8 <JNI_OnLoad+0x5d348>
+   5a5f0:      	mov	w0, #0x2                // =2
+   5a5f4:      	mov	x2, x20
+   5a5f8:      	mov	w3, #0x3e8              // =1000
+   5a5fc:      	bl	0xccc00 <_ZN8facebook3jni9softerror15reportSoftErrorENS_5xplat9softerror8SeverityEPKcS6_j@plt>
+   5a600:      	ldr	x0, [sp, #0x1f0]
+   5a604:      	bl	0x6f20c <JNI_OnLoad+0x6c>
+   5a608:      	ldr	x20, [sp, #0x210]
+   5a60c:      	add	x0, sp, #0x260
+   5a610:      	bl	0xcaf28 <JNI_OnLoad+0x5bd88>
+   5a614:      	bl	0xcda10 <memset@plt>
+   5a618:      	add	x0, sp, #0x260
+   5a61c:      	bl	0x518e8 <.text+0x5488>
+   5a620:      	ldp	x25, x21, [x29, #0x98]
+   5a624:      	adrp	x23, 0x1c000
+   5a628:      	add	x23, x23, #0x232
+   5a62c:      	ldr	x26, [x29, #0x90]
+   5a630:      	ldr	x22, [x29, #0x80]
+   5a634:      	ldrb	w8, [x29, #0x70]
+   5a638:      	mov	x24, x20
+   5a63c:      	str	w8, [sp, #0xa4]
+   5a640:      	cbz	x24, 0x5a670 <.text+0xe210>
+   5a644:      	cmp	x24, x20
+   5a648:      	b.eq	0x5a65c <.text+0xe1fc>
+   5a64c:      	add	x0, sp, #0x260
+   5a650:      	mov	x1, x23
+   5a654:      	mov	w2, #0x3                // =3
+   5a658:      	bl	0x5db9c <.text+0x1173c>
+   5a65c:      	ldp	x1, x2, [x24, #0x10]
+   5a660:      	add	x0, sp, #0x260
+   5a664:      	bl	0x5db9c <.text+0x1173c>
+   5a668:      	ldr	x24, [x24]
+   5a66c:      	cbnz	x24, 0x5a644 <.text+0xe1e4>
+   5a670:      	add	x8, sp, #0x260
+   5a674:      	add	x0, sp, #0x230
+   5a678:      	add	x1, x8, #0x8
+   5a67c:      	bl	0x51980 <.text+0x5520>
+   5a680:      	add	x0, sp, #0x260
+   5a684:      	bl	0x51a2c <.text+0x55cc>
+   5a688:      	add	x0, x19, #0x48
+   5a68c:      	add	x1, sp, #0x230
+   5a690:      	bl	0x5ce30 <.text+0x109d0>
+   5a694:      	add	x0, sp, #0x230
+   5a698:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   5a69c:      	mov	w0, #0x280              // =640
+   5a6a0:      	bl	0xccfa0 <__wrap__Znwm@plt>
+   5a6a4:      	ldrb	w20, [x19, #0x1e8]
+   5a6a8:      	mov	x23, x0
+   5a6ac:      	adrp	x8, 0xd6000
+   5a6b0:      	add	x8, x8, #0x490
+   5a6b4:      	bl	0xcb3c4 <JNI_OnLoad+0x5c224>
+   5a6b8:      	bl	0xcacdc <JNI_OnLoad+0x5bb3c>
+   5a6bc:      	add	x0, sp, #0x260
+   5a6c0:      	bl	0x4d9a0 <.text+0x1540>
+   5a6c4:      	add	x24, x23, #0x20
+   5a6c8:      	ldr	w3, [sp, #0xa0]
+   5a6cc:      	add	x1, sp, #0x1c8
+   5a6d0:      	add	x2, sp, #0x1b0
+   5a6d4:      	add	x5, sp, #0x260
+   5a6d8:      	mov	x0, x24
+   5a6dc:      	mov	w4, w20
+   5a6e0:      	mov	w6, #0x1                // =1
+   5a6e4:      	mov	w7, #-0x1               // =-1
+   5a6e8:      	bl	0xa9430 <JNI_OnLoad+0x3a290>
+   5a6ec:      	add	x0, sp, #0x260
+   5a6f0:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   5a6f4:      	mov	x0, xzr
+   5a6f8:      	bl	0x7667c <JNI_OnLoad+0x74dc>
+   5a6fc:      	ldrb	w8, [x19, #0x2a8]
+   5a700:      	ldrb	w9, [x23, #0x1b4]
+   5a704:      	ldr	x20, [sp, #0x98]
+   5a708:      	and	w8, w8, w9
+   5a70c:      	strb	w8, [x23, #0x228]

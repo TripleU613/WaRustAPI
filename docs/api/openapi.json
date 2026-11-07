@@ -1,4 +1,11 @@
 {
+  "x-mobileconfig-loader-handoff-evidence": {
+    "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-loader-handoff/inspect-handoff.py <pinned-library>; offline inspection only",
+    "x-transport": "research only; diagnostic and constructor handoff, not validated account/configuration adoption",
+    "x-live": false,
+    "description": "Confirmed selected static loader callers retain parse diagnostics while continuing to finalization/accessor handoff. The shared record pair reaches a configuration constructor that retains ownership at state+0/object+0x258 and seeds deferred bytes. Initial policy/cache bytes are canonical on this constructor path; outer admission, later writers, account ownership and persistence remain unresolved.",
+    "evidence": "docs/protocol/apk/2.26.43.72-mobileconfig-loader-handoff/README.md"
+  },
   "x-mobileconfig-record-finalization-evidence": {
     "x-cli": "python3 docs/protocol/apk/2.26.43.72-mobileconfig-record-finalization/inspect-finalizer.py <pinned-library>; offline static and synthetic merge projection",
     "x-transport": "research only; record-vector finalization, not observed request/configuration acceptance",

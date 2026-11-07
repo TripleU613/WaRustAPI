@@ -1,0 +1,37 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "selected_calls": {
+    "0x5a27c": "0x5c6e8",
+    "0x5a284": "0xbfe18",
+    "0x5a290": "0xbfc6c",
+    "0x5a53c": "0x5c6e8",
+    "0x5a544": "0xbfe18",
+    "0x5a574": "0xbfc6c",
+    "0x5a6e8": "0xa9430",
+    "0xa953c": "0x4c570"
+  },
+  "diagnostics": {
+    "0x181bc": "native_error__parse_main_params_map",
+    "0x16e69": "native_error__parse_package_params_maps",
+    "0x19e42": "Params List is empty, typically means we failed to parse params map file",
+    "0x1aa5f": "No valid schema hash and param list provided"
+  },
+  "record_flow": "loader finalizer -> shared accessor -> local pair -> constructor x1 -> state allocation first pair -> object+0x258",
+  "constructor_initial_state": {
+    "object_byte194": "argument w4 & 1",
+    "object_byte208": 1,
+    "object_byte209": 0,
+    "state_bytes40_through46": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "state_pointer_field": "object+0x258",
+    "record_pair_retained": "shared control count increment when nonnull"
+  },
+  "scope": "selected normal control flow; diagnostics do not independently establish rejection or configuration acceptance; outer admission and persistent state remain unresolved"
+}

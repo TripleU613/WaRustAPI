@@ -1,0 +1,39 @@
+
+../android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000004c460 <.text>:
+   59e20:      	str	q0, [x9, #0x28]!
+   59e24:      	mov	x8, x9
+   59e28:      	str	q0, [x8, #0x50]!
+   59e2c:      	add	x0, x9, #0xa0
+   59e30:      	str	x8, [sp, #0xb8]
+   59e34:      	mov	w8, #0x3f800000         // =1065353216
+   59e38:      	str	w8, [x9, #0x70]
+   59e3c:      	mov	x8, x9
+   59e40:      	str	q0, [x9, #0x60]
+   59e44:      	stp	q0, q0, [x9, #0x10]
+   59e48:      	stp	q0, q0, [x9, #0x30]
+   59e4c:      	str	q0, [x8, #0x78]!
+   59e50:      	stur	q0, [x9, #0x88]
+   59e54:      	str	x9, [sp, #0x78]
+   59e58:      	str	xzr, [x9, #0x98]
+   59e5c:      	stp	x0, x8, [sp, #0xa8]
+   59e60:      	bl	0x5b354 <.text+0xeef4>
+   59e64:      	add	x21, x19, #0x1e0
+   59e68:      	mov	x0, x21
+   59e6c:      	bl	0x5b3f0 <.text+0xef90>
+   59e70:      	cbz	x20, 0x59e94 <.text+0xda34>
+   59e74:      	add	x0, sp, #0x260
+   59e78:      	add	x1, x20, #0x8
+   59e7c:      	bl	0x5b108 <.text+0xeca8>
+   59e80:      	add	x1, sp, #0x260
+   59e84:      	mov	x0, x21
+   59e88:      	bl	0x5b600 <.text+0xf1a0>
+   59e8c:      	add	x0, sp, #0x260
+   59e90:      	bl	0x59b2c <.text+0xd6cc>
+   59e94:      	movi	v0.2d, #0000000000000000
+   59e98:      	str	x21, [sp, #0x88]
+   59e9c:      	mov	w8, #0x1                // =1
+   59ea0:      	ldr	x21, [x29, #0x88]

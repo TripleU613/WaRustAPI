@@ -91,3 +91,8 @@ selected function. Register-relative annotations are not runtime memory.
 exception paths, finalizer caller/flag producers, selected runtime file/decoder,
 account ownership, synchronization and response persistence/cache activation.
 No Rust runtime or saved account state changed.
+
+Follow-up: [loader caller and constructor handoff](../2.26.43.72-mobileconfig-loader-handoff/README.md)
+now binds two selected finalizer callers to shared records and configuration
+state initialization. Diagnostics do not cause an immediate return at those
+individual sites; full outer admission and error propagation remain unresolved.
