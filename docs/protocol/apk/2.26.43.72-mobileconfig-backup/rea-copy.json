@@ -1,0 +1,69 @@
+{
+  "evidence_id": "ev_302eaec470724c9f708dcd21495c2687a006c69eef362ffe50fb8caf0775d4a5",
+  "subject": {
+    "name": "libmobileconfig-jni.so",
+    "digest": {
+      "sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c"
+    },
+    "local_path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "format": "unknown",
+    "architecture": null
+  },
+  "provider": {
+    "id": "rizin",
+    "name": "Rizin",
+    "version": null
+  },
+  "analysis_profile": null,
+  "predicate_type": "rea.reverse-engineering.command-observation",
+  "operation": "execute_rizin_command",
+  "parameters": {
+    "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so",
+    "command": "e scr.color=0; pd 36 @ 0xc1fd4",
+    "provider_executable": "rizin",
+    "command_arguments": [
+      "-N",
+      "-q",
+      "-c",
+      "e scr.color=0; pd 36 @ 0xc1fd4",
+      "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    ]
+  },
+  "raw_result": {
+    "stdout": "        .-> 0x000c1fd4      mov   x0, x20\n        :   0x000c1fd8      bl    sym.imp.feof\n       ,==< 0x000c1fdc      cbnz  w0, 0xc200c\n       |:   0x000c1fe0      add   x0, sp, 0x38\n       |:   0x000c1fe4      mov   w1, 1\n       |:   0x000c1fe8      mov   w2, 0x1000\n       |:   0x000c1fec      mov   x3, x20\n       |:   0x000c1ff0      bl    sym.imp.fread\n       |:   0x000c1ff4      mov   x2, x0\n       |:   0x000c1ff8      add   x0, sp, 0x38\n       |:   0x000c1ffc      mov   w1, 1\n       |:   0x000c2000      mov   x3, x22\n       |:   0x000c2004      bl    sym.imp.fwrite\n       |`=< 0x000c2008      b     0xc1fd4\n       `--> 0x000c200c      mov   x0, x20\n            0x000c2010      bl    sym.imp.fclose\n            0x000c2014      mov   x0, x22\n            0x000c2018      bl    sym.imp.fclose\n            0x000c201c      mov   w0, 1\n        ,=< 0x000c2020      b     0xc20dc\n       ,==< 0x000c2024      cbz   x19, 0xc20d8\n       ||   0x000c2028      adrp  x1, 0x17000\n       ||   0x000c202c      add   x1, x1, 0x3cd\n       ||   0x000c2030      add   x0, sp, 0x38\n       ||   0x000c2034      bl    0x4d9a0\n       ||   0x000c2038      adrp  x1, 0x19000\n       ||   0x000c203c      add   x1, x1, 0xead\n       ||   0x000c2040      add   x0, sp, 0x20\n       ||   0x000c2044      bl    0x4d9a0\n       ||   0x000c2048      adrp  x0, 0x1c000\n       ||   0x000c204c      add   x0, x0, 0xaef\n       ||   0x000c2050      add   x8, sp, 8\n       ||   0x000c2054      mov   x1, x22\n       ||   0x000c2058      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____std::__ndk1.operator__char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____char_const___std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____const\n       ||   0x000c205c      bl    0xcb368\n       ||   0x000c2060      bl    0xcb918\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "normalized_result": {
+    "stdout": "        .-> 0x000c1fd4      mov   x0, x20\n        :   0x000c1fd8      bl    sym.imp.feof\n       ,==< 0x000c1fdc      cbnz  w0, 0xc200c\n       |:   0x000c1fe0      add   x0, sp, 0x38\n       |:   0x000c1fe4      mov   w1, 1\n       |:   0x000c1fe8      mov   w2, 0x1000\n       |:   0x000c1fec      mov   x3, x20\n       |:   0x000c1ff0      bl    sym.imp.fread\n       |:   0x000c1ff4      mov   x2, x0\n       |:   0x000c1ff8      add   x0, sp, 0x38\n       |:   0x000c1ffc      mov   w1, 1\n       |:   0x000c2000      mov   x3, x22\n       |:   0x000c2004      bl    sym.imp.fwrite\n       |`=< 0x000c2008      b     0xc1fd4\n       `--> 0x000c200c      mov   x0, x20\n            0x000c2010      bl    sym.imp.fclose\n            0x000c2014      mov   x0, x22\n            0x000c2018      bl    sym.imp.fclose\n            0x000c201c      mov   w0, 1\n        ,=< 0x000c2020      b     0xc20dc\n       ,==< 0x000c2024      cbz   x19, 0xc20d8\n       ||   0x000c2028      adrp  x1, 0x17000\n       ||   0x000c202c      add   x1, x1, 0x3cd\n       ||   0x000c2030      add   x0, sp, 0x38\n       ||   0x000c2034      bl    0x4d9a0\n       ||   0x000c2038      adrp  x1, 0x19000\n       ||   0x000c203c      add   x1, x1, 0xead\n       ||   0x000c2040      add   x0, sp, 0x20\n       ||   0x000c2044      bl    0x4d9a0\n       ||   0x000c2048      adrp  x0, 0x1c000\n       ||   0x000c204c      add   x0, x0, 0xaef\n       ||   0x000c2050      add   x8, sp, 8\n       ||   0x000c2054      mov   x1, x22\n       ||   0x000c2058      bl    method.std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____std::__ndk1.operator__char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____char_const___std::__ndk1::basic_string_char__std::__ndk1::char_traits_char___std::__ndk1::allocator_char____const\n       ||   0x000c205c      bl    0xcb368\n       ||   0x000c2060      bl    0xcb918\n",
+    "stderr": "ERROR: Cannot determine entrypoint, using 0x0004c460.\n",
+    "exit_code": 0,
+    "signal": null,
+    "output_truncated": false,
+    "completion_status": "complete",
+    "artifact_sha256_after": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+    "artifact_changed": false
+  },
+  "confidence": "observed",
+  "authority": "shipped-artifact",
+  "environment": null,
+  "limitations": [
+    "The executable version and supported formats are reported as unknown because no reliable version probe was performed.",
+    "A non-zero process exit is preserved as an observed command result.",
+    "Rizin commands and retained plugins may read files or access network resources outside the selected artifact; those external inputs are not bound to Evidence.",
+    "When both are available, pre-run and post-run digests detect artifact changes across the provider call but cannot prove the exact bytes consumed during the call."
+  ],
+  "relationship_coverage": null,
+  "locations": [
+    {
+      "kind": "artifact-path",
+      "path": "/home/tripleu/Documents/Codex/2026-11-04-hey/android-lab/output/metrics-native/reconstructed-reproduction/libmobileconfig-jni.so"
+    }
+  ],
+  "evidence_links": []
+}

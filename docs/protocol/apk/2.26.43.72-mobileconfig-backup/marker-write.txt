@@ -1,0 +1,39 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c1a9c:      	paciasp
+   c1aa0:      	stp	x29, x30, [sp, #-0x30]!
+   c1aa4:      	str	x21, [sp, #0x10]
+   c1aa8:      	stp	x20, x19, [sp, #0x20]
+   c1aac:      	mov	x29, sp
+   c1ab0:      	ldrb	w8, [x2]
+   c1ab4:      	ldr	x9, [x2, #0x10]
+   c1ab8:      	mov	x19, x1
+   c1abc:      	mov	x21, x0
+   c1ac0:      	adrp	x1, 0x1a000
+   c1ac4:      	add	x1, x1, #0xd5a
+   c1ac8:      	tst	w8, #0x1
+   c1acc:      	csinc	x0, x9, x2, ne
+   c1ad0:      	bl	0xcd810 <fopen@plt>
+   c1ad4:      	cbz	x0, 0xc1b10 <JNI_OnLoad+0x52970>
+   c1ad8:      	mov	x20, x0
+   c1adc:      	cbz	x19, 0xc1afc <JNI_OnLoad+0x5295c>
+   c1ae0:      	mov	x0, x21
+   c1ae4:      	mov	w1, #0x1                // =1
+   c1ae8:      	mov	x2, x19
+   c1aec:      	mov	x3, x20
+   c1af0:      	bl	0xcd870 <fwrite@plt>
+   c1af4:      	mov	x21, x0
+   c1af8:      	b	0xc1b00 <JNI_OnLoad+0x52960>
+   c1afc:      	mov	x21, xzr
+   c1b00:      	mov	x0, x20
+   c1b04:      	bl	0xcd820 <fclose@plt>
+   c1b08:      	cmp	x21, x19
+   c1b0c:      	cset	w0, eq
+   c1b10:      	bl	0xcab6c <JNI_OnLoad+0x5b9cc>
+   c1b14:      	ldp	x29, x30, [sp], #0x30
+   c1b18:      	autiasp
+   c1b1c:      	ret

@@ -1,0 +1,39 @@
+
+pinned libmobileconfig-jni.so:	file format elf64-littleaarch64
+
+Disassembly of section .text:
+
+000000000006f1a0 <JNI_OnLoad>:
+   c228c:      	paciasp
+   c2290:      	sub	sp, sp, #0x50
+   c2294:      	stp	x29, x30, [sp, #0x30]
+   c2298:      	stp	x20, x19, [sp, #0x40]
+   c229c:      	add	x29, sp, #0x30
+   c22a0:      	mrs	x20, TPIDR_EL0
+   c22a4:      	mov	x1, x0
+   c22a8:      	add	x0, sp, #0x8
+   c22ac:      	bl	0xcac48 <JNI_OnLoad+0x5baa8>
+   c22b0:      	bl	0xc227c <JNI_OnLoad+0x530dc>
+   c22b4:      	sub	x8, x29, #0x10
+   c22b8:      	add	x0, sp, #0x8
+   c22bc:      	mov	x1, xzr
+   c22c0:      	bl	0xcd890 <_ZNSt6__ndk14__fs10filesystem8__statusERKNS1_4pathEPNS_10error_codeE@plt>
+   c22c4:      	ldurb	w8, [x29, #-0x10]
+   c22c8:      	add	x0, sp, #0x8
+   c22cc:      	cmp	w8, #0x2
+   c22d0:      	cset	w19, eq
+   c22d4:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c22d8:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   c22dc:      	b.ne	0xc230c <JNI_OnLoad+0x5316c>
+   c22e0:      	bl	0xcbcf0 <JNI_OnLoad+0x5cb50>
+   c22e4:      	ldp	x29, x30, [sp, #0x30]
+   c22e8:      	add	sp, sp, #0x50
+   c22ec:      	autiasp
+   c22f0:      	ret
+   c22f4:      	bl	0xcaf40 <JNI_OnLoad+0x5bda0>
+   c22f8:      	bl	0xcca40 <_ZNSt6__ndk112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED2Ev@plt>
+   c22fc:      	bl	0xca2dc <JNI_OnLoad+0x5b13c>
+   c2300:      	b.ne	0xc230c <JNI_OnLoad+0x5316c>
+   c2304:      	mov	x0, x19
+   c2308:      	bl	0xccf70 <__wrap__Unwind_Resume@plt>
+   c230c:      	bl	0xcd9f0 <__stack_chk_fail@plt>

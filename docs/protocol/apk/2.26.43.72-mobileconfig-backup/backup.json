@@ -1,0 +1,50 @@
+{
+  "member_sha256": "5c50f623849463f4b71b662dbceabeef1a5f4dc36f56f0154c9048ef0d09255c",
+  "strings": {
+    "0x17fa0": "_backup",
+    "0x1b490": "DONE",
+    "0x17504": "CacheBackupError",
+    "0x1c603": "Failed to backup cache, result: ",
+    "0x173cd": "FileCopyError",
+    "0x19ead": "copyFile",
+    "0x1ad5d": "rb",
+    "0x1ad5a": "wb",
+    "0x1899d": "FBMobileConfigStorageManager::persistConfigsInternal",
+    "0x25876": ""
+  },
+  "selected_calls": {
+    "0x86818": "0x8b810",
+    "0x868ac": "0xc28ac",
+    "0x86e3c": "0x8b8bc",
+    "0x86edc": "0xc1f4c",
+    "0x86f0c": "0xc1f4c",
+    "0x86f3c": "0xc1f4c",
+    "0x86f80": "0x79dfc",
+    "0x79e20": "tail B 0xc1a9c",
+    "0xc1f94": "0xcd810",
+    "0xc1fb8": "0xcd810",
+    "0xc1ff0": "0xcd880",
+    "0xc2004": "0xcd870",
+    "0xc2010": "0xcd820",
+    "0xc2018": "0xcd820",
+    "0xc1af0": "0xcd870",
+    "0xc1b04": "0xcd820",
+    "0xc28f8": "0xcd8c0"
+  },
+  "backup_codes": {
+    "0": "marker helper true",
+    "1": "selected missing state/path/lookup prerequisites",
+    "2": "empty backup base",
+    "3": "selected cleanup failure",
+    "4": "directory helper false",
+    "5": "first copy false",
+    "6": "second copy false",
+    "7": "third copy false",
+    "8": "marker helper false"
+  },
+  "continuation": "all selected normal backup codes reach 0x8706c; codes >=2 log CacheBackupError first",
+  "copy": "rb source, wb destination; 4096-byte fread/fwrite loop until feof; write/close returns not checked",
+  "marker": "empty-string write helper to DONE path; no DONE body text",
+  "authority": "static calls and analyst-transcribed branch meanings, not executed copy or recovery tests",
+  "remaining": "actual source contents, prerequisite helpers, cleanup implementation, restore consumer, durability and activation"
+}
