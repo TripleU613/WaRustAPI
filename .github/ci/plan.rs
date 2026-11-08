@@ -44,6 +44,26 @@ const DOCS_INPUTS: &[(&str, &str)] = &[
         "whatsapp-api",
     ),
     ("docs/protocol/native-kem-nist-vectors.json", "whatsapp-api"),
+    (
+        "docs/protocol/apk/2.26.43.72-blocklist-outbound-hash/blank-units.json",
+        "whatsapp-api",
+    ),
+    (
+        "docs/protocol/apk/2.26.43.72-usync-outer-refusal/numeric-vectors.json",
+        "whatsapp-api",
+    ),
+    (
+        "docs/protocol/apk/2.26.43.72-contact-protocol-refusal/numeric-vectors.json",
+        "whatsapp-api",
+    ),
+    (
+        "docs/protocol/apk/2.26.43.72-about-error-codes/integer-oracle.json",
+        "whatsapp-api",
+    ),
+    (
+        "docs/protocol/apk/2.26.43.72-token-success-state/timestamp-vectors.json",
+        "whatsapp-api",
+    ),
     ("docs/protocol/signal-wire-vectors.json", "whatsapp-api"),
     ("docs/protocol/mex-long-parser-catch-fixture.json", "xtask"),
     ("docs/protocol/receipt-status-order-evidence.txt", "xtask"),
