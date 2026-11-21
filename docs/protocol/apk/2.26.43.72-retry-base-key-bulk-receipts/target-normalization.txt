@@ -1,0 +1,38 @@
+
+# class: LX/EZd;
+# extends: Ljava/lang/Object;
+
+.method public A00(LLLLIJ)  # .registers 14
+    # full signature: LX/EZd;->A00(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;LX/18U;IJ)LX/Em7;
+    0000..0002  move-object  v3, v10
+    0002..0004  move  v4, v11
+    0004..000a  invoke-static  {v10}, LX/8t1;->A0i(LX/18U;)LX/1dW;
+    000a..000c  move-result-object  v2
+    000c..0010  iget-object  v0, v7, LX/EZd;->A00:LX/05a;
+    0010..0016  invoke-static  {v0}, LX/05a;->A03(LX/05a;)Ljava/lang/Object;
+    0016..0018  move-result-object  v1
+    0018..001c  check-cast  v1, LX/0xW;
+    001c..0020  iget-object  v0, v2, LX/1dW;->A00:LX/0DY;
+    0020..0026  invoke-virtual  {v1, v0}, LX/0xW;->A08(LX/0DY;)Z
+    0026..0028  move-result  v0
+    0028..002c  if-nez  v0, +0x1a
+    002c..0030  const/16  v0, #0xd
+    0030..0034  if-eq  v11, v0, +0xa
+    0034..0038  const/16  v0, #0x8
+    0038..003c  if-ne  v11, v0, +0x12
+    003c..0040  iget-boolean  v0, v2, LX/1dW;->A02:Z
+    0040..0044  if-eqz  v0, +0xe
+    0044..0048  const-string  v0, "MessageStatusUpdateReceiptFactory/buildMessageStatusUpdateReceipt ignore when setting is off, status="
+    0048..004e  invoke-static  {v11, v0}, LX/1Xl;->A14(ILjava/lang/String;)Ljava/lang/StringBuilder;
+    004e..0050  move-result-object  v1
+    0050..0054  const-string  v0, " key="
+    0054..005a  invoke-static  {v2, v0, v1}, LX/2LA;->A1J(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/StringBuilder;)V
+    005a..005c  const/4  v4, #0x5
+    005c..0060  new-instance  v0, LX/Em7;
+    0060..0062  move-object  v1, v8
+    0062..0064  move-object  v2, v9
+    0064..0066  move-wide  v5, v12
+    0066..006c  invoke-direct/range  {v0..v6}, LX/Em7;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;LX/18U;IJ)V
+    006c..006e  return-object  v0
+    # exception table: 0 try range(s)
+.end method

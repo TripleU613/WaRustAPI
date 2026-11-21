@@ -1,4 +1,12 @@
 {
+  "x-pinned-receipt-bulk-base-key-cleanup": {
+    "x-cli": true,
+    "x-transport": false,
+    "x-live": false,
+    "x-library": [],
+    "description": "Existing xtask reproduces pinned receipt-driven bulk base-key deletion producer, numeric received-target predicate, settings normalization and outgoing/self ownership with full recipient-device/message-key grouping. Separate pending-prekey confirmation requires retained-key equality before clearing and storage. Async completion, full lifecycle/flags/TTL and Rust persistence integration remain unproved or unported. Research only; higher retry counts unchanged.",
+    "evidence": "docs/protocol/apk/2.26.43.72-retry-base-key-bulk-receipts/README.md"
+  },
   "x-pinned-retry-base-key-delete-producers": {
     "x-cli": true,
     "x-transport": false,

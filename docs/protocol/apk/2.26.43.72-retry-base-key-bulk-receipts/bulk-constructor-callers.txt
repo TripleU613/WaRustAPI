@@ -1,0 +1,38 @@
+classes.dex  LX/15v;->A09(VLI)
+  invoke dex byte offset: 0x8061bc
+classes.dex  LX/184;->BLn(ZLI)
+  invoke dex byte offset: 0x829316
+classes.dex  LX/186;->BLn(ZLI)
+  invoke dex byte offset: 0x8299a8
+classes.dex  LX/188;->BLn(ZLI)
+  invoke dex byte offset: 0x829d14
+classes13.dex  LX/SoZ;->A0V(VL)
+  invoke dex byte offset: 0x56e29c
+classes7.dex  Lcom/whatsapp/chatinfo/view/custom/SharePhoneNumberBottomSheet;->onClick(VL)
+  invoke dex byte offset: 0x2e1ebe
+classes8.dex  LX/Dvb;->A0i(LL)
+  invoke dex byte offset: 0x5001cc
+classes8.dex  LX/E4L;->A02(VL)
+  invoke dex byte offset: 0x53a1fc
+classes8.dex  LX/Eck;->A00(V)
+  invoke dex byte offset: 0x58847c
+classes8.dex  LX/Ed7;->A00(LLLLLZ)
+  invoke dex byte offset: 0x58b3ea
+classes8.dex  LX/EvA;->A00(LLLLLZ)
+  invoke dex byte offset: 0x5fbf8a
+classes8.dex  LX/ExH;->A06(VLL)
+  invoke dex byte offset: 0x611b1a
+classes8.dex  LX/F1F;->A04(VL)
+  invoke dex byte offset: 0x6560aa
+classes8.dex  LX/F21;->A00(LL)
+  invoke dex byte offset: 0x6692de
+classes8.dex  LX/F2q;->A04(VLLL)
+  invoke dex byte offset: 0x68afb4
+classes8.dex  LX/FT0;->ADH(LLL)
+  invoke dex byte offset: 0x7a120e
+classes8.dex  LX/FTN;->A01(LL)
+  invoke dex byte offset: 0x7a61de
+classes8.dex  LX/FcL;->run(V)
+  invoke dex byte offset: 0x7f7e08
+classes8.dex  LX/FmU;->invokeSuspend(LL)
+  invoke dex byte offset: 0x8b5270

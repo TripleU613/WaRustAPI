@@ -27,3 +27,5 @@ The [factory inventory](factory-callers.txt) has39 invoke sites across36 distinc
 Ordinary chat base-key cleanup, bulk-map producer/trigger, periodic TTL, all status branches, complete alias migration and crash behavior remain open. No Rust base-key persistence, higher retry counts, wire fields, replay or live operation changed. Counts above two remain refused.
 
 Reproduce with `python3 docs/protocol/apk/2.26.43.72-retry-base-key-delete-triggers/reproduce.py ../android-lab/apks/WhatsApp.1.apk`. The APK and complete-source identities are checked before matching exports/excerpts. checksums.json covers all bundle files except itself.
+
+The ordinary receipt-driven bulk producer and its separate pending-prekey confirmation are now traced in [the bulk-receipt follow-up](../2.26.43.72-retry-base-key-bulk-receipts/README.md). Global TTL and complete Rust lifecycle integration remain open.

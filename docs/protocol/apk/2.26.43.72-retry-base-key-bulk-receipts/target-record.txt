@@ -1,0 +1,17 @@
+
+# class: LX/Em7;
+# extends: Ljava/lang/Object;
+
+.method public <init>(VLLLIJ)  # .registers 8
+    # full signature: LX/Em7;-><init>(Lcom/whatsapp/infra/core/jid/DeviceJid;Lcom/whatsapp/infra/core/jid/UserJid;LX/18U;IJ)V
+    0000..0002  const/4  v0, #0x1
+    0002..0008  invoke-static  {v2, v0}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000e  invoke-direct  {v1}, Ljava/lang/Object;-><init>()V
+    000e..0012  iput-object  v4, v1, LX/Em7;->A04:LX/18U;
+    0012..0016  iput-object  v2, v1, LX/Em7;->A02:Lcom/whatsapp/infra/core/jid/DeviceJid;
+    0016..001a  iput  v5, v1, LX/Em7;->A00:I
+    001a..001e  iput-wide  v6, v1, LX/Em7;->A01:J
+    001e..0022  iput-object  v3, v1, LX/Em7;->A03:Lcom/whatsapp/infra/core/jid/UserJid;
+    0022..0024  return-void
+    # exception table: 0 try range(s)
+.end method

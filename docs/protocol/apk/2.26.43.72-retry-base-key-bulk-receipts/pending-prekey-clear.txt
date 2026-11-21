@@ -1,0 +1,21 @@
+
+# class: LX/F1Y;
+# extends: Ljava/lang/Object;
+
+.method public A06(V)  # .registers 4
+    # full signature: LX/F1Y;->A06()V
+    0000..0004  iget-object  v0, v3, LX/F1Y;->A00:LX/Dha;
+    0004..000a  invoke-static  {v0}, LX/DBd;->A0Q(Lcom/google/protobuf/GeneratedMessageLite;)Lcom/google/protobuf/GeneratedMessageLite$Builder;
+    000a..000c  move-result-object  v2
+    000c..0010  iget-object  v1, v2, Lcom/google/protobuf/GeneratedMessageLite$Builder;->instance:Lcom/google/protobuf/GeneratedMessageLite;
+    0010..0014  check-cast  v1, LX/Dha;
+    0014..0018  sget  v0, LX/Dha;->ALICEBASEKEY_FIELD_NUMBER:I
+    0018..001a  const/4  v0, #0x0
+    001a..001e  iput-object  v0, v1, LX/Dha;->pendingPreKey_:LX/Ddn;
+    001e..0022  iget  v0, v1, LX/Dha;->bitField0_:I
+    0022..0026  and-int/lit8  v0, v0, #0xbf (-65)
+    0026..002a  iput  v0, v1, LX/Dha;->bitField0_:I
+    002a..0030  invoke-static  {v2, v3}, LX/F1Y;->A01(Lcom/google/protobuf/GeneratedMessageLite$Builder;LX/F1Y;)V
+    0030..0032  return-void
+    # exception table: 0 try range(s)
+.end method

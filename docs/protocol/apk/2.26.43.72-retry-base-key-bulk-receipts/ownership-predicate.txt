@@ -1,0 +1,27 @@
+
+# class: LX/1dX;
+# extends: Ljava/lang/Object;
+
+.method public A0H(ZLL)  # .registers 6
+    # full signature: LX/1dX;->A0H(LX/09F;LX/18U;)Z
+    0000..0002  const/4  v3, #0x0
+    0002..0008  invoke-static  {v4, v3}, LX/00l;->A09(Ljava/lang/Object;I)V
+    0008..000a  const/4  v2, #0x1
+    000a..000e  iget-object  v0, v5, LX/18U;->A0j:LX/1dW;
+    000e..0012  iget-boolean  v0, v0, LX/1dW;->A02:Z
+    0012..0016  if-nez  v0, +0x18
+    0016..001a  iget  v1, v5, LX/18U;->A0i:I
+    001a..001e  const/16  v0, #0x40
+    001e..0022  if-ne  v1, v0, +0x12
+    0022..0024  move-object  v0, v5
+    0024..0028  check-cast  v0, LX/Dwf;
+    0028..002c  iget-object  v0, v0, LX/Dwf;->A00:Lcom/whatsapp/infra/core/jid/UserJid;
+    002c..0032  invoke-interface  {v4, v0}, LX/09F;->BVC(LX/0DY;)Z
+    0032..0034  move-result  v0
+    0034..0038  if-eqz  v0, +0x7
+    0038..003c  iget-boolean  v0, v5, LX/18U;->A0z:Z
+    003c..0040  if-nez  v0, +0x3
+    0040..0042  return  v2
+    0042..0044  return  v3
+    # exception table: 0 try range(s)
+.end method

@@ -1,0 +1,58 @@
+{
+  "README.md": {
+    "bytes": 5608,
+    "sha256": "4ad6a0eb2a991473f9227840be17464ffdfeb6bb51d206cd75dc11ee3005bc42"
+  },
+  "bulk-constructor-callers.txt": {
+    "bytes": 1335,
+    "sha256": "ee1cdd2e8b3dc422a1fb2a3b9071e285568360f1e829c89616c66a943e5a2477"
+  },
+  "bulk-map-producer.txt": {
+    "bytes": 16520,
+    "sha256": "be16e96c0e4105f1c7f3458e41e7fd3169496d45e87a996d4b183b904447fd2c"
+  },
+  "bulk-runnable-constructor.txt": {
+    "bytes": 498,
+    "sha256": "3634e5b43fbb9c651d3f03cd25da8f323b2dbbe45048237731df4818e646e479"
+  },
+  "coordinator-construction-probe.json": {
+    "bytes": 149,
+    "sha256": "9de6cf9e9247a08be76508142d7fd980a53ce78eb6b9c1ebf811fb9b937ed7ba"
+  },
+  "map-producer-callers.txt": {
+    "bytes": 276,
+    "sha256": "ec1382a7c2367749b7c97588bccf77b0ee7b5877c9981e6203ce074ddc496890"
+  },
+  "ownership-predicate.txt": {
+    "bytes": 1034,
+    "sha256": "01ca61519ddf65740d201bf5864ec1bf89a51fd115293b4ccce21c950a68a399"
+  },
+  "pending-prekey-clear.txt": {
+    "bytes": 1059,
+    "sha256": "03becadca2ae0d75dc9920b7e61989f854ed45291e19148d653069321bba67bc"
+  },
+  "pending-prekey-confirmation.txt": {
+    "bytes": 8882,
+    "sha256": "8c8d943201752ab6e7d862b5d67ffd5971ea8d3d614510e3ba7551fb0e89ed4d"
+  },
+  "receipt-dispatch-callers.txt": {
+    "bytes": 131,
+    "sha256": "e90d47ddbfd69f748bce15dfb61e6b86c4bd8fdd019107e6552f415765e20106"
+  },
+  "received-target-predicate.txt": {
+    "bytes": 701,
+    "sha256": "67fe176850cfe40a47cb70bb2f809623ec4890e73d99b47fdda6e8cb53d50008"
+  },
+  "reproduce.py": {
+    "bytes": 3455,
+    "sha256": "996a2f2dbee63c06b9a6e407e14f59f7d69d3191fe494d60419f4a3b287d4fd8"
+  },
+  "target-normalization.txt": {
+    "bytes": 1889,
+    "sha256": "a8f2ce2230e59c3e6eb8d9572cae531dd5ff4ecb18c40e85c7981ca0524dcc4a"
+  },
+  "target-record.txt": {
+    "bytes": 807,
+    "sha256": "c2653c1ca3677e5da30236d8656b0adcce6551c01901343bdce01953090f8bc9"
+  }
+}
