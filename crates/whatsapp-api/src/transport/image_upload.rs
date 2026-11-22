@@ -385,34 +385,12 @@ pub(super) fn approved_host(host: &str) -> bool {
 }
 
 fn route(store: &ProtocolStore) -> Result<(String, Zeroizing<String>)> {
-    let latest = select_route_record(super::media_routing::refresh::active_record(store)?, || {
-        store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))
-    })?;
+    let latest = super::media_routing::refresh::active_record(store)?.ok_or_else(missing_route)?;
     route_from_record(&latest)
 }
 
-fn select_route_record(
-    active: Option<serde_json::Value>,
-    scan: impl FnOnce() -> Result<Vec<(Vec<u8>, Vec<u8>)>>,
-) -> Result<serde_json::Value> {
-    if let Some(saved) = active {
-        return Ok(saved);
-    }
-    let records = scan()?;
-    if records.len() == 10000 {
-        return Err(invalid("checkpoint scan limit reached"));
-    }
-    records
-        .into_iter()
-        .filter(|(key, _)| key.starts_with(b"media-route:"))
-        .map(|(_, value)| {
-            serde_json::from_slice::<serde_json::Value>(&value)
-                .map_err(|_| invalid("invalid saved route"))
-        })
-        .collect::<Result<Vec<_>>>()?
-        .into_iter()
-        .max_by_key(|value| value["at"].as_i64().unwrap_or(0))
-        .ok_or_else(|| invalid("no saved media route; run --login --media-route first"))
+fn missing_route() -> Error {
+    invalid("no saved media route; run --login --media-route first")
 }
 
 fn route_from_record(latest: &serde_json::Value) -> Result<(String, Zeroizing<String>)> {
@@ -958,9 +936,7 @@ fn reserve_upload(
             serde_json::to_value(&owner).map_err(|_| invalid("cannot encode upload owner"))?;
         saved["upload_owner_version"] = 1.into();
         let latest =
-            select_route_record(super::media_routing::refresh::active_record_in(tx)?, || {
-                tx.scan(Table::Checkpoints, 1, 10000)
-            })?;
+            super::media_routing::refresh::active_record_in(tx)?.ok_or_else(missing_route)?;
         let (current_host, current_auth) = route_from_record(&latest)?;
         if current_host != host || current_auth.as_str() != auth {
             return Err(invalid("media route changed before upload reservation"));
@@ -2262,6 +2238,140 @@ mod tests {
                 before
             );
         }
+    }
+
+    #[test]
+    fn large_history_preserves_legacy_upload_and_refresh_ownership_across_restart() {
+        use super::*;
+        use crate::{
+            binary::{Encoder, Node},
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+            transport::media_routing::refresh,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: dir.path().join("route-history.redb"),
+                create,
+                account_id: AccountId::new("fixture").unwrap(),
+                key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([7; 32]))),
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        let account = AccountRecord {
+            phone: Some(config.phone),
+            registration: RegistrationStatus::Registered,
+            generation: store.generation(),
+            ..Default::default()
+        };
+        let reply = |id: &str, host: &str| {
+            Node::new("iq")
+                .attr("type", "result")
+                .attr("id", id)
+                .children(vec![
+                    Node::new("media_conn")
+                        .attr("id", id)
+                        .attr("ttl", "1800")
+                        .attr("auth_ttl", "1800")
+                        .attr("auth", "fixture-auth")
+                        .children(vec![Node::new("host").attr("hostname", host)]),
+                ])
+        };
+        let now = Timestamp::now().0;
+        store
+            .write(|tx| {
+                account.save(tx)?;
+                for i in 0..10_000 {
+                    let history_key = format!("history:{i:05}");
+                    tx.put(Table::Checkpoints, history_key.as_bytes(), 1, b"fixture")?;
+                }
+                for (id, host) in [("a", "old.whatsapp.net"), ("z", "media.whatsapp.net")] {
+                    let wire = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+                        .encode(&reply(id, host))?;
+                    let route = serde_json::json!({
+                        "status": "result",
+                        "at": now,
+                        "requested_at": now,
+                        "wire": wire
+                    });
+                    let route_key = format!("media-route:{id}");
+                    tx.put_json(Table::Checkpoints, route_key.as_bytes(), 1, &route)?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        drop(store);
+        let store = open(false);
+        let (host, auth) = route(&store).unwrap();
+        assert_eq!(host, "media.whatsapp.net"); // Equal receipt times: last key wins.
+        reserve_upload(
+            &store,
+            &account,
+            "message:fixture:upload",
+            &host,
+            &auth,
+            |seed| {
+                Ok((
+                    upload_url(&host, &auth, seed, &[3; 32])?,
+                    serde_json::json!({"status":"outcome_unknown"}),
+                ))
+            },
+        )
+        .unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"media-route:zz",
+                    1,
+                    &serde_json::json!({"status":"outcome_unknown","at":now}),
+                )
+            })
+            .unwrap();
+        assert!(route(&store).is_err()); // A later uncertain legacy route wins the same tie.
+        refresh::prepare(&store, "first").unwrap();
+        assert!(route(&store).is_err()); // Pending coordinator owns the route.
+        store
+            .write(|tx| refresh::settle_in(tx, "first", &reply("first", "current.whatsapp.net")))
+            .unwrap();
+        drop(store);
+        let store = open(false);
+        assert_eq!(route(&store).unwrap().0, "current.whatsapp.net");
+        refresh::prepare(&store, "wait").unwrap();
+        let wait = Node::new("iq")
+            .attr("id", "wait")
+            .attr("type", "error")
+            .children(vec![
+                Node::new("error")
+                    .attr("code", "507")
+                    .attr("backoff", "3600"),
+            ]);
+        store
+            .write(|tx| refresh::settle_in(tx, "wait", &wait))
+            .unwrap();
+        let deadline = refresh::throttle_until(&store).unwrap().unwrap();
+        drop(store);
+        let store = open(false);
+        assert!(refresh::prepare(&store, "blocked").is_err());
+        assert_eq!(
+            refresh::recover_throttle(&store).unwrap().preserved_until,
+            Some(deadline)
+        );
+        assert!(
+            store
+                .read(|tx| tx.get(Table::Checkpoints, b"media-route:blocked", 1))
+                .unwrap()
+                .is_none()
+        );
+        store
+            .write(|tx| tx.delete(Table::Checkpoints, b"media-routing-owner:v1"))
+            .unwrap();
+        assert!(route(&store).is_err()); // Never fall back to the older legacy rows.
     }
 
     #[test]

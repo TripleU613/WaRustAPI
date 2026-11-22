@@ -278,8 +278,9 @@ checkpoint is not proof that such unbound history has been reconciled.
 The safe RecoveryReport exposes sequenced/unsequenced/unbound counts, the active
 unsequenced bound and preserved deadline. It contains no raw identifiers, hosts,
 auth or server text. Incomplete/duplicate sequences, invalid source metadata,
-authentication failures and the local 10000-route-history bound refuse before
-partial repair. Four encrypted-store tests cover lost-wait/reopen restoration,
+and authentication failures refuse before partial repair. The original local
+10,000-record cap was removed by the large-history correction below. Four
+encrypted-store tests cover lost-wait/reopen restoration,
 clock/ID ordering, preservation of ambiguous saved deadlines, unsequenced expiry
 without restamping, and corrupt/incomplete history. No live traffic occurred.
 
@@ -535,11 +536,10 @@ The Rust conn selector additionally rejects duplicate children as a local
 admission policy. Stale-prior, outer result/error/ID admission and orphaned-owner
 checks remain separate existing tests; this new test does not stand in for them.
 
-**Bounded negative findings / limits:** has_context_rows refuses a 10,000-row
-checkpoint scan rather than silently treating truncated history as absent.
-Throttle recovery pages checkpoints but separately caps media records at 10,000.
-Those local resource limits can refuse large histories; they were not removed
-or claimed as native limits. Full upload/download HTTP interoperability, every
+**Historical limits.** This audit found separate 10,000-record limits in the
+checkpoint scan and in throttle recovery. Both were subsequently removed.
+[Large-store regression and current behavior](#media-route-selection-and-wait-recovery-in-large-stores).
+Full upload/download HTTP interoperability, every
 host choice, native lifecycle parity and live acceptance remain outside this
 coordinator audit. No new refresh, retry, wait reset or live account operation.
 
@@ -2078,3 +2078,42 @@ closes the concrete returned-code bridge for selected methods, not complete
 media acceptance or worker retry policy. Rust200/no-replay settings unchanged.
 [Reused backend methods, new opening chain and reproduction](apk/2.26.43.72-upload-backend-response/README.md).
 No runtime change or live operation.
+
+## Media route selection and wait recovery in large stores
+
+**Confirmed in Rust, offline.** Two regressions reproduced different failures.
+A valid legacy route became unusable after 10,000 unrelated checkpoints.
+Separately, recovery rejected a complete history of 10,001 actual route
+receipts. The first failure blocked attachment upload reservation and the
+second blocked preparation of a media route refresh.
+
+Route lookup now reads only authenticated `media-route:` records when a
+history scan is needed. The coordinator owner, current pointer and legacy
+fallback are checked in the same read snapshot or upload write transaction.
+The latest legacy timestamp wins, with the last key winning ties. A latest
+refusal or uncertain result still blocks upload. An owner with a pending first
+refresh, or a missing owner with coordinator history, prevents legacy fallback.
+
+Recovery reads one route record at a time. It records which receipt numbers
+were seen using 64-bit blocks allocated as needed. Before restoring a wait,
+it checks that each receipt is unique, in the range from one through the
+saved counter, and that the number of distinct receipts equals the counter.
+The latest sequenced directive determines the recovered deadline. A saved
+deadline can only be extended by recovery. An unsequenced active wait still
+blocks preparation until its original deadline. Time spent verifying history
+grows with the number of route records.
+
+**Test evidence.** After a store restart with 10,000 unrelated checkpoints,
+an attachment reserved a legacy route. The coordinator then adopted a new
+route, retained a synthetic 507 wait across another restart and refused the
+next refresh. A second test used 10,001 authenticated receipt records in
+reverse sequence order. Recovery restored the newest wait. Removing a middle
+receipt prevented restoration and left the store without a partially rebuilt
+deadline.
+
+**Confirmed static in APK 2.26.43.72.** `1xY.CK4` processes successful
+media routing replies and `1xY.Bvj` handles the selected 507 wait and 503
+reset branches. The durable sequence numbers and history lookup are Rust
+storage behavior. Both regressions ran offline. Fresh DEX exports matched the retained
+[`CK4` callback](rea/2.26.43.72-media-route-lifetimes/callback-checked.txt) and
+[`Bvj` wait arithmetic](rea/2.26.43.72-media-retry-scheduling/error-callback-arithmetic.txt).

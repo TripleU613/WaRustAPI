@@ -113,88 +113,73 @@ fn recover_in(tx: &mut WriteTx<'_>, now: Timestamp) -> Result<RecoveryReport> {
     if counter == Some(0) {
         return Err(invalid("invalid media receipt counter"));
     }
-    let mut ordered = BTreeMap::new();
-    let mut cursor = None;
+    let expected = counter.unwrap_or(0);
+    let mut seen_blocks = BTreeMap::<u64, u64>::new();
+    let mut sequenced: usize = 0;
+    let mut latest_directive: Option<(u64, Option<Timestamp>)> = None;
     let mut unsequenced = 0;
     let mut unbound = 0;
     let mut unbound_active = None;
     let mut active = None;
-    let mut examined = 0;
-    loop {
-        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-        let done = rows.len() < 256;
-        cursor = rows.last().map(|(key, _)| key.clone());
-        for (row_key, bytes) in rows {
-            if !row_key.starts_with(b"media-route:") {
-                continue;
+    tx.fold_checkpoints(ROUTE_PREFIX, (), |(), row_key, bytes| {
+        let value = parse_route(bytes)?;
+        if value.get("context_version").is_none() {
+            unbound += 1;
+            if let Some(until) = legacy_wait(row_key, &value, now)? {
+                unbound_active =
+                    Some(unbound_active.map_or(until, |old: Timestamp| old.max(until)));
             }
-            examined += 1;
-            if examined > 10000 {
-                return Err(invalid("media recovery history exceeds local bound"));
+            return Ok(());
+        }
+        let record: Record = serde_json::from_value(value).map_err(|_| invalid_route_data())?;
+        validate(&record)?;
+        if record.generation != tx.generation() || row_key != key(&record.action_id).as_bytes() {
+            return Err(invalid("historical media context mismatch"));
+        }
+        if record.status == "outcome_unknown" {
+            return Ok(());
+        }
+        let directive = receipt_directive(&record)?;
+        if let Some(sequence) = record.settlement_sequence {
+            // validate() excludes sequence zero. Allocate bits only for observed
+            // blocks, so an erroneous large counter cannot size an allocation.
+            if sequence > expected {
+                return Err(invalid("media receipt history and counter disagree"));
             }
-            let value: serde_json::Value = serde_json::from_slice(&bytes).map_err(|_| {
-                crate::Error::Storage(crate::store::StoreError::Serialization(
-                    "invalid stored media refresh data".into(),
-                ))
-            })?;
-            if value.get("context_version").is_none() {
-                unbound += 1;
-                if let Some(until) = legacy_wait(&row_key, &value, now)? {
-                    unbound_active =
-                        Some(unbound_active.map_or(until, |old: Timestamp| old.max(until)));
+            let index = sequence - 1;
+            let block = seen_blocks.entry(index / 64).or_default();
+            let bit = 1u64 << (index % 64);
+            if *block & bit != 0 {
+                return Err(invalid("duplicate media receipt sequence"));
+            }
+            *block |= bit;
+            sequenced += 1;
+            if let Some(directive) = directive {
+                let until = match directive {
+                    ThrottleDirective::Wait(seconds) => Some(deadline(record.at, seconds)?),
+                    ThrottleDirective::Clear => None,
+                };
+                if latest_directive.is_none_or(|(last, _)| sequence > last) {
+                    latest_directive = Some((sequence, until));
                 }
-                continue;
             }
-            let record: Record = serde_json::from_value(value).map_err(|_| {
-                crate::Error::Storage(crate::store::StoreError::Serialization(
-                    "invalid stored media refresh data".into(),
-                ))
-            })?;
-            validate(&record)?;
-            if record.generation != tx.generation() || row_key != key(&record.action_id).as_bytes()
-            {
-                return Err(invalid("historical media context mismatch"));
-            }
-            if record.status == "outcome_unknown" {
-                continue;
-            }
-            let directive = receipt_directive(&record)?;
-            if let Some(sequence) = record.settlement_sequence {
-                if ordered.insert(sequence, (directive, record.at)).is_some() {
-                    return Err(invalid("duplicate media receipt sequence"));
-                }
-            } else {
-                unsequenced += 1;
-                if let Some(ThrottleDirective::Wait(seconds)) = directive {
-                    let until = deadline(record.at, seconds)?;
-                    if now <= until {
-                        active = Some(active.map_or(until, |old: Timestamp| old.max(until)));
-                    }
+        } else {
+            unsequenced += 1;
+            if let Some(ThrottleDirective::Wait(seconds)) = directive {
+                let until = deadline(record.at, seconds)?;
+                if now <= until {
+                    active = Some(active.map_or(until, |old: Timestamp| old.max(until)));
                 }
             }
         }
-        if done {
-            break;
-        }
+        Ok(())
+    })?;
+    // Exactly N distinct receipts in 1..=N proves full coverage. A missing
+    // receipt could hold a later wait or clear, so publish nothing on a gap.
+    if u64::try_from(sequenced) != Ok(expected) {
+        return Err(invalid("media receipt history is incomplete"));
     }
-    // A missing middle receipt may contain a wait or reset. Never replay a
-    // partial history or use timestamps to fill its order.
-    let mut last: u64 = 0;
-    let mut replayed = None;
-    for (sequence, (directive, at)) in &ordered {
-        if last.checked_add(1) != Some(*sequence) {
-            return Err(invalid("media receipt history is incomplete"));
-        }
-        last = *sequence;
-        match directive {
-            Some(ThrottleDirective::Clear) => replayed = None,
-            Some(ThrottleDirective::Wait(seconds)) => replayed = Some(deadline(*at, *seconds)?),
-            None => {}
-        }
-    }
-    if counter.unwrap_or(0) != last {
-        return Err(invalid("media receipt history and counter disagree"));
-    }
+    let replayed = latest_directive.and_then(|(_, until)| until);
     // A standalone saved deadline can predate sequencing. Recovery is not
     // authority to erase/shorten it; only a fresh validated live transition is.
     let preserved = existing.into_iter().chain(replayed).max();
@@ -204,7 +189,7 @@ fn recover_in(tx: &mut WriteTx<'_>, now: Timestamp) -> Result<RecoveryReport> {
         tx.put_json(Table::Checkpoints, THROTTLE, 1, &until)?;
     }
     Ok(RecoveryReport {
-        sequenced_receipts: ordered.len(),
+        sequenced_receipts: sequenced,
         unsequenced_receipts: unsequenced,
         unbound_records: unbound,
         unbound_active_until: unbound_active,
@@ -411,6 +396,57 @@ mod tests {
             ]);
         legacy(&store, "result", &result, at);
         assert_eq!(recover_throttle(&store).unwrap().unbound_active_until, None);
+    }
+
+    #[test]
+    fn complete_large_route_history_restores_latest_ordered_wait_and_refuses_a_gap() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("large-receipts.redb");
+        let store = open(&path);
+        const COUNT: u64 = 10_001;
+        let at = Timestamp::now();
+        let expected = deadline(at, 3600).unwrap();
+        store
+            .write(|tx| {
+                tx.put_json(Table::Checkpoints, RECEIPT_SEQUENCE, 1, &COUNT)?;
+                tx.put_json(Table::Checkpoints, OWNER, 1, &true)?;
+                for sequence in 1..=COUNT {
+                    // Reverse lexical order so the newest wait is visited first.
+                    let id = format!("fixture-{:05}", COUNT - sequence);
+                    let request_wire = encode(&request(&id, None)?)?;
+                    let code = if sequence == COUNT { "507" } else { "503" };
+                    let record = Record {
+                        context_version: 1,
+                        generation: tx.generation(),
+                        action_id: id.clone(),
+                        requested_at: at,
+                        at,
+                        status: "refused".into(),
+                        settlement_sequence: Some(sequence),
+                        request_digest: Sha256::digest(&request_wire).into(),
+                        request_wire,
+                        prior: None,
+                        wire: Some(encode(&error(&id, code, "3600"))?),
+                        effective_wire: None,
+                    };
+                    tx.put_json(Table::Checkpoints, key(&id).as_bytes(), 1, &record)?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        drop(store);
+        let store = open(&path);
+        let report = recover_throttle(&store).unwrap();
+        assert_eq!(report.sequenced_receipts as u64, COUNT);
+        assert_eq!(report.preserved_until, Some(expected));
+        store
+            .write(|tx| {
+                tx.delete(Table::Checkpoints, THROTTLE)?;
+                tx.delete(Table::Checkpoints, key("fixture-05000").as_bytes())
+            })
+            .unwrap();
+        assert!(recover_throttle(&store).is_err());
+        assert_eq!(throttle_until(&store).unwrap(), None);
     }
 
     #[test]

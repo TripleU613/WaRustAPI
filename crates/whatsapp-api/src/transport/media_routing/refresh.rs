@@ -43,6 +43,7 @@ pub async fn write_and_wait_captured<S: tokio::io::AsyncRead + tokio::io::AsyncW
     .await
 }
 
+const ROUTE_PREFIX: &[u8] = b"media-route:";
 const CURRENT: &[u8] = b"media-routing-current:v1";
 const OWNER: &[u8] = b"media-routing-owner:v1";
 const THROTTLE: &[u8] = b"media-routing-throttle-until:v1";
@@ -231,37 +232,18 @@ fn checked_receipt_counter_in(tx: &WriteTx<'_>) -> Result<Option<u64>> {
         return Err(invalid("media receipt counter exhausted"));
     }
     if prior.is_none() {
-        let mut cursor = None;
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            let done = rows.len() < 256;
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, bytes) in rows {
-                if !key.starts_with(b"media-route:") {
-                    continue;
-                }
-                let value: serde_json::Value = serde_json::from_slice(&bytes).map_err(|_| {
-                    crate::Error::Storage(crate::store::StoreError::Serialization(
-                        "invalid stored media refresh data".into(),
-                    ))
-                })?;
-                if value.get("context_version").is_none() {
-                    continue;
-                }
-                let record: Record = serde_json::from_value(value).map_err(|_| {
-                    crate::Error::Storage(crate::store::StoreError::Serialization(
-                        "invalid stored media refresh data".into(),
-                    ))
-                })?;
+        tx.fold_checkpoints(ROUTE_PREFIX, (), |(), _, bytes| {
+            let value: serde_json::Value = parse_route(bytes)?;
+            if value.get("context_version").is_some() {
+                let record: Record =
+                    serde_json::from_value(value).map_err(|_| invalid_route_data())?;
                 validate(&record)?;
                 if record.settlement_sequence.is_some() {
                     return Err(invalid("media receipt counter missing; no order reset"));
                 }
             }
-            if done {
-                break;
-            }
-        }
+            Ok(())
+        })?;
     }
     Ok(prior)
 }
@@ -356,25 +338,23 @@ fn validate(record: &Record) -> Result<()> {
     }
     Ok(())
 }
-fn has_context_rows(rows: Vec<(Vec<u8>, Vec<u8>)>, only_applied: bool) -> Result<bool> {
-    if rows.len() == 10000 {
-        return Err(invalid("media history scan limit reached"));
-    }
-    for (key, bytes) in rows {
-        if !key.starts_with(b"media-route:") {
-            continue;
-        }
-        let value: serde_json::Value = serde_json::from_slice(&bytes).map_err(|_| {
-            crate::Error::Storage(crate::store::StoreError::Serialization(
-                "invalid stored media refresh data".into(),
-            ))
-        })?;
-        if value.get("context_version").is_some() && (!only_applied || value["status"] == "result")
-        {
-            return Ok(true);
-        }
-    }
-    Ok(false)
+fn invalid_route_data() -> crate::Error {
+    crate::Error::Storage(crate::store::StoreError::Serialization(
+        "invalid stored media refresh data".into(),
+    ))
+}
+
+fn parse_route(bytes: &[u8]) -> Result<serde_json::Value> {
+    serde_json::from_slice(bytes).map_err(|_| invalid_route_data())
+}
+
+fn has_context_rows(tx: &WriteTx<'_>, only_applied: bool) -> Result<bool> {
+    tx.fold_checkpoints(ROUTE_PREFIX, false, |found, _, bytes| {
+        let value = parse_route(bytes)?;
+        Ok(found
+            || (value.get("context_version").is_some()
+                && (!only_applied || value["status"] == "result")))
+    })
 }
 
 /// Freeze request bytes and the coordinator's exact prior route atomically.
@@ -413,7 +393,7 @@ pub fn prepare(store: &ProtocolStore, id: &str) -> Result<Node> {
             checked_receipt_counter_in(tx)?;
             let owner: Option<bool> = tx.get_json(Table::Checkpoints, OWNER, 1)?;
             let prior: Option<Current> = tx.get_json(Table::Checkpoints, CURRENT, 1)?;
-            if owner.is_none() && has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, false)? {
+            if owner.is_none() && has_context_rows(tx, false)? {
                 return Err(invalid(
                     "prospective media history has no coordinator owner",
                 ));
@@ -421,10 +401,7 @@ pub fn prepare(store: &ProtocolStore, id: &str) -> Result<Node> {
             if owner == Some(false) || (prior.is_some() && owner != Some(true)) {
                 return Err(invalid("media route has no valid owner"));
             }
-            if owner == Some(true)
-                && prior.is_none()
-                && has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, true)?
-            {
+            if owner == Some(true) && prior.is_none() && has_context_rows(tx, true)? {
                 return Err(invalid("applied media route pointer is missing"));
             }
             if let Some(current) = &prior {
@@ -522,7 +499,7 @@ fn settle_impl_in(tx: &mut WriteTx<'_>, id: &str, reply: &Node) -> Result<Settle
     if kind == Some("result")
         && current.is_none()
         && record.prior.is_none()
-        && has_context_rows(tx.scan(Table::Checkpoints, 1, 10000)?, true)?
+        && has_context_rows(tx, true)?
     {
         return Err(invalid("applied media route pointer is missing"));
     }
@@ -584,7 +561,7 @@ fn settle_impl_in(tx: &mut WriteTx<'_>, id: &str, reply: &Node) -> Result<Settle
     tx.put_json(Table::Checkpoints, key(id).as_bytes(), 1, &record)?;
     Ok(result)
 }
-/// Resolve the applied current pointer instead of ordering receipt timestamps.
+/// Use the applied current route or, for stores without a coordinator, the latest legacy record.
 /// Once this coordinator is active, legacy history cannot resurrect a route.
 pub(crate) fn active_record(store: &ProtocolStore) -> Result<Option<serde_json::Value>> {
     store
@@ -592,7 +569,7 @@ pub(crate) fn active_record(store: &ProtocolStore) -> Result<Option<serde_json::
             active_record_from(
                 tx.generation(),
                 |key| tx.get(Table::Checkpoints, key, 1),
-                || tx.scan(Table::Checkpoints, 1, 10000),
+                || tx.fold_checkpoints(ROUTE_PREFIX, None, latest_legacy_route),
             )
         })
         .map_err(redact)
@@ -603,7 +580,7 @@ pub(crate) fn active_record_in(tx: &WriteTx<'_>) -> Result<Option<serde_json::Va
     active_record_from(
         tx.generation(),
         |key| tx.get(Table::Checkpoints, key, 1),
-        || tx.scan(Table::Checkpoints, 1, 10000),
+        || tx.fold_checkpoints(ROUTE_PREFIX, None, latest_legacy_route),
     )
     .map_err(redact)
 }
@@ -620,19 +597,39 @@ fn route_json<T: serde::de::DeserializeOwned>(value: Option<Vec<u8>>) -> Result<
         .transpose()
 }
 
+fn latest_legacy_route(
+    latest: Option<serde_json::Value>,
+    _: &[u8],
+    bytes: &[u8],
+) -> Result<Option<serde_json::Value>> {
+    let value = parse_route(bytes)?;
+    if value.get("context_version").is_some() {
+        return Err(invalid(
+            "prospective media history has no coordinator owner",
+        ));
+    }
+    // Legacy max_by_key used the last key on tied receipt timestamps, including
+    // an uncertain or refused record that must supersede an older success.
+    let at = |row: &serde_json::Value| row["at"].as_i64().unwrap_or(0);
+    if latest.as_ref().is_some_and(|prior| at(prior) > at(&value)) {
+        return Ok(latest);
+    }
+    Ok(Some(value))
+}
+
 fn active_record_from(
     generation: AccountGeneration,
     mut get: impl FnMut(&[u8]) -> Result<Option<Vec<u8>>>,
-    scan: impl FnOnce() -> Result<Vec<(Vec<u8>, Vec<u8>)>>,
+    legacy: impl FnOnce() -> Result<Option<serde_json::Value>>,
 ) -> Result<Option<serde_json::Value>> {
     let owner: Option<bool> = route_json(get(OWNER)?)?;
     if owner.is_none() {
-        if get(CURRENT)?.is_some() || has_context_rows(scan()?, false)? {
+        if get(CURRENT)?.is_some() {
             return Err(invalid(
                 "prospective media history has no coordinator owner",
             ));
         }
-        return Ok(None);
+        return legacy();
     }
     if owner != Some(true) {
         return Err(invalid("invalid media route owner"));

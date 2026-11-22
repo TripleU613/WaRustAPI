@@ -843,6 +843,38 @@ fn open_record(
     Ok(store.sealer.open(&aad, value)?)
 }
 
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
+fn fold_checkpoint_prefix<T>(
+    store: &ProtocolStore,
+    generation: AccountGeneration,
+    table: &impl ReadableTable<&'static [u8], &'static [u8]>,
+    prefix: &[u8],
+    mut state: T,
+    mut fold: impl FnMut(T, &[u8], &[u8]) -> Result<T>,
+) -> Result<T> {
+    for entry in table.range::<&[u8]>(prefix..).map_err(StoreError::from)? {
+        let (key, sealed) = entry.map_err(StoreError::from)?;
+        let key = key.value();
+        if !key.starts_with(prefix) {
+            break;
+        }
+        let row = zeroize::Zeroizing::new(open_record(
+            store,
+            generation,
+            Table::Checkpoints,
+            key,
+            RECORD_V1,
+            sealed.value(),
+        )?);
+        state = fold(state, key, &row)?;
+    }
+    Ok(state)
+}
+
 fn read_events_in<T: ReadableTable<u64, &'static [u8]>>(
     store: &ProtocolStore,
     events: &T,
@@ -928,6 +960,25 @@ fn journal_head_in<T: ReadableTable<u64, &'static [u8]>>(events: &T) -> Result<E
 }
 
 impl ReadTx<'_> {
+    /// Fold authenticated v1 checkpoint values in key order, within this transaction.
+    #[cfg(all(
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    ))]
+    pub(crate) fn fold_checkpoints<T>(
+        &self,
+        prefix: &[u8],
+        initial: T,
+        fold: impl FnMut(T, &[u8], &[u8]) -> Result<T>,
+    ) -> Result<T> {
+        let table = self
+            .tx
+            .open_table(Table::Checkpoints.def())
+            .map_err(StoreError::from)?;
+        fold_checkpoint_prefix(self.store, self.generation, &table, prefix, initial, fold)
+    }
+
     /// Account generation the transaction reads under.
     pub fn generation(&self) -> AccountGeneration {
         self.generation
@@ -1069,6 +1120,25 @@ impl ReadTx<'_> {
 }
 
 impl WriteTx<'_> {
+    /// Fold authenticated v1 checkpoint values in key order, within this transaction.
+    #[cfg(all(
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    ))]
+    pub(crate) fn fold_checkpoints<T>(
+        &self,
+        prefix: &[u8],
+        initial: T,
+        fold: impl FnMut(T, &[u8], &[u8]) -> Result<T>,
+    ) -> Result<T> {
+        let table = self
+            .tx
+            .open_table(Table::Checkpoints.def())
+            .map_err(StoreError::from)?;
+        fold_checkpoint_prefix(self.store, self.generation, &table, prefix, initial, fold)
+    }
+
     /// Read a bounded page after an exclusive physical-key cursor within this
     /// write transaction. Includes this transaction's uncommitted changes.
     /// Blinded-table cursors are physical keys, not logical lookup keys.

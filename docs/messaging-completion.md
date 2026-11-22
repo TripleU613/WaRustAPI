@@ -1,3 +1,5 @@
+**Media routes in large stores (offline).** Upload preparation survives 10,000 unrelated checkpoints. Deadline recovery validates more than 10,000 actual route receipts and refuses incomplete history. [Evidence and limits](protocol/media-network-outcomes.md#media-route-selection-and-wait-recovery-in-large-stores).
+
 **Offline inbox recovery.** Large stores now support inspection and replay. Newly recovered messages reference their original saved capture. [Restart and deduplication evidence](protocol/messaging-transport.md#offline-inbox-recovery-in-large-stores).
 
 **View-once image selection (offline).** List unopened images and select one for prefetch or one-time opening, including after restart in large stores. [Commands and regression](protocol/messaging-transport.md#selecting-an-unopened-image).
