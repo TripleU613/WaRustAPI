@@ -159,7 +159,7 @@ file. **Unknown:** live transfer of an empty attachment and handset presentation
 **Confirmed schema and selected writer.** Both the retained 2.26.37.71
 BZc/BZB evidence and the 2.26.43.72 Di0 descriptor include URL (tag 1).
 The earlier outgoing encoder comment attributed the omission of URL to a
-missing field. The Rust encoder sends directPath (tag 10).
+missing field. Before the outgoing fix below, the Rust encoder sent only directPath (tag 10).
 
 In the pinned 2.26.43.72 APK, a DEX field-reference search found 13 direct
 accesses to Di0.url_, including writes in Eel.A00, FPY.AET, F3d.A07 and the
@@ -167,9 +167,47 @@ Di0 constructor. Eel.A00 reads the message's AtH() at 0014. A nonempty value
 reaches the URL write at 0048 in either mode. A null value skips the write.
 F1S.A03 distinguishes how the writer treats an empty string. DirectPath is
 written separately at 0504. The three direct Eel.A00 caller sites are
-E3q.AET, FOt.A00 and FQg.AET. **Unknown:** when the native upload result becomes
-AtH() in each caller. This distinction matters before changing Rust's sender.
+E3q.AET, FOt.A00 and FQg.AET. The selected transfer-to-message handoff is traced below.
 
 Reproduce against the APK identified above with
 `xtask apk-smali <apk> --class 'LX/Eel;' --method A00 --signatures --exceptions`.
 The complete stdout SHA-256 is `34d7d6bdd2a25093017e1a1e5d47dc6b734fe356e5a8a8ffcd8ae122a3bb4a3f`.
+
+## Outgoing document download locations
+
+**Confirmed static, APK 2.26.43.72.** The upload callback reads the JSON
+`url` into LzN.A0D. MOu.A07 (0126..0130) passes that value to MDL.A0E,
+which stores it in MDL.A0N. MDL.A08 reads the same field under its monitor.
+[Response parser](rea/2.26.43.72-media-upload-response/response-callback.txt)
+and [result adoption](rea/2.26.43.72-media-upload-response/result-adoption.txt).
+
+Msx.accept iterates media messages. On the selected successful branches
+(0316..0334 and 0446..04bc), a non-null MDL.A08 result is passed to
+1eP.ChB. Document model 9JR extends 1eQ and inherits ChB and AtH. ChB
+writes 1eQ.A0A, calls A0w and mirrors the value into 8tC.A0f when the media
+record is present. AtH checks the mirror via A11 and returns 1eQ.A0A. The
+Eel.A00 writer above therefore has an upload-supplied value for URL field 1.
+FOt.A00 calls Eel.A00 at 0026 and returns the same document builder at 002c.
+Direct path is a separate value at field 10.
+
+**Search scope.** The DEX has 14 direct invocation sites for MDL.A08 across
+seven methods. Some feed host inspection or diagnostics, so a getter call alone
+does not identify the message handoff. A separate field search for 1eQ.A0A
+found one direct writer in ChB and two reads in AtH. The earlier A10 validation
+path and DEf propagation path do not establish where the upload returned its URL.
+This traces selected successful transfers. Which other transfer modes populate
+either location and current handset behavior are **unknown**.
+
+To reproduce, run `xtask apk-smali <apk> --class 'LX/Msx;' --method accept
+--signatures --exceptions`. Use the same command for MDL.A0E, MDL.A08,
+1eQ.ChB, 1eQ.AtH, FOt.A00 and Eel.A00. The complete Msx.accept stdout
+SHA-256 is `6084cfee44e26917756db6f82a700f12aee48be3919afa724dd2d55255d6dd3f`. Run `xtask apk-callers <apk> --class 'LX/MDL;'
+--method A08` for the getter inventory.
+
+**Implemented and tested offline.** Newly prepared Rust document messages carry
+the validated upload response URL and direct path. The regression passes a
+synthetic response through location validation and the production document
+encoder, then reads the outer field 7 and checks the exact bytes in fields
+1 and 10, including percent escapes and query strings. Previously prepared
+messages reuse their saved protobuf. Live delivery and opening on a recipient
+device remain unverified for this change.

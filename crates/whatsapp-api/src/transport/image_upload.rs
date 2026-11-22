@@ -198,10 +198,12 @@ fn mp4_info(bytes: &[u8]) -> Result<(u32, u32, u32)> {
 
 /// Outgoing subset of Message.documentMessage (tag 7). APK 2.26.37.71
 /// BZc/BZB and 2.26.43.72 Di0 define both url (1) and directPath (10).
-/// This sender emits directPath. The descriptor alone cannot tell us when
-/// the native sender also populates url. See docs/protocol/document-media.md.
+/// The selected 43.72 upload callback Msx.accept calls ChB with the returned
+/// URL. Eel.A00 copies AtH() to tag 1. See docs/protocol/document-media.md.
 #[derive(Clone, PartialEq, Message)]
 struct DocumentMessage {
+    #[prost(string, tag = "1")]
+    url: String,
     #[prost(string, tag = "2")]
     mimetype: String,
     #[prost(string, tag = "3")]
@@ -220,6 +222,32 @@ struct DocumentMessage {
     direct_path: String,
     #[prost(int64, tag = "11")]
     media_key_timestamp: i64,
+}
+
+fn document_payload(
+    (file_name, mimetype): (String, String),
+    encrypted: &image::EncryptedImage,
+    (url, direct_path): (String, String),
+    timestamp: Timestamp,
+) -> Vec<u8> {
+    Envelope {
+        video: None,
+        image: None,
+        audio: None,
+        document: Some(DocumentMessage {
+            url,
+            mimetype,
+            title: file_name.clone(),
+            file_sha256: encrypted.plaintext_hash.to_vec(),
+            file_length: encrypted.plaintext_len,
+            media_key: encrypted.media_key.to_vec(),
+            file_name,
+            file_enc_sha256: encrypted.encrypted_hash.to_vec(),
+            direct_path,
+            media_key_timestamp: timestamp.as_unix_seconds(),
+        }),
+    }
+    .encode_to_vec()
 }
 
 /// File name and MIME type of a document input; the type comes from the
@@ -1083,26 +1111,13 @@ async fn upload_prepared(
             }
             .encode_to_vec(),
         )
-    } else if let Some((file_name, mimetype)) = document {
-        Zeroizing::new(
-            Envelope {
-                video: None,
-                image: None,
-                audio: None,
-                document: Some(DocumentMessage {
-                    mimetype,
-                    title: file_name.clone(),
-                    file_sha256: encrypted.plaintext_hash.to_vec(),
-                    file_length: encrypted.plaintext_len,
-                    media_key: encrypted.media_key.to_vec(),
-                    file_name,
-                    file_enc_sha256: encrypted.encrypted_hash.to_vec(),
-                    direct_path,
-                    media_key_timestamp: timestamp.as_unix_seconds(),
-                }),
-            }
-            .encode_to_vec(),
-        )
+    } else if let Some(document) = document {
+        Zeroizing::new(document_payload(
+            document,
+            &encrypted,
+            (url, direct_path),
+            timestamp,
+        ))
     } else if voice {
         Zeroizing::new(
             Envelope {
@@ -2825,24 +2840,17 @@ mod tests {
     }
 
     #[test]
-    fn document_payload_uses_the_apk_field_numbers_and_no_url() {
-        let payload = Envelope {
-            image: None,
-            audio: None,
-            video: None,
-            document: Some(DocumentMessage {
-                mimetype: "application/pdf".into(),
-                title: "a.pdf".into(),
-                file_sha256: vec![1; 32],
-                file_length: 10,
-                media_key: vec![2; 32],
-                file_name: "a.pdf".into(),
-                file_enc_sha256: vec![3; 32],
-                direct_path: "/v/t62/x".into(),
-                media_key_timestamp: 1,
-            }),
-        }
-        .encode_to_vec();
+    fn document_payload_preserves_both_uploaded_locations_at_the_apk_tags() {
+        let url = "https://mmg.whatsapp.net/a%2Fb?x=%2F&y=2";
+        let path = "/v/t62/x?oh=stored&oe=expiry";
+        let reply = serde_json::json!({"url":url,"direct_path":path});
+        let encrypted = image::encrypt_document(b"document").unwrap();
+        let payload = document_payload(
+            ("a.pdf".into(), "application/pdf".into()),
+            &encrypted,
+            locations(&reply).unwrap(),
+            Timestamp(1000),
+        );
         assert_eq!(
             crate::signal::direct::payload_fields(&payload).unwrap(),
             vec![7]
@@ -2852,7 +2860,15 @@ mod tests {
             .unwrap();
         let mut fields = crate::signal::direct::payload_fields(&inner).unwrap();
         fields.sort();
-        assert_eq!(fields, vec![2, 3, 4, 5, 7, 8, 9, 10, 11]);
+        assert_eq!(fields, vec![1, 2, 3, 4, 5, 7, 8, 9, 10, 11]);
+        for (tag, expected) in [(1, url), (10, path)] {
+            assert_eq!(
+                super::super::protobuf_enum::message_bytes(&inner, tag)
+                    .unwrap()
+                    .as_deref(),
+                Some(expected.as_bytes())
+            );
+        }
         assert_eq!(
             document_meta(Path::new("/tmp/report.PDF")).unwrap(),
             ("report.PDF".into(), "application/pdf".into())

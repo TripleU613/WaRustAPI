@@ -1,3 +1,5 @@
+**Outgoing documents (offline).** Newly prepared document messages carry the validated upload URL and direct path. [APK trace and wire test](protocol/document-media.md#outgoing-document-download-locations).
+
 **Empty incoming documents (offline).** An explicitly empty document now survives inbox projection and authenticated export after restart. [APK evidence and test scope](protocol/document-media.md#receiving-an-empty-document).
 
 2026-11-04 — **Offline implementation batch:** current-build PIN re-entry now

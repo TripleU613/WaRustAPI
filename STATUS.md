@@ -1,3 +1,5 @@
+**Outgoing documents (offline).** Newly prepared document messages carry the validated upload URL and direct path. [APK trace and wire test](docs/protocol/document-media.md#outgoing-document-download-locations).
+
 **Empty incoming documents (offline).** An explicitly empty document now survives inbox projection and authenticated export after restart. [APK evidence and test scope](docs/protocol/document-media.md#receiving-an-empty-document).
 
 **Pinned ordinary receipt-driven retry-key cleanup traced.** Message-status processing groups full message keys by recipient device under selected received-target codes and outgoing/self ownership, then queues bulk deletion. A separate pending-prekey path requires retained-key equality. Async completion, TTL and Rust integration remain open. [Evidence and limits](docs/protocol/retry-answers.md#pinned-receipt-driven-bulk-base-key-cleanup-2026-11-07).
