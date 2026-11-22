@@ -1,3 +1,5 @@
+**Unreadable session endings (offline).** The Rust listener stops automatic reconnects after a damaged terminal stanza or a stream end immediately following an unidentified stanza. Encrypted split-reader tests cover capture across restart and a competing writer failure. [APK evidence and local policy](frame-admission.md#reconnect-after-an-unreadable-session-ending).
+
 **Media routes in large stores (offline).** Upload preparation survives 10,000 unrelated checkpoints. Deadline recovery validates more than 10,000 actual route receipts and refuses incomplete history. [Evidence and limits](media-network-outcomes.md#media-route-selection-and-wait-recovery-in-large-stores).
 
 **Offline inbox recovery.** Large stores now support inspection and replay. Newly recovered messages reference their original saved capture. [Restart and deduplication evidence](messaging-transport.md#offline-inbox-recovery-in-large-stores).

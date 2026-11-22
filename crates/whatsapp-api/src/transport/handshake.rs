@@ -371,6 +371,8 @@ mod tests {
         ExpiredPrewrite,
         PartialWrite,
         StreamEnd,
+        TruncatedFailure,
+        UnreadableThenEnd,
         MediaRefresh {
             delay: u64,
             io_limit: u64,
@@ -575,6 +577,15 @@ mod tests {
                     ]),
             )
             .unwrap();
+            if matches!(record_case, RecordCase::UnreadableThenEnd) {
+                let unreadable = transport
+                    .encrypt(&[0, 0xF8, 1, crate::binary::tags::JID_PAIR])
+                    .unwrap();
+                server
+                    .write_all(&codec.encode(&unreadable, None).unwrap())
+                    .await
+                    .unwrap();
+            }
             let reply: &[u8] = match record_case {
                 RecordCase::MediaRefresh { .. } => &media_reply,
                 RecordCase::MalformedStructure { .. } => &malformed,
@@ -593,7 +604,8 @@ mod tests {
                     checksum: false, ..
                 } => &[2, 0],
                 RecordCase::EmptyRecord { .. } => &[0, 0xF8, 1, 25],
-                RecordCase::StreamEnd => &[0, 0xF8, 1, 2],
+                RecordCase::TruncatedFailure => b"\x00\xf8\x02\xfc\x07failure",
+                RecordCase::StreamEnd | RecordCase::UnreadableThenEnd => &[0, 0xF8, 1, 2],
                 RecordCase::InvalidFrame {
                     fragmented: true, ..
                 } => &[1, 0xF8, 1, 25],
@@ -835,6 +847,18 @@ mod tests {
                     Err(TransportError::Closed)
                 ));
                 assert!(matches!(channel.read().await, Err(TransportError::Closed)));
+            } else if matches!(
+                record_case,
+                RecordCase::TruncatedFailure | RecordCase::UnreadableThenEnd
+            ) {
+                channel.write(b"local record fixture").await.unwrap();
+                let expected: &[&str] = if matches!(record_case, RecordCase::TruncatedFailure) {
+                    &["unexpected_eof"]
+                } else {
+                    &["invalid_node", "stream_end"]
+                };
+                super::super::connection::tests::assert_unreadable_split_close(channel, expected)
+                    .await;
             } else if matches!(record_case, RecordCase::StreamEnd) {
                 channel.write(b"local record fixture").await.unwrap();
                 let frame = super::super::messaging::read_frame(&mut channel)
@@ -1030,6 +1054,12 @@ mod tests {
                 .await;
             }
         }
+    }
+
+    #[tokio::test]
+    async fn encrypted_split_reader_keeps_terminal_evidence_before_writer_failure() {
+        exchange(false, false, RecordCase::TruncatedFailure).await;
+        exchange(false, false, RecordCase::UnreadableThenEnd).await;
     }
 
     #[tokio::test]

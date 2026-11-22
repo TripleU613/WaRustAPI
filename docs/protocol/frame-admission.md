@@ -1,5 +1,38 @@
 # Decrypted frame admission
 
+## Reconnect after an unreadable session ending
+
+**Confirmed in APK 2.26.43.72.** The frame reader returns a null node for a
+root stream-end token. In `1s2.run`, the null return from `123.A08` at
+`0058` takes the logout branch at `1196`. The reader reports the disconnect
+and returns. Failed initial reads reach the reader’s error callback and terminate that read loop.
+[Frame reader](apk/2.26.43.72-stream-end/frame-reader.txt) ·
+[Reader dispatch](apk/2.26.43.72-about-callback-lifetime/reply-dispatch.txt) ·
+[Truncation evidence](apk/2.26.43.72-truncated-node/README.md).
+
+**Confirmed in Rust, offline.** A frame can have a readable root name and a
+truncated body. Previously, the actor handled the truncation first. A literal
+`failure` frame with a missing body returned a recoverable transport error.
+A root stream-end token following a stanza with an unreadable name also
+returned a recoverable error, where a socket EOF in the same position stopped
+reconnects.
+
+The persistent client now stops automatic reconnects for a damaged
+`failure` or `stream:error`, and for either form of peer close after an
+unidentified stanza. A fully decoded stanza clears that uncertainty. A
+standalone root stream-end and a truncated ordinary `message` retain the
+existing bounded reconnect policy. The decision to stop is local. The native
+global reconnect decision for these combinations remains **unknown**.
+
+The split reader records the stop reason before closing in response to a
+terminal frame. A later writer error therefore preserves that reason even
+when the actor has not dequeued the frame. An in-memory encrypted peer tested
+both a truncated `failure` and an unreadable stanza followed by stream-end.
+In each case a later write failed, the final outcome suppressed reconnect,
+and the original capture classes and epoch survived reopening the store.
+The actor tests separately cover `stream:error` and the ordinary-loss controls.
+Use `whatsapp-cli undecodable` for redacted capture inspection.
+
 ## Header-only and fragmented frames terminate the epoch (2026-11-06)
 
 **Confirmed selected static / implemented offline, APK2.26.43.72**, build264307238,

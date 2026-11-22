@@ -419,13 +419,25 @@ wait branch, or establish fresh live behavior.
 
 ## Where the APK handles an undecodable stanza (2026-10-13)
 
-When a decrypted frame does not decode, `listen` now captures it as
-`inbound-undecodable`, keeps receiving, and stops only for a terminal stanza
-whose name it can read (or a close right after an unreadable one). That is
-**local policy**. Which frame catches the native reader's decode exception, and
-whether the native connection survives it, is **not traced**: the retained
-`124.A01`/`124.A02` evidence covers the readers, not their callers' exception
-handling. [Audit](replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+**Partially resolved for 2.26.43.72.** The selected root stream-end and
+corrupt-frame paths now have direct `123.A08` / `1s2.run` evidence. Rust
+preserves a damaged terminal stanza and suppresses automatic reconnects when
+its root is `failure` or `stream:error`. Socket EOF or root stream-end after
+a stanza whose name could not be read also suppresses reconnects. Matching
+native global reconnect policy for these sequences remains **unknown**.
+[Evidence and restart tests](frame-admission.md#reconnect-after-an-unreadable-session-ending) ·
+[Original audit](replay-safety-audit.md#network-input-panic-audit-2026-10-13).
+
+### Offline settlement of previously unreadable replies
+
+**Confirmed in the Rust fixture.** In
+`inbox::settle_tests::captured_replies_settle_their_waiting_action_once`,
+the fixture saves a reply while its action is queued. The first recovery skips
+the reply. Once the fixture reserves the action, the next recovery settles it
+from those same saved bytes. The action ID and its current state therefore
+do not prove that the capture followed the reservation. This concerns explicit
+`undecodable --settle-replies`. The live actor requires a connection-local
+written callback. How to establish causal order for older captures is **unknown**.
 
 ## Comparison token dictionary: double-byte page 0 index 1
 

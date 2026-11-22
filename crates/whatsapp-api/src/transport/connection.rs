@@ -16,7 +16,10 @@ use crate::{
     session::{AccountRecord, ObservedCredential},
     store::{ProtocolStore, Table},
 };
-use std::{sync::Arc, time::Duration};
+use std::{
+    sync::{Arc, OnceLock},
+    time::Duration,
+};
 use tokio::sync::{mpsc, oneshot, watch};
 
 const LOGIN_KEY: &[u8] = b"comparison-primary-login-v1";
@@ -539,6 +542,46 @@ pub(crate) enum Inbound {
     },
 }
 
+/// Local reconnect policy for incomplete stanzas. The native frame reader
+/// (43.72 123.A08 / 1s2.run) terminates on root stream-end or truncation.
+/// Neither outcome establishes what an unreadable server response meant.
+#[derive(Default)]
+struct UnreadableStanza {
+    pending: bool,
+}
+
+impl UnreadableStanza {
+    fn observe(&mut self, item: &Result<Inbound>) -> Option<&'static str> {
+        match item {
+            Ok(Inbound::Node(_)) => self.pending = false,
+            Ok(Inbound::Undecodable {
+                description: Some(name),
+                ..
+            }) if matches!(name.as_str(), "failure" | "stream:error") => {
+                return Some(
+                    "server ended session with a stanza this client could not decode; no reconnect (whatsapp-cli undecodable)",
+                );
+            }
+            Ok(Inbound::Undecodable {
+                class: "stream_end",
+                ..
+            })
+            | Err(Error::Transport(super::TransportError::PeerClosed))
+                if self.pending =>
+            {
+                return Some(
+                    "server closed the connection after a stanza this client could not read; no reconnect (whatsapp-cli undecodable)",
+                );
+            }
+            Ok(Inbound::Undecodable {
+                description: None, ..
+            }) => self.pending = true,
+            _ => {}
+        }
+        None
+    }
+}
+
 /// Unpack and decode one decrypted frame.
 fn inbound_from_frame(frame: &[u8]) -> Inbound {
     match super::inbox::decode_frame(frame) {
@@ -795,24 +838,45 @@ impl NodeLink {
 }
 
 /// Reader/writer tasks behind a real link; aborted when the epoch ends.
-struct LinkTasks(tokio::task::JoinHandle<()>, tokio::task::JoinHandle<()>);
+struct LinkTasks {
+    reader: tokio::task::JoinHandle<()>,
+    writer: tokio::task::JoinHandle<()>,
+    reconnect_stop: Arc<OnceLock<&'static str>>,
+}
+
+impl LinkTasks {
+    fn finish(&self, result: Result<()>) -> Result<()> {
+        if result
+            .as_ref()
+            .is_err_and(|error| error.is_recoverable_by_reconnect())
+            && let Some(reason) = self.reconnect_stop.get()
+        {
+            return Err(Error::invalid("connection", *reason));
+        }
+        result
+    }
+}
+
 impl Drop for LinkTasks {
     fn drop(&mut self) {
-        self.0.abort();
-        self.1.abort();
+        self.reader.abort();
+        self.writer.abort();
     }
 }
 fn encode(node: &Node) -> Result<Vec<u8>> {
     Ok(Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node)?)
 }
-fn link_from(
-    channel: EncryptedConnection<tokio::net::TcpStream>,
+fn link_from<S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin + Send + 'static>(
+    channel: EncryptedConnection<S>,
     store: Arc<ProtocolStore>,
     epoch: ConnectionEpoch,
 ) -> Result<(NodeLink, LinkTasks)> {
     let (mut reader, mut writer) = channel.into_split()?;
     let (incoming_tx, incoming_rx) = mpsc::channel(64);
+    let reconnect_stop = Arc::new(OnceLock::new());
+    let reader_stop = reconnect_stop.clone();
     let reader_task = tokio::spawn(async move {
+        let mut unreadable = UnreadableStanza::default();
         loop {
             let mut next = match reader.read().await {
                 // APK 2.26.43.72 123.A08 skips authenticated empty plaintext;
@@ -826,26 +890,38 @@ fn link_from(
                 Ok(None) => Err(Error::Transport(super::TransportError::PeerClosed)),
                 Err(e) => Err(e.into()),
             };
-            let ended = matches!(
-                &next,
-                Ok(Inbound::Undecodable { class, .. })
-                    if super::messaging::terminal_frame_error(class).is_some()
-            );
+            let reason = unreadable.observe(&next);
+            if let Some(reason) = reason {
+                // Publish before closing the writer. Its Closed error may reach
+                // drive before the reader can enqueue the terminal item.
+                let _ = reader_stop.set(reason);
+            }
+            let ended = reason.is_some()
+                || matches!(
+                    &next,
+                    Ok(Inbound::Undecodable { class, .. })
+                        if super::messaging::terminal_frame_error(class).is_some()
+                );
             if ended {
                 // Consume both halves before publishing the terminal capture;
                 // stop further reads and reject later writes. An already-started
                 // write remains uncertain; closure cannot retract its bytes.
                 reader.close();
-                // The actor may already be returning from a failed earlier
-                // write. Preserve this control before queue publication so it
-                // cannot be lost with the receiver. The actor capture is idempotent.
-                if let Ok(Inbound::Undecodable { frame, class, .. }) = &next
-                    && let Err(error) =
-                        super::inbox::preserve_undecodable(&store, frame, class, Some(epoch))
-                {
-                    tracing::warn!("terminal frame capture failed; epoch remains closed");
-                    next = Err(error);
-                }
+            }
+            // Preserve the evidence for either half of an ambiguous close even
+            // if the actor exits on an earlier pending write. Capture is idempotent.
+            if let Ok(Inbound::Undecodable {
+                frame,
+                class,
+                description,
+            }) = &next
+                && (ended || description.is_none())
+                && let Err(error) =
+                    super::inbox::preserve_undecodable(&store, frame, class, Some(epoch))
+            {
+                reader.close();
+                tracing::warn!("could not preserve unreadable frame; epoch closed");
+                next = Err(error);
             }
             let failed = next.is_err() || ended;
             if incoming_tx.send(next).await.is_err() || failed {
@@ -873,7 +949,11 @@ fn link_from(
     });
     Ok((
         NodeLink::new(incoming_rx, outgoing_tx),
-        LinkTasks(reader_task, writer_task),
+        LinkTasks {
+            reader: reader_task,
+            writer: writer_task,
+            reconnect_stop,
+        },
     ))
 }
 
@@ -900,12 +980,12 @@ pub async fn run(
 ) -> Result<()> {
     let (channel, expected) = connect_with_authority(&store, &config, epoch).await?;
     // Abort-on-drop also covers callers cancelling this whole future.
-    let (mut link, _tasks) = link_from(channel, store.clone(), epoch)?;
+    let (mut link, tasks) = link_from(channel, store.clone(), epoch)?;
     link.epoch_authority = Some(EpochWriteAuthority {
         store: store.clone(),
         expected,
     });
-    drive(
+    let result = drive(
         Session {
             store,
             config,
@@ -917,7 +997,8 @@ pub async fn run(
         ready,
         link,
     )
-    .await
+    .await;
+    tasks.finish(result)
 }
 
 // The authenticated failure was captured before this optional credential update.
@@ -1125,10 +1206,7 @@ pub(crate) async fn drive(
     let mut action_drain = ActionDrain::default();
     let mut action_replies = super::actions::LiveReplies::default();
     let mut outbox_tick = tokio::time::interval(Duration::from_secs(1));
-    // Set by a frame whose stanza name could not be read; cleared by the next
-    // decoded stanza. A server close right after such a frame may be the end
-    // of a session we could not read, so it is not treated as recoverable.
-    let mut unreadable_stanza = false;
+    let mut unreadable = UnreadableStanza::default();
     outbox_tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Delay);
     loop {
         if *stop.borrow() {
@@ -1242,38 +1320,26 @@ pub(crate) async fn drive(
                 link.send(&ping).await?;
             }
             incoming = link.incoming.recv() => {
-                let inbound = match incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))? {
-                    Err(Error::Transport(super::TransportError::PeerClosed)) if unreadable_stanza => {
-                        return Err(Error::invalid("connection", "server closed the connection after a stanza this client could not read; captured; no reconnect (whatsapp-cli undecodable)"));
-                    }
-                    other => other?,
-                };
+                let incoming = incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))?;
+                let reason = unreadable.observe(&incoming);
+                let inbound = incoming.map_err(|error| reason.map_or(error, |why| Error::invalid("connection", why)))?;
                 let node = match inbound {
-                    Inbound::Node(node) => {
-                        unreadable_stanza = false;
-                        node
-                    }
+                    Inbound::Node(node) => node,
                     // A redelivered frame this decoder refuses (a newer token,
                     // say) used to end receive at every login, uncaptured.
                     // Kept for inspection and later re-decoding; nothing to ACK.
                     // Continuing is local policy: where the APK catches a
                     // decode error is not traced.
-                    Inbound::Undecodable { frame, class, description } => {
+                    Inbound::Undecodable { frame, class, .. } => {
                         super::inbox::preserve_undecodable(&store, &frame, class, Some(epoch))?;
                         epoch_authority.check()?;
+                        if let Some(reason) = reason {
+                            return Err(Error::invalid("connection", reason));
+                        }
                         if let Some(terminal) = super::messaging::terminal_frame_error(class) {
                             // Native 1s2 exits on stream-end or corrupt framing.
                             // Existing transport recovery category grants no replay.
                             return Err(Error::Transport(terminal));
-                        }
-                        match description.as_deref() {
-                            // The server ended the session, as with a decodable
-                            // one below: never reconnect into a refusal.
-                            Some("failure" | "stream:error") => {
-                                return Err(Error::invalid("connection", "server ended session with a stanza this client could not decode; captured; no reconnect"));
-                            }
-                            Some(_) => {}
-                            None => unreadable_stanza = true,
                         }
                         tracing::warn!(class, "inbound frame did not decode; captured without ACK; session continues");
                         continue;
@@ -1848,7 +1914,7 @@ async fn maybe_upload(
 }
 
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::*;
     use crate::{
         model::{
@@ -1880,6 +1946,46 @@ mod tests {
             .unwrap();
         Arc::new(store)
     }
+    // Exercise the production split reader without polling the actor's input.
+    // A write that loses to the reader's close still reports the refusal.
+    pub(in crate::transport) async fn assert_unreadable_split_close(
+        channel: EncryptedConnection<tokio::io::DuplexStream>,
+        expected_classes: &[&str],
+    ) {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("split-terminal.redb");
+        let store = open(&path);
+        let (link, mut tasks) = link_from(channel, store.clone(), ConnectionEpoch(3)).unwrap();
+        tokio::time::timeout(Duration::from_secs(2), &mut tasks.reader)
+            .await
+            .unwrap()
+            .unwrap();
+        let write = link.send(&Node::new("presence")).await;
+        assert!(matches!(
+            write,
+            Err(Error::Transport(TransportError::Closed))
+        ));
+        assert!(
+            !tasks
+                .finish(write)
+                .unwrap_err()
+                .is_recoverable_by_reconnect()
+        );
+        drop(link);
+        drop(tasks);
+        drop(store);
+        let captures = super::super::inbox::undecodable_frames(&open(&path)).unwrap();
+        let mut classes = captures
+            .iter()
+            .map(|capture| {
+                assert_eq!(capture.epoch, Some(ConnectionEpoch(3)));
+                capture.class.as_str()
+            })
+            .collect::<Vec<_>>();
+        classes.sort_unstable();
+        assert_eq!(classes, expected_classes);
+    }
+
     fn identity_store(path: &std::path::Path) -> ProtocolStore {
         ProtocolStore::open(OpenOptions {
             path: path.to_owned(),
@@ -6737,6 +6843,60 @@ mod tests {
         fake.cut(Error::Transport(TransportError::PeerClosed)).await;
         let error = fake.finished().await.unwrap_err();
         assert!(error.is_recoverable_by_reconnect(), "{error}");
+    }
+
+    #[tokio::test]
+    async fn truncated_terminal_names_and_ambiguous_stream_end_suppress_reconnect() {
+        use crate::binary::tags::{BINARY_8, JID_PAIR, LIST_8};
+        for name in ["failure", "stream:error", "message"] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("truncated.redb");
+            let store = open(&path);
+            let mut frame = vec![0, LIST_8, 2, BINARY_8, name.len() as u8];
+            frame.extend_from_slice(name.as_bytes());
+            assert_eq!(
+                super::super::inbox::decode_frame(&frame)
+                    .unwrap_err()
+                    .class(),
+                "unexpected_eof"
+            );
+            let mut fake = start(&store, false, None);
+            fake.activate().await;
+            fake.deliver_frame(&frame).await;
+            let error = fake.finished().await.unwrap_err();
+            assert_eq!(
+                error.is_recoverable_by_reconnect(),
+                name == "message",
+                "{name}: {error}"
+            );
+            drop(store);
+            let captures = super::super::inbox::undecodable_frames(&open(&path)).unwrap();
+            assert_eq!(captures.len(), 1);
+            assert_eq!(captures[0].class, "unexpected_eof");
+        }
+        for intervening_node in [false, true] {
+            let dir = tempfile::tempdir().unwrap();
+            let store = open(&dir.path().join("ambiguous-end.redb"));
+            let mut fake = start(&store, false, None);
+            fake.activate().await;
+            fake.deliver_frame(&[0, LIST_8, 1, JID_PAIR]).await;
+            if intervening_node {
+                fake.deliver(Node::new("ib")).await;
+            }
+            fake.deliver_frame(&[0, LIST_8, 1, 2]).await;
+            let error = fake.finished().await.unwrap_err();
+            assert_eq!(
+                error.is_recoverable_by_reconnect(),
+                intervening_node,
+                "{error}"
+            );
+            assert_eq!(
+                super::super::inbox::undecodable_frames(&store)
+                    .unwrap()
+                    .len(),
+                2
+            );
+        }
     }
 
     #[tokio::test]
