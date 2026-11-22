@@ -1,3 +1,5 @@
+**Ordinary media in large stores (offline).** Listing, resolving and opening a cached attachment now work beyond 10,000 checkpoints. [Restart regression](docs/protocol/video-media.md#media-lookup-in-large-stores).
+
 **Saved video sends (offline).** Reopening an MP4 request with its original ID now passes the outbox attachment check. Changing its attachment type raises a conflict before file access. [Restart regression](docs/protocol/replay-safety-audit.md#reopening-a-video-send).
 
 **Outgoing documents (offline).** Newly prepared document messages carry the validated upload URL and direct path. [APK trace and wire test](docs/protocol/document-media.md#outgoing-document-download-locations).

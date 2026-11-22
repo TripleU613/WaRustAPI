@@ -2,7 +2,8 @@
 
 All new static evidence below is **confirmed** for APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
-This work extends incoming media; it does not implement video sending.
+The initial trace covers incoming media. The later ordinary MP4 send received
+a server acknowledgement and delivery and read receipts on 2026-11-02. [Live record](../../STATUS.md)
 
 ## Schema and type evidence
 
@@ -98,7 +99,7 @@ or proof of live interoperability.
 
 **Unknown/live unverified:** no incoming video/PTV stanza, display or playback
 has been observed. DirectPath-only retrieval, large/streamed files, processed/HD
-variant selection, video sending, circular PTV rendering, looping GIF behavior
+variant selection, circular PTV rendering, looping GIF behavior
 and view-once video consumption are unimplemented. Generic MP4 playback does
 not reproduce the APK's video-note UI.
 
@@ -124,3 +125,41 @@ encrypted database backup, separate baseline inspection copy, receive log,
 before/after event summaries and action/receipt/outbox inspections. Inspectors
 can write normal database-open metadata; they did not advance a journal consumer
 or delete a marker. No chat send, media GET, identity reset or resend was used.
+
+## Media lookup in large stores
+
+**Confirmed in Rust, offline.** Ordinary media lookup previously stopped at
+10,000 checkpoints across the entire store. A history of receipts and other
+unrelated operations could therefore make even an already downloaded video
+inaccessible after restart. The CLI and HTTP media list now query only the
+`received-own:` and `received:` key ranges in the same read transaction.
+Selectors retain their SHA-256 derivation and listings retain their key order.
+Opening one selector decrypts only its matching inbox record. The client
+rechecks that record and its expiry before handing over authenticated bytes.
+
+The regression first reproduced the old pagination error. With 10,000 unrelated
+checkpoints plus a cached video, the reopened store now lists the original
+selector and resolves its sealed reference. Opening it still verifies and
+returns the fixture bytes when another inbox row contains invalid JSON. A full
+listing reports that damaged row.
+
+**Confirmed in APK 2.26.43.72.** The ordinary video descriptor carries URL
+at field 1 and direct path at field 13. The large-store test uses cached
+ciphertext and exercises no HTTP request. Choosing a download host for a
+direct-path-only video remains unverified. [DiM descriptor fields](apk/2.26.43.72-media-video-ingress/video-fields.txt)
+
+### What a video direct path contains
+
+**Confirmed static for 2.26.43.72.** In `F1B.A05` at byte offsets
+`005a..006a`, the message-key JID supplies the boolean passed to
+`KmR.A00` at `0274..0284`. Only a JID with numeric type 21 sets it.
+With that mode and a whole-string match for the lowercase UUID-v4
+pattern, the original field 13 value goes to `8tC.A0S`. Otherwise the
+helper returns null and a separate branch can retain the raw value in
+`8tC.A0V`. Those fields distinguish an opaque identifier from the
+ordinary direct path. Neither assignment constructs a download URL.
+[Video projection](apk/2.26.43.72-media-image-ingress/video-projector.txt) ·
+[JID predicate](apk/2.26.43.72-unhandled-receipt-root/type21-predicate.txt) ·
+[Classification helper](rea/2.26.43.72-media-upload-response/direct-path-mode.txt) ·
+[Pattern](rea/2.26.43.72-media-upload-response/opaque-handle-pattern.txt) ·
+[Whole-string match](rea/2.26.43.72-media-upload-response/regex-match-semantics.txt)

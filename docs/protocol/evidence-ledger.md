@@ -1,3 +1,5 @@
+**Ordinary media in large stores (offline).** Listing, resolving and opening a cached attachment now work beyond 10,000 checkpoints. [Restart regression](video-media.md#media-lookup-in-large-stores).
+
 **Outgoing documents (offline).** Newly prepared document messages carry the validated upload URL and direct path. [APK trace and wire test](document-media.md#outgoing-document-download-locations).
 
 **Empty incoming documents (offline).** An explicitly empty document now survives inbox projection and authenticated export after restart. [APK evidence and test scope](document-media.md#receiving-an-empty-document).

@@ -3,7 +3,7 @@
 use crate::{
     Error, Result,
     registration::request::LabRegistrationConfig,
-    store::{ProtocolStore, Table},
+    store::{ProtocolStore, ReadTx, Table},
 };
 use prost::Message;
 use sha2::{Digest, Sha256};
@@ -231,14 +231,14 @@ fn media_context(payload: &[u8]) -> Result<Option<MediaContext>> {
         .context)
 }
 
-fn unexpired(store: &ProtocolStore, record: &serde_json::Value, duration: u32) -> Result<bool> {
+fn unexpired(tx: &ReadTx<'_>, record: &serde_json::Value, duration: u32) -> Result<bool> {
     let wire: Option<Vec<u8>> = if !record["route"].is_null() {
         Some(
             serde_json::from_value(record["route"].clone())
                 .map_err(|_| bad("invalid saved route"))?,
         )
     } else if let Ok(capture) = serde_json::from_value::<Vec<u8>>(record["capture"].clone()) {
-        store.read(|tx| tx.get_json(Table::Checkpoints, &capture, 1))?
+        tx.get_json(Table::Checkpoints, &capture, 1)?
     } else {
         None
     };
@@ -376,57 +376,81 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
 }
 type Candidate = (Vec<u8>, Descriptor, Zeroizing<Vec<u8>>);
 
-fn candidates(store: &ProtocolStore) -> Result<Vec<Candidate>> {
-    let rows = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
-    if rows.len() == 10000 {
-        return Err(bad("inbox requires pagination"));
+fn candidate_descriptor(tx: &ReadTx<'_>, key: &[u8], bytes: &[u8]) -> Result<Option<Descriptor>> {
+    let mut record: serde_json::Value =
+        serde_json::from_slice(bytes).map_err(|_| bad("invalid inbox record"))?;
+    if record["status"] != "decrypted" {
+        return Ok(None);
     }
-    let mut out = Vec::new();
-    for (key, bytes) in rows {
-        if !key.starts_with(b"received:") && !key.starts_with(b"received-own:") {
-            continue;
+    let plain: Zeroizing<Vec<u8>> = serde_json::from_value(record["protobuf"].take())
+        .map_err(|_| bad("invalid protobuf record"))?;
+    let plain = if let Some(suffix) = key.strip_prefix(b"received-own:") {
+        let chat = std::str::from_utf8(suffix)
+            .ok()
+            .and_then(|s| s.split_once(':'))
+            .and_then(|(chat, _)| crate::model::jid::Jid::parse(chat).ok())
+            .ok_or_else(|| bad("invalid synchronized media chat"))?;
+        super::own_device::payload(&plain, &chat)
+            .ok_or_else(|| bad("invalid synchronized media wrapper"))?
+    } else {
+        plain
+    };
+    if let Some(d) = descriptor(&plain)? {
+        if let Some(duration) = media_context(&plain)?
+            .and_then(|c| c.expiration)
+            .filter(|v| *v != 0)
+            && !unexpired(tx, &record, duration)?
+        {
+            return Ok(None);
         }
-        let mut record: serde_json::Value =
-            serde_json::from_slice(&bytes).map_err(|_| bad("invalid inbox record"))?;
-        if record["status"] != "decrypted" {
-            continue;
-        }
-        let plain: Zeroizing<Vec<u8>> = serde_json::from_value(record["protobuf"].take())
-            .map_err(|_| bad("invalid protobuf record"))?;
-        let plain = if let Some(suffix) = key.strip_prefix(b"received-own:") {
-            let chat = std::str::from_utf8(suffix)
-                .ok()
-                .and_then(|s| s.split_once(':'))
-                .and_then(|(chat, _)| crate::model::jid::Jid::parse(chat).ok())
-                .ok_or_else(|| bad("invalid synchronized media chat"))?;
-            super::own_device::payload(&plain, &chat)
-                .ok_or_else(|| bad("invalid synchronized media wrapper"))?
-        } else {
-            plain
-        };
-        if let Some(d) = descriptor(&plain)? {
-            if let Some(duration) = media_context(&plain)?
-                .and_then(|c| c.expiration)
-                .filter(|v| *v != 0)
-                && !unexpired(store, &record, duration)?
-            {
-                continue;
-            }
-            out.push((key, d, Zeroizing::new(bytes)));
-        }
+        return Ok(Some(d));
     }
-    Ok(out)
+    Ok(None)
 }
+
+fn map_candidates<T>(
+    store: &ProtocolStore,
+    selector: Option<&str>,
+    mut project: impl FnMut(&[u8], Descriptor, Zeroizing<Vec<u8>>) -> Result<T>,
+) -> Result<Vec<T>> {
+    store.read(|tx| {
+        let mut out = Vec::new();
+        // These prefixes are in physical key order, as in the original full-table scan.
+        for prefix in [b"received-own:".as_slice(), b"received:"] {
+            tx.visit_checkpoint_keys(prefix, |key| {
+                if selector.is_some_and(|id| hex::encode(Sha256::digest(key)) != id) {
+                    return Ok(());
+                }
+                let bytes = Zeroizing::new(
+                    tx.get(Table::Checkpoints, key, 1)?
+                        .ok_or_else(|| bad("missing inbox record"))?,
+                );
+                if let Some(d) = candidate_descriptor(tx, key, &bytes)? {
+                    out.push(project(key, d, bytes)?);
+                }
+                Ok(())
+            })?;
+        }
+        Ok(out)
+    })
+}
+
+fn selected_candidate(store: &ProtocolStore, id: &str) -> Result<Option<Candidate>> {
+    Ok(map_candidates(store, Some(id), |key, d, bytes| {
+        Ok((key.to_vec(), d, bytes))
+    })?
+    .pop())
+}
+
 /// List ordinary attachments without opening, exporting, or contacting a server.
 pub fn list(store: &ProtocolStore) -> Result<Vec<MediaEntry>> {
-    Ok(candidates(store)?
-        .into_iter()
-        .map(|(key, d, _)| MediaEntry {
+    map_candidates(store, None, |key, d, _| {
+        Ok(MediaEntry {
             id: hex::encode(Sha256::digest(key)),
             kind: d.kind,
             bytes: d.length,
         })
-        .collect())
+    })
 }
 
 const REFERENCE_BINDING: &[u8] = b"incoming-ordinary-media-v1";
@@ -613,29 +637,24 @@ pub(super) fn event_content(
 /// Account-bound references to authenticated ordinary inbox attachments. This
 /// operation is offline and excludes every supported view-once marker.
 pub fn references(store: &ProtocolStore) -> Result<Vec<crate::model::message::MediaReference>> {
-    candidates(store)?
-        .into_iter()
-        .map(|(key, d, _)| {
-            media_url(&d)?;
-            let id = hex::encode(Sha256::digest(key));
-            Ok(crate::model::message::MediaReference {
-                sealed: store
-                    .seal_media_reference(REFERENCE_BINDING, id.as_bytes())?
-                    .into(),
-                kind: match d.kind {
-                    MediaKind::Image => crate::model::message::MediaKind::Image,
-                    MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
-                    MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
-                    MediaKind::Document => crate::model::message::MediaKind::Document,
-                    MediaKind::Video | MediaKind::VideoNote => {
-                        crate::model::message::MediaKind::Video
-                    }
-                },
-                mime_type: d.mime.clone(),
-                length: Some(d.length),
-            })
+    map_candidates(store, None, |key, d, _| {
+        media_url(&d)?;
+        let id = hex::encode(Sha256::digest(key));
+        Ok(crate::model::message::MediaReference {
+            sealed: store
+                .seal_media_reference(REFERENCE_BINDING, id.as_bytes())?
+                .into(),
+            kind: match d.kind {
+                MediaKind::Image => crate::model::message::MediaKind::Image,
+                MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
+                MediaKind::Sticker => crate::model::message::MediaKind::Sticker,
+                MediaKind::Document => crate::model::message::MediaKind::Document,
+                MediaKind::Video | MediaKind::VideoNote => crate::model::message::MediaKind::Video,
+            },
+            mime_type: d.mime.clone(),
+            length: Some(d.length),
         })
-        .collect()
+    })
 }
 
 /// Validate a sealed reference against its still-present ordinary inbox record.
@@ -649,10 +668,8 @@ pub fn reference_selector(
     if id.len() != 64 || !id.bytes().all(|b| b.is_ascii_hexdigit()) {
         return Err(bad("invalid reference selector"));
     }
-    let (_, d, _) = candidates(store)?
-        .into_iter()
-        .find(|(key, _, _)| hex::encode(Sha256::digest(key)) == id)
-        .ok_or_else(|| bad("ordinary attachment not found"))?;
+    let (_, d, _) =
+        selected_candidate(store, id)?.ok_or_else(|| bad("ordinary attachment not found"))?;
     let kind = match d.kind {
         MediaKind::Image => crate::model::message::MediaKind::Image,
         MediaKind::VoiceNote => crate::model::message::MediaKind::Audio,
@@ -802,10 +819,8 @@ pub async fn open(
     if id.len() != 64 || !id.bytes().all(|b| b.is_ascii_hexdigit()) {
         return Err(bad("invalid attachment selector"));
     }
-    let (source_key, d, source) = candidates(store)?
-        .into_iter()
-        .find(|(key, _, _)| hex::encode(Sha256::digest(key)) == id)
-        .ok_or_else(|| bad("ordinary attachment not found"))?;
+    let (source_key, d, source) =
+        selected_candidate(store, id)?.ok_or_else(|| bad("ordinary attachment not found"))?;
     let state_key = format!("media-download:{id}");
     let saved: Option<serde_json::Value> =
         store.read(|tx| tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1))?;
@@ -954,14 +969,17 @@ fn ensure_source_available(
     key: &[u8],
     source: &[u8],
 ) -> Result<()> {
-    if !candidates(store)?
-        .iter()
-        .any(|(current_key, _, current_source)| {
-            current_key == key
-                && hex::encode(Sha256::digest(current_key)) == id
-                && current_source.as_slice() == source
-        })
-    {
+    let available = store.read(|tx| {
+        if hex::encode(Sha256::digest(key)) != id
+            || !(key.starts_with(b"received:") || key.starts_with(b"received-own:"))
+        {
+            return Ok(false);
+        }
+        let current = tx.get(Table::Checkpoints, key, 1)?.map(Zeroizing::new);
+        Ok(current.as_deref().map(Vec::as_slice) == Some(source)
+            && candidate_descriptor(tx, key, source)?.is_some())
+    })?;
+    if !available {
         return Err(bad(
             "ordinary media source changed or expired before plaintext handoff",
         ));
@@ -1002,10 +1020,7 @@ fn retain_download_refusal_bound(
 }
 
 pub(crate) fn ensure_available(store: &ProtocolStore, id: &str) -> Result<()> {
-    if !candidates(store)?
-        .iter()
-        .any(|(key, _, _)| hex::encode(Sha256::digest(key)) == id)
-    {
+    if selected_candidate(store, id)?.is_none() {
         return Err(bad("attachment expired or no longer available"));
     }
     Ok(())
@@ -2325,7 +2340,7 @@ mod tests {
                 .unwrap();
             let direct = serde_json::json!({"route":route});
             assert_eq!(
-                unexpired(&store, &direct, 60).unwrap(),
+                store.read(|tx| unexpired(tx, &direct, 60)).unwrap(),
                 expected,
                 "direct {time:?}"
             );
@@ -2335,12 +2350,16 @@ mod tests {
                 .unwrap();
             let historical = serde_json::json!({"capture":capture_key.to_vec()});
             assert_eq!(
-                unexpired(&store, &historical, 60).unwrap(),
+                store.read(|tx| unexpired(tx, &historical, 60)).unwrap(),
                 expected,
                 "capture {time:?}"
             );
         }
-        assert!(!unexpired(&store, &serde_json::json!({}), 60).unwrap());
+        assert!(
+            !store
+                .read(|tx| unexpired(tx, &serde_json::json!({}), 60))
+                .unwrap()
+        );
     }
     use super::*;
     #[cfg(feature = "comparison-client")]
@@ -3220,6 +3239,84 @@ mod tests {
             let json = serde_json::to_string(&reference).unwrap();
             assert!(!json.contains("whatsapp.net"));
         }
+    }
+
+    #[tokio::test]
+    async fn cached_video_remains_available_beyond_ten_thousand_checkpoints() {
+        use crate::{
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let open_store = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: dir.path().join("large-history.redb"),
+                account_id: AccountId::new("test").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [9; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open_store(true);
+        let mut config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = Zeroizing::new("offline-fixture".into());
+        let fixture = video_fixture();
+        let key = b"received:video";
+        let id = hex::encode(Sha256::digest(key));
+        store
+            .write(|tx| {
+                AccountRecord {
+                    phone: Some(config.phone.clone()),
+                    registration: RegistrationStatus::Registered,
+                    ..Default::default()
+                }
+                .save(tx)?;
+                for index in 0..10_000 {
+                    tx.put(
+                        Table::Checkpoints,
+                        format!("history:{index:05}").as_bytes(),
+                        1,
+                        b"fixture",
+                    )?;
+                }
+                let payload = video_payload(&fixture, false, b"");
+                tx.put_json(
+                    Table::Checkpoints,
+                    key,
+                    1,
+                    &serde_json::json!({"status":"decrypted","protobuf":payload}),
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    format!("media-download:{id}").as_bytes(),
+                    1,
+                    &serde_json::json!({"status":"downloaded","body":fixture.body}),
+                )
+            })
+            .unwrap();
+        drop(store);
+        let store = open_store(false);
+        let entries = list(&store).unwrap();
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].id, id);
+        let refs = references(&store).unwrap();
+        assert_eq!(refs.len(), 1);
+        assert_eq!(reference_selector(&store, &refs[0]).unwrap(), id);
+        // A known selector reads only its own payload; a damaged sibling is
+        // still reported when the caller asks to inspect the whole catalog.
+        store
+            .write(|tx| tx.put(Table::Checkpoints, b"received:unrelated", 1, b"invalid"))
+            .unwrap();
+        assert!(list(&store).is_err());
+        let head = store.journal_head().unwrap();
+        let (kind, bytes) = open(&store, &config, &id).await.unwrap();
+        assert_eq!(kind, MediaKind::Video);
+        assert_eq!(&*bytes, b"synthetic video domain fixture");
+        assert_eq!(store.journal_head().unwrap(), head);
     }
 
     #[test]

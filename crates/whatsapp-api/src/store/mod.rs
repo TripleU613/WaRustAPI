@@ -998,6 +998,32 @@ impl ReadTx<'_> {
         Ok(out)
     }
 
+    /// Visit the unblinded checkpoint keys in one prefix without opening their values.
+    #[cfg(all(
+        feature = "experimental-registration-https",
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    ))]
+    pub(crate) fn visit_checkpoint_keys(
+        &self,
+        prefix: &[u8],
+        mut visit: impl FnMut(&[u8]) -> Result<()>,
+    ) -> Result<()> {
+        let table = self
+            .tx
+            .open_table(Table::Checkpoints.def())
+            .map_err(StoreError::from)?;
+        for entry in table.range::<&[u8]>(prefix..).map_err(StoreError::from)? {
+            let (key, _) = entry.map_err(StoreError::from)?;
+            if !key.value().starts_with(prefix) {
+                break;
+            }
+            visit(key.value())?;
+        }
+        Ok(())
+    }
+
     /// Number of records in a table.
     pub fn count(&self, table: Table) -> Result<u64> {
         let t = self.tx.open_table(table.def()).map_err(StoreError::from)?;
