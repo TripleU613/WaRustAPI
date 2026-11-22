@@ -189,7 +189,11 @@ fn login_material(
             "previous login refused or uncertain; inspect before retry",
         ));
     }
-    let payload = super::login::primary_login(&account, config)?;
+    let payload = super::login::primary_login(
+        &account,
+        config,
+        super::presence::saved_push_name(store)?.as_deref(),
+    )?;
     let key = account
         .noise_static
         .as_ref()

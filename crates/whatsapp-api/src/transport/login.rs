@@ -66,10 +66,13 @@ fn login_app_version(account: &AccountRecord, config: &LabRegistrationConfig) ->
 }
 
 /// Build without inventing Android hardware, attestation or companion pairing.
-/// This is an explicitly minimal experiment, not a complete APK login payload.
+/// Device facts come only from configuration; the display name comes only from
+/// what this account already sent. This is an explicitly minimal experiment,
+/// not a complete APK login payload.
 pub fn primary_login(
     account: &AccountRecord,
     config: &LabRegistrationConfig,
+    push_name: Option<&str>,
 ) -> Result<Zeroizing<Vec<u8>>> {
     config.validate()?;
     if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
@@ -147,6 +150,14 @@ pub fn primary_login(
         });
     }
     payload.user_agent = Some(user_agent);
+    // 43.72 `X.1nX` (AnonymousClass270 case 461) writes the locally saved
+    // display name when non-empty. It is the name this account already sent,
+    // never a new or guessed one.
+    if let Some(name) = push_name
+        && let Ok(name) = super::presence::normalize_name(name)
+    {
+        payload.push_name = Some(name.to_owned());
+    }
     Ok(Zeroizing::new(payload.encode_to_vec()))
 }
 
@@ -173,7 +184,7 @@ mod tests {
             }],
             ..Default::default()
         };
-        let bytes = primary_login(&account, &cfg).unwrap();
+        let bytes = primary_login(&account, &cfg, None).unwrap();
         let payload = ClientPayload::decode(bytes.as_slice()).unwrap();
         assert_eq!(
             payload.username,
@@ -194,7 +205,7 @@ mod tests {
             source_step: None,
         });
         let payload =
-            ClientPayload::decode(primary_login(&account, &cfg).unwrap().as_slice()).unwrap();
+            ClientPayload::decode(primary_login(&account, &cfg, None).unwrap().as_slice()).unwrap();
         let version = payload.user_agent.unwrap().app_version.unwrap();
         assert_eq!((version.tertiary, version.quaternary), (Some(43), Some(72)));
         account.credentials.pop();
@@ -204,9 +215,9 @@ mod tests {
         );
         assert_eq!(parse_app_version("WhatsApp/2.26"), None);
         account.credentials[0].value = Zeroizing::new(b"not-numeric".to_vec());
-        assert!(primary_login(&account, &cfg).is_err());
+        assert!(primary_login(&account, &cfg, None).is_err());
         account.credentials.clear();
-        assert!(primary_login(&account, &cfg).is_err());
+        assert!(primary_login(&account, &cfg, None).is_err());
     }
     fn version_fixture() -> (LabRegistrationConfig, AccountRecord) {
         let mut config: LabRegistrationConfig =
@@ -244,7 +255,7 @@ mod tests {
         ] {
             let mut account = original.clone();
             account.credentials.push(version_credential(value));
-            let error = primary_login(&account, &config).unwrap_err();
+            let error = primary_login(&account, &config, None).unwrap_err();
             assert_eq!(
                 error.to_string(),
                 "invalid input for `login`: saved app version is malformed"
@@ -254,7 +265,7 @@ mod tests {
         let mut account = original;
         account.credentials.push(version_credential(b"2.26.43.72"));
         account.credentials.push(version_credential(b"2.26.37.70"));
-        let error = primary_login(&account, &config).unwrap_err();
+        let error = primary_login(&account, &config, None).unwrap_err();
         assert_eq!(
             error.to_string(),
             "invalid input for `login`: saved app versions conflict"
@@ -269,13 +280,14 @@ mod tests {
         config.client.user_agent = Some(Zeroizing::new("private-agent-without-version".into()));
         // A valid saved fact still wins over unrelated mutable config.
         let payload =
-            ClientPayload::decode(primary_login(&account, &config).unwrap().as_slice()).unwrap();
+            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
+                .unwrap();
         let version = payload.user_agent.unwrap().app_version.unwrap();
         assert_eq!((version.tertiary, version.quaternary), (Some(43), Some(72)));
         account
             .credentials
             .retain(|c| c.name != REGISTERED_APP_VERSION);
-        let error = primary_login(&account, &config).unwrap_err();
+        let error = primary_login(&account, &config, None).unwrap_err();
         assert_eq!(
             error.to_string(),
             "invalid input for `login`: configured User-Agent has no valid app version"
@@ -322,7 +334,8 @@ mod tests {
         let (config, account) = device_config();
         config.validate().unwrap();
         let payload =
-            ClientPayload::decode(primary_login(&account, &config).unwrap().as_slice()).unwrap();
+            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
+                .unwrap();
         let ua = payload.user_agent.unwrap();
         assert_eq!(ua.platform, Some(Platform::Android as i32));
         assert_eq!(ua.mcc.as_deref(), Some("000"));
@@ -352,7 +365,8 @@ mod tests {
         let (mut config, account) = version_fixture();
         config.client.device = None;
         let payload =
-            ClientPayload::decode(primary_login(&account, &config).unwrap().as_slice()).unwrap();
+            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
+                .unwrap();
         assert_eq!(payload.year_class, None);
         assert_eq!(payload.mem_class, None);
         assert_eq!(payload.traffic_anonymization, None);
@@ -365,7 +379,8 @@ mod tests {
             ..Default::default()
         });
         let payload =
-            ClientPayload::decode(primary_login(&account, &config).unwrap().as_slice()).unwrap();
+            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
+                .unwrap();
         let ua = payload.user_agent.unwrap();
         assert_eq!(ua.os_version.as_deref(), Some("13"));
         assert_eq!(ua.device, None);
@@ -373,6 +388,34 @@ mod tests {
         assert_eq!(ua.mcc, None);
         assert_eq!(ua.phone_id, None);
         assert_eq!(payload.year_class, None);
+    }
+
+    #[test]
+    fn saved_display_name_is_carried_and_never_invented() {
+        let (config, account) = version_fixture();
+        // A name this account already sent is carried at login.
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, Some("  Lab Phone  "))
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
+        assert_eq!(payload.push_name.as_deref(), Some("Lab Phone"));
+        // No saved name means no pushName field, not an empty claim.
+        let payload =
+            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
+                .unwrap();
+        assert_eq!(payload.push_name, None);
+        // An unusable stored value is dropped instead of being sent.
+        for name in ["", "   ", "two\nlines"] {
+            let payload = ClientPayload::decode(
+                primary_login(&account, &config, Some(name))
+                    .unwrap()
+                    .as_slice(),
+            )
+            .unwrap();
+            assert_eq!(payload.push_name, None, "{name:?} was sent");
+        }
     }
 
     #[test]

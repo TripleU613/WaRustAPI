@@ -401,7 +401,10 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
     }
     let local = saved_noise_identity(&account)?;
     let payload = login
-        .then(|| whatsapp_api::transport::login::primary_login(&account, &config))
+        .then(|| {
+            let saved_name = whatsapp_api::transport::presence::saved_push_name(&store)?;
+            whatsapp_api::transport::login::primary_login(&account, &config, saved_name.as_deref())
+        })
         .transpose()?;
     const LOGIN_KEY: &[u8] = b"comparison-primary-login-v1";
     if login {

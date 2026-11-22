@@ -111,6 +111,11 @@ Also written by this filler, at top level: `oc`, `yearClass`, `memClass`.
   10 s old. `lidDbMigrated`, `messageSts`, `preacksCount` and
   `processingQueueSize` are conditional on companion/queue facts.
 - `case 460` and the remaining fillers were not read.
+- `case 461` (`X.1nX`): `username` from the login JID's numeric user part
+  (`userJid.user`, or the LID prefix for a LID login, which also sets
+  `product = WHATSAPP_LID`), and `pushName` from the saved `push_name`
+  preference (`X.C09O.B2L`, default empty) when non-empty. A login with neither
+  fact leaves both fields absent.
 
 ## Rust implementation
 
@@ -148,6 +153,14 @@ tracked file must not carry a personal carrier identity):
 ```
 
 `preview` reports which device facts are configured, never their values.
+
+**Display name.** `primary_login` takes the name this account already sent,
+read from the `push-name` record written when its presence went out
+(`presence::saved_push_name`, the analogue of the APK's saved `push_name`
+preference). It is trimmed and validated with the same rule as the presence
+stanza and dropped if unusable; when nothing was ever sent, `pushName` stays
+absent rather than empty. The caller passes it explicitly, so a login builder
+cannot silently invent a name.
 
 **Consistency guard.** The registration User-Agent is produced by the same
 `Build.*` reads (`0re.A00`), so one device must not be reported two ways. When

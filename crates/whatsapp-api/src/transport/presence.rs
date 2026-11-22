@@ -46,6 +46,14 @@ fn invalid(reason: &'static str) -> Error {
 /// `<presence name=<name> type="available"/>` — sets the display name other
 /// people see beside our number.
 pub fn push_name(name: &str) -> Result<Node> {
+    Ok(Node::new("presence")
+        .attr("name", normalize_name(name)?)
+        .attr("type", "available"))
+}
+
+/// Trim and validate a display name. The APK's own bound is the generated
+/// schema's `0..=2^53-1`; the 100-character limit is ours.
+pub fn normalize_name(name: &str) -> Result<&str> {
     let trimmed = name.trim();
     if trimmed.is_empty() {
         return Err(invalid("a display name is not empty"));
@@ -56,9 +64,24 @@ pub fn push_name(name: &str) -> Result<Node> {
     if trimmed.chars().any(char::is_control) {
         return Err(invalid("a display name has no control characters"));
     }
-    Ok(Node::new("presence")
-        .attr("name", trimmed)
-        .attr("type", "available"))
+    Ok(trimmed)
+}
+
+/// The display name this account last sent, read from the `push-name` record
+/// written when it went out. The APK's login payload carries its saved
+/// `push_name` preference (`X.C09O.B2L`), so this is the analogue here: an
+/// absent record means no name has been sent and nothing is invented.
+pub fn saved_push_name(store: &crate::store::ProtocolStore) -> Result<Option<String>> {
+    let record: Option<serde_json::Value> =
+        store.read(|tx| tx.get_json(crate::store::Table::Checkpoints, b"push-name", 1))?;
+    let Some(name) = record
+        .as_ref()
+        .and_then(|record| record["name"].as_str())
+        .map(str::to_owned)
+    else {
+        return Ok(None);
+    };
+    Ok(normalize_name(&name).ok().map(str::to_owned))
 }
 
 const PENDING_NAME: &[u8] = b"push-name-pending";
@@ -406,6 +429,51 @@ pub fn parse_chatstate(node: &Node) -> Option<IncomingChatState> {
 mod tests {
     use super::*;
     use crate::binary::{Decoder, Encoder, TokenDictionary};
+    use crate::{
+        model::ids::AccountId,
+        store::{MasterKey, OpenOptions, StaticKeySource},
+    };
+
+    fn store() -> (tempfile::TempDir, crate::store::ProtocolStore) {
+        let dir = tempfile::tempdir().unwrap();
+        let store = crate::store::ProtocolStore::open(OpenOptions {
+            path: dir.path().join("presence.redb"),
+            account_id: AccountId::new("presence").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([9; 32]))),
+            create: true,
+        })
+        .unwrap();
+        (dir, store)
+    }
+
+    #[test]
+    fn saved_display_name_reads_only_written_names_and_never_invents_one() {
+        let (_dir, store) = store();
+        assert_eq!(saved_push_name(&store).unwrap(), None);
+        // The saved name is the one that went out, normalized on read.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    crate::store::Table::Checkpoints,
+                    b"push-name",
+                    1,
+                    &serde_json::json!({"status": "written", "name": "  Lab  "}),
+                )
+            })
+            .unwrap();
+        assert_eq!(saved_push_name(&store).unwrap().as_deref(), Some("Lab"));
+        // A record without a usable name is treated as absent.
+        for value in [
+            serde_json::json!({"status": "written"}),
+            serde_json::json!({"status": "written", "name": "two\nlines"}),
+            serde_json::json!({"status": "written", "name": "   "}),
+        ] {
+            store
+                .write(|tx| tx.put_json(crate::store::Table::Checkpoints, b"push-name", 1, &value))
+                .unwrap();
+            assert_eq!(saved_push_name(&store).unwrap(), None, "{value}");
+        }
+    }
 
     fn round_trip(node: &Node) {
         let dict = TokenDictionary::comparison_2_26_37_71();
@@ -598,16 +666,7 @@ mod tests {
     /// `LX/0y0->A00` case 3: `name` then `type="available"`, nothing else.
     #[test]
     fn queued_push_name_is_taken_once() {
-        let dir = tempfile::tempdir().unwrap();
-        let store = crate::store::ProtocolStore::open(crate::store::OpenOptions {
-            path: dir.path().join("name.redb"),
-            account_id: crate::model::ids::AccountId::new("name").unwrap(),
-            key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
-                crate::store::MasterKey::from_bytes([7; 32]),
-            )),
-            create: true,
-        })
-        .unwrap();
+        let (_dir, store) = store();
         assert!(queue_push_name(&store, "  ").is_err());
         assert!(take_push_name(&store).unwrap().is_none());
         queue_push_name(&store, " Usher ").unwrap();
