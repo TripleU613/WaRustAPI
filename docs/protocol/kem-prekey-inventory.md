@@ -296,6 +296,30 @@ false defaults for `q`, the APK would not send `pqsupport`, and there is no
 request of ours for it to ride on.
 
 
+### Returned inventory and batch values applied (2026-11-22)
+
+**Confirmed static (43.72, retained evidence):** the `08Y.A0Q` registry
+declares the PQ generation target as property **21200** (default 200) and the
+upload batch as property **21201** (default 10); `0WJ` captures the former for
+`0Yj`, and `0jc.A1C` uses `max(1, 21201)` unsent rows.
+
+Rust now reads both from the latest settled A/B reply instead of hardcoding the
+defaults. `transport::abprops::property_value` applies the same collection rules
+as `inspect`: duplicate rows take the last value, an invalid last value hides
+earlier ones, a delta reply contributes only the codes it names while an older
+settled reply supplies the rest, and a newer full reply defines the whole set.
+Only a settled, correlated successful reply counts; queued, reserved-unanswered
+and refused reads apply nothing. `begin_upload` uses
+`max(1, min(21200, 200))` as the inventory target and `max(1, min(21201, 200))`
+as the batch; the clamp is a local resource bound, not a traced server rule.
+MobileConfig precedence remains unported.
+
+Tests: `property_lookup_applies_last_value_and_delta_precedence` and
+`property_lookup_hides_invalid_last_values_and_ignores_unsettled_replies` cover
+the accessor; `kyber_inventory_and_batch_follow_returned_properties` shows a
+SET batch of 3, an ADD inventory of 5 with a batch of 3, and a later full reply
+without the codes restoring the defaults. No live account ran.
+
 ### KEM batch scans refuse corrupt owned inventory (2026-11-05)
 
 **Confirmed local defect, fixed offline:** kem_prekeys.all_rows skipped JSON

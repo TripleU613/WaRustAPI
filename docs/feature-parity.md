@@ -30,7 +30,7 @@ store inspections ([HTTP API parity](#http-api-parity)). Every other operation i
 | Two-step verification | live (set) | `two-factor` | [registration-lab](protocol/registration-lab.md#two-step-verification-and-resolving-an-unknown-outcome-2026-09-24) | Change/disable not live-verified; the first set attempt stays Sent/unknown |
 | Ban appeal | partial: token recovered, nothing submitted | `ban-appeal` | [ban-appeal](protocol/ban-appeal.md) | Owner's decision; SubmitAnAppealForIP doc_id not recovered; named-operation acceptance unverified |
 | Account recovery / re-registration of a banned number | absent | — | — | Out of scope without owner authority |
-| Server AB properties / feature configuration | partial: one read sent live 2026-10-08, outcome unknown (stream ended); no values applied; the `abprops` notification now queues a forced read when the channel is ready | `abprops-query` | [feature-configuration](protocol/feature-configuration.md), [startup-requests](protocol/startup-requests.md#server-requested-refetch-abprops-notification) | A settled reply; effective values gate other rows (properties 2983, 23639) |
+| Server AB properties / feature configuration | partial: one read sent live 2026-10-08, outcome unknown (stream ended); settled values are now applied per code (21198/21200/21201), and the `abprops` notification queues a forced read when the channel is ready | `abprops-query` | [feature-configuration](protocol/feature-configuration.md), [startup-requests](protocol/startup-requests.md#server-requested-refetch-abprops-notification) | Effective MobileConfig precedence; properties 2983 and 23639/23463 still lack an enabled consumer |
 
 ## Encryption and identity
 

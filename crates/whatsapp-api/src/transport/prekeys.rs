@@ -667,9 +667,6 @@ fn begin_upload_selected(
     }
     let account_authority_sha256 = account_authority(account)?;
     let iq_id = super::messaging::new_message_id()?;
-    // 07t.A0R 0196..01a2: property 21201 defaults to 10; returned values are
-    // not applied (MobileConfig unported), so the default is used.
-    let pq_batch = 10;
     let reserved =
         store.write(|tx| {
             // The actor's snapshot can outlive a local account update. Bind
@@ -689,6 +686,19 @@ fn begin_upload_selected(
                 return Err(invalid("publication account changed"));
             }
             let pq_enabled = super::abprops::pq_keys_upload_enabled_in_write(tx)?;
+            // 43.72 08Y.A0Q registry defaults: inventory target 21200 = 200 and
+            // upload batch 21201 = 10. A settled A/B reply replaces each value;
+            // the local 1..=200 clamp is a resource bound, not a server rule.
+            let pq_target = super::abprops::property_value_in_write(
+                tx,
+                super::abprops::PQ_INVENTORY_PROPERTY,
+            )?
+            .map_or(200usize, |value| value.clamp(1, 200) as usize);
+            let pq_batch = super::abprops::property_value_in_write(
+                tx,
+                super::abprops::PQ_BATCH_PROPERTY,
+            )?
+            .map_or(10usize, |value| value.clamp(1, 200) as usize);
             // Refusal retry/backoff/regeneration policy is not ported. Returning
             // keys to Unsent is inventory state, not authority to reserve a new
             // IQ on the next notification or reconnect (43.72 13z.A02/14o.BLn).
@@ -726,8 +736,8 @@ fn begin_upload_selected(
             let ids: Vec<u32> = if legacy { unsent_in(&*tx)?.into_iter().take(if add { 200 } else { UNSENT_TARGET }).collect() } else { Vec::new() };
             if ids.is_empty() && !add { return Ok(None); }
             let kem_rows = if add && pq {
-                // 08Y defaults:21200 inventory200,21201 batch10. Distinct limits.
-                super::kem_prekeys::add_rows_in(tx, 200, pq_batch)?
+                // 21200 inventory and 21201 batch are distinct limits.
+                super::kem_prekeys::add_rows_in(tx, pq_target, pq_batch)?
             } else if !add && pq_enabled {
                 super::kem_prekeys::upload_rows_in(tx, pq_batch)?
             } else {
@@ -2009,6 +2019,103 @@ mod tests {
     /// 13c.A03: Kyber keys ride with the upload only while property 21198 is
     /// on, and only with an unsent last-resort key; once that is acknowledged
     /// the next upload carries none.
+    #[test]
+    fn kyber_inventory_and_batch_follow_returned_properties() {
+        use crate::transport::abprops::{PQ_BATCH_PROPERTY, PQ_INVENTORY_PROPERTY};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("kyber-props.redb"));
+        let (account, signed) = account_and_signed(&store);
+        let action = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        let props = Node::new("props").attr("hash", "h").children(vec![
+            Node::new("prop")
+                .attr("config_code", "21198")
+                .attr("config_value", "1"),
+            Node::new("prop")
+                .attr("config_code", PQ_INVENTORY_PROPERTY.to_string())
+                .attr("config_value", "5"),
+            Node::new("prop")
+                .attr("config_code", PQ_BATCH_PROPERTY.to_string())
+                .attr("config_value", "3"),
+        ]);
+        assert!(
+            super::super::actions::record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", action.as_str())
+                    .attr("type", "result")
+                    .children(vec![props]),
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            super::super::abprops::property_value(&store, PQ_BATCH_PROPERTY).unwrap(),
+            Some(3)
+        );
+        generate(&store).unwrap();
+        // SET path: the returned batch (21201 = 3) caps the one-time list and
+        // the last-resort key rides along.
+        let (pending, iq) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        assert_eq!(iq.child("pq_list").expect("pq_list").child_nodes().len(), 3);
+        assert!(iq.child("pq_last_resort_key").is_some());
+        let id = iq.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        pending
+            .settle(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result"),
+            )
+            .unwrap();
+        // ADD path (a follow-up demand that includes PQ): 21200 = 5 fills the
+        // unsent inventory, then 21201 = 3 selects the upload batch.
+        let (pending, iq) = begin_followup_upload(&store, &account, &signed, true, true)
+            .unwrap()
+            .expect("PQ ADD");
+        assert_eq!(iq.child("pq_list").expect("pq_list").child_nodes().len(), 3);
+        let unsent = store
+            .read(|tx| {
+                Ok(super::super::kem_prekeys::all_rows(tx)?
+                    .into_iter()
+                    .filter(|row| !row.last_resort && !row.sent)
+                    .count())
+            })
+            .unwrap();
+        assert_eq!(unsent, 5, "21200 inventory target");
+        let id = iq.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        pending
+            .settle(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result"),
+            )
+            .unwrap();
+        // A later full reply without the two counts unsets them; the traced
+        // defaults then apply instead of the previous values.
+        let forced = super::super::abprops::queue_forced(&store)
+            .unwrap()
+            .unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        let defaults = Node::new("props").attr("hash", "h2").children(vec![
+            Node::new("prop")
+                .attr("config_code", "21198")
+                .attr("config_value", "1"),
+        ]);
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", forced.as_str())
+                .attr("type", "result")
+                .children(vec![defaults]),
+        )
+        .unwrap();
+        assert_eq!(
+            super::super::abprops::property_value(&store, PQ_BATCH_PROPERTY).unwrap(),
+            None
+        );
+    }
+
     #[test]
     fn kyber_keys_upload_only_behind_the_server_property() {
         let dir = tempfile::tempdir().unwrap();

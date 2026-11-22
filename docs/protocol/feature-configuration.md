@@ -81,6 +81,15 @@ fixture verifies preservation, not equality to the APK's packed-empty marker
 selection. Existing byte/string packing equivalence and Android execution are
 not established by that fixture. No IDs, identities or reservations are rotated.
 
+**Applied values (2026-11-22, offline):** `transport::abprops::property_value`
+exposes a settled reply's last value for any A/B code with the APK's
+collection rules (last duplicate wins, invalid last value hides, delta codes
+override and older replies supply the rest, a newer full reply defines the
+set). Currently applied: 21198 (PQ upload gate), 21200 (KEM inventory target)
+and 21201 (KEM upload batch, clamped locally to 1..=200). Not applied: 2983
+(peer edit window) and 23639/23463 (read-setting MEX/SMAX branch) still have
+no enabled consumer in this client, and MobileConfig precedence is unported.
+
 **Unknown / unfinished:** effective 35661 remains unknown until a supported
 response and complete resolver precedence are established. This command does
 not disable removal guards or claim effective feature state, even if the server

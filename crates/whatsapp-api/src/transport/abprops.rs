@@ -28,6 +28,12 @@ const TOKEN_PENDING_NAMESPACE_PROPERTY: i32 = 14303;
 // 37.71 D1G.Bat 0004..000e (PQKeysUploadABPropsObserver): PQ_KEYS_UPLOAD_CODE.
 // Turning it off deletes every Kyber prekey (DeleteKyberPreKeysJob).
 const PQ_KEYS_UPLOAD_PROPERTY: i32 = 0x52ce;
+// 43.72 08Y.A0Q registry: PQ inventory target (default 200) and upload batch
+// (default 10), captured by the 0WJ provider. Values are counts, not booleans.
+/// Generation target for unsent one-time KEM keys (`0Yj.A00`).
+pub const PQ_INVENTORY_PROPERTY: i32 = 21200;
+/// Upload batch size for one-time KEM keys (`0jc.A1C`).
+pub const PQ_BATCH_PROPERTY: i32 = 21201;
 
 /// Queue one initial AB-property read without a fabricated cached hash.
 /// Repeats reuse the original action, including refusals and uncertain outcomes.
@@ -323,6 +329,149 @@ pub(crate) fn pq_keys_upload_enabled_in_write(tx: &crate::store::WriteTx<'_>) ->
     Ok(inspect_saved(&id, outcome, reply)?.pq_keys_upload_value == Some(true))
 }
 
+/// Last returned signed integer for one A/B property code.
+///
+/// Collection follows the same rules as [`inspect`]: duplicate rows take the
+/// last value, an invalid last value hides earlier ones, and a full hashless
+/// reply applies nothing. A delta reply contributes only the codes it names;
+/// an older settled reply supplies the rest, while a full reply ends the
+/// search because it defines the whole set. Only a settled, correlated
+/// successful reply counts — queued, reserved-unanswered and refused reads
+/// apply nothing. This is not MobileConfig precedence.
+pub fn property_value(store: &ProtocolStore, code: i32) -> Result<Option<i32>> {
+    store.read(|tx| property_value_in(tx, code))
+}
+
+pub(crate) fn property_value_in(tx: &crate::store::ReadTx<'_>, code: i32) -> Result<Option<i32>> {
+    let mut candidates = Vec::new();
+    for key in [FORCED_MARKER, MARKER] {
+        let Some(id) = tx.get_json::<String>(Table::Checkpoints, key, 1)? else {
+            continue;
+        };
+        let Some((outcome, reply)) = actions::view_in(tx, &id)? else {
+            continue;
+        };
+        if outcome.kind != "abprops_query" || outcome.status != actions::ActionStatus::Ok {
+            continue;
+        }
+        let Some(reply) = reply else {
+            continue;
+        };
+        if reply.description != "iq"
+            || text(&reply, "id") != Some(id.as_str())
+            || text(&reply, "type") != Some("result")
+            || reply.child("error").is_some()
+        {
+            continue;
+        }
+        candidates.push((outcome.settlement_sequence.unwrap_or(0), reply));
+    }
+    candidates.sort_by_key(|candidate| std::cmp::Reverse(candidate.0));
+    for (_, reply) in candidates {
+        match property_in_reply(&reply, code)? {
+            PropertyLookup::Named(value) => return Ok(value),
+            PropertyLookup::FullWithout => return Ok(None),
+            PropertyLookup::DeltaWithout => continue,
+        }
+    }
+    Ok(None)
+}
+
+pub(crate) fn property_value_in_write(
+    tx: &crate::store::WriteTx<'_>,
+    code: i32,
+) -> Result<Option<i32>> {
+    // The write transaction exposes the same read surface through `ReadTx`
+    // conversions used elsewhere; re-read the two markers directly instead of
+    // nesting a store read inside the reservation.
+    let mut candidates = Vec::new();
+    for key in [FORCED_MARKER, MARKER] {
+        let Some(id) = tx.get_json::<String>(Table::Checkpoints, key, 1)? else {
+            continue;
+        };
+        let Some((outcome, reply, _request)) = actions::view_in_write(tx, &id)? else {
+            continue;
+        };
+        if outcome.kind != "abprops_query" || outcome.status != actions::ActionStatus::Ok {
+            continue;
+        }
+        let Some(reply) = reply else {
+            continue;
+        };
+        if reply.description != "iq"
+            || text(&reply, "id") != Some(id.as_str())
+            || text(&reply, "type") != Some("result")
+            || reply.child("error").is_some()
+        {
+            continue;
+        }
+        candidates.push((outcome.settlement_sequence.unwrap_or(0), reply));
+    }
+    candidates.sort_by_key(|candidate| std::cmp::Reverse(candidate.0));
+    for (_, reply) in candidates {
+        match property_in_reply(&reply, code)? {
+            PropertyLookup::Named(value) => return Ok(value),
+            PropertyLookup::FullWithout => return Ok(None),
+            PropertyLookup::DeltaWithout => continue,
+        }
+    }
+    Ok(None)
+}
+
+enum PropertyLookup {
+    /// The code is named by this reply; `None` means its last value is invalid.
+    Named(Option<i32>),
+    /// A full reply that does not name the code: the property is unset.
+    FullWithout,
+    /// A delta reply that does not name the code: an older reply applies.
+    DeltaWithout,
+}
+
+fn property_in_reply(reply: &Node, code: i32) -> Result<PropertyLookup> {
+    let props = reply
+        .child("props")
+        .ok_or_else(|| Error::invalid("abprops", "saved reply has no unique props child"))?;
+    let delta = delta_and_hash(props)?.0;
+    let mut seen = None;
+    for row in props
+        .child_nodes()
+        .iter()
+        .filter(|node| node.description == "prop")
+    {
+        let Some(row_code) = text(row, "config_code").filter(|value| !value.is_empty()) else {
+            continue;
+        };
+        let Some(row_code) = integer(row_code) else {
+            continue;
+        };
+        if row_code != code {
+            continue;
+        }
+        // IWy.C8f SparseArray.append: the last duplicate wins, and an invalid
+        // last value hides every earlier one.
+        seen = Some(text(row, "config_value").and_then(integer));
+    }
+    Ok(match seen {
+        Some(value) => PropertyLookup::Named(value),
+        None if delta => PropertyLookup::DeltaWithout,
+        // A full reply defines the whole set: an absent code is unset.
+        None => PropertyLookup::FullWithout,
+    })
+}
+
+/// `(delta_update, hash-present)` with the APK's Boolean parse.
+fn delta_and_hash(props: &Node) -> Result<(bool, bool)> {
+    for name in ["hash", "delta_update"] {
+        if props.get_attr(name).is_some() && text(props, name).is_none() {
+            return Err(Error::invalid("abprops", "nontext props metadata"));
+        }
+    }
+    Ok((
+        text(props, "delta_update").is_some_and(|value| value.eq_ignore_ascii_case("true")),
+        text(props, "hash").is_some_and(|value| !value.is_empty()),
+    ))
+}
+
 /// Inspect saved correlated evidence without queueing or applying feature values.
 pub fn inspect(store: &ProtocolStore) -> Result<Option<AbPropsInspection>> {
     store.read(inspect_in)
@@ -420,6 +569,97 @@ mod tests {
             .attr("type", "result")
             .children(vec![props])
     }
+    fn prop(code: &str, value: &str) -> Node {
+        Node::new("prop")
+            .attr("config_code", code)
+            .attr("config_value", value)
+    }
+    fn settle(store: &ProtocolStore, id: &str, props: Node) {
+        actions::reserve_pending(store).unwrap();
+        assert!(
+            actions::record_reply(
+                store,
+                &Node::new("iq")
+                    .attr("id", id)
+                    .attr("type", "result")
+                    .children(vec![props]),
+            )
+            .unwrap()
+        );
+    }
+
+    #[test]
+    fn property_lookup_applies_last_value_and_delta_precedence() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("property.redb"), true);
+        // Nothing saved: no value, no default invented here.
+        assert_eq!(property_value(&store, 2983).unwrap(), None);
+        let id = queue(&store).unwrap();
+        // Queued but not settled: applies nothing.
+        assert_eq!(property_value(&store, 2983).unwrap(), None);
+        let props = Node::new("props").attr("hash", "h").children(vec![
+            prop("2983", "900"),
+            prop("2983", "1200"),
+            prop("21201", "7"),
+        ]);
+        settle(&store, &id, props);
+        assert_eq!(property_value(&store, 2983).unwrap(), Some(1200));
+        assert_eq!(property_value(&store, 21201).unwrap(), Some(7));
+        assert_eq!(property_value(&store, 21200).unwrap(), None);
+
+        // A later delta names only the code it changes; an unmentioned code
+        // keeps the older settled value.
+        let forced = queue_forced(&store).unwrap().unwrap();
+        assert_ne!(forced, id);
+        let delta = Node::new("props")
+            .attr("delta_update", "true")
+            .children(vec![prop("21201", "3")]);
+        settle(&store, &forced, delta);
+        assert_eq!(property_value(&store, 21201).unwrap(), Some(3));
+        assert_eq!(property_value(&store, 2983).unwrap(), Some(1200));
+
+        // A newer full reply replaces the whole set: unmentioned codes are unset.
+        let newer = queue_forced(&store).unwrap().unwrap();
+        settle(
+            &store,
+            &newer,
+            Node::new("props")
+                .attr("hash", "h2")
+                .children(vec![prop("2983", "60")]),
+        );
+        assert_eq!(property_value(&store, 2983).unwrap(), Some(60));
+        assert_eq!(property_value(&store, 21201).unwrap(), None);
+    }
+
+    #[test]
+    fn property_lookup_hides_invalid_last_values_and_ignores_unsettled_replies() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("property-invalid.redb"), true);
+        let id = queue(&store).unwrap();
+        settle(
+            &store,
+            &id,
+            Node::new("props")
+                .attr("hash", "h")
+                .children(vec![prop("2983", "900"), prop("2983", "not-an-int")]),
+        );
+        // IWy.C8f collects then converts, so the invalid last duplicate hides
+        // the earlier valid one.
+        assert_eq!(property_value(&store, 2983).unwrap(), None);
+        // A refused reply never applies.
+        let forced = queue_forced(&store).unwrap().unwrap();
+        actions::reserve_pending(&store).unwrap();
+        actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", forced.as_str())
+                .attr("type", "error")
+                .children(vec![Node::new("error").attr("code", "400")]),
+        )
+        .unwrap();
+        assert_eq!(property_value(&store, 2983).unwrap(), None);
+    }
+
     #[test]
     fn forced_fetch_is_triggered_by_the_first_child_tag_not_the_type_attribute() {
         let with_child = |children: Vec<Node>| {
