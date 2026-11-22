@@ -21,8 +21,3 @@ Provide minimal steps or a sanitized fixture.
 - Rust version:
 - Enabled features:
 - Protocol profile, if relevant:
-
-## Diagnostics
-
-Include sanitized errors only. Do not attach keys, OTPs, PINs, account databases,
-or private messages. Report vulnerabilities through SECURITY.md.

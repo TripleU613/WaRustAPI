@@ -316,7 +316,7 @@ sessions for old PN and updated LID identities. The inspector distinguishes
 cross-alias mismatch from within-session mismatch, requires history to match
 the current LID pin, preserves all mappings across pagination/restart, marks
 missing pins unknown and exposes no peer JID. These tests establish inspection
-behavior, not an actual remote identity change or permission to replace keys.
+behavior, not an actual remote identity change.
 
 **Confirmed (implementation correction):** the previous `outbox-suspended`
 command omitted the CLI transport feature gate. Both its enum variant and
@@ -541,8 +541,7 @@ ProtocolMessage enum. Complete peer serialization/transmission remains untraced.
 confirmation dialog with an AES positive-button callback (0034..0058) and a
 negative button (0058..0066). Exact callers locate 5XZ.onClick and 5Xc.onClick,
 but those click handlers, the dialog callback and complete connection to scan
-success remain untraced. This evidence establishes the guarded writer, not
-permission to mark our live peer verified without human comparison.
+success remain untraced. This evidence establishes the guarded writer.
 
 **Confirmed/static, inbound own-account action `1gz.A00`:** its peer branch
 checks the source DeviceJid's UserJid against the local account through BO0 at
@@ -699,7 +698,7 @@ research tooling only; no live verification claim or account mutation occurred.
 **Confirmed/static:** the same comparison APK 2.26.37.71 (SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`)
 resolves DUm selector 15's remaining 1lL predicates. These are local UI gates,
-not server refusals or permission to synthesize contact/attestation state.
+not server refusals.
 
 | Predicate | Exact static behavior | Evidence |
 | --- | --- | --- |
@@ -1428,8 +1427,7 @@ replace differently obfuscated evidence attributed to other builds.
 below prior `A02` retains expected timestamp `A02`, job timestamp `A04` and
 update clock `A03`. A response reaching that expectation resets the trio.
 The Boolean true and missing-baseline branches also reset it. **Unknown:** the
-Boolean's full caller semantics and own-account/type/raw-ID reconciliation;
-we have not inferred permission to clear expectations from an arbitrary flag.
+Boolean's full caller semantics and own-account/type/raw-ID reconciliation.
 **Negative finding:** `0bN.A0H(ZLLLZ)` accepts an already constructed `LbQ`
 and persists it through `0bp.A05`; it does not itself produce the expected
 timestamp. Broader membership transactions remain unported.
@@ -1602,8 +1600,7 @@ these are local scheduling bounds, not WhatsApp cooldowns. Before teardown it
 rechecks current membership through `0bN.A0B`: a returned device drops the
 registry entry and is left untouched. Otherwise it reaches `0jc.A0s/A0r` and
 sender-key removal, including literal `sender_keys` / group-scoped SQL and
-batch iteration. Full session/identity deletion semantics remain untraced;
-we have not implemented cleanup or inferred permission to erase history.
+batch iteration. Full session/identity deletion semantics remain untraced.
 **Negative finding:** the scoped `A02` has no post-cleanup `A04` call to clear
 that dead-device entry; its explicit registry removal is in the returned-device
 branch. Broader callback lifecycle remains unknown. Do not infer that a cleanup
@@ -1870,7 +1867,7 @@ a still-zero account type yields no target, otherwise a singleton. When false,
 A0k obtains the device's user counterpart set through 0Xw.A0U, rebinds each to
 the same device number, then converts the list to Signal addresses. Failure to
 convert the original device uses the original singleton. This branch can select
-multiple mapped namespaces; it is not permission to guess PN/LID aliases.
+multiple mapped namespaces.
 0kT.A02 also has an independent 0x536a (21354) predicate before one mapping
 branch. Its current value and full 0Xw/0DE/0hd mapping behavior remain unknown.
 
@@ -2079,7 +2076,7 @@ key argument v17 is tested at 01d0. With a null key and a present old map value,
 it calls A0L (01d4..01e2). With a nonnull key and null old value, it instead
 constructs D3f discriminator 42/0x2a (01e6..0228); D3f.COL case 42 calls
 DeS.BqB (069a..06b4). This is branch evidence, not a newly implemented nullable
-key API or permission to clear an identity. The misleading historical topic
+key API. The misleading historical topic
 name is retained to preserve existing diff selectors; its interpretation is
 corrected in cross-device-sync.md.
 
@@ -2244,8 +2241,7 @@ A01 only returns a nonnull address when that predicate was false. **Inferred:**
 with a stable predicate this specialized branch is unreachable for these parsed
 results; the second call would need a changed result. No intervening mutation
 is visible in the caller, but complete helper purity/runtime reachability is
-not established here. Keep the actual branch source; do not invent an effective
-flag value or delete code on the basis of this inference. Ordinary translation
+not established here. Keep the actual branch source. Ordinary translation
 continues through the stored mapping repository and preserves the device ID.
 
 ### Implemented row selector and reproducible offline inspection
@@ -2474,7 +2470,7 @@ null to every field except addressing_mode=`lid`.
 | A08 | selected addressing mode |
 | A0B | meta sender_country_code |
 
-These are metadata bindings, not authority to adopt keys or guess a PN/LID map.
+These are metadata bindings.
 Guest semantics, username trust/display and every downstream DFc consumer remain
 **unknown/unported**. The prior group trace's field-layout unknown is resolved
 for these constructor arguments; its other unknowns remain.
@@ -2762,7 +2758,7 @@ common preparation through its existing CLI, and `peer-keys --show` already
 provides redacted signature inspection. No new command or account operation.
 **Unknown:** native notification-driven adoption, full hybrid admission and fresh
 live validation. This is authentication of a supplied signed key, not human
-verification of an identity or permission to replace it.
+verification of an identity.
 
 ## Selected PQ bundle boundary, 2026-10-11
 

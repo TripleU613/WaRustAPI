@@ -16,7 +16,7 @@ force nor refresh selection is set. Missing state supplies the empty string.
 `Aym.A1L` still adds that empty hash attribute. `GAZ.A1T` selects singleton
 `1S7`, whose getServer is s.whatsapp.net and user is empty. The callback is
 `IWy` discriminator 1, registered with 32000 ms. That timer is an APK request
-timeout, not a server wait or permission to repeat uncertain requests.
+timeout, not a server wait.
 [Scoped source and negative results](abprops-receive-evidence.txt) retain the
 construction, callbacks, storage, concrete getters and defaults windows.
 

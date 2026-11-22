@@ -75,9 +75,3 @@ of the `nothing_yet` GitHub pre-release so cloud sessions can fetch it; see
 [Obtaining the APK](docs/protocol/apk-analysis.md#obtaining-the-apk). Keep APKs
 and raw research output in ignored `lab/` or outside the checkout. Fixtures must
 be sanitized.
-
-Live registration requires a controlled test number and explicit operator
-consent. Normal CI must not contact WhatsApp, request OTPs, or mutate accounts.
-Do not include keys, PINs, OTPs, account databases, private messages, or
-unsanitized captures in issues or pull requests. Follow [SECURITY.md](SECURITY.md)
-for sensitive reports.

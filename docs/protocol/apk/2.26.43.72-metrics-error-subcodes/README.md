@@ -68,8 +68,7 @@ In the failure-reason branch, after classification and any credential change,
 the worker checks remaining endpoints: if present, it calls the sender again;
 otherwise it invokes optional callback-table slot+0x20 and calls0x728050(raw1).
 A recognized subcode alone does not take the401 task-removal branch. This is a
-metrics-specific path, not authority to retry other API requests or replace
-account identity. No Rust production metrics sender exists in the bounded
+metrics-specific path. No Rust production metrics sender exists in the bounded
 source search recorded in the [regular IQ trace](../2.26.43.72-metrics-regular-iq/README.md).
 No Rust behavior is changed or fabricated telemetry introduced.
 

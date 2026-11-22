@@ -122,8 +122,7 @@ passes these explicit integer values to its constructors:
 
 [C9D.A00](apk/2.26.37.71-session-refresh-preview/attestation-state-decode.txt)
 iterates the enum adapter by `intValue`; an unmatched integer returns NOT_SET
-(`0036..003c`). That is native decoding behavior, not authority to assign a
-state to a historical Rust identity which never stored this field.
+(`0036..003c`). That is native decoding behavior.
 
 **Confirmed static:** [Bot.A03](apk/2.26.37.71-session-refresh-preview/bundle-candidate-parse.txt)
 reads `pqkey` (`020a..020e`) and `non_e2ee_attestation` (`0248..0254`). With
@@ -133,7 +132,7 @@ are established by v13 at `0100` and v4 at `014c`, respectively; constructor
 argument order is value then signature. Without attestation, `0258` branches
 to `0354`; with the same property enabled it reads presence of
 `force_override_e2ee_state` (`0370..0384`). Property disabled/present branches
-also carry null CWS. These properties are not configurable bypass switches.
+also carry null CWS.
 Actual server-assigned values and complete attestation primitives are unknown.
 
 [CPB.A00](apk/2.26.37.71-session-refresh-preview/primary-bundle-admission.txt)

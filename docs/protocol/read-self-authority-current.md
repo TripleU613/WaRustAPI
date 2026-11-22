@@ -114,8 +114,7 @@ pairing-contextF0I throughCompanionDeviceManager; Fei.run discriminator43
 constructsF0I from a device/key-index entry with zero timing defaults before
 calling1nG.A0F. Their product entry-point, pairing cryptographic validation,
 account-sync response correlation and complete ordering still require tracing.
-Zero-valued timing fields in this constructor are native producer behavior,
-not permission to manufacture a device in Rust.
+Zero-valued timing fields in this constructor are native producer behavior.
 
 ## Rust inventory is not this authority
 

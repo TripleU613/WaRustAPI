@@ -62,7 +62,7 @@ map and constructs0mK.0mK builds iq/type=get/xmlns=w:mex with to=0mL.A00,
 optional query metadata, a query child with query_id when validated, and JSON
 text when admitted. The concrete destination singleton serialization, resolved
 QueryGroupInfo identifier, every0Tk string rule and Pando metadata remain
-outside this trace. Do not invent a query ID or HTTP endpoint from call name.
+outside this trace.
 
 ## Caller scope and Rust port boundary
 

@@ -74,7 +74,7 @@ The exactA05 caller inventory finds the service'sA06 and2Fn.onComplete.
 A06 is an ADM path: it compares its supplied token against the Intent's
 admRegistrationIdFromServer, passes provider string adm, first booleantrue
 and second boolean=not equal intoA05, restoring Binder identity on normal
-and exceptional exits. This does not authorize fabricating an ADM token.
+and exceptional exits.
 
 The retained1uf.A0B RegistrationIntentService branch distinguishes VERIFY
 and REFRESH, obtains platform token state, and can invokeA06 or launch the

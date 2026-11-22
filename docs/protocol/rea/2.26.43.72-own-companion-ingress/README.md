@@ -92,5 +92,4 @@ methods does not claim all their branches are implemented.
 
 The prior current trace's0WB “cleanup” classification was refined: these methods
 performPN/LID migration. Me presence also has a transient export origin; it is not
-standalone registration/session authority. Both negative findings are persisted
-so they cannot silently become permission to enable read-self.
+standalone registration/session authority.

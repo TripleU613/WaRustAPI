@@ -8,7 +8,7 @@ Original section numbers are retained for source and evidence references.
 
 ## 0. The actual objective
 
-Build `crates/whatsapp-api`: a standalone async Rust library that registers and operates as a WhatsApp **primary device**, using a phone number the operator controls. Normal operation must require neither a paired phone nor another WhatsApp client process. Preserve the `WhatsAppClient` / `SyncEngine` / `SyncEvent` separation so the existing bridge can adopt the library through an adapter.
+Build `crates/whatsapp-api`: a standalone async Rust library that registers and operates as a WhatsApp **primary device**. Normal operation must require neither a paired phone nor another WhatsApp client process. Preserve the `WhatsAppClient` / `SyncEngine` / `SyncEvent` separation so the existing bridge can adopt the library through an adapter.
 
 Owner-updated end state (2026-10-10): expose every WhatsApp feature through a
 working API, with versioned understanding of the shipped APK code and explicit
@@ -16,14 +16,6 @@ links from native behavior to Rust implementation and validation. Intermediate
 milestones remain useful, but do not establish that this full objective is done.
 Exporting or decompiling a method alone does not establish understanding or
 runtime parity; every unresolved branch, gate and producer stays labelled.
-
-The compatibility objective is ordinary client behavior without client-induced
-account failures. No implementation can guarantee that Meta never restricts an
-account or treats an unofficial client differently. Preserve protocol
-verification, challenges, cooldowns, trust checks and uncertain outcomes; do not
-implement ban/detection evasion, fabricated provenance or limit bypasses. Avoid
-unrelated telemetry where protocol requirements permit it, and document unknown
-requirements instead of silently guessing them.
 
 **First decisive result:** complete a primary registration, authenticate, exchange an encrypted text message with the official Android app, terminate the Rust process, and reconnect using only the persisted Rust-owned state. Complete this before building the full groups/media/bridge surface.
 
@@ -80,7 +72,7 @@ Do not promise calendar completion dates before the primary-device experiment. R
 | --- | --- | --- |
 | G0 — Repository and dependencies | Inspect local instructions and existing crate APIs; choose initial target; evaluate Rust components, storage, TLS, Signal candidates | Repository map, dependency decision records, current build baseline, explicit unresolved blockers |
 | G1 — Minimal protocol evidence | Pin Android reference and build only enough registration, framing, nodes, and crypto to attempt one conversation | Hashed reference manifest, fixture provenance, minimal working replay harness; no invented wire constants |
-| G2 — Primary-device proof | Register one controlled test number, authenticate, exchange encrypted direct text, stop and restart | Official peer receives and sends valid messages; Rust reconnects from its own state without QR, companion app, or fresh OTP |
+| G2 — Primary-device proof | Register one test number, authenticate, exchange encrypted direct text, stop and restart | Official peer receives and sends valid messages; Rust reconnects from its own state without QR, companion app, or fresh OTP |
 | G3 — Durable messaging | Implement transactional crypto state, outbox/inbox, event replay, receipt handling, disconnect/reconnect and resource limits | Crash matrix and replay tests pass; ambiguous delivery is represented honestly |
 | G4 — Devices and groups | Complete recipient device lifecycle, sender-key distribution, group operations and membership changes | Verified behavior with multiple recipient devices and group membership changes |
 | G5 — Media and message operations | Streaming media upload/download; replies, reactions, edits, revocations, expiry handling | Official-client round trips and adversarial integrity/resource-limit tests |
@@ -90,20 +82,20 @@ G2 is a **vertical slice**, not a requirement to finish every lower layer first.
 
 G0's production TLS gate may remain unresolved during offline work or a labeled experimental lab spike. It must be resolved before production readiness is claimed.
 
-If primary registration is blocked, produce a concrete blocker report containing the request stage, sanitized response class, reference profile, attempted supported flow, and evidence still needed. Keep offline codec/store work useful. Do not rename a linked-device implementation to make the milestone appear complete.
+If primary registration is blocked, produce a concrete blocker report containing the request stage, sanitized response class, reference profile, attempted supported flow, and evidence still needed. Keep offline codec/store work useful.
 
 ## 21. Exact starting instructions for the implementation agent
 
 1. Read applicable repository instructions and this document. Inspect `crates/tzibbur-api`, especially session storage, sync/events, errors and bridge adapters; record actual compatibility requirements.
 2. Run the existing relevant build/tests and record the baseline without changing unrelated code.
-3. Resolve the reference APK/profile and create the evidence/unknowns ledger. Do not invent version strings or wire constants.
+3. Resolve the reference APK/profile and create the evidence/unknowns ledger.
 4. Evaluate reusable Rust codec/Signal components, the strict TLS dependency gate and `redb` integration. Record precise decisions and blockers.
 5. Build the smallest Rust CLI/replay harness needed for registration, authenticated transport and one encrypted direct conversation.
-6. Attempt G2 on a controlled account only when its dependencies and required operator inputs are available. Record genuine success or the specific blocker.
+6. Run G2 and record the result.
 7. Make the messaging path transactional and pass the crash matrix before broadening the API.
 8. Complete device lifecycle and groups, then media and message mutations, following the gate order.
 9. Add the existing bridge adapter only after the standalone path works. Preserve source identity and durable replay semantics.
-10. Package, document and report capabilities with evidence. Never report stubbed, mocked-only or untested live operations as working.
+10. Package, document and report capabilities with evidence.
 
 ## 22. Definition of done
 

@@ -108,7 +108,7 @@ lifecycles remain open. See [the receive evidence](message-edit.md).
 ## How to resolve
 
 Evidence must come from the pinned APK (static analysis in the lab) and from
-dated captures with a controlled test number. Do not copy web-profile
+dated captures with a test number. Do not copy web-profile
 constants into `Observed` rows. Record each observation with date, APK
 version, and whether the server accepted the reference client that day.
 

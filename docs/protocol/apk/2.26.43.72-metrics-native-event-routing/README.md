@@ -41,8 +41,7 @@ aborts on a negative event-code argument, initializes native arrays and stores
 code, weight and channel; psId slot +0x40 starts at -1. Channels 0/1 retain that
 default; channels 2/3 additionally store low-32-bit psId into +0x40. Other channel
 values hit abort in this selected entry. This is native behavior under the Java
-worker's existing bounded channel mapping, not new permission to invent IDs,
-weights, channels or telemetry. No Rust value range is changed from this trace.
+worker's existing bounded channel mapping. No Rust value range is changed from this trace.
 
 After field conversion, it reads native-context slot +0x38. If nonnull, it calls
 manager helper **0x7259cc** with the event; otherwise that manager handoff is

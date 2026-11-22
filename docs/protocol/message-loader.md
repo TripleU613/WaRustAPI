@@ -73,8 +73,7 @@ This is evidence for the shown media preparation source, not every outgoing
 text, group, broadcast, newsletter, edit, restored or mirrored message. Complete
 0qA callers, key-builder authority and subtype setter overrides remain **unknown**. Neither this
 status-1 call nor the FStatus constructor's PREPARING enum proves a universal
-outgoing initial state. It is not permission to set uncertain Rust reservations
-back to a prepared state or to resend a message.
+outgoing initial state.
 
 ## Negative findings, Rust boundary and next trace
 

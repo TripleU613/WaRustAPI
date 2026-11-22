@@ -116,7 +116,7 @@ workspace/property tests retain ordinary-frame, root-control and failure rules.
 
 **Confirmed pinned static / implemented offline:** the same complete123.A08
 checks decrypted length0 and loops to the next encrypted record. This does not
-establish a keepalive meaning or permission to transmit empty records.
+establish a keepalive meaning.
 
 Rust now skips zero-length authenticated plaintext before node decoding in the
 normal split reader and both low-level stanza receive APIs. The raw encrypted

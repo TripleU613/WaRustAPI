@@ -53,7 +53,7 @@ fn ack_owner_key(id: LocalMessageId) -> String {
     format!("outbox-message-ack-owner:{id}")
 }
 /// Freeze callback ownership in the same transaction as ciphertext and InFlight.
-/// This is local provenance, not a new APK field or permission to resend.
+/// This is local provenance.
 pub(super) fn reserve_ack_owner_in(
     tx: &mut crate::store::WriteTx<'_>,
     id: LocalMessageId,

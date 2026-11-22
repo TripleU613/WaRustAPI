@@ -79,8 +79,7 @@ with true,false,0 and other configuration follow-ups. The push-config path
 accepts missing type or equalsIgnoreCase(gcm), logs unknown other types and
 calls RegistrationIntentService.A0F/1uj.A00(context,0Gq) on the selected path.
 Logs describe force replacing the GCM token; the actual replacement job and
-its persistence/requests are not traced here. Do not manufacture or reuse a
-GCM token from these call edges. No branch in this class calls0v6.A07, but
+its persistence/requests are not traced here. No branch in this class calls0v6.A07, but
 indirect ACK or async behavior is not resolved solely by that negative.
 
 **Rust source comparison:** connection.rs and notifications.rs have no dedicated

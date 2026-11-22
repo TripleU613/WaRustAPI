@@ -65,8 +65,7 @@ The selected native checks are:
 
 The selected path does **not** recompute/compare a checksum over recovered
 payload bytes. It restores the32-bit checksum/state for versions2/3. The role of
-that state in later serialization/integrity checks remains untraced; this is not
-proof of a globally absent integrity check or permission to bypass one.
+that state in later serialization/integrity checks remains untraced.
 
 Accepted data yields a no-copy payload view and then a mutable copy. A buffer
 object restores timestamp+0x20, the offset12 field at+0x28, zeroes+0x2c, stores

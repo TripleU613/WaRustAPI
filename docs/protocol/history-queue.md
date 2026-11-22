@@ -46,8 +46,7 @@ The Bng subtype branch at 09da identifies itself as
 0zH.A0K(message, 0), and returns through the retained handler path before
 queue staging. The companion branch continues. BNm/database readiness,
 message-access-status type 8 and other processing branches are retained but
-not fully traced. This is a companion history receive path; normal primary
-message handling must not invent queued history solely to create aliases.
+not fully traced. This is a companion history receive path.
 
 ## Record construction and stable-ID persistence
 

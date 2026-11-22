@@ -36,8 +36,7 @@ writer encoding boundary. Normal direct message writes (including explicit
 selected identity resumption) check the connection account fingerprint again
 there. This final driver fence binds the connection account generation to the
 current store generation; stale-generation accounts are not repaired or reset.
-A failure leaves reserved/uncertain state, not permission to replay the query,
-advance a second session, or regenerate a send ID. No wire contents change.
+A failure leaves reserved/uncertain state. No wire contents change.
 
 ## Explicit legacy/offline boundaries
 

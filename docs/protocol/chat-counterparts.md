@@ -40,7 +40,7 @@ sort_timestamp order. The SQL filters hidden=0. Selected chat_view columns
 come from 0ZT.A00 through 0ZU.A01. Complete view definition, column-list
 construction and 0ZR's effective migration state are **unknown**. This trace
 identifies stored chat provenance; it does not prove server-authenticated alias
-admission or grant Rust permission to create a mapping from arbitrary input.
+admission.
 
 ## Bulk population from conversation records
 

@@ -383,7 +383,7 @@ backfilled observation. Original upload key ownership checks still apply.
 
 `prekeys` text/JSON and existing read-only GET /v1/prekeys summary expose
 pq_low_acknowledged_batches: a historical count of acknowledged batches
-with saved PQ flagtrue. It is not current demand or permission to upload.
+with saved PQ flagtrue.
 No account/key/request IDs or contents are exposed. Previously misleading
 CLI/schema no-KEM-producer wording is corrected.
 
@@ -904,8 +904,7 @@ converted a reserved device query to server-refused from such late replies.
 The actor now selects each wait's own deadline. Expired uploads drop only their
 session-local waiter and keep durable outcome_unknown/key reservations. Expired
 device queries are deferred for this session while pending users and the durable
-query row remain unchanged. This timeout does not authorize a resend, key reuse,
-repeating those deferred users, cooldown bypass or clearing uncertain history. Existing admission
+query row remain unchanged. Existing admission
 triggers and the selected30-second local durations are retained.
 
 Prekey, device-query and keepalive reply admission also checks that its waiter

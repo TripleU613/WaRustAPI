@@ -177,7 +177,6 @@ If A02 removes first, a later A03 has no unchanged map entry to claim. A respons
 GET in A0H, timer cancellation, and subsequent REMOVE in A02 are separate stages;
 ID reuse/replacement and callback generation remain unproven. Selected A0H/A02
 do not use their elapsedRealtime value as a strict deadline-admission check.
-Do not weaken Rust's explicit monotonic deadlines based on this static trace.
 
 For Hyg's missing required response child/t, or nonintegral t, retained parser
 helpers throw LIL(String). [The constructor](../2.26.43.72-iq-response-ownership/schema-error-constructors.txt)

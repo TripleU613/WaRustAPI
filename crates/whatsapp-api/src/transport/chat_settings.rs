@@ -398,8 +398,7 @@ pub fn decode_keep(payload: &[u8]) -> Option<IncomingKeep> {
 
 /// Resolve a supported group keep/unkeep reference using an authenticated
 /// envelope sender. APK 37.71 D9L.A01 0682..06b6 passes BV3.key to BoQ.A00;
-/// its author is independent of the keeping member. This does not authenticate
-/// a supplied sender or establish permission to keep another member's message.
+/// its author is independent of the keeping member.
 pub fn group_keep_target(
     chat: &Jid,
     sender: &Jid,

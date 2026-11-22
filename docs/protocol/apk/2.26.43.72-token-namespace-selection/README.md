@@ -25,8 +25,6 @@ The ordinary branch can be summarized, conditional on proven mapping results:
 | PN | mapped account user, else PN | PN | mapped account user, else PN |
 | Account user | original user | mapped phone user, else original | original user |
 
-This table is not authority to manufacture mappings, choose an effective Boolean
-from its packaged default, or rewrite a request that was already reserved.
 The [effective configuration boundary](../../token-feature-inputs.md) remains open.
 
 ## Counterpart side effects are separately gated

@@ -52,8 +52,7 @@ AssertionError, passes it to Log.e and returns; there is no explicit throw in
 that method. A06 returns false for null, but true for a nonnull out-of-range
 string after logging. Thus a nonnull long string still reaches A05 in these
 selected bodies; copying300 as a proven server rejection or hard native
-constructor limit would be unjustified. This does not authorize sending such
-an input. Logging-internal failure behavior is not exhaustively audited.
+constructor limit would be unjustified. Logging-internal failure behavior is not exhaustively audited.
 
 ## Eligibility and recovery remain separate
 

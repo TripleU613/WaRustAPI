@@ -545,8 +545,8 @@ The [persisted registration lab](protocol/registration-lab.md) now connects
 key generation/signing, encrypted persistence and comparison request assembly.
 It is explicitly lab-profile-only; default registration and messaging remain blocked.
 The opt-in CLI feature `experimental-signup` now exposes `lab-signup` for
-single-action operator-authorized HTTPS attempts. Ordinary commands remain
-blocked. Two prior operator-authorized attempts returned `ServerRefused` without
+single-action HTTPS attempts. Ordinary commands remain
+blocked. Two prior attempts returned `ServerRefused` without
 a recorded HTTP reason; neither established signup or OTP delivery. The editable
 [request profile](../crates/whatsapp-api/src/registration/request.rs) now exports to
 private JSON, with offline preview and redacted HTTP diagnostics for future
@@ -637,7 +637,7 @@ test covering this bound and signed bit patterns. No extra tools were needed.
 2. Integrate and validate the approved Signal candidate (ADR 0005); it also gates real XEdDSA
    certificate verification, for which no independent vectors are available
    offline yet.
-3. With a controlled test number and operator consent: capture one
+3. Capture one
    registration and one handshake to move `registration.*`, `transport.*`
    and `noise.*` rows to `Observed`; only then implement the registration
    driver and `connect`.

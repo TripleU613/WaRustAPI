@@ -96,8 +96,7 @@ Snapshots are constrained to companion bootstrap with held version zero.
 Its `A07` is a complete **smali fallback**, not usable Java: it checks that an
 incoming patch version is the held version plus one; snapshot handling has a
 separate path. It reads key IDs and patch/snapshot MACs, rejects malformed
-inputs, and contains feature-dependent mismatch handling. Those branches are
-not permission to disable existing Rust cryptographic verification.
+inputs, and contains feature-dependent mismatch handling.
 
 The successful application path invokes `0mj.A00`, which applies/stores
 mutations and calls `0l8.A08` with the incoming version and resulting hash.

@@ -1308,8 +1308,7 @@ The shared direct/group ciphertext byte view accepts both Bytes and unchanged
 UTF-8 Text. `binary::decoder::read_content` uses read_value(false), so raw binary
 bodies remain Bytes even when UTF-8-valid; token/string values can yield Text.
 This is not a universal UTF-8 conversion of binary ciphertext. This is an
-implementation correction, not an APK-required text encoding or permission to
-reinterpret structured content as bytes.
+implementation correction, not an APK-required text encoding.
 
 **Evidence/status:** the retry stanza remains the **observed** 2026-09-24 handset
 shape with group participant routing recorded in [groups](groups.md#the-fan-out-works-one-device-asks-for-a-retry-2026-09-24).
@@ -1689,8 +1688,7 @@ converted a reserved device query to server-refused from such late replies.
 The actor now selects each wait's own deadline. Expired uploads drop only their
 session-local waiter and keep durable outcome_unknown/key reservations. Expired
 device queries are deferred for this session while pending users and the durable
-query row remain unchanged. This timeout does not authorize a resend, key reuse,
-repeating those deferred users, cooldown bypass or clearing uncertain history. Existing admission
+query row remain unchanged. Existing admission
 triggers and the selected30-second local durations are retained.
 
 Prekey, device-query and keepalive reply admission also checks that its waiter
@@ -1790,8 +1788,7 @@ encrypted-socket integration proof or complete native callback-map parity.
 **Remaining capture gap:** wait_for returns buffered unmatched nodes only on
 success. Timeout, terminal stanza, read error and count exhaustion currently
 discard that local buffer; the helper has no store parameter. That loss is not
-fixed by this admission guard and must be addressed separately without turning
-a failed wait into permission to resend reserved requests. Generic ACK sender
+fixed by this admission guard and must be addressed separately. Generic ACK sender
 normalization and challenge-controller integration also remain incomplete.
 No live traffic or account operation.
 

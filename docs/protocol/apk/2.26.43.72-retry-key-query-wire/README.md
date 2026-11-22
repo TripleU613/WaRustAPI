@@ -17,8 +17,7 @@ which delegates toA06 under scopeE78.A02. A06 locks and callsA00 with final
 isPqSessionUpgrade=false. A00 has a distinct PQ-upgrade/backoff skip, expires
 in-flight EX8 entries only when stored uptime+60000 is **less than** current
 uptime, filters candidate devices and suppresses already-in-flight addresses.
-That60000 is a manager-entry expiry, **not a proven IQ callback timeout** or
-permission to replay an uncertain query. EX8 stores request context/metrics;
+That60000 is a manager-entry expiry, **not a proven IQ callback timeout**. EX8 stores request context/metrics;
 source integer12 from the retry job must not be invented as a wire attribute.
 
 A00 callsA05 with candidate and identity-changed lists. A04 separately drains

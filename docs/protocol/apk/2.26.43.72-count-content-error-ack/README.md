@@ -30,7 +30,6 @@ A07(true), so its context remains available on this selected path.
 SQLiteFullException and SQLiteDatabaseCorruptException have a separate020c
 rethrow handler; they do not use the LIL completion path. Other Exception
 has another handler, and tracked incoming can request a500 error through2Dx.
-This does not authorize treating storage errors as harmless content errors.
 Metadata-construction failures before A01 are outside this catch boundary.
 
 0v6.BLn builds F0R.A02 metadata and invokes8bl selector13; its

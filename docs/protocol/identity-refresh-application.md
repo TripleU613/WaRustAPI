@@ -63,7 +63,7 @@ continues processing Bjo/Bjn, separates Bjp refusal, and invokes 0jc.A0L. Its
 companion ADV policy remains separate. [Bot.A03](apk/2.26.37.71-identity-refresh-application/candidate-parser.txt)
 produces CWS from selected-user non_e2ee_attestation and separately parses PQ
 and identity_auth data. Rust defers **any presence** of those metadata children,
-including malformed data. A valid signed key is not authority to skip them.
+including malformed data.
 
 **Implemented:** the supported branch requires a correlated successful saved
 action, complete singleton selected-device classic bundle, valid signed-key

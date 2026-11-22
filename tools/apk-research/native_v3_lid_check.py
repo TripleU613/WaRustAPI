@@ -38,7 +38,7 @@ class NativeLid:
         self.primitives = {}
         # APK 37.71 exact ranges: fingerprint-v3-equality-lid-evidence.txt.
         # Only traced routing/validators/constructors execute; mapped bytes
-        # elsewhere are storage, not permission to run another native path.
+        # elsewhere are storage.
         self.allowed = [(0x71DA6C, 0x71DADC), (0x71D944, 0x71D9F8),
                         (0x71DDB4, 0x71DED8), (0x71DFA4, 0x71E060),
                         (0x71EBD8, 0x71ECC0), (0x71EB38, 0x71EBD8),

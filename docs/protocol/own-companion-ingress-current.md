@@ -39,10 +39,7 @@ and LID device and obey the namespace migration gate. The crucial role split is:
 | Unknown and BU7 companion mode is true | Fei43 -> construct F0I ->1nG.A0F |
 | Unknown and primary mode | A0Y(device,`unknown_companion`,true,false) |
 
-Thus a primary client must not turn a raw server-assigned device/index pair
-into an active trusted companion. The companion-role branch is a different
-authority path. Its zero timing defaults are native metadata construction,
-not authorization for Rust to fabricate a device or assume its role.
+The companion-role branch supplies zero timing defaults.
 
 Unknown-companion A0Y normally enters a logout/removal operation, with local
 per-device suppression and an exception while a qualifying hosted pair is in
@@ -100,7 +97,7 @@ FcP10 then clears pending-login and starts FeN16 critical bootstrap. The prior
 its scope is distinct from complete identity/session/bootstrap readiness.
 0WJ.A0J has transaction and identity-change handling, but its recovered Java
 contains invalid-looking exceptional flow. Its full semantics and conflict
-admission remain **unknown**; the call is not permission to replace a held pin.
+admission remain **unknown**.
 
 FDV.onSuccess later clears the pairing context and registered-device marker,
 records verification scheduling and notifies bootstrap observers. Full failure,

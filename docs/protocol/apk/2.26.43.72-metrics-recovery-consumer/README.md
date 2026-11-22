@@ -74,8 +74,7 @@ initialization flag, live callbacks, valid file/header/checksum and available
 regular transport**, a recovered outgoing regular buffer reaches task admission.
 No previous terminal outcome input is checked in this consumer. The prior
 terminal path's set removal does not by itself exclude a surviving file here.
-This is a static conditional path, not observed restart replay or permission to
-retry any other API after terminal refusal. Full scheduler/provider/Java gates
+This is a static conditional path, not observed restart replay. Full scheduler/provider/Java gates
 still determine whether an admitted task actually sends.
 
 ## Reproduction and scope

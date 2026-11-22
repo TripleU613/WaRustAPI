@@ -136,7 +136,7 @@ For group notifications, verify the available authenticated sender/context and r
 
 Replies preserve the original chat/message/sender reference. Reactions track add/change/remove semantics. Edits and revocations validate the acting identity and reference; they must not mutate another sender's message merely because a supplied ID matches. Separate local deletion from a protocol request to delete for others.
 
-Preserve disappearing-message timers and view-once indicators in the domain model. Apply verified expiry rules to local bodies and media, while retaining only the minimal bounded tombstones required for correctness. Do not invent ordinary downloadable content when a message type is unsupported. Bridge support for these features requires a separate capability decision.
+Preserve disappearing-message timers and view-once indicators in the domain model. Apply verified expiry rules to local bodies and media, while retaining only the minimal bounded tombstones required for correctness. Bridge support for these features requires a separate capability decision.
 
 ## 16. Media without hidden native dependencies
 

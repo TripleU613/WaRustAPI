@@ -19,8 +19,7 @@ observer registration, existing state and query outcome.
 For a PhoneUserJid selected by0Dn.A0d, EiZ/0Ws.A0E supplies the destination
 mapping when nonnull. Missing mapping logs downgrade_to_pn and uses the original
 identity. Other inputs also retain the original identity. This is a selected
-producer rule, not authority to downgrade arbitrary Rust requests or synthesize
-mappings. The EVN is removed under the original map key. Local model/state,
+producer rule. The EVN is removed under the original map key. Local model/state,
 recipient-set, listener and scheduled-handler work follows; those helpers are
 not fully reconstructed. A00 allocates a sequence while still under A0c.
 After monitor exit and local callbacks, A0j may cause A0V, but either result
@@ -133,8 +132,7 @@ attempt performs its current-sharing check and allocates a fresh outer ID,
 while retaining the job's sequenceNumber. The callback-result-discarding
 contract remains distinct from exception eligibility. No explicit delay is
 present on that selected in-runner loop; global scheduling/backoff remains
-outside this claim. Native retry eligibility does not authorize replaying a
-Rust durable uncertain send or rotating its ID to escape uncertainty.
+outside this claim.
 
 Reproduce the additional retained files with the same APK/OUT variables:
 

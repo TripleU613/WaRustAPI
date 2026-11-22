@@ -124,8 +124,7 @@ the saved hash and complete wireMAC/valueMAC map to agree, and returns a
 candidate with authenticated indexes. Repeating the operation authenticates and
 returns the same complete state. Older/newer snapshot versions are refused by
 this migration API. `CollectionSnapshot::key_ids()` exposes the snapshot and
-record IDs for preparation of the existing-held-key resolver; those IDs are
-not authority to fetch, activate or trust a key.
+record IDs for preparation of the existing-held-key resolver.
 
 The storage staging API and transport publisher use distinct checkpoint keys:
 `storage.rs` uses `app-state-collection:<hex collection name>`, while transport

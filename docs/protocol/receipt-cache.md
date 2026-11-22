@@ -67,8 +67,7 @@ version value or complete null-loading policy from that omission.
 A missing resolved DeviceJid logs and skips that row; a returned pair missing
 its request-map entry throws IllegalStateException. SQLiteDatabaseCorruptException
 logs, calls 0Fy.A03 and returns the accumulated map. Other exception/cleanup
-paths remain in the full catch table; this is not permission to suppress all
-storage failures in Rust. A0N's log says NoCaching: this is a transient fallback
+paths remain in the full catch table. A0N's log says NoCaching: this is a transient fallback
 for incoming timestamps, not proof of the general full-message cache loader.
 The separate A0M version query retained in receipt-version.md remains distinct.
 

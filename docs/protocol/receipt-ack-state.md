@@ -73,7 +73,7 @@ entries whose chat parse is null, builds DDH with saved status/time and null
 stanza key, then chooses by useStatusInfra. True calls Cif.A01 and waits on AzY;
 false calls Cmn.A03 with the saved deferral count/duration and budget **10000**,
 then waits on AzY. The ACK handler's original budget is **5000**. Neither number
-is a WhatsApp server wait or permission to repeat a network request. Complete
+is a WhatsApp server wait. Complete
 Cif routing, parsing exceptions and jobqueue retry policy remain unknown.
 
 ## Rust boundary

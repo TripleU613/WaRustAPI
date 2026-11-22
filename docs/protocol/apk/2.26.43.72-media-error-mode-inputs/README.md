@@ -57,8 +57,7 @@ permission after uncertain outcomes.
 ## Action flag also has stop paths
 
 [Exact F0b.A00 census](action-flag-refs.txt) has ten direct reads/writes across
-EdS.A00, the constructor, F0b.A00/A01/A02. Initial TRUE is not unconditional
-permission to act throughout processing. [F0b.A02](processor-stop-actions.txt)
+EdS.A00, the constructor, F0b.A00/A01/A02. [F0b.A02](processor-stop-actions.txt)
 checks18w.A03's typed result: FSU logs stop/recent, conditionally calls0x0.A0Y
 when sendReceipt is true, then clears A00 at0052 and returns false. FSS logs
 stop/ack and calls F0b.A01 with its stored original reason before returning

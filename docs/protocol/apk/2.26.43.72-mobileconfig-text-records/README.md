@@ -80,8 +80,7 @@ branches write wrong_token_size_while_parsing or wrong_token_size_while_parsing_
 The loop began with failed_to_find_end_2 as its diagnostic, and stream termination
 can also assign that byte from a local stream-state result. Thus byte +0x50 alone
 is not established as a universal success flag. Full status/diagnostic handling,
-partial insertion and rollback are unproven. Do not clear an error because a
-single completion byte is set.
+partial insertion and rollback are unproven.
 
 ## Reproduction and limitations
 

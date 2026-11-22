@@ -45,7 +45,7 @@ transferred stream info with another local result at0076..0096. It separately
 adopts response metadata and normalizes ordinary path through M0g, as already
 [documented](../../rea/2.26.43.72-media-upload-response/README.md).
 At032e..0378 it also reads Lyh.A05 when deriving the M88 boolean; that is not
-standalone durable completion or permission to resend.
+standalone durable completion.
 
 [Five direct A06 field references](result-status-references.txt) identify the
 constructor plus MtZ,MOu,MvO andLHd. This audit newly retains

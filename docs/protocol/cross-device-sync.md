@@ -232,7 +232,7 @@ entries, foreign accounts and preservation-induced collisions. Local bounds,
 duplicate-index refusal and same-domain ownership checks fail closed; raw-account
 ID replacement and automatic PN/LID aliasing remain unsupported.
 
-This result is not a permission to trust new device identity keys. Authenticated
+Authenticated
 map ingestion, identity-key/device-hash checks, atomic authority persistence and
 sync-key activation remain to be connected. No device removal or key activation
 has been performed against the live account.
@@ -293,7 +293,7 @@ Comparison `17V.A09` handles the first child named `devices`. At `01e4..0234`,
 a non-`modify`, non-offline notification passes `A02`, parses `8oE.A01`, and
 queues `Af0` case 0 then case 1. `modify` or presence of the parent `offline`
 attribute instead requests account-device refresh through `1Tc.A01`
-(`023c..0270`); this is not permission to discard saved state.
+(`023c..0270`).
 
 `17V.A02` requires at least one `device` child. Its comparison is now decoded
 explicitly: `cmp-long v0,v1,v4` at `006a`, where v1 is saved
@@ -404,7 +404,7 @@ implementation, not an enabled linking command or authorization of a new device.
 `0jc.A0K` writes identities transactionally (`00b4..0180`) and has handling for
 identity changes; this is not permission for our client to silently replace a
 pinned identity. Local implementation must bind any new companion to the actual
-operator-authorized pairing material and preserve existing identity-conflict
+pairing material and preserve existing identity-conflict
 guards. Session establishment, full QR input validation, notification correlation
 and bootstrap completion still need implementation/tracing. The next bootstrap
 path is `DMU` case 1 at `3336` onward, through `0kv` and `Cyn`; do not restart
@@ -475,8 +475,7 @@ missing active key. Generation refuses while `A0A` detects a pending active-key
 share, allocates an epoch, creates 32 random key bytes, and binds the fingerprint
 to saved raw ID/current index/registered indexes (`A05` `0014..00b6`). With no
 companions it imports locally (`00d4..0108`); otherwise it queues shares to them
-(`010a..0154`). This is observed primary behavior, not authorization to initialize
-ADV state or keys in the live account to bypass missing linking prerequisites.
+(`010a..0154`). This is observed primary behavior.
 Generation/share completion and authorized collection transport remain unfinished.
 
 Follow-up tracing resolves the generation/share boundary more precisely:
@@ -485,8 +484,7 @@ Follow-up tracing resolves the generation/share boundary more precisely:
   int. `0oK.A05` `0014..004a` takes the signed maximum of that value and the
   manager's in-memory epoch. Only a zero maximum uses `SecureRandom.nextInt(65536)`;
   the selected value is incremented by one. The manager epoch is updated before
-  sharing (`00a8..00ac`). These are allocation rules, not permission to manufacture
-  missing account raw IDs or registered-device indexes.
+  sharing (`00a8..00ac`). These are allocation rules.
 - With no companions, `A05` imports and returns the generated key (`00ec..010a`).
   With companions, it invokes `A0C(..., true)` for each eligible saved device and
   returns **null** (`014c..015a`), not the generated key as immediately usable.
@@ -646,8 +644,7 @@ verification with the pinned primary identity and `11T.A08` reconciliation.
 Items 1–5 below still describe own-device authorization, linked-device sessions
 and key activation, which remain open.
 
-1. Wire own-device sender authorization from the observed incoming path; decoding
-   a key-share is not authorization to replace keys.
+1. Wire own-device sender authorization from the observed incoming path.
 2. Implement linked-device sessions and validated device-list changes without
    replacing primary identity or resetting uncertain outcomes.
 3. Complete account-device fingerprint validation before key use and implement
@@ -1288,7 +1285,7 @@ change, account reset or new key adoption was performed.
   (`01c8..0248`). The reason `identity_changed` affects an update flag
   (`0128..013e`). **Unknown:** A06/B7j/0bp/JhE internals, alias completeness,
   full session/group mutation and all transaction boundaries. This is peer
-  companion cleanup, not permission to reset our account or rotate identity.
+  companion cleanup.
 
 **Implementation gap at this trace:** `peer-keys` uses a full signed
 prekey-bundle reply and cannot stand in for this `encrypt/identity` read.
@@ -1518,7 +1515,7 @@ identity-triggered rotation remain unverified; no primary key was adopted.
   the sender-key name (`001a..0036`). It deletes from `sender_keys` using
   **group_id, sender_account_id, sender_account_type, device_id, bucket_id**
   equality (`0074..0094`), with the tuple supplied by Cnr.A03. Its boolean is
-  affected-row-count > 0, not permission to delete all keys for a user. The
+  affected-row-count > 0. The
   database is closed before F1E(group) cache invalidation through 0ka.A01
   (`009e..00bc`); invalid-group handling returns false (`00d2..00fc`). Cache
   callback internals and transaction coupling to identity replacement remain
@@ -1730,8 +1727,7 @@ inference can now be narrowed using these retained initialization paths:
   `registration_device_id`, default **0** (`0000..001c`). A LID user is converted
   by [0DE.A04](apk/2.26.37.71-core/sender-key-account-lid-device-build.txt) into
   an ordinary 0e1 device except for index **0x63**, which constructs Bli. The
-  builder retains the supplied device index. This is not permission to invent
-  one or to flatten an existing companion to primary.
+  builder retains the supplied device index.
 - [08i.A09](apk/2.26.37.71-core/sender-key-account-pn-ensure.txt) ensures Me
   loading using **1XY(this, 1)** and 08t.A04/A00. The nonzero discriminator in
   [1XY.call](apk/2.26.37.71-core/sender-key-account-me-load.txt) opens app-private
@@ -1864,8 +1860,7 @@ handling and do not prove successful commit.
 [0lO.A01](apk/2.26.37.71-core/sender-key-group-mode-settings-load.txt) reads
 that cursor column (`042a..043e`). Case-insensitive `pn` becomes literal **pn**;
 other returned values (including null) become literal **lid** (`043e..0456`).
-This establishes a storage reload rule, not a network parser or permission to
-invent a mode when a server reply is missing it. Missing-column resolution and
+This establishes a storage reload rule, not a network parser. Missing-column resolution and
 complete cursor-provider lifecycle remain **unknown**.
 
 **Additional scan boundary:** the contact A0X write scan found 13 instructions:
@@ -2002,8 +1997,7 @@ the returned row ID, and returns false for -1 (0000..0054). A06 writes table
 according to 0ZR.A03 (00c0..00ee / 012e..0134). It also computes `hidden`
 from separate chat-type/state predicates and repairs row IDs on successful
 updates. Full A09 insertion/schema and those visibility predicates remain
-**unknown**; this is not permission to copy the Android storage schema into
-our encrypted store or change chat visibility.
+**unknown**.
 
 [Selected caller/dispatch evidence](group-type-update-callers-evidence.txt)
 records the only two A03 call instructions found by an exact class/method
@@ -2279,8 +2273,7 @@ converted a reserved device query to server-refused from such late replies.
 The actor now selects each wait's own deadline. Expired uploads drop only their
 session-local waiter and keep durable outcome_unknown/key reservations. Expired
 device queries are deferred for this session while pending users and the durable
-query row remain unchanged. This timeout does not authorize a resend, key reuse,
-repeating those deferred users, cooldown bypass or clearing uncertain history. Existing admission
+query row remain unchanged. Existing admission
 triggers and the selected30-second local durations are retained.
 
 Prekey, device-query and keepalive reply admission also checks that its waiter

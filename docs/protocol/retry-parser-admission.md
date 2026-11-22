@@ -18,8 +18,7 @@ reserve a key query. It also ignored valid default-count receipts.
 
 The public RetryRequest.registration remains optional for source compatibility
 with direct model construction, but a successful shared parse always provides
-four bytes. Downstream supported-count gates remain separate; a parsed count0
-or count>4 is not permission to answer it. Negative counts remain unrepresentable
+four bytes. Downstream supported-count gates remain separate. Negative counts remain unrepresentable
 in this Rust model and are refused. Full Java Unicode integer syntax parity is
 not established. No new acceptance of higher retry counts was added.
 

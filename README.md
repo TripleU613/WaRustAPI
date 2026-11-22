@@ -1,8 +1,5 @@
 # WaRustAPI
 
-> **Status: experimental and incomplete. Not production-ready.** Interfaces,
-> storage formats and behaviour change without notice.
-
 Experimental Rust workspace for a standalone WhatsApp **primary-device** client.
 The goal is phone-number registration and messaging without a paired phone or
 another running WhatsApp client.
@@ -47,7 +44,7 @@ Every command is listed in [docs/cli.md](docs/cli.md) and described in [docs/api
 
 Optional `experimental-noise`, `experimental-registration-https`,
 `experimental-signal-crypto`, and `experimental-transport` remain lab features.
-HTTPS uses owner-approved native `ring` crypto; the Signal adapter includes
+HTTPS uses native `ring` crypto; the Signal adapter includes
 AGPL-marked dependencies. See [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ## Development

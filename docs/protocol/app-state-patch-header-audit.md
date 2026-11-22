@@ -104,7 +104,7 @@ their existing precedence; do not validate ignored opaque payloads as if selecte
 2. Return typed, redacted structural outcomes: inline/version; external-only
    retrieval deferred; fatal exit100/exit101/other; missing-version, mixed-source
    and duplicate-version failures. Keep numeric native fatal reason metadata
-   distinct from actual server IQ error codes; do not invent meanings for36/37/38.
+   distinct from actual server IQ error codes.
 3. Check all collection patch versions for uniqueness before the first per-patch
    mutation-state commit. Ideally validate all selected collection categories
    for an IQ before starting the worker, as F2T construction precedes dispatch.

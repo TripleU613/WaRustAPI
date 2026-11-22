@@ -38,8 +38,7 @@ to establish a request deadline or replay-authority timestamp.
 
 The selected exception table does not establish transactional restoration of
 that preference after parse/handoff failure. Apply calls are not proof of
-completed disk durability. This is native metrics recovery handling, not
-permission to delete uncertain message/request state in Rust. The metrics
+completed disk durability. This is native metrics recovery handling. The metrics
 producer, persistence format validation and downstream sink policy remain open.
 
 ## Cleanup and metrics sink remain distinct from application state

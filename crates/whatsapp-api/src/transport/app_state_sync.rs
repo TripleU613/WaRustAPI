@@ -1260,9 +1260,7 @@ pub(crate) fn ingest_action(store: &crate::store::ProtocolStore, id: &str) -> Re
 /// text="conflict"/><patches><patch>…</patch></patches></collection>`. Each is a
 /// `SyncdPatch` carrying its own `version` — server-sent patches do, outgoing
 /// ones must not — so it goes through exactly the verification an inline patch
-/// from a fetch does. Nothing is applied that does not verify: a conflict is not
-/// permission to trust bytes, and the key a patch names must be one this account
-/// already holds.
+/// from a fetch does. Each patch must verify with a key the account already holds.
 struct CatchUpSource<'a> {
     action_id: &'a str,
     request_digest: [u8; 32],
@@ -1894,8 +1892,6 @@ mod catch_up_atomic_tests {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("preflight.redb"));
         install_key(&store);
-        // Even a syntactically valid empty external-reference message is not
-        // permission to omit the snapshot and apply just the inline portion.
         let snapshot =
             Node::new("iq")
                 .attr("type", "result")

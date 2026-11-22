@@ -72,7 +72,7 @@ chat is its recipient A06 when present, else the normalized key's chat
 jumps to the successful return at `0296`. Additional success branches allow
 a type-3/5/6 destination equal to CjN.A04, a converted bot destination, or
 equality with `0Xw.A0I(expected UserJid)`. Bot conversion and directory alias
-authority remain untraced; a port must not manufacture such equivalence.
+authority remain untraced.
 
 The REA Java rendering loses this successful control flow and appears to log
 and throw even after equality. The retained DEX branches at `01ce..020e`

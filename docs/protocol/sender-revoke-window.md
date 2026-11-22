@@ -44,14 +44,13 @@ that type-21 predicate, outside the supported User/PN/LID direct route.
 06e6..0704 selects revoke-drop-old. A normal own parent bypasses these checks;
 admin kind 64 adds a separate own-admin/ownership path. Current held own-device
 sender revokes use their existing outgoing-parent path and do not get the peer
-window imposed on them. This does not authorize caller-chosen ownership.
+window imposed on them.
 
 Other predicates remain incomplete. 1iG.A00 reads a C1iI addon rather than merely
 checking a payment message type; its full producer/lifecycle is not ported.
 Terminal classification, orphan processing, author/namespace reconciliation,
 admin/group/status admission and receipt/cache/physical deletion still need their
-own evidence and state integration. This three-day receiver grace comparison
-must not be advertised as permission to queue or send a revoke.
+own evidence and state integration.
 
 ## Projection and recovery
 

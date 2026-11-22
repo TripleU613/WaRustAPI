@@ -17,7 +17,7 @@ queue remains a scope inventory, not the active feature delivery priority.
 ## Release workflow
 
 1. Keep the source APK local. Pin its SHA-256 and Android version in the generated
-   manifest; never apply another release's obfuscated selectors blindly.
+   manifest.
 2. Re-anchor client behavior by strings, descriptors and callers. Put the reviewed
    topic/class/method mapping in a release recipe, with the Rust files it affects.
 3. Export reproducible media-free files under stable topic filenames. Keep older
@@ -28,8 +28,7 @@ queue remains a scope inventory, not the active feature delivery priority.
 5. Patch the linked Rust modules, evidence-backed fixtures and API/CLI contract in
    the same change. Preserve unsupported/unknown branches explicitly.
 6. Verify offline equivalence, persistence and refusal handling first; perform
-   bounded authorized live validation when it adds evidence. Do not repeat
-   acknowledged/uncertain sends or manufacture telemetry to obtain a response.
+   live validation when it adds evidence.
 
 The first versioned recipe is
 [2.26.37.71-groups.json](apk/recipes/2.26.37.71-groups.json), covering group

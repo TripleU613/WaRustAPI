@@ -72,8 +72,7 @@ entirely in memory. Both encryption layers receive bare protobuf bytes and apply
 padding once. Existing pins remain enforced, including fresh mode. The result
 exposes frozen device ciphertext and group ciphertext, and retains the private
 bare distribution in zeroizing memory for the existing bounded original-send
-retry window. The distribution getter is secret-bearing and must never be logged
-or exposed in a public response. Debug output includes counts and rotation state,
+retry window. Debug output includes counts and rotation state,
 not identifiers, keys or payloads.
 
 `Prepared::reserve_in` checks every original crypto snapshot, then reserves

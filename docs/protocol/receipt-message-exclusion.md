@@ -54,7 +54,7 @@ uses ordinary 1/2/3 ordering. Confusing the two reverses object attribution.
 153.A00 at 103e–1052 invokes the generic constructor with discriminator 1
 and registers its Runnable with 0ZN.A04 after transaction success marking.
 Full revoke/edit/placeholder admission remains **unknown here**; this is a
-cache-replacement mark, not permission to delete any original Rust send.
+cache-replacement mark.
 
 ## Media/status flag round trip is asymmetric
 

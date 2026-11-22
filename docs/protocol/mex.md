@@ -447,7 +447,7 @@ integer slots above must not alone be treated as a completed group type port.
 escaped DEX strings returned no matches for these four hashes; narrower Group/
 Community/group/GROUP searches also returned none. These checks do not prove
 server-returned names do not exist: escaped/UTF-16 representation and strings
-assembled at runtime are outside that direct search. Do not invent names.
+assembled at runtime are outside that direct search.
 
 The 2H8/2H7 branches read support (2H8 only), locked, announcement,
 growth_locked2.locked, ephemeral.expiration_time_in_sec, limit_sharing.
@@ -819,8 +819,7 @@ finds fourteen unique, seventeen unanchored, seven ambiguous. `creation_time`
 with shorty JL still matches **both ADv.A04 and A05**; the locator cannot tell
 creation from subject time from this anchor. `invalid bot jid: ` with LL
 matches **0hj.A00 and A01**. `bot` with L matches **0hh.getServer,
-Ble.getRawString, Ble.getServer, CSe.A00**. These are negative results to
-preserve, not permission to pick the old class. String-free helpers require
+Ble.getRawString, Ble.getServer, CSe.A00**. String-free helpers require
 caller-based/manual evidence. Full proposed recipe remains unresolved.
 
 **Confirmed newly visible catch detail:** nullable `0hj.A03` catches **all**
@@ -1120,8 +1119,7 @@ interop last-hyphen Java integer semantics and traced singleton cases. Explicit
 device suffixes fail even when zero. Plain hosted domains normalize to their
 getServer results. `kind()` reveals only a recognized subtype; `user()` explicitly
 exposes private identifiers and `server()` the canonical domain. Debug hides
-identifiers. This type is separate from existing Jid/send policy: validation is
-not permission to send to bot/interop/server/placeholders, and no saved identity
+identifiers. This type is separate from existing Jid/send policy. No saved identity
 is reclassified. Optional LID/PN alias subtype checks and member assembly still
 need integration. Cache effects, complete Android Unicode-version parity and
 live MEX state application remain **unknown/unverified**.
@@ -1417,8 +1415,7 @@ A00 iterates the supplied entries and resolves stored roles as 0/1/2 for
 ordinary/admin/superadmin. Later it iterates existing entries, tests whether the
 new map contains each key, and also protects selected LID aliases and own-account
 aliases before queuing removals (+03fc..050a). It calls 0bA.A0i with new stored
-rows and removal candidates at +0552. This establishes a reconciliation path,
-not permission to replace the whole membership vector naively. All alias/own
+rows and removal candidates at +0552. This establishes a reconciliation path. All alias/own
 account/device/history/event/recovery branches still need a full port. No
 membership application or change-event generation is implemented by this chunk.
 

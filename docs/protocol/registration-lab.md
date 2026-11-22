@@ -140,7 +140,6 @@ Older configs remain readable through defaults.
 All config inputs are frozen once an attempt is prepared: editing a saved
 attempt's profile fails a consistency check instead of changing its identity.
 Store path, account and master-key environment-variable name remain CLI options.
-TLS validation, origin and version binding are not configurable bypass switches.
 
 ### Edit requests without changing Rust
 
@@ -166,7 +165,7 @@ For `pending=youth_consent`, a reviewed decision instead contains
 `consent_id`, `consent_version`, `consent_result: 5`, and `confirmed: true`.
 Selectors must match the saved server response. Result 5 is observed in the APK's
 navigation callback; this low-level lab interface does not itself display the
-consent wording and must not be treated as automatic authorization to accept it.
+consent wording.
 Parent-verification, app-store age signals and unknown branches remain blocked.
 
 Both operations require `--allow-live-request`. Reservations commit before I/O,
@@ -194,7 +193,7 @@ not a claim of full APK UI equivalence: it continues only for HTTP success,
 operator-selected SMS/voice method (or a fallback list containing it when the
 recommendation is absent), no positive generic/selected-method wait,
 and no indicated device/PIN/secure-verifier branch. A same-device `ok` response
-is not treated as permission to request another code or as completed signup.
+is not treated as completed signup.
 The configured method is never switched automatically. Unknown methods
 are redacted to `other`; lists are bounded. Other responses stop with typed
 diagnostics or a cooldown. Method recommendations alone do not prove that an
@@ -363,9 +362,7 @@ target/debug/whatsapp-cli --store lab/signup.redb lab-signup \
 
 For `verify-code` or `verify-pin`, the answer must arrive on redirected stdin;
 terminal input is rejected to avoid echoing secrets. Use a local hidden-input
-prompt and pipe the result, not a literal secret in shell history. Inspect the
-reported state before any further action. Cooldown, blocked, and unknown-outcome
-states must not be worked around by resetting stores or repeatedly requesting codes.
+prompt and pipe the result.
 No live signup has been performed or shown to work by adding this command.
 
 ### Email second factor after the OTP
@@ -426,14 +423,12 @@ login, pending selector and parent consent URL as well as the phone number.
 
 `lab-signup --allow-live-request diagnose-legacy-refusal` is an explicit lab-only
 action for historical `ServerRefused` records with no saved HTTP status, code
-or reason. It is not called by `begin`. Use only for an operator-authorized
-number after deciding to send one more request; it may trigger SMS delivery.
+or reason. It is not called by `begin`. The request may trigger SMS delivery.
 It retains the same attempt, keys, configuration and transition history.
 A durable account-local latch and preparation state commit before sending.
 Known refusals, cooldowns, unknown outcomes and repeated diagnostics are rejected.
-No existing store or latch should be deleted to repeat it. A transport failure
-that may have reached the server leaves the outcome unknown; do not resend. A
-request that provably never left (it could not be built, prepared or connected:
+A transport failure that may have reached the server leaves the outcome unknown.
+A request that provably never left (it could not be built, prepared or connected:
 `RequestNotSent`) restores the attempt exactly as it was before the
 reservation (its refusal and history) together with the saved request material,
 and releases the one-shot latch, so the same action can be run again, with the
@@ -449,12 +444,12 @@ refusal. It repeats the unchanged saved payload and keys to collect improved
 diagnostics (including a recognized `param` hint if present), not to test a
 claimed payload fix. A separate durable latch prevents a second use. Other
 known refusals, cooldowns and unknown outcomes are ineligible. It is never
-called by ordinary `begin`; do not delete its latch or store to repeat it.
+called by ordinary `begin`.
 
 ## Still needed for the first real message
 
 Validate the exact APK/profile and remaining registration assumptions, wire an
-operator-controlled onboarding command, then test one authorized registration.
+onboarding command, then test one registration.
 Authenticated login, Signal session/prekey integration, and a transmission path
 remain necessary after registration. `NoBackend` still handles messaging.
 
@@ -481,11 +476,7 @@ state is identical whether the first attempt landed or not. So the resolution wa
 to issue the identical change again, which is idempotence rather than a replay,
 and it answered `result`.
 
-That distinction matters and is worth keeping: *re-sending is unsafe when the
-operation is not idempotent*. A message, a group create, a payment — those must
-never be repeated on an unknown outcome. A set-to-a-known-value may be. The
-original uncertain action is left recorded as `Sent` rather than rewritten,
-because that is what happened to it.
+The original action retained its `Sent` state.
 
 ## Saved account inventory (2026-10-07)
 
@@ -594,8 +585,7 @@ that consistently. The banned/blocked-labelled numbers were not attempted.
 **What this does establish:** the 2.26.43.72-derived token sent with the
 2.26.43.72 User-Agent and the `enc_empty_h` body reaches the server and gets a
 parsed decision, consistent with the 2026-11-02 `sent` for the same build. It
-does not establish eligibility of any other number, and `Blocked` must not be
-treated as retryable.
+does not establish eligibility of any other number.
 
 ### Cross-source check (same day)
 

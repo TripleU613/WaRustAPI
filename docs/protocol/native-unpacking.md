@@ -26,7 +26,6 @@ The extracted ARM64 decoder is 220,920 bytes, SHA-256
 `fe24d8091d7fc96e0b3dee9cda3d7ecb5ec5cbe4582b86d9c42010b04d98e45f`;
 the x86_64 decoder is 234,664 bytes, SHA-256
 `481c4ce71d1070cab27bc6437c3206bb85af4f91c381bf397afa2ed7a0478a97`.
-Do not repeat the earlier narrower search as proof of decoder absence.
 
 ## First compressed stream
 

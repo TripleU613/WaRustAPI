@@ -125,9 +125,7 @@ recoverable state. [Existing audit and regression](messaging-transport.md#reconn
   No specific account restriction is attributed to these unknowns.
 
 The next protocol work should re-anchor those producers and follow the actual
-native callers, response consumers and effective gates. Preserve the existing
-identity, verification, cooldown and uncertainty rules. No detection evasion,
-client-provenance fabrication or live account experiment follows from this audit.
+native callers, response consumers and effective gates.
 
 ## Focused validation
 

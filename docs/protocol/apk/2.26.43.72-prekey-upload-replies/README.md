@@ -416,8 +416,7 @@ Additional export hashes:
   812 in this method. The provider/default of that constructor argument remains
   untraced. Count>=target skips generation; otherwise deficit=target-count.
 - A06 checks native **WhatsAppLibLoader.BbM**. Missing library logs/reports and
-  skips; UnsatisfiedLinkError around generation is caught/reported. This is
-  actual gating, not permission to silently omit required PQ fields elsewhere.
+  skips; UnsatisfiedLinkError around generation is caught/reported.
 - It obtains identity through **0Yj.Anw**, reads positive native
   next_kyber_prekey_id, and generates min(deficit,50) records per chunk through
   **EqE.A00(identity,KEMKeyType.A02,id)**. Exact enum/algorithm and signature
@@ -534,8 +533,7 @@ upstream registration/startup/notification routing is not yet fully traced.
 
 - Exact **13z.A0B** callers are Fcd.run (known successful ADD continuation) and
   **Fd5.run**. The latter passes stored reason plus four booleans unchanged.
-  Its constructor's extra integer **$t** is stored but **not read by run**;
-  do not invent dispatch semantics from that integer alone.
+  Its constructor's extra integer **$t** is stored but **not read by run**.
 - Fd5 constructor callers: **13z.A0R**, **13z.A0V**, **EcZ.A00**, **Fec.run**.
   This is an exact concrete-call inventory, not proof of all reflection/native
   entry paths. The Fec method remains untraced in this chunk.
@@ -566,8 +564,7 @@ upstream registration/startup/notification routing is not yet fully traced.
 continuation and the migrated low-count scope, while retaining distinct PQ SET
 entry. It must not infer that all count notifications or all initial uploads
 use ADD, nor infer migration from unsent PQ existence. Rust currently lacks this
-current-build manager strategy. This is evidence, not an implementation or
-permission to mark keys sent locally to enter that scope. No production change
+current-build manager strategy. No production change
 or live traffic; existing account state and uncertain requests remain intact.
 
 Additional export hashes:
@@ -971,7 +968,7 @@ exports were inspected only for the selected paths described below.
 - 14o constructor is retained: A07 is a13z dependency, not a reader-generation
   token. No stale-reader check is visible in the specific forwarding chain
   above; this bounded observation is **not** proof of absent reconnect
-  protection elsewhere or permission to weaken Rust generation checks.
+  protection elsewhere.
 
 **Impact:** prior alternate-route unknown is narrowed: selected cold-start
 fallback discards77/78, while the enabled route is proven to14o. Actual
@@ -1522,8 +1519,7 @@ outside scope. No Rust implementation of these state changes yet.
   deleteprivate prekeys, rotateidentity or invoke the406 deleteStoreA0m path.
   Full nativewrapper atomicity and exceptional outcomes remain separate.
 - Gateenabledmark-unsent includes uploadedLR rows, so the same migration
-  predicate can becomefalse untilSETack. This is explicit digestresync,
-  not authority to resetmigration on ordinary reconnect. A0Q closes its
+  predicate can becomefalse untilSETack. This is explicit digestresync. A0Q closes its
   scopes and callsA0S(inputreason) usingexisting material.
 
 **Port constraints:** correlate a fresh digest/404 to its original request,
@@ -1849,8 +1845,7 @@ node decoder returnsnull and skips adding that row. Loaded1vZ has its persisted
 row ID and loggable ID=-1; it does not invent an original live loggable ID.
 1iY.A01 compares wa_dictionary_version with3, updates it when different, and
 for an old nonzero version other than3 deletes the preacks table and returns
-true. Old0 or3 does not take that delete branch. This is pre-ACK codec migration,
-not authority to reset identities, prekeys, business records or raw captures.
+true. Old0 or3 does not take that delete branch. This is pre-ACK codec migration.
 The preference apply and SQL deletion are not shown as one atomic migration.
 Value3 is a storage preference, not an APK release or proof of wire-dictionary
 compatibility between builds.
@@ -1998,7 +1993,7 @@ and registers TB5 selector11 via0aq.A04. TB5.run switch11->0430 reads the window
 mode flag and load latch. Its selected non-window/load-complete path calls
 1iV.A07 directly; other paths schedule TB8 selector8 on the queue executor.
 That TB8 branch remains a trace boundary. A07 itself returns if initial load
-is incomplete; it is not authority to erase SQL rows because memory was skipped.
+is incomplete.
 
 A07 updates the persisted-memory window only after its latch check. It compares
 incoming and loaded row-ID boundaries; when out-of-order entries need merging

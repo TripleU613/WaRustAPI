@@ -1269,7 +1269,7 @@ Receipt reservations now persist their local account-authority digest through AC
 
 Owned receipt batches now bind account/Signal authority at reservation and recheck it at the actual writer alongside member/privacy guards. Late account replacement or identity change blocks the whole batch and retains uncertainty; routine credential/time observations remain allowed. [Local ownership evidence and 90-case regression](docs/protocol/replay-safety-audit.md#receipt-writer-retains-its-reservation-account-authority-2026-11-06). Offline only.
 
-The native ID-only ACK maps now have a bounded producer trace: explicit tracked-send records include VoIP plus reconnect/challenge resubmission; no ordinary receipt producer was established. This does not authorize Rust uncertain-send replay or loosen receipt matching. [Evidence and limits](docs/protocol/receipt-ack-special.md#bound-the-independent-id-map-producers-before-changing-receipts-2026-11-06). Static/offline only.
+The native ID-only ACK maps now have a bounded producer trace: explicit tracked-send records include VoIP plus reconnect/challenge resubmission; no ordinary receipt producer was established. [Evidence and limits](docs/protocol/receipt-ack-special.md#bound-the-independent-id-map-producers-before-changing-receipts-2026-11-06). Static/offline only.
 
 Pinned generic receipt-ACK audit confirms a full-key callback lookup including type/participant, followed by independent ID-based cleanup/callback maps. Their producers remain untraced; no blanket native ownership claim or Rust settlement change. [Evidence and negative finding](docs/protocol/receipt-ack-special.md#current-generic-callback-key-and-separate-id-maps-2026-11-06). Static/offline only.
 
@@ -1289,7 +1289,7 @@ Malformed ACK numeric errors now stop normal actor/CLI stateful receive and capt
 
 Malformed/out-of-i32 root ACK errors now preserve uncertain state across direct, distribution, receipt and CLI classification instead of becoming ordinary failures. Valid signed/Unicode errors retain prior behavior. [Pinned parser/catch evidence, tests and remaining scope](docs/protocol/message-ack.md#integral-error-admission-before-ordinary-ack-outcomes-2026-11-06). Offline only.
 
-Receipt ACK numeric459 now preserves single/batched reservations instead of recording an ordinary refusal, matching the pinned pre-class auth-challenge branch. [Regression, source and open recovery boundary](docs/protocol/receipt-ack-special.md#current-auth-challenge-diversion-precedes-receipt-settlement-2026-11-06). Offline only; no challenge bypass or replay.
+Receipt ACK numeric459 now preserves single/batched reservations instead of recording an ordinary refusal, matching the pinned pre-class auth-challenge branch. [Regression, source and open recovery boundary](docs/protocol/receipt-ack-special.md#current-auth-challenge-diversion-precedes-receipt-settlement-2026-11-06). Offline only.
 
 Actor and CLI receipt writes now retain every reserved batch member and recheck ownership plus the existing automatic direct-read privacy gate before encoding. Refusals preserve unknown reservations without replay. [Owned receipt handoff and limits](docs/protocol/replay-safety-audit.md#receipt-writer-owns-every-reserved-batch-member-2026-11-06). Offline only.
 
@@ -5157,9 +5157,7 @@ malformed masked id, three group texts, and seven group reactions, five of them
 deliberately varied experiments, every one carrying a rotated sender key and
 most silently dropped by the server. Earlier sessions also ended on
 `stream:error` echoing unACKed `w:gp2` group notifications. **Not
-established:** which of these triggered the ban. **Lesson recorded:** live
-experiments must be few, spaced out and on one long-lived connection; never
-iterate stanza variants against the server from a real account. No appeal was
+established:** which of these triggered the ban. No appeal was
 submitted and no re-registration attempted (owner's decision). `q` is unaffected
 (`login_checkpoint=success`). Next code bug from this run: `w:gp2`
 notifications that are not dirty refreshes are never ACKed.
@@ -9875,7 +9873,7 @@ references remain valid; no group keep payload was available. No new group draft
 keep/unkeep transmission, group ACK or handset rendering was tested. An earlier
 local ownership refusal resulted from overlapping offline inspection and receive
 orchestration; its logs were preserved and inspection completion verified before
-this window. No server retry, account reset or ownership bypass was added.
+this window.
 
 2026-10-09 — **Confirmed local/static:** incoming keep events now preserve
 optional payload milliseconds and their own envelope ID, independently of the
@@ -10568,8 +10566,7 @@ converted a reserved device query to server-refused from such late replies.
 The actor now selects each wait's own deadline. Expired uploads drop only their
 session-local waiter and keep durable outcome_unknown/key reservations. Expired
 device queries are deferred for this session while pending users and the durable
-query row remain unchanged. This timeout does not authorize a resend, key reuse,
-repeating those deferred users, cooldown bypass or clearing uncertain history. Existing admission
+query row remain unchanged. Existing admission
 triggers and the selected30-second local durations are retained.
 
 Prekey, device-query and keepalive reply admission also checks that its waiter

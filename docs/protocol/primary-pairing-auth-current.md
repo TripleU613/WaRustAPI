@@ -41,8 +41,7 @@ and user authorization for this alternative remain **unknown**.
 
 F1G.A04 refuses another active FUY or existing 0Vy pending Eo9, requires
 10V.A01's timestamp to differ from -1, refuses the selected hosted type on
-consumer, and calls A05 before scheduling the preparation worker. These are
-specific gates, not permission to invent registration or pairing state.
+consumer, and calls A05 before scheduling the preparation worker.
 The preceding bundle retains A05's old-FUY deactivation and the later
 FeN12 active-generation check before Eo9 creation.
 

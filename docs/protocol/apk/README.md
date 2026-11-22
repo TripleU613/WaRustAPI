@@ -244,7 +244,7 @@ session/identity SQL predicates, canonical-address branches, property definition
 transaction callback registration and cache-variant cleanup. Its
 [baseline](2.26.37.71-companion-cleanup/targets.json) is separate from the nearly
 full core bundle. [Interpretation and remaining gates](../peer-identity.md#companion-key-removal-scope-and-callback-boundaries-2026-10-08)
-distinguish static deletion scope from permission to run cleanup. No account
+describe the static deletion scope. No account
 keys/history are deleted; native/full mapping and effective feature gates remain open.
 
 

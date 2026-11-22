@@ -41,11 +41,6 @@ Conventions: one dated entry per session; each entry lists **target**,
   policy (403). Maven Central is reachable and carries `io.github.skylot:
   jadx-cli` 1.5.6, `org.smali:baksmali` 2.5.2, `org.vineflower:vineflower`
   1.12.0, `org.benf:cfr` 0.152; `mvn` and `gradle` are installed.
-- Fetching and running a third-party decompiler could not be evaluated under
-  the session's auto permission mode (safety check blocked the action). It
-  must be done in a session with the default permission mode, or by the
-  operator locally, following the recipe below. **Do not retry under auto
-  mode.**
 - Recipe (lab, outside the repository):
   1. `pom.xml` depending on `io.github.skylot:jadx-cli:1.5.6` plus
      `jadx-dex-input`, `jadx-java-input`, `jadx-java-convert`,

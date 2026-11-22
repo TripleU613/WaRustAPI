@@ -24,7 +24,7 @@ and message transmission remain gated; these commands do not request an OTP.
 Set `WHATSAPP_API_MASTER_KEY` to a 32-byte key encoded as 64 hex characters,
 obtained from your secret manager. `whatsapp-cli keygen` can generate a fresh
 key; its stdout is secret. Keep it outside the database and retain it across
-restarts. Do not generate a new key for an existing store.
+restarts.
 
 ```sh
 cargo run --locked -p whatsapp-cli -- --store protocol.redb store init
@@ -55,7 +55,8 @@ curl http://127.0.0.1:8787/openapi.json
 
 The document describes every operation, including the ones only the CLI performs today; see [docs/api/README.md](api/README.md).
 
-The HTTP interface has no authentication. Keep the default loopback binding.
+The default bind address is 127.0.0.1:8787. Base routes are public. Optional
+store routes require loopback and a bearer token from `--token-file`.
 The wire-profile routes describe the comparison APK, not a working connection.
 Network mutation endpoints return structured errors while their gates remain
 unresolved.

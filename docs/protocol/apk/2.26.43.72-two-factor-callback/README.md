@@ -36,8 +36,7 @@ FcH with the original code/email and integer0. That runnable stores/clears
 settings, conditionally uses14C encryption/round-trip validation, updates nag/
 email metadata and may enqueue Fetch2FAEmailStatusJob when email is absent and
 its saved status is unknown. Full encryption/provider/job/observer semantics
-remain unported; this is not permission to mimic a plaintext fallback, adopt
-credentials speculatively or schedule extra requests.
+remain unported.
 
 FUS.Bvj obtains an error pair, defaults to-1/null when absent, and postsFej.
 Fej's full body is not traced here. Thus result, outer refusal and delivery

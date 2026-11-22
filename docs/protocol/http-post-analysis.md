@@ -127,8 +127,7 @@ typed response did not retain these method-selection fields.
 This is a confirmed client-flow gap, **not proof that it causes no_routes**
 or that existence checks are mandatory for every server branch. The exact
 observer decisions and client-capabilities producer still require tracing
-before claiming complete APK-equivalent method selection. Do not invent a
-`new_account` flag from this finding.
+before claiming complete APK-equivalent method selection.
 
 An opt-in preflight builder and conservative method gate are now implemented
 and covered by offline tests. Newly exported templates enable it; saved legacy
@@ -148,8 +147,7 @@ The following static follow-up sent no additional request.
 
 `VerifyPhoneNumber.A5P` 0x0e74–0x0eb0 selects the SMS no-route handler, then
 `A2D` 0x0026–0x0034 stores `server-send-request-no-routes` through `I4A.A0R`.
-`A2D` also consumes the retry-after duration; zero per-method waits do not
-establish permission to ignore the general wait. Default resource 0x7f12377e
+`A2D` also consumes the retry-after duration. Default resource 0x7f12377e
 reads: "We couldn't send an SMS to your number. Please check your number and
 try again in %s." Resource 0x7f12377f is its untimed variant. Neither diagnoses
 the SIM as virtual or reveals the server's routing decision.
@@ -162,7 +160,7 @@ not a proven fix for SMS delivery. Existing keys, token and saved cooldown
 remain untouched. Before a live test, the saved deadline must pass and the
 profile change must be applied through a checked same-attempt update; ordinary
 begin rejects edits to frozen material, and legacy migration does not apply
-to this known cooldown. Do not reset the store to install the proposal.
+to this known cooldown.
 
 The [reproducible cross-reference inventory](http-post-xrefs.txt) contains
 39 literal `POST` references, 24 `User-Agent` references and two literal
@@ -174,7 +172,7 @@ not fully covered. This is a starting inventory, not a completed all-traffic aud
 | --- | --- | --- |
 | Shared HTTP helper `LX/129;->A0E` | URL supplied by caller; `User-Agent` set at 0x00a2; conditional POST at 0x0120; JSON default content type at 0x0136; optional gzip request/response headers | Generic transport, not a registration body schema. Do not copy its JSON default into the form-encoded registration sender. |
 | `LX/IN5;->ACJ` | `gdrive-api/begin-transaction`, `clients/wa/backups/`, `:beginTransaction`; JSON options `mode`, `estimatedDeltaBytes`, `axolotlMode`, `retryCount` | Backup API path, not evidence of a Meta signup prerequisite. Host resolution still needs tracing. |
-| `KotlinRegistrationBridge->A04` / `A05` | Client funnel / pre-phone-number funnel builders; `current_screen`, `previous_screen`, `action_taken`; A05 also has `event_name`, language/locale and session identifiers | Client telemetry exists. Mandatory ordering and whether signup depends on it remain unknown. Do not invent or replay activity. |
+| `KotlinRegistrationBridge->A04` / `A05` | Client funnel / pre-phone-number funnel builders; `current_screen`, `previous_screen`, `action_taken`; A05 also has `event_name`, language/locale and session identifiers | Client telemetry exists. Mandatory ordering and whether signup depends on it remain unknown. |
 | `KotlinRegistrationBridge->A08` | Register builder includes `code`, conditional `auth_response`, `context`, `method`, `advertising_id`; uses `HSP.A0A` | Registration completion differs from requesting a code. Response-parser keys later in this method are not outgoing fields. |
 | `KotlinRegistrationBridge->A09` | `token` at 0x00b6, `method` at 0x00c4, optional `context` at 0x00d2; branch-dependent permission/education fields at 0x00f0–0x010e; optional `client_start_message` and `advertising_id`; `HSP.A06` passed to `RetryingHttpClient.A01` | Code-request builder. Profile extension maps can represent these values, but their runtime producers and mandatory subset remain unproven. No automatic retries copied. |
 | `KotlinRegistrationBridge->A0T/A0U/A0V` | Shared phone, language/locale, fdid/expid, access-session ID and recovery/backup token appenders | Already represented by the editable profile and persisted prerequisites. |
@@ -208,7 +206,7 @@ this path's exact binary encoding.
 | `I4D.A0H`, 0x0014–0x006c | `mistyped`, `reason`, `hasav`, `client_metrics` | `mistyped`/`hasav` conditional; reason and serialized metrics inserted on this helper path. Their caller/runtime values are not inferred. |
 | `I4D.A0K`, 0x0012–0x007c | `mcc`, `mnc`, `sim_mcc`, `sim_mnc` | Strings from two carrier-info objects, converted to bytes; repository reads network and SIM operators. No carrier is inferred from a phone number. |
 | `I4D.A0H`, 0x0082–0x00e0 | `education_screen_displayed`, `prefer_sms_over_flash` | Stored booleans, default false in these preference reads. Existence is not evidence of server-requiredness. |
-| `I4D.A0H`, 0x00fc–0x016a | `push_code`, `new_acc_uuid` | Added only for non-empty stored values. Do not fabricate them. |
+| `I4D.A0H`, 0x00fc–0x016a | `push_code`, `new_acc_uuid` | Added only for non-empty stored values. |
 | `RequestCodeRepository.A00`, 0x0c50–0x0c7e | `feo2_query_status` | Stored string with fallback `did_not_query`, encoded to bytes. |
 | `I4D.A0r`, 0x010c–0x0116 | `recaptcha` | Conditional challenge-related data from another component. Not implemented or fabricated. |
 
@@ -267,7 +265,6 @@ Further tracing identifies the code-specific producer: `I4A.A0E` reads
 `reg_attempts_generate_code` with default zero (0x0010–0x001c), increments and
 persists it (0x001e–0x0028), then constructs `H2r` using the inherited `HcR`
 constructor (0x0038–0x0042). A fresh counter therefore supplies 1, not 0.
-This is not permission to reset a previously used attempt counter.
 `H2r.A01` additionally emits nullable `is_sim_number`, `is_sim_absent`,
 `is_permission_granted`, and `isUserChoosingToMigrateFromConsumerAppDirectly`.
 These are conditional runtime inputs, not constant claims to add to the profile.
@@ -344,7 +341,7 @@ Failure paths can leave an empty H and omit Authorization; their existence is
 not proof that the server accepts that fallback. No H or attestation token is
 manufactured, and no live request was sent in this implementation.
 
-### Subsequent authorized ENC-only experiment
+### Subsequent ENC-only experiment
 
 One explicit request reused the latest saved account identity and unchanged
 612-byte inner form, wrapped in an 884-byte `ENC` body. The response remained

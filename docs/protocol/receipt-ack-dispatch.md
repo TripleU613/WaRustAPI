@@ -65,8 +65,7 @@ traced here; this is call-site evidence, not complete send-job behavior.
 **Confirmed:** 0hn.A01/A02 both synchronize on A04, check containsKey, and log
 added duplicate ackable stanza plus duplicate_ackable_stanza on a match. They
 still put a new D42 under the supplied key at 00a4..00aa. They differ in D42
-discriminator 0 versus 1. Replacing a callback is not evidence of a transmission,
-identity rotation or permission to replay an uncertain request.
+discriminator 0 versus 1. Replacing a callback is not evidence of a transmission or identity rotation.
 
 D42.BjN discriminator 0 invokes the held callback with **null** (006e..007e).
 Nonzero invokes it with the supplied payload (0008..0016). Both then perform

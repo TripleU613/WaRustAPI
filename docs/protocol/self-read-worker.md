@@ -46,8 +46,7 @@ submission: status 17 survives CNn's settings downgrade, goes through CYV,
 and ordinary messages reach 15A.A02. Its state-only pool maps 17 to 17,
 then applies the saved last-read-row boundary and A07 status ordering before
 mutation. Reaching v30 therefore does not prove a write, but a false A09
-does **not** establish whole-receipt rejection or permission to discard the
-receipt's local state effects. The 1iZ store branch remains distinct.
+does **not** establish whole-receipt rejection. The 1iZ store branch remains distinct.
 
 The qualifying v26 pool instead calls 0zH.A0V(collection,false) at
 0d7a..0d92. The [retained submission trace](read-receipt-submission.md)

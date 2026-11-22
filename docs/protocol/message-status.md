@@ -80,8 +80,7 @@ receipt_coex/message_add_on_receipt_coex after specific device, account and chat
 gates, with its own transactions/catches retained. These tables are distinct
 from receipt_user. **Unknown:** effective coexistence gates, all subtype
 classification/target producers and transitive helper effects. The shown path
-is not proof of global absence of normal-send user-row seeding. Do not invent
-receipt_user membership from blank device targets or a coexistence row.
+is not proof of global absence of normal-send user-row seeding.
 
 ## Rust boundary and next trace
 

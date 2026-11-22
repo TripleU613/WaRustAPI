@@ -5,8 +5,7 @@
 [Nine-topic recipe](apk/recipes/2.26.37.71-read-linked-set.json),
 [complete selected methods](apk/2.26.37.71-read-linked-set/targets.json).
 Offsets below are method-relative bytes. This extends the saved-set boundary
-of [read-job admission](read-receipt-job.md), not a Rust linked-device importer
-or permission to adopt arbitrary device identities.
+of [read-job admission](read-receipt-job.md), not a Rust linked-device importer.
 
 ## Eligibility is a saved companion set
 

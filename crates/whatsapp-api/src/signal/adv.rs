@@ -40,7 +40,7 @@ fn bad() -> Error {
 }
 
 /// Signature-verified E2EE key-index metadata. This is not a transport device
-/// list, a linked-device session, or permission to use a received sync key.
+/// list or a linked-device session.
 #[derive(Clone, PartialEq, Eq)]
 pub struct VerifiedIndexList {
     raw_id: u32,

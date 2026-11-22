@@ -73,7 +73,7 @@ fn saved_dhash(store: &ProtocolStore) -> Result<Option<String>> {
 }
 
 /// Whether a set result needs reconciliation before the cache can be current.
-/// This is local projection state, not a server refusal or permission to resend.
+/// This is local projection state.
 pub fn reconciliation_required(store: &ProtocolStore) -> Result<bool> {
     store
         .read(|tx| tx.get_json(Table::Checkpoints, RECONCILIATION_KEY, 1))

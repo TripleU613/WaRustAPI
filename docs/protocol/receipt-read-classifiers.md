@@ -28,8 +28,7 @@ it returns 0Ze.A07(), a synchronized read of the model's integer A07.
 The override helper reads call_not_spam_jids through 0V4.A02, comma-splits
 nonempty input and delegates JID conversion to 0DE.A0C; absent/empty input
 returns null. Parsing authority, invalid entries, field producers and persistence
-remain **unknown**. These are local classifier codes, not message statuses,
-server refusal codes or permission to replace saved classification.
+remain **unknown**. These are local classifier codes, not message statuses or server refusal codes.
 
 0DV.A0L tests only A02 (CUg) nonnull. Thus the previously retained 0yy.A0D
 branch combines chat classification with contact-addon presence. Neither the

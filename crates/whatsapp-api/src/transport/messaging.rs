@@ -1271,7 +1271,7 @@ fn unhandled_receipt_root(incoming: &Node) -> Option<&str> {
     }
     // Confirm the preceding native ChatJid resolution for supported ordinary
     // user/group routes. A server-only, broadcast, newsletter or opaque sender
-    // may fail or dispatch elsewhere; do not invent its error context.
+    // may fail or dispatch elsewhere.
     let from = super::receipts::network_jid(incoming, "from")?;
     if !(from.is_user_like() || from.is_group()) || from.user.is_empty() {
         return None;

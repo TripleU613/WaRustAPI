@@ -74,7 +74,7 @@ units and clock assumptions rather than silently substituting an unrelated clock
 
 0pQ.A02 explicitly resets the listed synchronization backoffs to-1, including
 global. The selected reset method alone does not establish when the application
-is allowed to clear them; it is not permission to reset waits during retry.
+is allowed to clear them.
 
 ## Current Rust gap and next work
 

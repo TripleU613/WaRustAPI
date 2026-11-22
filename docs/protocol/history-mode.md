@@ -63,8 +63,6 @@ Jid.getDevice() on its selected JID, then A00 at 1210..1222. Adjacent branches
 store platform and ADV identity data; the full handler is retained but its
 selected JID producer, signed identity verification, event type admission,
 registration state transitions and side-effect ordering are **unknown** here.
-The presence of that setter is not authority to invent a device number or
-consider a companion paired.
 
 The exact registration_device_id anchor scan finds seven constant references
 in six physical methods (BMw has two). GEu.A02, 0g1.A0b and 1LA.AAT are

@@ -48,8 +48,7 @@ nonnull operation set. Only an LID-based group and LID user can reach its
 counterpart branch, with additional participant/A0b conditions. If 0Xw.A0H
 returns a PhoneUserJid, A01 rebinds each device number under that user and the
 addition branch calls A04 on the rebound set. A01 catches 08j and returns the
-set accumulated so far. This is not authority to invent a PN/LID mapping in
-Rust; effective mapping, group conditions and caller persistence continuity
+set accumulated so far. Effective mapping, group conditions and caller persistence continuity
 for the counterpart remain **unknown/unported**.
 
 ## Persistence and sender-key flags

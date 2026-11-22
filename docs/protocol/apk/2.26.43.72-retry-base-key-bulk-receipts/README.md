@@ -14,7 +14,7 @@ Selected target records are built by [EZd.A00](target-normalization.txt). If0xW.
 
 ## Device-keyed cleanup map and ordering
 
-A00 groups target records by default EoY built from the complete DeviceJid (F3k.A04, previously traced). Each value is a LinkedHashSet of original1dW message keys. Collection requires from-me=true or [1dX.A0H](ownership-predicate.txt). That helper additionally accepts a selected type64/Dwf message with own-user BVC and A0z=false; it is not permission to classify every incoming message as ours. Device identity and the full message key are retained; there is no bare-user/global-message-ID delete.
+A00 groups target records by default EoY built from the complete DeviceJid (F3k.A04, previously traced). Each value is a LinkedHashSet of original1dW message keys. Collection requires from-me=true or [1dX.A0H](ownership-predicate.txt). That helper additionally accepts a selected type64/Dwf message with own-user BVC and A0z=false. Device identity and the full message key are retained; there is no bare-user/global-message-ID delete.
 
 After collecting the cleanup map, A00 runs its distinct A03 processing, then selected message/status-store updates and bookkeeping. A nonempty cleanup map queues Fc1 selector17 under base_key_delete through0YM.A02 at0454. The [runnable constructor](bulk-runnable-constructor.txt) stores the map inA01 and F21 inA00, matching the earlier selector17 arm. That arm expands original/normalized addresses and executes EbJ's exact message/recipient deletion. The [executor trace](../2.26.43.72-retry-base-key-delete-triggers/delete-executor.txt) establishes ThreadPoolExecutor submission, not awaited completion.
 

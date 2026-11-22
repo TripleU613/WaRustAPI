@@ -82,10 +82,7 @@ to="server"><privacy><category name="category" value="value"/></privacy></iq>`
 0h8.A0T with request code 69 and long argument zero (01cc..01da). Zero here
 does not establish an infinite timeout, no retry, or a server-directed wait.
 Dispatch result/timeout handling and pending-state durability remain **unknown**.
-This is source authority for the local-off correction request, not authorization
-to send a request automatically. (At trace time it was also not authorization to
-add a settings mutation command; that command now exists as an explicitly
-confirmed one-shot, see *Implemented offline* below.)
+This is source authority for the local-off correction request.
 
 **Confirmed scoped boundaries:** SettingsPrivacy.C62 maps the local key
 `read_receipts_enabled` to category `readreceipts`, converts an integer selection

@@ -24,7 +24,7 @@ RefetchWriteGuard.check_write_authority now reloads current saved authority
 before its existing job/answer ownership checks. NodeLink's existing queued ACK
 and query preparation both use that guard. A change before ACK encoding blocks
 both writes; a change after ACK acknowledgement but before query preparation
-blocks the query without manufacturing permission to replay the ACK.
+blocks the query.
 
 ActiveRefetches now forwards its complete frozen guard into completion rather
 than only the job. Both the refusal transaction and successful replacement-

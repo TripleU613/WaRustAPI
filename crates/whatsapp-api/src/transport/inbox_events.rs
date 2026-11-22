@@ -3708,8 +3708,7 @@ mod tests {
             )
             .unwrap();
         assert_eq!(retained.events, batch.events);
-        // Two stored claims for the same original member are uncertainty, not
-        // permission to select either parent or repeat an old event marker.
+        // Two stored claims for the same original member are ambiguous.
         let legacy: serde_json::Value = store
             .read(|tx| {
                 tx.get_json(

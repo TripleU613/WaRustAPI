@@ -806,7 +806,6 @@ struct ReceiptCallbackOwner {
 }
 
 /// One frozen receipt batch and its exact durable reservation members.
-/// A successful check is not permission to repeat a write after uncertainty.
 pub struct ReservedReceipt {
     node: Node,
     pub(crate) guard: ReceiptWriteGuard,

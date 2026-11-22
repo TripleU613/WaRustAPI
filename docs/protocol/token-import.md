@@ -54,8 +54,7 @@ one branch logs `saveIdentityWithoutNotification`, with companion fallback to
 A14, canonical-address selection and A0H writes. It then reaches the already
 traced imported verification metadata branch. These imported keys are a separate
 source from authenticated prekey replacement. The previous
-[history verification trace](peer-identity.md) applies; this is not authority
-for Rust to accept an arbitrary history blob as a replacement pin.
+[history verification trace](peer-identity.md) applies.
 
 ## Field numbers and a decoder limitation
 

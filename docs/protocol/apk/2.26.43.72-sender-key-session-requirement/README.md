@@ -65,8 +65,7 @@ made about unexpanded transitive callees.
 
 Ex8.A07 gates selected group policy on positive group metadata, configurable
 metadata/count bounds, a feature flag and A02 readiness. Its nullable Boolean
-argument is only a fallback after eligibility checks; null is not a blanket
-permission to enable PQ. Effective values and lifetime/reset policy remain
+argument is only a fallback after eligibility checks. Effective values and lifetime/reset policy remain
 unknown. Do not port guessed feature defaults or change PQ advertisement.
 
 ## Producer search boundary and remaining work

@@ -33,7 +33,7 @@ retry receipts or weaken Rust receipt route/member correlation from this branch.
 The selected retry wrapper mode0 [forwards null](../2.26.43.72-retry-receipt-callback-handoff/callback-wrapper.txt),
 and its FfK releases the job's untimed get normally. Thus a matched callback can
 complete the retry job even for an error-bearing ACK. Normal job return proves
-callback completion, not server acceptance, usable keys or permission to resend.
+callback completion.
 The upstream reader's complete parsing/challenge dispatch and effective provider
 binding remain separate; not every arbitrary input node is admitted here.
 

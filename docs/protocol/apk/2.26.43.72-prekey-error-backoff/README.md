@@ -55,7 +55,7 @@ pending entries, reconstructs in-flight EX8 entries using uptimeMillis, calls
 A05 with reason 9 for grouped work, clears pending map and clears posted flag
 A00. It does not clear backoff mode A01 or reset 0Vf in this selected method.
 A05 is a separate job admission path; a queued job is not a successful network
-write or permission to repeat arbitrary uncertain Rust reservations.
+write.
 
 Explicit A03 acts only while A01 true: clears A01/A00, resets 0Vf and invokes
 A04. Exact caller census includes A00, two FeR.run sites, SendE2EMessageJob.A0J

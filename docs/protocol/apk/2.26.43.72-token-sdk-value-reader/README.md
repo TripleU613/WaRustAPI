@@ -41,9 +41,7 @@ Nv3.A06 checks existing metadata. Flags0x6 trigger auxiliary handling (unless th
 boolean suppresses the selected call); flags0x11 return the supplied default.
 Otherwise an existing long-value vector yields getLong. No value-vector offset
 returns literal0. IndexOutOfBoundsException/BufferUnderflowException in the
-retained metadata/value ranges log and return the supplied default. This is a
-bounded branch description, not permission to treat every malformed buffer as
-zero or to bypass the preceding source/type gates.
+retained metadata/value ranges log and return the supplied default.
 
 ## Source classification
 

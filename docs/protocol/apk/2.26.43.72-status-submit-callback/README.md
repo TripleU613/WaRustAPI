@@ -34,8 +34,7 @@ retained getPrimaryDevice override; this is not an inbound reader gate.
 
 0Th.A01 locks the full-key callback map. Duplicate key logs/reports an error,
 then replaces viaMap.put; it does not reject or complete the prior callback in
-this selected path. This does not prove unique native operation ownership and
-is not permission to weaken Rust's original-reservation guards.
+this selected path. This does not prove unique native operation ownership.
 
 ## Future completion carries no acceptance value
 

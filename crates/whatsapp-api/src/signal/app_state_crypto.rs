@@ -208,7 +208,6 @@ impl MutationKeys {
     }
 
     /// Cz6.ADf: snapshot MAC || ordered value MACs || version || collection.
-    /// A valid MAC is not permission to skip version/fingerprint validation.
     pub fn verify_patch(
         &self,
         snapshot_mac: &[u8; 32],

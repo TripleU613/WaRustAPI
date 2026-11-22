@@ -42,8 +42,7 @@ not interpreted; their retention is not a complete semantic port.
 
 Source branches are 0022..0060, 0060..00dc and 00dc..0154. The shadow path
 constructs both operations; execution/comparison ordering inside its coroutine
-and LNQ remains **unknown**. This is not permission to choose whichever result
-is convenient. Set requests use a different Boolean property **23639** in A0P.
+and LNQ remains **unknown**. Set requests use a different Boolean property **23639** in A0P.
 Their effective values, constructor/default authority and native configuration
 resolution remain **unknown** here; an observed set mode would not prove fetch mode.
 

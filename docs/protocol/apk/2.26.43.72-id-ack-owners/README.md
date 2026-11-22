@@ -44,8 +44,7 @@ not universal exclusion of every runtime producer.
 it separately selects challenged records through0TV.A03 and submits those
 through A08 too. A08 iterates id/Message entries and calls tracked A0L.
 Later0656..06b8 it drains pending EVD records using their tracking/callback
-fields. This is native resubmission machinery; it is not authorization to
-replay any Rust uncertain receipt or chat send.
+fields. This is native resubmission machinery.
 
 Eo7.A00 only extracts EV7 when Message.arg1=206.0TV.A00 uses that extraction,
 VoIP tag branches (including offer/terminate), attempt count, config0x3c4a and

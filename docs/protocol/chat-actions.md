@@ -438,12 +438,10 @@ the attribute when `None`) and **one** further live attempt was made. The server
 refused it again with the same `code=400 text=bad-request`.
 
 **Live patch attempts stopped there: two sends, one correction, both refused.**
-Permuting the remaining candidates until one is accepted is the brute-forcing
-this project forbids, and a patch accepted for the wrong reason is worse than a
-refusal. What the refusals establish is that the server validates a patch rather
+What the refusals establish is that the server validates a patch rather
 than storing it opaquely, and that the version attribute was not the only cause.
 
-Still undistinguished, and none of them worth guessing:
+Open questions:
 
 * a collection may need an existing **snapshot** before it accepts a patch —
   this account's `return_snapshot` fetch returned an empty `<sync/>`, so it has
@@ -540,7 +538,7 @@ Implemented and verified end to end on 2026-09-24:
    `<patches>` we are behind on;
 3. those patches are verified and applied — same verification an inline patch
    from a fetch gets, and the key each names must be one this account already
-   holds, because a conflict is not permission to trust bytes;
+   holds;
 4. next patch claims `version="1"` → **accepted**, server reports `version="2"`.
 
 `app_state::keys_for` was added for step 3: `select_active_key` answers "which
@@ -685,7 +683,6 @@ invalid digits/length, absent/error metadata, malformed/overflow refresh and
 once-only durable ingestion. Missing/rejected LIDs remain null, not proof that
 an account has no LID. Existing ingested markers/statuses are preserved; no
 historical reprocessing, fresh query, key change or identity mapping is performed.
-Contact metadata is not authority to replace a Signal pin or authenticated alias.
 
 **Research boundary:** a case-sensitive `Usync`/`usync` string search selected
 111 strings from 453,954 before tracing `0u7`; the selected methods, rather than
@@ -1568,9 +1565,7 @@ Individual insert/delete results are discarded, while selected thrown write/
 close failures propagate. Per-targetA0A delegatesA0Q, which suppresses an
 equivalent latest block-state system-message model or constructs and hands off
 a new one.8be selector6 closes the changed-union scheduling handoff toA09 ->3XP;
-consumer effects remain untraced. This is not authority to fabricate a user
-message, replay a request, ACK unsupported notifications, or weaken Rust's
-atomic projection. No production behavior or live account operation changed.
+consumer effects remain untraced. No production behavior or live account operation changed.
 
 Validation: twelve selected DEX export commands reproduce byte-for-byte;
 README selected-task extraction executes exactly. Complete retained REA data,

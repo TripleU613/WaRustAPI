@@ -32,7 +32,6 @@ Full writer-error delivery and success-schema exception lifecycle remain open.
 The existing correlated-IQ router's exact result/error admission remains the
 basis for calling the selected callback. This trace does not weaken login,
 authentication, revocation, notification restrictions or unrelated IQ errors.
-It does not authorize any operation that a different request was refused.
 
 ## Confirmed Rust mismatch and correction
 

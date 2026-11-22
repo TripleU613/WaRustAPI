@@ -68,7 +68,7 @@ mention_type takes the JID path: resolve through 0VT.A09 then 0D7.A00, skip an
 unresolved value, otherwise construct DLg(jid,display_name). Type 1 has a
 322.A01 setting/account gate and can yield D32.A00. Unknown types log and skip.
 Full gate defaults and JID conversion authority remain unknown. The query has
-no ORDER BY; do not invent a canonical winner for the first qualifying user.
+no ORDER BY.
 After closing resources it passes the collected list to A04 at 0144..014a.
 The [route selector](receipt-route.md) filters DLg only, so the D32 marker is
 not interchangeable with a qualifying user mention.

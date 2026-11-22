@@ -100,8 +100,7 @@ adds1ur.A00's auth_bundle/PendingIntent metadata, and calls Context.sendBroadcas
 The ACK destination is supplied by extra_notification_sender; the earlier
 PendingIntent creator was separately checked through1ur.A01. This ACK block does
 not compare those two package values or rerun1ur.A01 for the sender. That is a
-bounded description of these checks, not proof of an exploitable trust failure
-or permission to bypass provider admission. Manifest/OS authority remains open.
+bounded description of these checks. Manifest/OS authority remains open.
 
 The broadcast path catches RuntimeException: a DeadObjectException cause returns;
 other causes rethrow in its out-of-line handler. No selected response wait,

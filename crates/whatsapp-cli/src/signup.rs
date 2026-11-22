@@ -47,16 +47,16 @@ pub(super) enum Action {
         #[arg(long)]
         decision: std::path::PathBuf,
     },
-    /// One authorized resend of a legacy refusal whose diagnostics were lost.
+    /// One resend of a legacy refusal whose diagnostics were lost.
     /// Known refusals/cooldowns are excluded; a durable latch prevents repeats.
     DiagnoseLegacyRefusal,
-    /// One authorized repeat of HTTP 200 / bad_param to collect field hints.
+    /// One repeat of HTTP 200 / bad_param to collect field hints.
     /// Same saved payload and keys; a durable latch prevents another repeat.
     DiagnoseBadParameter,
     /// One encrypted-envelope experiment after HTTP 200 / bad_param.
     /// Same inner fields and identity; no attestation, no automatic repeats.
     DiagnoseEncryptedParameter,
-    /// One ENC plus empty-H experiment; does not fabricate attestation.
+    /// One ENC plus empty-H experiment.
     DiagnoseUnsignedEnvelope,
     /// One additive-code-field experiment from a private EndpointFields JSON file.
     /// Uses ENC plus empty H; rejects replacement of saved fields.
@@ -591,7 +591,7 @@ pub(super) async fn run(
                 }
                 _ => {
                     return Err(invalid(
-                        "current state does not permit this answer; inspect status and do not retry blindly",
+                        "current state does not permit this answer; inspect status",
                     ));
                 }
             };

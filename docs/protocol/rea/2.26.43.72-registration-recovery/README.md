@@ -56,8 +56,7 @@ permission was added.
 
 This is a conservative extension of the existing Rust refusal policy, not a
 complete port of the Android PIN screen. Rust uses its existing strict
-nonnegative-integer duration parser: malformed/negative values fail locally
-rather than becoming permission to retry. Android's mode-specific wait
+nonnegative-integer duration parser: malformed/negative values fail locally. Android's mode-specific wait
 selection, malformed/overflow recovery, UI and all PIN re-entry branches are
 not claimed equivalent. Their remaining work is in the
 [whole-APK queue](../../apk-porting.md).

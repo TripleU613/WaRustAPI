@@ -402,7 +402,7 @@ A field or URL existing in an APK does not establish a mandatory request.
 | Groups/status/presence | transport/{groups,group_send,status_receipts,presence} | [Current presence targets and token merge](presence.md#current-target-types-and-outbound-guard-2026-11-06) verified; unsupported target bypass and incoming PN/LID metadata projection fixed. Other incoming JID families and upstream typing activity/cancel, effective producer gates and full notification-to-refresh ordering remain open. Existing group/status ports are partial. |
 | Account/profile/contact actions | transport/{actions,about,profile_picture,blocklist,two_factor,report,contacts} | [Producer-specific action callbacks](chat-actions.md); photo outer/error selection and report32s callback ownership corrected offline. Full payload/native-state adoption, report optional metadata and complete per-producer response matrices remain open. Generic Ok is not feature acceptance. |
 | App state/MEX/settings/history | transport/{app_state_sync,mex,chat_settings,history_notice} | Queue conditional startup dependencies, sync cursors, mutation acknowledgements and persistence. Mandatory startup status remains unproven. |
-| Optional services/telemetry/third parties | versioned APK evidence, ownership not yet complete | Queue trace callers and runtime gates before classifying required/conditional/optional. Never invent events, device provenance or values. |
+| Optional services/telemetry/third parties | versioned APK evidence, ownership not yet complete | Queue trace callers and runtime gates before classifying required/conditional/optional. |
 
 ## Token material and declared version
 
@@ -1050,8 +1050,7 @@ and session in its reservation transaction after checking only answer/query.
 It now snapshots the prior session alongside identity and checks both again
 inside that write, before retiring the job or reserving a resend. A newer pin
 or ratchet produces a redacted InvalidInput and leaves pending work and newer
-peer state unchanged. This is optimistic concurrency protection, not authority
-to replace an identity, retry a refused query or reset any history.
+peer state unchanged. This is optimistic concurrency protection.
 
 **Offline regression:** the exact guard used at reservation accepts matching
 identity/session, then independently refuses simulated identity and session
@@ -1155,8 +1154,7 @@ descriptor key is 0x8b60 with declared false default; actual runtime evaluation
 is not known. Manager seed/cap are 10/610. Configuration, allowance producers
 and runnable effects remain untraced; Rust scheduling remains unchanged.
 [Exact strict boundaries, raw exports and inferred sequence limits](apk/2.26.43.72-prekey-upload-replies/README.md#retry-limits-and-delay-inputs-2026-11-04).
-No live traffic or production change; this is not permission to retry/reforge
-uncertain upload reservations or regenerate account keys.
+No live traffic or production change.
 
 ## Current-build limited prekey retry mode producer (2026-11-04)
 
@@ -1280,8 +1278,7 @@ combines property21198 with 0WJ.A0z's EXISTS(sent last-resort PQ row). Shared
 A0E guards readiness/inflight/backoff. Fd5.run ignores its stored $t and forwards
 flags unchanged; constructor/dispatched selector assumptions are not admission.
 [Exact entry arguments, SQL and upstream/lifetime gaps](apk/2.26.43.72-prekey-upload-replies/README.md#setadd-entry-admission-and-migrated-state-2026-11-04).
-No runtime strategy port yet; do not fabricate migrated state or reset pending
-batches. No production change/live traffic.
+No runtime strategy port yet. No production change/live traffic.
 
 ## Frozen prekey request provenance (2026-11-04)
 
@@ -1305,8 +1302,7 @@ mode/dictionary assertions, full checkpoint preservation across reopen, no secon
 reservation, and unchanged frozen request after settlement. A synthetic historical
 batch without the new checkpoint remains held and receives no backfill on reopen
 or settlement. The earlier PQ-off/on construction-failure snapshot also now covers
-this new write boundary. This is provenance for future versioned-mode work,
-never permission to replay uncertain requests. ADD/generation strategy remains
+this new write boundary. This is provenance for future versioned-mode work. ADD/generation strategy remains
 unfinished. No live traffic.
 
 ## Uncertain KEM batch replay admission (2026-11-04)
@@ -1869,8 +1865,7 @@ converted a reserved device query to server-refused from such late replies.
 The actor now selects each wait's own deadline. Expired uploads drop only their
 session-local waiter and keep durable outcome_unknown/key reservations. Expired
 device queries are deferred for this session while pending users and the durable
-query row remain unchanged. This timeout does not authorize a resend, key reuse,
-repeating those deferred users, cooldown bypass or clearing uncertain history. Existing admission
+query row remain unchanged. Existing admission
 triggers and the selected30-second local durations are retained.
 
 Prekey, device-query and keepalive reply admission also checks that its waiter
@@ -2070,8 +2065,7 @@ encrypted-socket integration proof or complete native callback-map parity.
 **Remaining capture gap:** wait_for returns buffered unmatched nodes only on
 success. Timeout, terminal stanza, read error and count exhaustion currently
 discard that local buffer; the helper has no store parameter. That loss is not
-fixed by this admission guard and must be addressed separately without turning
-a failed wait into permission to resend reserved requests. Generic ACK sender
+fixed by this admission guard and must be addressed separately. Generic ACK sender
 normalization and challenge-controller integration also remain incomplete.
 No live traffic or account operation.
 
@@ -5491,7 +5485,7 @@ No runtime changed in this research chunk. The next implementation must carry
 confirmed native parse-error causes separately from local limits/storage faults,
 use the fresh descriptor without recipient/edit, preserve capture/write ordering
 and forbid resend/query/identity work. Queue recovery, unsupported metadata and
-remote acceptance remain unverified; this is not permission to ACK all refusals.
+remote acceptance remain unverified.
 
 ## Ordinary required-device error responses implemented (2026-11-06)
 

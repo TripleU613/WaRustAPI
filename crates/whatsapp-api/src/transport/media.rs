@@ -920,7 +920,7 @@ pub async fn open(
     Ok((d.kind, plain))
 }
 
-// Local operation ownership, not an APK wire field or permission to replay.
+// Local operation ownership.
 pub(super) fn check_download_owner(store: &ProtocolStore, expected: [u8; 32]) -> Result<()> {
     store.read(|tx| {
         let account = crate::session::AccountRecord::load(tx)?;

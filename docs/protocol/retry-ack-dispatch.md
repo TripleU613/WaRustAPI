@@ -238,7 +238,7 @@ No runtime changed in this research chunk. The next implementation must carry
 confirmed native parse-error causes separately from local limits/storage faults,
 use the fresh descriptor without recipient/edit, preserve capture/write ordering
 and forbid resend/query/identity work. Queue recovery, unsupported metadata and
-remote acceptance remain unverified; this is not permission to ACK all refusals.
+remote acceptance remain unverified.
 
 ## Ordinary required-device error responses implemented (2026-11-06)
 

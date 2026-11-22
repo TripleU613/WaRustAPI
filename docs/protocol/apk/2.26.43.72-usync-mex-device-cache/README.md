@@ -17,11 +17,11 @@ From repo root. Reuse [HSo builder](../2.26.43.72-prekey-lid-mex-selection/profi
 
 ## Actual device gate and cache provenance
 
-HSo.A01 at0172..018e requiresH6w.A0I=true and a non-null/nonemptyH6w.A09 hash before creating the per-user devices object. The independent include_devices aggregate elsewhere comes fromA0I, so requesting devices does not imply a per-user cached hash object exists. LID-onlyA0M is a separate field; do not manufacture cache data for a LID-only request.
+HSo.A01 at0172..018e requiresH6w.A0I=true and a non-null/nonemptyH6w.A09 hash before creating the per-user devices object. The independent include_devices aggregate elsewhere comes fromA0I, so requesting devices does not imply a per-user cached hash object exists. LID-onlyA0M is a separate field.
 
 The preceding0p7.A0B copies3GQ.A02 toHck.A0E, then when enabled reads0jD.A07 hash intoHck.A06,0jD.A00 timestamp intoHck.A02 and0jD.A04(...).A02 expected timestamp intoHck.A01 (zero if absent). H6w transfers these toA0I,A09,A02,A01 respectively.0jD.A07 snapshots a copied set fromA0C; empty/null-target paths return empty string, otherwiseF2N.A03 selects hash formatterA05 versusA04 by property0x415b. The collection source, both formatters and effective property value are untraced here; no single hash format is inferred.
 
-0jD.A00 returns0 ifA04 finds no record, otherwise2Eu.A05. A04 has separate self/other and configured alias/storage paths, including0mi.A08 and2Eq.A01. Complete store/authentication/alias authority, atomicity across the separate reads and timestamp units are not established. These are cached fields, not permission to substitute local wall-clock time or invented metadata.
+0jD.A00 returns0 ifA04 finds no record, otherwise2Eu.A05. A04 has separate self/other and configured alias/storage paths, including0mi.A08 and2Eq.A01. Complete store/authentication/alias authority, atomicity across the separate reads and timestamp units are not established. These are cached fields.
 
 ## Gated timestamps are decimal strings
 

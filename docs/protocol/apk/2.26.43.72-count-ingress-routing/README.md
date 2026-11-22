@@ -47,8 +47,7 @@ absence of tracked notification ingress.
 selects the matching E8e type and constructs1k4. Its
 [constructor](tracked-wrapper-constructor.txt) extends1k3, whose retained
 [BX2 predicate](../2.26.43.72-count-content-error-ack/incoming-kind-predicates.txt)
-returns true. Malformed wrapper metadata can fail before the count parser;
-this is not permission to synthesize missing fields.
+returns true. Malformed wrapper metadata can fail before the count parser.
 
 ## Persistence policy is separate from wrapper kind
 

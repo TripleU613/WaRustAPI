@@ -71,8 +71,7 @@ same authenticated connection loop while a group query is awaited.
 4. Reserve each selected device page once, with message context, original local
    marker revisions and preparation metadata in one transaction. Each reply
    must be complete: refusals, per-user errors, omitted users, rejected signed
-   candidates or superseded revisions block. Cached lists cannot turn that
-   failure into permission to send. Pending membership changes stop later pages.
+   candidates or superseded revisions block. Pending membership changes stop later pages.
 5. Rebuild the complete matching plan and load the shared routing/crypto
    snapshot. Request only devices without a held session, using the durable
    directory controller. Its internal selector derives from the original local
@@ -529,8 +528,7 @@ encrypted-socket integration proof or complete native callback-map parity.
 **Remaining capture gap:** wait_for returns buffered unmatched nodes only on
 success. Timeout, terminal stanza, read error and count exhaustion currently
 discard that local buffer; the helper has no store parameter. That loss is not
-fixed by this admission guard and must be addressed separately without turning
-a failed wait into permission to resend reserved requests. Generic ACK sender
+fixed by this admission guard and must be addressed separately. Generic ACK sender
 normalization and challenge-controller integration also remain incomplete.
 No live traffic or account operation.
 

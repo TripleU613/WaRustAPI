@@ -69,8 +69,7 @@ A00's own log names the first boolean `fromIdentityChange`, the last boolean
 `fetchPqPrekey` log/parameter. A00 removes expired in-flight entries only when
 `stored_uptime + 60000 < current_uptime` (`00da..00f4`). Non-upgrade requests
 skip device keys already in that map (`0236..0242`). This is native transient
-bookkeeping, **not** permission to expire/replay our durable outcome-unknown
-actions or ignore server waits. TEE filtering, configured PN normalization,
+bookkeeping. TEE filtering, configured PN normalization,
 B78/B77 key selection and callback/response semantics remain **unported**.
 
 A06 filters devices again, returns for empty lists, and enqueues the named

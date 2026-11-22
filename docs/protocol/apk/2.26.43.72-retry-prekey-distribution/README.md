@@ -27,7 +27,7 @@ returns true exactly for query result1. Enum numeric values/display names and
 actual feature values are not invented. The selected
 [Ff4 discriminator10](../2.26.43.72-enc-state-pq-retry-inputs/retry-key-callable.txt)
 loads optional0WJ.A0a only when its isPqSession input is true and Ex8 returns
-A00 or A01. This does not authorize arbitrary PQ advertisement.
+A00 or A01.
 
 ## Optional getter changes publication ownership before returning
 

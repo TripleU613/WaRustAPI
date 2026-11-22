@@ -28,9 +28,7 @@ at0026 looks up A0E[category]. A present7wp replaces the candidate integer with
 8AX.A00(pending.A00). It returns Math.max(0,candidate). Thus a caller of this
 view can see a desired setting before server confirmation. The method itself
 is a read/overlay, not a preference write or durable acceptance. Its category
-branches use distinct defaults/feature authorities; those must not be copied
-as account state. Invalid negative conversion can clamp to0; that display/view
-fallback is not authority to transmit category all.
+branches use distinct defaults/feature authorities. Invalid negative conversion can clamp to0.
 
 8Y1.BWP(82B) separately obtains0oe and returns whether the map contains a
 nonnull entry under82B.A05. It does not examine that entry's value or server

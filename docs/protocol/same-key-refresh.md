@@ -25,7 +25,7 @@ SHA-256 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 [source bundle](apk/2.26.37.71-same-key-refresh/targets.json) preserve the
 parser, Boolean producer, constructor, admission and session derivation.
 
-## A server field, not a local bypass switch
+## Source of the server field
 
 `Bot.A03` with absent CWS and main property enabled reaches 0354. At
 0370–0384 it looks up selected-user child `force_override_e2ee_state`,
@@ -37,8 +37,6 @@ attributes with the same name do not produce this value. Main property
 disabled takes the normal Bjo path without needing this field.
 
 Rust reads the child only from a correlated authenticated **saved reply**.
-It never manufactures or transmits the field, exposes a configuration override,
-changes a challenge, or treats it as permission to skip signature checks.
 Present attestation/PQ/identity_auth remains deferred, irrespective of this child.
 
 ## Admission invariant

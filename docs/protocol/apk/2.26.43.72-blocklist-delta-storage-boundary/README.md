@@ -61,8 +61,7 @@ BooleanA00, it returns without creating a duplicate. Otherwise it asks0yt.A00
 for kind0x3a at the08q clock time, requires1ym (its diagnostic names
 FMessageSystemBlockContact), writes the requested Boolean and hands it to
 0wZ.A0C(message,-1). The shown method does not build the outbound blocklist IQ.
-Downstream message storage/events/observer behavior is not traced by that fact;
-do not fabricate a sent user chat message, receipt or network job as a substitute.
+Downstream message storage/events/observer behavior is not traced by that fact.
 This side effect occurs before the handler's A0U add/remove and queued worker.
 
 ## Rust consequence and open obligations

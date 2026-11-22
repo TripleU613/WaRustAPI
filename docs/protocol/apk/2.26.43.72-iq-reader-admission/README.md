@@ -16,8 +16,7 @@ Only identified IQ/callback blocks of large dispatchers are interpreted here.
 id and xmlns. Exact type=result requires a nonnull ID before reaching1lZ.A1E.
 Exact type=error takes its own processing branch, then reaches the same
 forwarder only when ID is nonnull (00e0..00e6). The error branch can perform
-map operations and parse error children before that later test; this is not
-permission to accept a malformed/missing-ID error. Parsing can also throw.
+map operations and parse error children before that later test. Parsing can also throw.
 
 Missing type throwsLIL at0680. Unknown types throwLIL at0658. get and set
 enter distinct request-handling branches, not the selected response forwarder.

@@ -150,8 +150,7 @@ provenance, [original refresh guards](identity-refresh-guards.md), own-account
 protection, companion ADV authority, human verification or native admission.
 
 CPB's existing fail-with-key-change fallback and unchanged-key/stored-state/
-property/explicit-override matrix remain in the retained source. They are not
-implemented as generic permission to ignore invalid attestation. **Unknown /
+property/explicit-override matrix remain in the retained source. **Unknown /
 unported:** stored C0F provenance and schema defaults/producers, actual native
 property values, full admission transitions, automatic atomic session/pin/state
 adoption, alias updates and deferred identity ACKs. The existing session preview

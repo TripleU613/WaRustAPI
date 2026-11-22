@@ -44,8 +44,7 @@ GET ofA0H; actual response dispatch subsequently REMOVES A0H. Neither selected
 response method compares reply age against32000. A timer already executing
 may compete with that response claim. **Inferred possible ordering:** a response
 can cancel an overdue but not yet dispatched timer; passing nominal duration
-alone does not prove native callback expiry. This is not an observed race or
-permission to accept replies after expiry has claimed ownership.
+alone does not prove native callback expiry. This is not an observed race.
 
 ## Rust boundary and next port
 

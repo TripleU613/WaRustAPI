@@ -49,9 +49,7 @@ collection version or notification delivery counter.
 
 `0lJ.A04()` is the narrower retry eligibility `counter != -1 && counter < 4`.
 Its full error/disconnection retry schedule and the `BUx` delete eligibility
-are **not** established by this audit. Do not reproduce cleanup by blindly
-deleting local checkpoints, requesting server deletion, or treating timeout as
-success. Those actions require their complete state transition and callbacks.
+are **not** established by this audit. Those actions require their complete state transition and callbacks.
 
 **Confirmed fatal gate:** `SyncResponseHandler.A08` marks primary recovery
 or `companion_syncd_dirty` under feature 25799, releases in-flight sync without
@@ -78,8 +76,7 @@ The following real writers/triggers were traced:
   Its structural body is retained; no general store downgrade port is claimed.
 - `FDp.CKt` clears manager caches, calls a store-reset hook and removes the
   keys enumerated by `0Yz.A03`'s static set, including `syncd_dirty`, its reason
-  and bootstrap fields. This is a bounded callback/reset observation, not
-  permission to clear those fields after any error.
+  and bootstrap fields. This is a bounded callback/reset observation.
 
 **Refuted inference:** this trace does not establish an unconditional
 delete-all-data request on every successful fresh registration. Reason 11's

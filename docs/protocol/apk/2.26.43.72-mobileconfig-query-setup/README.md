@@ -16,7 +16,6 @@ BadRequesterSetup / FBMobileConfigRequester::getQueryParams / empty deviceId,
 then helper 0xcade4 zeroes all three output-vector words and returns to cleanup.
 The earlier requester construction copied this string from updater+0xf8. Its
 upstream source and relationship to account/device identity remain untraced.
-Do not invent a device identifier to satisfy this check.
 
 With a nonempty deviceId, the producer first tests the request-data string at
 +0x08. A nonempty string takes the query_hash route and bypasses the schema-empty

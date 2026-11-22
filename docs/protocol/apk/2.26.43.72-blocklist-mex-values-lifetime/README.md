@@ -73,16 +73,14 @@ shows freshA03=false selects0j3 (notRsH).0j3 still chooses Pando versus IQ at
 runtime. Its non-Pando branch passes the saved32000ms to0Sf.A0W, whose callback
 registration/expiry scheduling is already separately traced. That is a
 selected non-Pando send deadline, not a universal migration/Pando deadline,
-outer wait duration, socket-write limit or permission to retry. AQY discards
+outer wait duration or socket-write limit. AQY discards
 the returned operation handle; this wrapper shows no new retained handle or
 cancel hook. Full cancellation/lower lifecycle remains unproven.
 
 ## Rust comparison and limits
 
 No dedicated Rust migration sender or mode adoption is added. Existing generic
-group MEX construction uses a different nonnull input and is unchanged. Do not
-invent null fields, copy wrapper omission semantics, assume error callbacks hang,
-or assign a universal32s retry loop from this evidence. Final wire serializer,
+group MEX construction uses a different nonnull input and is unchanged. Final wire serializer,
 identifier provider authority, effective Pando policy, writer/account checks,
 callback races and complete migration adoption remain unported.
 

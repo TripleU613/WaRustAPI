@@ -27,7 +27,7 @@ via 0x664338, and adds it through 0x66386c only when absent and the selected
 captured string is nonempty. Request category word +0x1e0 selects the second
 string for values 3/5 and the first otherwise. Category meanings and complete
 UA formatters are unknown; 0lR.A02's cache miss invokes A00 with 2.26.43.72,
-while A04 invokes A01(null). Do not invent device or User-Agent values.
+while A04 invokes A01(null).
 
 The direct interceptor constructor census returns zero, refuted as an absence
 proof by RlW's optimized Object.<init> plus explicit native initHybrid call.

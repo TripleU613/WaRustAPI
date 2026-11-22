@@ -44,7 +44,7 @@ A05=4, A04=the selected argument, A03=row.A07, callsF1z.A00(context,builder,set)
 stores that set, originalEoh and original reason and dispatchesF1z.A01.
 No row is created in this selected worker. The meaning of fields4/1, complete
 subtype classification, EaT/set providers and F1z consumer/persistence/retry
-policy remain untraced; they are not labeled server state or permission to resend.
+policy remain untraced.
 
 ## Direct cleanup uses a different map
 

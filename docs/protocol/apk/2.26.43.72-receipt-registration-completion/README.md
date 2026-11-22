@@ -40,8 +40,7 @@ durable callback ownership and no-replay guards. No production mismatch was
 established and no behavior change is justified by this trace.
 
 Unknown: all A05 failure paths, FfK failure producers, effective native job retry
-policy, complete specialized state, aliases and live outcomes. Native duplicate
-callback replacement is not permission to replace/replay Rust uncertain intent.
+policy, complete specialized state, aliases and live outcomes.
 
 ## Reproduction
 

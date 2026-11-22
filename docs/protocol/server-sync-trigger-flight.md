@@ -84,7 +84,7 @@ an empty conditional, so the preceding checked DEX is the control-flow source.
 `1C8.A01` increments a bounded retry counter, returns null when exhausted, and
 otherwise computes capped exponential jitter before switching to a capped
 delay. Constructor parameters selecting its cap/attempt count for this manager
-remain untraced; do not invent those values. Server-provided backoff is another
+remain untraced. Server-provided backoff is another
 existing input, not an instruction to mark an uncertain write successful.
 
 **Critical distinction:** `A02` is an in-memory manager/job flag. Its lifetime

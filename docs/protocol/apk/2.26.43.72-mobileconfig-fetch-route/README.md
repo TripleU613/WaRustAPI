@@ -59,8 +59,7 @@ Selected persisted IDs reproduced from the packaged MEX asset:
 | MobileConfigConsistencyLoggingQuery | 34033663249614454 |
 
 persisted-ids.json retains namespace, asset hash, client and server identities.
-A doc ID establishes packaged query selection, not variables, scheduling or
-permission to send. Logging operation ID retention is not a logging-protocol port.
+A doc ID establishes packaged query selection. Logging operation ID retention is not a logging-protocol port.
 
 ## MEX result ordering
 

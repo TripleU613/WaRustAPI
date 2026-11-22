@@ -63,8 +63,7 @@ Assume selected parsing and invoked methods return normally. R is the callback's
 After admitted adoption via1dH.A0O, CK4 builds a set/hash/association-key input.
 Only exactdirty=true **and BU7=false** enqueue8bU selector1. BU7=true or a
 non-true dirty value returns without that task. This is a post-adoption
-obligation; it is not authority to pretend the snapshot failed or resend the
-original fetch/block/unblock. The
+obligation. The
 [retained dirty worker](../2.26.43.72-blocklist-migration-obligation/README.md)
 resolves mappings and eventually requests MigrateBlocklistLid with dirty_ack,
 not an original per-contact set replay. Runtime executor/error completion and

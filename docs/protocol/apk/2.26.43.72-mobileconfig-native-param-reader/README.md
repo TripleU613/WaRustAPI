@@ -28,9 +28,7 @@ processing has its own stream check; header-value admission alone is insufficien
 
 The complete selected helper contains no comparison of file bytes +0/+1 to ASCII
 v4 and no requirement declared_length == 30 + hash_length. It consumes 30+hash_length
-bytes sequentially rather than seeking to the declared length. These are bounded
-helper observations, not permission to send modified formats or proof the entire
-loader accepts an arbitrary version prefix.
+bytes sequentially rather than seeking to the declared length. Accepted version prefixes for the full loader remain unknown.
 
 The earlier [Java PfF header](../2.26.43.72-token-param-header/README.md) selects v4
 from initial bytes and requires the length equality. Preserve the distinction:

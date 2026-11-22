@@ -2026,7 +2026,7 @@ impl RegistrationService {
             .await
     }
 
-    /// One explicitly authorized comparison-envelope experiment after bad_param.
+    /// One comparison-envelope experiment after bad_param.
     /// The caller must install the encrypted transport; account identity and
     /// previous diagnostic reservations remain unchanged. Never called by begin.
     #[cfg(feature = "experimental-registration-https")]
@@ -2038,7 +2038,7 @@ impl RegistrationService {
             .await
     }
 
-    /// One authorized experiment with the observed empty-H envelope fallback.
+    /// One experiment with the observed empty-H envelope fallback.
     /// Requires the caller's matching transport; does not clear prior reservations.
     #[cfg(feature = "experimental-registration-https")]
     pub async fn diagnose_unsigned_envelope_once(

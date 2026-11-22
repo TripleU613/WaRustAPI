@@ -22,7 +22,6 @@ at28b4 instead obtains group@jid via0Tp.A0M as a raw string and puts nonnull
 strings into pairs. No typed GroupJid getter or1bc call occurs in this selected
 branch before that collection. This does not prove there is no downstream
 constructor; scheduling/worker parsing and alternate producers remain separate.
-Do not apply the constructor blindly to this raw-string scheduling boundary.
 Rust's existing local require_group_id admits its supported shorter legacy
 fixtures; it is not tightened by this trace. Full native queue-to-request group
 identity admission remains unresolved, not declared compliant by this choice.

@@ -52,8 +52,7 @@ The exact provider implementations and effective config are not established.
 [00o.A01](lazy-factory.txt) creates00q. [00q.getValue](lazy-value.txt) checks its
 uninitialized sentinel, synchronizes on its lock, invokes the supplier once,
 stores the result and clears the initializer. Therefore this owner's selected
-0Xp is memoized; it does not re-read646a for every caller/access. This is not
-authority to switch database implementations in an existing Rust store.
+0Xp is memoized; it does not re-read646a for every caller/access.
 
 **Confirmed conditional identity:** when both callers resolve the same nonnull
 0xc3e cache entry, they share its memoized0Xp. This closes the prior missing

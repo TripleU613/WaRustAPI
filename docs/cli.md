@@ -1090,7 +1090,7 @@ Usage: whatsapp-cli lab-open-view-once [OPTIONS]...
 
 ## whatsapp-cli lab-download-view-once
 
-Download one authenticated view-once image as private ciphertext; do not open it
+Download one authenticated view-once image as private ciphertext
 
 ```
 Usage: whatsapp-cli lab-download-view-once [OPTIONS]...
@@ -1251,7 +1251,7 @@ Usage: whatsapp-cli lab-signup submit-consent [OPTIONS]...
 
 ## whatsapp-cli lab-signup diagnose-legacy-refusal
 
-One authorized resend of a legacy refusal whose diagnostics were lost. Known refusals/cooldowns are excluded; a durable latch prevents repeats
+One resend of a legacy refusal whose diagnostics were lost. Known refusals/cooldowns are excluded; a durable latch prevents repeats
 
 ```
 Usage: whatsapp-cli lab-signup diagnose-legacy-refusal [OPTIONS]...
@@ -1259,7 +1259,7 @@ Usage: whatsapp-cli lab-signup diagnose-legacy-refusal [OPTIONS]...
 
 ## whatsapp-cli lab-signup diagnose-bad-parameter
 
-One authorized repeat of HTTP 200 / bad_param to collect field hints. Same saved payload and keys; a durable latch prevents another repeat
+One repeat of HTTP 200 / bad_param to collect field hints. Same saved payload and keys; a durable latch prevents another repeat
 
 ```
 Usage: whatsapp-cli lab-signup diagnose-bad-parameter [OPTIONS]...
@@ -1275,7 +1275,7 @@ Usage: whatsapp-cli lab-signup diagnose-encrypted-parameter [OPTIONS]...
 
 ## whatsapp-cli lab-signup diagnose-unsigned-envelope
 
-One ENC plus empty-H experiment; does not fabricate attestation
+One ENC plus empty-H experiment
 
 ```
 Usage: whatsapp-cli lab-signup diagnose-unsigned-envelope [OPTIONS]...
@@ -1487,7 +1487,7 @@ Usage: whatsapp-cli registration begin [OPTIONS]...
 
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
-| --country | COUNTRY | yes |  |  |  | Country calling code (explicit; never guessed) |
+| --country | COUNTRY | yes |  |  |  | Country calling code |
 | --phone | PHONE | yes |  |  |  | Phone number in E.164 form (`+<cc><national>`) |
 | --method | METHOD | no | `sms` |  | `sms`, `voice` | Challenge method |
 

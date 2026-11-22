@@ -56,8 +56,7 @@ restartable. No snapshot installation, external retrieval, key acquisition,
 mutation action projection, automatic continuation query or owner-flight release
 is introduced by this operation alone.
 
-The pure response classifier is structural only. A category named `Data` is
-not permission to change state; `VersionAck` is not an authenticated new held
+The pure response classifier is structural only. `VersionAck` is not an authenticated new held
 baseline. Known collection names are not proof of original request ownership.
 
 The initial supported contract needs an exact requested collection set, explicit
@@ -102,9 +101,7 @@ write transaction as its prospective socket reservation. It binds:
   checkpoint and present empty checkpoint as distinguishable observations.
 - Relevant pending-write ownership and any established recovery ownership at
   admission. Outstanding uncertain/prepared writes must not be bypassed by
-  fetching over their baseline. Do not invent a new recovery/role predicate for
-  authenticated incremental verification: the unclosed scheduler initialization
-  gates stay separate, and an absent lifecycle row cannot authorize new sends.
+  fetching over their baseline.
 
 For the supported incremental path, the request's version must equal its
 captured authenticated held version. A missing or legacy unknown-provenance map
@@ -175,7 +172,6 @@ before transaction success. The native response can therefore leave earlier
 patches or collections committed if a later cryptographic application fails.
 The Rust 409 helper instead intentionally verifies its whole chain in its
 caller's one transaction; keep that proven atomic settlement behavior unchanged.
-Do not expose that private function to a non409 route merely to reuse its name.
 
 **Proposed local checkpoint model** (names/schema not implemented):
 

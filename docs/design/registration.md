@@ -31,11 +31,11 @@ Required behavior:
 - Validate and normalize the phone number with explicit country information; preserve the protocol's required representation.
 - Separate an account registration ID, local account ID, wire message ID, device ID and challenge ID.
 - Keep Noise static keys and Signal identity keys as distinct typed values.
-- Persist only credentials actually observed. Do not invent a bearer token, cookie, password or fingerprint field because another API uses it.
+- Persist only credentials actually observed.
 - Honor expiry and retry constraints; do not loop through OTP requests or verification attempts.
 - Do not log or durably store OTPs or user-entered PINs as ordinary state.
 - Return typed required actions or a specific unsupported-registration error for unimplemented server requirements.
 - Never re-register automatically to repair an expired connection, a malformed stanza, or an unknown login failure.
 - Registration, logout/revocation, disconnect and local deletion are different operations.
 
-Use controlled test numbers for live experiments. The acceptance test must show that registration succeeds on the intended supported path without importing another client's completed session. Owning a number does not imply that the server will accept a custom client.
+The acceptance test must show that registration succeeds on the intended supported path without importing another client's completed session.

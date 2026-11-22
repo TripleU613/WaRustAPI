@@ -4,7 +4,7 @@
 use super::response::CollectionData;
 use std::{collections::BTreeSet, fmt};
 
-/// A structural verdict never establishes authenticity or permission to apply.
+/// A structural verdict never establishes authenticity.
 pub struct CollectionHeaders<'a> {
     /// Original snapshot reference; authenticated retrieval remains required.
     pub snapshot_ref: Option<&'a [u8]>,

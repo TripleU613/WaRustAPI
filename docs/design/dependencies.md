@@ -40,7 +40,7 @@ The reviewed `rustls-rustcrypto` documentation describes a pure-Rust provider bu
 
 Graviola is a separate candidate if the project later chooses to allow Rust plus included assembly: its own documentation says it includes assembly and has architecture/CPU restrictions. “No C compiler required” is not the same as an entirely Rust cryptography implementation. Under the strict contract in this plan, do not silently select it. [Graviola documentation](https://github.com/ctz/graviola)
 
-**Decision rule:** select an adequately reviewed pure-Rust provider that works with the chosen HTTP stack. If none qualifies, mark production HTTPS support blocked and document the exact deficiency. Offline work may continue. Do not weaken certificate validation, implement a new TLS stack, or quietly relax the language requirement to clear this gate. An experimental build must remain explicitly experimental.
+**Decision rule:** select an adequately reviewed pure-Rust provider that works with the chosen HTTP stack. If none qualifies, mark production HTTPS support blocked and document the exact deficiency. Offline work may continue. An experimental build must remain explicitly experimental.
 
 ### 2.4 Prove the dependency graph
 

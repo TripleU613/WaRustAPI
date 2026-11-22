@@ -49,8 +49,7 @@ Those higher-level transitions are now addressed in the subsequent
 [group preparation account audit](group-preparation-account-ownership.md), within
 its documented limits. Existing normal
 [group writer checks](group-writer-account-ownership.md) and [group projection](group-projection-ownership.md)
-remain separate safeguards. Non-group/offline consumers do not gain permission
-to replay queries or override account/session state from this change.
+remain separate safeguards.
 
 No new APK export was required for this local defect; existing native directory
 bundle validation and pinned APK2.26.43.72 evidence remain unchanged. No traffic,

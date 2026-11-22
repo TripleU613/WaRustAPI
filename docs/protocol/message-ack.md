@@ -419,7 +419,7 @@ next one/group stanza, or choose DistributionRefused. Existing timeout leaves
 work uncertain and does not resume it. The CLI direct, group/status and child
 sender-key distribution result writers use the same helper with their reserved
 destination. Their captured exact-ID waits remain unchanged: a wrong-chat ACK
-returns outcome_unknown rather than granting permission to resend or continue.
+returns outcome_unknown.
 
 The real-crypto group reference regression injects conflicting recipient ACKs
 with success and refusal errors while distribution is outstanding. Both fail
@@ -1008,8 +1008,7 @@ send admission and writer authority remain untraced. ExJ submitsDra through0NX;
 no specific telemetry request/endpoint is inferred.
 
 This research chunk changes no Rust runtime. Existing reservation, once-only
-fact and no-replay rules stay intact; native conditional resend is not authority
-for a generic retry. Next work: DCC/reason enum/Fef/1uS wait ownership and actual
+fact and no-replay rules stay intact. Next work: DCC/reason enum/Fef/1uS wait ownership and actual
 sync/sender construction. Existing status edit/diversion regressions remain
 local controls, not tests of the unported native job. No live operations.
 
@@ -1172,8 +1171,7 @@ not prove absence. FreshBulk A0L matches prior retained bytes; its completed
 future/retry audit is reused, not treated as new wire behavior.
 
 Rust durable original-owner regression passes unchanged. A connected predicate
-is not key acceptance, complete write readiness or permission to replay an
-uncertain reservation. No runtime, timing, retry or live-account change added.
+is not key acceptance or complete write readiness. No runtime, timing, retry or live-account change added.
 
 ## Connection observers wake the selector without granting send authority (2026-11-06)
 
@@ -1215,7 +1213,7 @@ wire-ID/in-flight guards and original outbox authority remain.
 **Reused confirmed static evidence**, pinned APK43.72 SHA256887a6f94:
 [PhoneUserJid/0Dl.A02](apk/2.26.43.72-pn-ack-text/README.md) requires5..20
 ASCII digits, forbids leading0 and prefix10 unless1008. This is protocol user
-grammar, not permission to invent a phone number or change registration/E.164.
+grammar.
 The [user factory](apk/2.26.43.72-message-ack-chat/user-factory.txt) constructs
 that user for plain hosted/PN. [123.A01](apk/2.26.43.72-group-missing-identification/current-jid-attribute-reader.txt)
 reconstructs both JID_PAIR and AD through the factory; [A04](apk/2.26.43.72-group-missing-identification/current-ad-string-join.txt)

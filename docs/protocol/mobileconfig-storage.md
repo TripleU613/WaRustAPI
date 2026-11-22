@@ -56,7 +56,7 @@ instead calls [GQv.A00](apk/2.26.37.71-mobileconfig-storage/mapped-read.txt),
 which maps the channel read-only, sets little-endian order and uses the same
 validator. Both close their channel/input resources and return null on a
 reported validation error or IOException. Other failures retain their native
-exception behavior; neither helper is a permission to invent an empty config.
+exception behavior.
 
 [Hq6.A00](apk/2.26.37.71-mobileconfig-storage/file-validation.txt) rejects
 file lengths below eight and buffers whose limit is below the supplied length.

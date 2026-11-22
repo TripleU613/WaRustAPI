@@ -23,7 +23,7 @@ callback ownership and invokes BsS. The new Cgd constructor binds selector and
 continuation; its complete [BsS](../2.26.43.72-default-timer-callback/get-failure.txt)
 was re-exported and matches byte-for-byte. Selector2 resumes with BWM.
 The wrapper maps BWM to null; manager null returns its wrapped failure variant.
-A lost/expired callback is not proof of remote refusal or permission to resend.
+A lost/expired callback is not proof of remote refusal.
 Effective queue readiness, native coroutine cancellation and restart policy are
 not reconstructed by this selected route.
 

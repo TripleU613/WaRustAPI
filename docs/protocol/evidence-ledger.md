@@ -3859,7 +3859,7 @@ Handset delivery/read is unconfirmed. No phone, plaintext, key or private stanza
 is recorded here. These observations apply to the comparison lab only, not the
 pinned default profile. [Implementation and static sources](messaging-transport.md).
 
-2026-09-18 UTC, comparison lab only: one operator-authorized diagnostic
+2026-09-18 UTC, comparison lab only: one diagnostic
 `POST https://v.whatsapp.net/v2/code` reused an existing legacy attempt's
 configuration and keys. The server returned HTTP 200 and parsed JSON
 `status=fail`, `reason=bad_param`; the bounded response body was 58 bytes.
@@ -6396,8 +6396,7 @@ converted a reserved device query to server-refused from such late replies.
 The actor now selects each wait's own deadline. Expired uploads drop only their
 session-local waiter and keep durable outcome_unknown/key reservations. Expired
 device queries are deferred for this session while pending users and the durable
-query row remain unchanged. This timeout does not authorize a resend, key reuse,
-repeating those deferred users, cooldown bypass or clearing uncertain history. Existing admission
+query row remain unchanged. Existing admission
 triggers and the selected30-second local durations are retained.
 
 Prekey, device-query and keepalive reply admission also checks that its waiter
@@ -6591,8 +6590,7 @@ encrypted-socket integration proof or complete native callback-map parity.
 **Remaining capture gap:** wait_for returns buffered unmatched nodes only on
 success. Timeout, terminal stanza, read error and count exhaustion currently
 discard that local buffer; the helper has no store parameter. That loss is not
-fixed by this admission guard and must be addressed separately without turning
-a failed wait into permission to resend reserved requests. Generic ACK sender
+fixed by this admission guard and must be addressed separately. Generic ACK sender
 normalization and challenge-controller integration also remain incomplete.
 No live traffic or account operation.
 

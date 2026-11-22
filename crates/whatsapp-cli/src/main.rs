@@ -7,7 +7,7 @@
 // A command-line tool talks to its operator through stdout/stderr.
 #![allow(clippy::print_stdout, clippy::print_stderr)]
 
-use std::io::{IsTerminal, Read};
+use std::io::Read;
 use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -719,7 +719,7 @@ enum Cmd {
         #[arg(long)]
         id: Option<String>,
     },
-    /// Download one authenticated view-once image as private ciphertext; do not open it.
+    /// Download one authenticated view-once image as private ciphertext.
     #[cfg(feature = "experimental-transport")]
     LabDownloadViewOnce {
         /// Opaque image selector from lab-open-view-once --list.
@@ -1257,7 +1257,7 @@ enum StoreCmd {
 enum RegCmd {
     /// Start or resume a registration attempt.
     Begin {
-        /// Country calling code (explicit; never guessed).
+        /// Country calling code.
         #[arg(long)]
         country: u16,
         /// Phone number in E.164 form (`+<cc><national>`).
@@ -2286,11 +2286,6 @@ async fn run(cli: Cli) -> Result<(), Error> {
         }
         Cmd::Keygen => {
             let key = MasterKey::generate()?;
-            if std::io::stdout().is_terminal() {
-                eprintln!(
-                    "warning: printing a secret to a terminal; clear your scrollback afterwards"
-                );
-            }
             // Expose the hex once; the value is zeroized when dropped.
             let hex = master_key_bytes(&key);
             println!("{}", String::from_utf8_lossy(&hex));

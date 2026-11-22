@@ -61,8 +61,7 @@ queued worker succeeded. The previously retained
 contains a conditional status 13 and other helper work, already attributed in
 [message status](message-status.md#separate-workflows-not-universal-initial-state-evidence).
 Full ordinary add/send transition and SQL/observer-to-network authority remain
-unfinished. Do not invent status 2 at this queue boundary merely because the
-call is asynchronous or because Rust uses Prepared/InFlight reservations.
+unfinished.
 
 ## Setter candidates excluded from new text initialization
 

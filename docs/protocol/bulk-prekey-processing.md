@@ -96,9 +96,7 @@ bytes with B7H.A09 (`0112..0192`). It distinguishes changed-key and same-key
 failures, sticky non-E2EE state and an additional property 0x7497.
 
 **Unknown/unported:** actual property values, C0F enum/state authority, the full
-CPB transition matrix, B7H attestation semantics and the batch equivalent. Do
-not take a logged fallback as general permission to skip attestation, fabricate
-an account mode or bypass a challenge. Existing Rust legacy Signal/ADV guards
+CPB transition matrix, B7H attestation semantics and the batch equivalent. Existing Rust legacy Signal/ADV guards
 remain; this research is not a claim that hybrid handling is implemented.
 
 ## Missing key type: implemented correction

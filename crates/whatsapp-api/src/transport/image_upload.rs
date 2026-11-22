@@ -983,7 +983,7 @@ async fn upload_prepared(
     }
     // APK43.72 RlW installs WAUserAgentInterceptor: HTTPS requests without
     // User-Agent get the configured nonempty value. Require an explicit value
-    // before allocating upload state; do not invent Android identification.
+    // before allocating upload state.
     // Evidence: docs/protocol/apk/2.26.43.72-media-user-agent/README.md.
     if config.client.user_agent.is_none() {
         return Err(Error::invalid(

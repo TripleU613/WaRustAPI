@@ -19,7 +19,7 @@ and calls **A0B(message,-1,false)** (16e0..16e6). Its IOException catch at
 code units **0b66..0b74 -> 0b74** covers byte 16cc..16e8; handler 16e8 logs
 `ReadReceipts/updateMessageToRead Failed to update msg status back to 16`
 and returns. This is a swallowed local persistence failure, not a recognized
-server reason or permission to retransmit. Other exceptions and scheduling
+server reason. Other exceptions and scheduling
 failures are not universally caught by this selected branch.
 
 0zc.A0B's false Boolean branches directly from 0000 to **025e**, bypassing

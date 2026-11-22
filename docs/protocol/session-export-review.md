@@ -56,7 +56,7 @@ only the sanitized handoff. Raw exports remain local and untracked.
   **unknown**; the transcript does not establish an automatic-read failure.
 - The recurring retry concerned the first, corrupt double-padded group send,
   not a reaction. The final handoff says retries outside the post-send window
-  and some notifications remain unhandled. Do not resend the corrupt record.
+  and some notifications remain unhandled.
 
 ## Documentation discrepancies and next boundary
 

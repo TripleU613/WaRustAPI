@@ -83,7 +83,7 @@ changed on the strength of an incompletely bound ingress.
 **Unknown:** full notification registration/authorization, all gate/default
 values, preference reset/concurrency/transaction semantics, every native group
 conversion side effect and complete Rust coordinator integration. This flag is
-not a ban status or permission to replay a failed query. No live account
+not a ban status. No live account
 operation, automatic query, identifier invention or identity-policy relaxation.
 
 `checksums.json` records bytes and SHA-256 for every other bundle file.

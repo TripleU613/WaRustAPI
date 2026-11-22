@@ -47,8 +47,7 @@ snapshot and constructs a replacement; zero retains the decoded snapshot for
 return. The selected constructor creates four default groups and a dictionary;
 its outlined argument setup includes A/B zero and C/D one. Additional fields and
 all constructor dependencies are not fully interpreted here. This is a local
-metrics snapshot fallback, not authority to reset credentials, ignore cooldowns,
-or replay pending message/request intents. No saved user state was modified.
+metrics snapshot fallback. No saved user state was modified.
 
 ## Bounded execution evidence
 

@@ -57,8 +57,7 @@ Manager A06 selects delayed Runnable only when A04 AND effective Boolean
 property 6493 are true. Otherwise A05 uses an alarm: type 3 with A04 true,
 type 2 with A04 false, both with elapsedRealtime plus the selected interval.
 The timeout alarm in A04 uses type 2. These are literal Android alarm type
-arguments, not proof of an effective duration or permission to send fabricated
-push state. Android alarm APIs and execution delays are not emulated here.
+arguments, not proof of an effective duration. Android alarm APIs and execution delays are not emulated here.
 
 ## Rust boundary and remaining work
 

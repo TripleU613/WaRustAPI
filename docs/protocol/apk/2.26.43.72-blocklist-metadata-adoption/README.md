@@ -34,8 +34,7 @@ selected LID becomes chosen; otherwise the existing association remains chosen.
 The worker adds every candidate unequal to chosen to its submission list, then
 adds chosen last, paired with the PN. It submits that list to0Ws.A0Q. The meaning
 of list order at the concrete writer, validation, events and transaction outcomes
-are not traced here. This is not authority to install an arbitrary alias or merge
-Rust identities. Comparator/selection does not change blocked membership.
+are not traced here. Comparator/selection does not change blocked membership.
 
 ## Username and display-name writes preserve existing authority
 

@@ -799,7 +799,7 @@ impl LabRegistrationConfig {
             "token": "<redacted>", "key_ids": "<redacted>",
             "compatibility": {
                 "observed_code_additional_fields": observed_code_fields,
-                "field_coverage_note": "Observed on the inspected APK branch, not proven server requirements; do not invent values",
+                "field_coverage_note": "Observed on the inspected APK branch, not proven server requirements",
                 "user_agent_matches_observed_presence": self.client.user_agent.is_some(),
                 "body_mode": self.transport.body_mode,
                 "action_delay_ms": self.transport.action_delay_ms,

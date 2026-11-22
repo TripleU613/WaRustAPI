@@ -67,8 +67,7 @@ The latter queries message_edit_info joined to message by original key ID,
 chat row and fromMe. If both searches miss, 1hQ.A02 looks for `__part__` at a
 positive position in the parent ID, constructs a key from the preceding ID
 substring with the same chat/fromMe, and repeats those two lookups. It returns
-the found message's key, or null. This does not authorize stripping `__part__`
-from an outgoing wire ID or changing a saved Rust request ID.
+the found message's key, or null.
 
 [0VA.Aon](apk/2.26.37.71-group-keep-send-key/message-store.txt) checks a cache
 through A01 before querying message by chat_row_id, from_me and key_id, using

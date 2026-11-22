@@ -43,7 +43,7 @@ the remote is outside `0DE.A0m/A0i`. Those group-like/status predicates were
 already traced in the [primary-LID evidence](peer-identity.md#primary-lid-receive-and-legacy-record-stability-2026-10-09).
 The selected chat goes to `Cmk.A01(LLL)`; actual participant/device fields remain
 separate in the receipt event constructor. This is selection of the message's
-chat, not authority to replace the actual fact actor or its identity pin.
+chat.
 
 `Cmk.A01` first tests the bot predicate `0DE.A0P` and inverted `Ayk.A1V` gate.
 If true, `0hd.A00` may return an immediate converted address. All other paths
@@ -108,8 +108,7 @@ matching that constant returns a fixed `0ZY` address. Otherwise a bot is passed
 to `0DE.A07`, which checks the type, looks up the user in the inverse of
 `8oC.A00`'s HashBiMap, constructs a PhoneUserJid when found, and returns the
 original when absent. This is a static bot dictionary branch, not ordinary
-PN/LID account association, and not permission to reuse these public constants
-as private account provenance. Dictionary initialization and full bot subtype
+PN/LID account association. Dictionary initialization and full bot subtype
 inventory remain **unknown/unported**.
 
 ## Rust application boundary and next requirements
@@ -257,7 +256,7 @@ No runtime changed in this research chunk. The next implementation must carry
 confirmed native parse-error causes separately from local limits/storage faults,
 use the fresh descriptor without recipient/edit, preserve capture/write ordering
 and forbid resend/query/identity work. Queue recovery, unsupported metadata and
-remote acceptance remain unverified; this is not permission to ACK all refusals.
+remote acceptance remain unverified.
 
 ## Ordinary required-device NACK implementation (2026-11-06)
 

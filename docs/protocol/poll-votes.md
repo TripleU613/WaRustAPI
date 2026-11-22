@@ -89,8 +89,7 @@ its saved `chat`; it projects outgoing-poll updates under the envelope sender.
 `outgoing::vote_payload_for` checks the caller-supplied target chat but likewise
 does not compare the saved own-poll chat before using its secret. Normal send
 reservation saves `chat` alongside secret/options/creator identities. Some
-historical fixtures lack chat; their binding is **unknown**, not permission to
-invent one. Incoming historical PN polls already use original authenticated
+historical fixtures lack chat; their binding is **unknown**. Incoming historical PN polls already use original authenticated
 capture proof through `direct_record_in` and retain their stored target key.
 
 Next work must bind outgoing poll targets to saved evidence, retain actual

@@ -26,8 +26,7 @@ lid-chatd-lid-mismatch and jumps back to the shared continuation (03da -> 01fc);
 it does not immediately throw or skip that continuation. Later, only if the
 `08Y.A17(0Yq.A04)` gate returns true, `09F.ChR` receives the original supplied
 JID (0344..034a). Effective flag value, setter implementation, namespace policy
-and full own-identity lifecycle remain **unknown in this trace**. This is not
-permission to accept a different namespace in Rust.
+and full own-identity lifecycle remain **unknown in this trace**.
 
 ## Getter is not a compliance rejection gate
 

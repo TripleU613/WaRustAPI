@@ -105,8 +105,7 @@ remain linked from the index. Its counter is not itself a receipt-user row.
 **D7K** checks hosted/coexistence chat eligibility, current device-target sets,
 feature/property paths and hosted-device predicates, then can OR origination
 mask **0x8000000**. Its diagnostics say no hosted/CoExV2 device was found.
-Full hosted classification, targets and effective feature policy remain unknown;
-this is not permission to fabricate a hosted device or merge namespaces.
+Full hosted classification, targets and effective feature policy remain unknown.
 
 **AVB** gates on A0C and reads B3b: when A0C is zero only native statuses
 **0/1/2** proceed; nonzero A0C skips that filter. An A0S message with nonnull

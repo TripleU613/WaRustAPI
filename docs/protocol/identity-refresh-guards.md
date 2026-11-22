@@ -24,7 +24,6 @@ notification-time snapshot equivalent is claimed by this change.
 pin A from A->B->A while a directory request was outstanding. The existing
 primary counter catches tracked primary changes, but not companion changes.
 The response may be correctly signed by A while representing an older lifecycle.
-A generic correlated result or valid signature is not permission to adopt it.
 A directory query also does not freeze legitimate send/receive ratchet progress.
 
 The local snapshot uses these fields, encrypted in Checkpoints:

@@ -72,7 +72,7 @@ effective properties and mapping trust are **unknown** here.
 logs a message naming CursorWindowAllocationException and returns false.
 That diagnostic is narrower than the actual catch type; it does not prove
 only cursor-window allocation failed. Nested close exceptions retain
-suppression handling. This is not authority for automatic network retries.
+suppression handling.
 
 ## Account/contact predicate A01
 

@@ -30,8 +30,7 @@ specific producer calls; it does not claim complete carried-key retry support.
    first byte0x05, copies exactly32 bytes from offset1 into a new array, and
    constructs Ehd. [Ehd constructor](signed-public-key-constructor.txt) stores
    that array as A01. A longer stored array is not rejected by this decoder;
-   trailing bytes are not copied. This is a stored-record parser fact, not
-   permission to loosen Rust wire/public-key admission elsewhere.
+   trailing bytes are not copied.
 3. **ID encoding: corroborated, already known in ordinary-prekey research.**
    [1nr.A04](id-writer.txt) emits low24 bits in three big-endian bytes, with no
    input range check in that helper. The retained retry getters call that same

@@ -15,8 +15,7 @@ also logs/returns.6oe.A03 uses Long.parseLong then multiplies by1000 for
 local milliseconds. Full Java overflow/negative policy is not ported by the
 Rust nonnegative-i64 local guard. The other branch resets active/start/end/
 type/visible preferences, including explicit is_active=false regardless
-of supplied duration. Feature-disabled reset is retained evidence, not
-authority to invent the APK configuration value in Rust.
+of supplied duration. Feature-disabled reset is retained evidence.
 
 **Refuted previous local assumption:** expiry is not required for an explicit
 inactive update. Rust now stores active=false, ends=0 without parsing expiry,
@@ -1163,8 +1162,7 @@ body and satisfying its remaining child-count constraint.
 
 **Derived result:** with the other success constraints satisfied, a byte
 result not selected as Argo can reach JSON decoding even when format
-is absent or different from json. This is a shape-selection fallback,
-not permission to accept arbitrary bytes: the selected JSON decoding,
+is absent or different from json. This is a shape-selection fallback. The selected JSON decoding,
 GraphQL data/errors conversion and refresh callback gates still apply.
 The earlier bounded statement that a raw-JSON fallback was not yet
 justified is superseded for this selected constructor/control flow.
@@ -1332,7 +1330,6 @@ new Rust timer or reconnect retry is inferred from it.
 On the not-ready path, 0Sf.A0A calls 0ln.A0E(id), logs and returns
 false. A0E removes A0I under the same lock and checks a removed value
 is its sentinel; this method does not call the feature's success handler.
-Native cleanup is not authority to erase a Rust uncertain-send record.
 
 ### Transfer to the reply map and response entry
 

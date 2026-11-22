@@ -39,7 +39,7 @@ elapsedRealtime. If A03 is nonzero it returns A03+elapsed; else if A04 is
 nonzero it returns A04+elapsed; otherwise it returns currentTimeMillis-A02.
 **Unknown:** producers/units of the adjustment fields, calibration events and
 which branch is active for the retained account. This confirms a potentially
-adjusted millisecond clock, not permission to invent server time or telemetry.
+adjusted millisecond clock.
 
 ## Earliest positive timestamp and columns
 

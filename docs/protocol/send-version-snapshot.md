@@ -55,8 +55,7 @@ The library surface is `transport::send_versions::inspect`. It first requires an
 existing outbox intent. `captured=false, users=[]` means no snapshot. Captured
 rows expose only user_ticket (SHA-256 of normalized JID), devices, at_send,
 current and matches. Both versions may be null; matches is nullable equality.
-It is not a native keep/drop decision, a server version, safety-number proof or
-permission to transmit. No user address, content, request key or ciphertext is
+It is not a native keep/drop decision, a server version or safety-number proof. No user address, content, request key or ciphertext is
 printed. When written this was a CLI contract only; since 2026-10-13
 `GET /v1/outbox/{local_id}/versions` is also served read-only by
 `serve --store-routes` ([store routes](../api/README.md#store-routes-opt-in)).

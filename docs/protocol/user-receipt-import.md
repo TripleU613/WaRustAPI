@@ -75,7 +75,7 @@ deliveredDeviceJid=6. Numbers were decoded from descriptors, not array positions
 or a public schema. Neither caller's traced user loop supplies fields 5/6 to
 A05. Pending/delivered device import and other branches remain separate unknowns.
 Multiplication here establishes serialized seconds to supplied milliseconds,
-including signed-long wrapping; it is not permission to synthesize missing times.
+including signed-long wrapping.
 
 ## Schema, scoped negatives and primary cleanup
 

@@ -64,7 +64,7 @@ whatsapp-cli accounts status --name b
 whatsapp-cli --profile b listen --allow-live-request --seconds 20
 ```
 
-The two numbers must never share a store, a config or a key variable. See
+See
 [configuration reference](configuration.md) for all fields.
 
 ## Checking account state

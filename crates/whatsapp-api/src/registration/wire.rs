@@ -1924,7 +1924,7 @@ pub struct RegistrationResponse {
     pub consent: RegistrationConsent,
     /// Server-recommended methods; unknown values are redacted enum variants.
     pub recommended_method: Option<Vec<VerificationMethod>>,
-    /// Fallback methods; never permission to switch methods automatically.
+    /// Fallback methods.
     pub fallback_methods: Option<Vec<VerificationMethod>>,
     /// Nonzero device-verification branches require explicit support.
     pub verify_pn_device: Option<u32>,

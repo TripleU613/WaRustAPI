@@ -31,8 +31,7 @@ completion, or when input is missing/old; its caught Exception is rethrown
 without that normal unmark. A0K cancellation unmarks separately.
 
 A0N's selected retry predicate declines only when the cause isGiq with an IQ
-error code400..499; other cases return true. This is job retry eligibility,
-not HTTP status, a retry interval or permission to replay uncertain Rust IQs.
+error code400..499; other cases return true. This is job retry eligibility.
 Full job-queue retry/backoff/terminal dispatch remains unported.
 
 0ht.A0V normalizes the user, uses conditional sent/real_issue timestamp updates

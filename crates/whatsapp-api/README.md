@@ -71,7 +71,7 @@ println!("{:?}", client.capabilities());
   and the CLI's `experimental-transport` feature.
 - `experimental-registration-https`: compiles the constrained, lab-only
   reqwest/rustls registration transport with the explicit `ring` provider.
-  This owner-approved native-crypto exception needs a C build toolchain.
+  This feature needs a C build toolchain.
   Normal certificate/hostname validation stays enabled; the registration
   protocol remains experimental and has not passed live interoperability.
 

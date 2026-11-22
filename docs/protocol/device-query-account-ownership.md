@@ -23,7 +23,7 @@ changed`. Transaction faults continue propagating.
 Account-less offline adapters remain usable only while their original absent
 account/store-generation binding matches. Creating an account after reservation
 changes authority. This is connection-local actor ownership, not a persistent
-new callback protocol or permission to resume/replay an uncertain read. Old
+new callback protocol. Old
 records are not backfilled, and no settled reply is reprocessed. Restoration of
 identical authority in the regression demonstrates the equality guard, not a
 new account reset/recovery command. The writer check does not claim a lock over

@@ -36,7 +36,7 @@ inferred per-device exclusion policy.
 0182..01ae obtains Can.A04's Boolean and calls Cio.A02(users,false) for the
 missing-LID preparation; its caught exception is logged and the fetch path
 continues. Effective routing/mapping/PQ inputs and complete Cio behavior remain
-unknown. This is not authority to manufacture LIDs or silently merge namespaces.
+unknown.
 
 ## The all-device key-fetch request
 
@@ -81,8 +81,7 @@ is not validation of their signature or origin.
 
 The device list is sorted using DPh selector 0 through DO5 selector 8. DPh's
 branch subtracts numeric device IDs, and its B7l catch returns equal. The wrapper
-and complete malformed-sort behavior are not newly traced; do not invent a
-strict total-order error policy from this comparison alone.
+and complete malformed-sort behavior are not newly traced.
 
 At 0358..039e, a nonempty Cai list queues DNs selector 47 through 0kY.A01.
 DNs's constructor assigns arguments 1/3/2 to A00/A01/A02, preserving the

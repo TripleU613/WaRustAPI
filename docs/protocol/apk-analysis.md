@@ -59,7 +59,7 @@ cargo run -p xtask -- apk-callers lab/WhatsApp.apk \
     --class 'Lcom/whatsapp/registration/core/http/KotlinRegistrationBridge;' \
     --method A09
 
-# 5. For a controlled test number only, reproduce the inspected comparison
+# 5. Reproduce the inspected comparison
 #    build's /v2/code token. This prints a phone-bound credential to stdout.
 cargo run -p xtask -- apk-registration-token lab/WhatsApp.apk \
     --country-code 1 --national-number 5551234567
@@ -86,7 +86,7 @@ active profile's fixtures.
 | `apk-xref` | Which Dalvik class and method loads an exact string | The runtime branch taken or values assembled without string literals |
 | `apk-callers` | Which Dalvik methods invoke an exact class/method pair | Whether the invoke is reached at runtime, **and whether any caller exists at all** — see the warning below |
 | `apk-smali` | Bounds-checked structural bytecode and referenced symbols for selected methods | Server acceptance or the runtime path without control-flow analysis/capture |
-| `apk-registration-token` | The exact comparison-build token derivation over APK-owned inputs and a controlled number | Server acceptance or compatibility with any other APK version |
+| `apk-registration-token` | The exact comparison-build token derivation over APK-owned inputs and a phone number | Server acceptance or compatibility with any other APK version |
 
 ## Two traps that produce silent empty output
 

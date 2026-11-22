@@ -52,7 +52,6 @@ not prove those facts or account-generation lifetime.
 19i.A00 call at0b3e and fetching-client-config diagnostic. The boolean for
 that conditional comes from1rj.A05; its meaning is not established here.
 A00 itself rechecks readiness throughA01 after taking the pending slot.
-Thus this call is not authority to skip the gate or proof a request was sent.
 The excerpt does not establish entry predicates, relation to the handler
 notification, successful rotation or complete startup ordering.
 

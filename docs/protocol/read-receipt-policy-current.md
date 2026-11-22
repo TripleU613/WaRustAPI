@@ -49,7 +49,7 @@ automatic direct normal-read intent when the durable validated server
 preference is known disabled. It creates no read-self substitute. This follows
 a necessary condition in current A05, not an assertion that every positive
 native contact/force condition has been implemented. Unknown preferences keep
-the existing operator-authorized behavior; no default is synthesized from the
+the existing behavior; no default is synthesized from the
 APK. Existing group behavior and public explicit `queue_read` remain separate.
 
 New read outbox rows carry explicit provenance `automatic=true/false`; old rows

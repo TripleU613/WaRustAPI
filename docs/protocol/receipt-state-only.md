@@ -33,8 +33,7 @@ the independent parsed status 17/18.
 Sender/read-self fallback diagnostics at 0238..028c do not modify this flag.
 Full selected-user/chat canonicalization, all aggregated/business branches,
 key-array helper validation and self-receipt trust remain separate trace
-boundaries. This table is not authority to attribute self receipts to remote
-outbox recipient facts. Current raw unsupported self captures stay preserved.
+boundaries. Current raw unsupported self captures stay preserved.
 
 ## A07 admission and played eligibility
 

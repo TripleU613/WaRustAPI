@@ -112,7 +112,7 @@ For nonserver failures, its second boolean gates retry eligibility. A nonnull
 computed delay releases the live flag without immediate rescan, handles deferred
 recovery if present, otherwise schedules the manager after delay. Ineligible or
 exhausted retries use `A02`, which resets the helper and releases without rescan.
-These are native transitions, not permission to requeue an uncertain Rust write.
+These are native transitions.
 Constructor-selected retry limits remain untraced; no new retry policy is ported.
 
 `FeN.run` case40 additionally classifies collection400/404 as fatal62/63;

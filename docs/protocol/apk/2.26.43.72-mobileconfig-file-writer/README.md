@@ -33,8 +33,7 @@ On the selected successful writes, the file layout is:
 | 8 + body size | `3c f1` magic footer |
 
 The size calculation is a 32-bit addition; this selected writer has no separate
-overflow rejection around that addition. This is a static arithmetic fact, not
-permission to generate oversized inputs or a claim about upstream size bounds.
+overflow rejection around that addition. Upstream size bounds remain unknown.
 The framing is a local storage format, not a network message format.
 
 After each of the six writes, the selected stream-state helper tests **mask 5**

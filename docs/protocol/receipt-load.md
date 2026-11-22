@@ -67,7 +67,7 @@ through 0VT.A07, asks 0VS.A0J for a counterpart row and resolves that through
 unchanged. Thus this loader mapping does not always share A07's explicit
 original-user fallback. The downstream UserJid nonnull assertion matters.
 Complete predicate/type/migration defaults and counterpart authority remain
-**unknown**; this is not authorization to merge unverified Rust PN/LID aliases.
+**unknown**.
 
 ## Consequence for the resend port
 

@@ -65,8 +65,7 @@ follows. The retained length helper file is now binary-length-diagnostic.txt.
 The add timestamp's0Tk.A05 receives nonnull Long and bounds **1577865600..
 4102473600**, optional=false. It returns true for nonnull values even after
 logging an out-of-range diagnostic through A0C. Thus on this selected normal
-return path the nonnull computed timestamp still reaches the t attribute; do
-not invent omission or refusal outside the stated range. Null-value handling
+return path the nonnull computed timestamp still reaches the t attribute. Null-value handling
 and logging failures are separate branches. ID0Tk.A06 is also a diagnostic
 schema helper; its prior [writer analysis](../2.26.43.72-client-auth-token-writer/README.md)
 explains why nonnull out-of-range strings are not a hard rejection proof.

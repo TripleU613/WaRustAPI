@@ -50,8 +50,7 @@ unknown here; Rust's existing terminal-fact replay refusal is not weakened.
 
 At 0974..09a2, native A08==**22** plus Ayk.A1X true takes the ABORTED diagnostic
 and terminal path. At 0c90..0caa, retryCount **greater than 4** takes the high
-retry-count terminal path. This is native job bookkeeping, not permission to
-add four network retries, rotate identity, or reset Rust reservations. Complete
+retry-count terminal path. This is native job bookkeeping. Complete
 outer scheduling and retry requirements remain unknown/unported.
 
 The native path reads the send count through 0zq.A01 for the selected ordinary

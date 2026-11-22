@@ -62,7 +62,7 @@ not a claim of runtime acceptance or complete Android parity.
 | Direct rotation triggers and reused candidate | [Caller/field inventory](apk/2.26.43.72-authkey-rotation-triggers/README.md) | Durable candidate recovery; exact-field inventory is not global absence proof |
 | Conditional token request and result | [Writer](apk/2.26.43.72-client-auth-token-writer/README.md), [correlated reply](apk/2.26.43.72-client-auth-token-reply/README.md) | Complete input authenticity, native JID/runtime behavior and durable token ownership |
 | Token readiness/pending nonce | [Membership](apk/2.26.43.72-client-auth-token-membership/README.md), [nonce flow](apk/2.26.43.72-client-auth-token-nonce-flow/README.md), [failure distinctions](apk/2.26.43.72-client-auth-token-failure/README.md) | Cross-thread/generation ordering and durable recovery |
-| Post-token held traffic | [Challenged-request ownership](apk/2.26.43.72-challenged-request-ownership/README.md) | Durable request-family ownership; selection is not permission to replay Rust reservations |
+| Post-token held traffic | [Challenged-request ownership](apk/2.26.43.72-challenged-request-ownership/README.md) | Durable request-family ownership |
 
 There is still no Rust rotation or client-auth-token maintenance flow in the
 searched transport source. New state must retain the usable old key plus a

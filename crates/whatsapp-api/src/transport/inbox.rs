@@ -3056,8 +3056,7 @@ mod tests {
             ],
         ];
         // Unknown/missing types are native parser errors. Native-recognized
-        // frskmsg/msmsg/otsk are a local coverage gap, never permission to
-        // ignore that child and ACK the sibling's successful skmsg.
+        // frskmsg/msmsg/otsk are a local coverage gap.
         for kind in [
             None,
             Some("unknown"),

@@ -39,7 +39,7 @@ a B1Q passing A0h, or a chat passing A0m with 23u.A00(derived B1Q UserJid)
 true. Otherwise CN8.A00 selects Ci4(chat,B1Q,bool), with bool true for 1iZ
 or chat passing 0DE.A0b. Complete 23u/classifier and participant authority
 remain **unknown**. The Boolean is the job's shouldForceReadSelfReceipt;
-true selects read-self through 0zd.A05, not permission to send peer read.
+true selects read-self through 0zd.A05.
 
 A0I appends original message-key IDs without sorting/deduplication in this
 body. Chg initializes its time to -1; positive A00(message) values are combined

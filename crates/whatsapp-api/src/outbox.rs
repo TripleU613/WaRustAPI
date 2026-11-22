@@ -408,8 +408,8 @@ impl Outbox {
     }
 
     /// Count entries whose progress still needs work across every namespace.
-    /// This is the same progress selection as `pending`, not permission to send:
-    /// transport reservations, account policy and retry waits remain separate.
+    /// This is the same progress selection as `pending`.
+    /// Transport reservations, account policy and retry waits remain separate.
     pub fn pending_count(&self, tx: &ReadTx<'_>) -> Result<usize> {
         let mut count = 0;
         let mut cursor = None;

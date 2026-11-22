@@ -182,8 +182,7 @@ at -1. Forward -1 returns occur only after both indices are found
 is greater, otherwise 0. Therefore unknown current / known next returns **0**,
 known current / unknown next returns **1**, and two unknown inputs return **0**
 even if their integers differ. 1hg.A04 consequently treats all three as
-nonadvancing. This is not permission to accept unknown wire receipt statuses;
-the separate six-status predicate still applies. No Rust state comparison or
+nonadvancing. The separate six-status predicate still applies. No Rust state comparison or
 admission behavior is changed from this observation.
 
 Final checks: **826** workspace/all-feature tests (688 API unit, four codec,

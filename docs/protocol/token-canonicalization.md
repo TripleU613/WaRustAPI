@@ -37,9 +37,7 @@ areEqual is false, retaining v3 (the original argument).
 
 Thus mapped PN input can select canonical account-user plus original PN without
 reverse lookup. Unchanged account-user input can require the reverse mapper.
-**Refuted shortcut:** suppressing counterpart lookup is not permission to keep
-an original PN as canonical when A0L found its account-user mapping. Nor does
-an authenticated Rust PN/LID alias establish the APK's mapping-store selection.
+**Refuted shortcut:** A0L can return its account-user mapping even when counterpart lookup is suppressed. An authenticated Rust PN/LID alias does not establish the APK's mapping-store selection.
 The effective property's value is still **unknown**, not an inferred default.
 
 ## Read and successful-write consumers

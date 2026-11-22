@@ -30,7 +30,7 @@ Fc1 constructor stores discriminator and captures; case15 enters0db6. It opens a
 
 ## Failure and lookup boundaries
 
-The base method rethrows SQLiteFull/Corrupt at020c; LIL is logged then rejoins ACK handling. Other Exception enters02d8, and when incoming BX2 is true builds completion2Dx with code500 then calls1ic.A0G; otherwise it returns. It does not follow normal ACK continuation. This is not a license to catch every Rust/local-state error and send a success ACK, or to claim an end-to-end500 wire encoding from this method alone.
+The base method rethrows SQLiteFull/Corrupt at020c; LIL is logged then rejoins ACK handling. Other Exception enters02d8, and when incoming BX2 is true builds completion2Dx with code500 then calls1ic.A0G; otherwise it returns. It does not follow normal ACK continuation. End-to-end500 wire encoding remains unverified.
 
 0WJ.A0W validates the scoped address throughA04, locks, reads bytes via0YT.A0K, decodes viaF3k.A02, wraps Ee1 and closes. Absent/unresolved returns null. Caught ECt logs invalid saved identity, callsA0G then returns null; A0G cleanup effects remain untraced and are not copied to Rust. Held identity lookup is separate from replacement-key trust.
 

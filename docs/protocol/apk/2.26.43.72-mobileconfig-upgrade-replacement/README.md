@@ -62,8 +62,7 @@ sleeps before returning false. A true result exits without that attempt's sleep.
 The selected normal three-attempt path never reaches the large-duration
 saturation edge also present in the generic duration arithmetic.
 
-These sleeps and retries are **file rename policy**, not authorization or
-evidence for retrying a network request, ACK or message. No network operation
+These sleeps and retries are **file rename policy**. No network operation
 occurs in these selected helpers. The host did not execute their sleep calls.
 
 ## Failure reporting and success continuation

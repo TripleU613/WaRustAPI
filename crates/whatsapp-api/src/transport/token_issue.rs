@@ -67,7 +67,6 @@ fn current_authority_in(tx: &WriteTx<'_>) -> Result<[u8; 32]> {
 }
 
 /// Content-free effect of a correlated token result on saved timestamp state.
-/// This is not delivery proof or permission to retry.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum TokenIssueCompletion {
@@ -183,8 +182,6 @@ fn legacy_owner_in(
                 matching = Some(id);
             }
         } else if !queued_only && timestamp == sent {
-            // Legacy reserved/success/refusal ownership is not permission to
-            // resend the same schedule through an older queued duplicate.
             return Ok(Some(id));
         }
     }

@@ -65,7 +65,6 @@ Their types are not generalized to every serialization or runtime failure.
 
 No callback ID, per-node result waiter, successful server response or durable
 transmission reservation is established for this ib node in these methods.
-That is not authority to clear uncertainty or automatically resend a future
-Rust operation after an ambiguous write. Complete native reconnect ownership,
+Complete native reconnect ownership,
 server ACK policy, stale cached-ID handling and generation fencing remain open.
 No Rust behavior, retry policy, HTTP route or live account/network operation changed.

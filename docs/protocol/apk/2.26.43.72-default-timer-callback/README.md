@@ -13,7 +13,7 @@ Its selected send branch builds to=s.whatsapp.net, type=set, xmlns=
 disappearing_mode, with one disappearing_mode/duration child. It constructs
 Cgi callback and passes20000ms (0x4e20), logical type277 (0x115), to0Sf.A0W
 at018a..0198. Initial branches handle unchanged/sentinel selections and
-manager gates; these are not authorization to fabricate their runtime values.
+manager gates.
 CJN.A00/A01 builds1cy conditionally using0wU; the selected write serializes
 positive1cy.A00, otherwise1cy.A01, widened from signed int to long. Full gate
 meaning, UI value domain and alternate-mode policy remain open. This chunk
@@ -36,7 +36,7 @@ the saved disappearing_mode_duration_int via0p0.A02, and publishes it through
 6of.A1C ->07e.A0D. Cgi.A00 buildsBSL fields and submits to0NX.CSW;
 the downstream telemetry sender and observer consequences remain untraced.
 The selected timeout branch does not call0p0.A09 or resubmit an IQ.
-It is not a server refusal or permission to undo uncertain remote changes.
+It is not a server refusal.
 
 In contrast, Cgi.CK4 postsCvG selector36. That branch callsCgi.A00 with
 null/true, compares requested1cy with saved0p0.A06, and, if different, calls

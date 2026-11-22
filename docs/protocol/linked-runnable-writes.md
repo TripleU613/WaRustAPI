@@ -30,8 +30,7 @@ Absent selected own JID reaches a terminal path; companion mode logs that it
 cannot send the complete on-demand access notification. Otherwise it calls
 0q6.A05 with the selected own JID, DeviceJid and Boolean. **Unknown:** complete
 Boolean/access semantics, producer authority, notification wire construction
-and later branch effects. A saved access flag alone is not authorization for
-history decryption, peer admission or a newly supplied identity.
+and later branch effects.
 
 ## Last-active time, case 2
 

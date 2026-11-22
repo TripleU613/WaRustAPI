@@ -22,8 +22,7 @@ Java decimal parsing/default0 differs from the generic u16 diagnostic.
 H5d with the saved target, null string/URL/byte-array metadata, id=-1 and the
 preview-dependent selector, and call8pX.CAe with the saved long. Other codes
 call8pX.CAd with saved target/type, code and long. Thus these are empty-metadata
-callback outcomes, not permission to retry and not proof every error means
-empty photo. Hyd upload has no corresponding404/410 success-like branch.
+callback outcomes. Hyd upload has no corresponding404/410 success-like branch.
 The call signature binds the empty arguments; downstream H5d/cache application,
 8pX/ITY implementations and the saved-long meaning remain untraced here.
 

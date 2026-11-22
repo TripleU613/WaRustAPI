@@ -135,8 +135,7 @@ Before complete trigger/refetch integration, the following obligations remain:
   account-wide latch. Its affected collections/pending writes remain fenced for
   explicit reconciliation while unrelated work remains available.
 - **Timeout retry policy:** native retry cap/constructor parameters and full
-  recovery/error transitions are not all traced. Clearing the volatile owner
-  is not authority to retry a frozen write or invent an exponential schedule.
+  recovery/error transitions are not all traced.
 
 ## Next bounded implementation and verification
 

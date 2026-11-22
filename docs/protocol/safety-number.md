@@ -206,8 +206,7 @@ before constructing the identifier-bound seed. V4 params constructor
 `0x71916c..0x719264` copies the supplied LID's full ASCII JID string into `+0x28`
 and stable PN into `+0x30`, in the opposite layout to the V3 fields above.
 The exact conversion/normalization behavior was **unknown** at this checkpoint.
-The JNI callback follow-up below resolves it; this is not permission to guess
-the current account's input inventory or selected scheme.
+The JNI callback follow-up below resolves it.
 
 **Confirmed/static, display getter and result follow-up (37.71, same pinned
 main-library hash):** the shared getters `0x6c1e0c..0x6c1e2c` and
@@ -1699,8 +1698,7 @@ and calls A00 (0064..00b6). A00 returns an A01 username formed by **prefixing
 0Gj.A01, which uses `Character.isWhitespace || Character.isSpaceChar`.
 It does not trim a nonblank string before prefixing. Exact runtime Unicode
 classification and upstream stored-string validation are unverified. This
-proves a producer transformation, not permission to strip/prefix arbitrary
-operator strings or normalize every native comparison input identically.
+proves a producer transformation.
 
 **Refuted label — PN sharing, not username availability:** the nullable Boolean
 read via 0qq.A05 in A0T's branch is not a username-enable flag. A05 checks a
@@ -2043,8 +2041,7 @@ base pointer plus integer. `0x71da6c` requires that integer in 0..99 and calls
 **0x71d944** with server kind 5. That initializes category +0x18 to **5**,
 formats the device user with `%s:%d` (VA `0x1347aa`), stores original base at
 +0x38, and device integer at +0x40. It then uses the ordinary full-string
-constructor for +0x20. Suffix formatting normalizes its decimal spelling;
-this is not authority to manufacture a companion device or identity.
+constructor for +0x20. Suffix formatting normalizes its decimal spelling.
 
 **Confirmed/static flattening:** `0x71ebd8` preserves ordinary objects and
 nonzero-device objects. For device-category 5, server kind 5, device integer

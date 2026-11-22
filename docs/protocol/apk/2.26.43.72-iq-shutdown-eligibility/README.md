@@ -47,7 +47,7 @@ the delegate. Otherwise it obtains0ZJ.A0K's0vH and delegatesBNJ, normalizing
 the boolean. Its handler's message4 forwards through0ZJ.A0t toA0r(Message).
 That final handler body and0vH implementation predicates are not traced here.
 The established formula is queued-message4 OR delegate.BNJ, not0AI.state==2,
-socket-open, authenticated, fully disconnected, or permission to resend.
+socket-open, authenticated, fully disconnected.
 
 ## Adjacent cancellation map is a separate mechanism
 

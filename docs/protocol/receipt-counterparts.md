@@ -50,7 +50,7 @@ proceeds directly to A01. A01 returns the cached value; its uninitialized
 path diagnoses `isGlobalChatDbMigrated is not initialized`, reports
 `msgStore not ready`, and assigns Boolean true if those diagnostics return.
 Assertion/diagnostic throwing behavior and complete migration initialization
-are **unknown**, so the trace is not a license to assume this gate always true.
+are **unknown**.
 
 ## JID rows are not receipt-user membership
 

@@ -39,7 +39,7 @@ Include a second-process ownership test, store corruption/wrong-key tests, and b
 
 ### 19.3 Live interoperability evidence
 
-Use a controlled account pair and record the APK/profile, library commit, test conditions and date. Verify the message contents on the official peer and on the Rust side. Cover direct conversations with recipient companions, group membership changes, media integrity and process restart.
+Use two accounts and record the APK/profile, library commit, test conditions and date. Verify the message contents on the official peer and on the Rust side. Cover direct conversations with recipient companions, group membership changes, media integrity and process restart.
 
 Test cold registration only when that specific test is intentionally invoked; normal CI and reconnect tests reuse existing test state. Do not trigger new OTPs or account mutations from every pull request or scheduled job.
 

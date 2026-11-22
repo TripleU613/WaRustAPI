@@ -114,8 +114,7 @@ The additional RequestCode success route is structurally retained:
 VerifyPhoneNumber.A5o's selected response status A0C invokesA2M; A2M forwards
 HiP.A0N/A0M throughA1j. Checked DEX confirms the selected gate.
 GpO names status integer2 OK, while the ordinary sent result is a different
-branch. This is not permission to treat SMS dispatch or any HTTP200 as completed
-registration. HiP.A0N's exact field-reference scan finds both HTTP bridge and
+branch. HiP.A0N's exact field-reference scan finds both HTTP bridge and
 RequestCodeRepository writers plus parcel construction; the upstream source and
 transport authenticity of every alternate origin remain **unknown** here.
 

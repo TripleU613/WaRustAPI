@@ -52,7 +52,7 @@ prevents a plan even when the server supplied backoff. With available budget, a
 parsed override replaces the generated delay. Remaining budget is wrapper A08
 minus elapsedRealtime since construction, and delay must be strictly smaller than
 remaining budget. No positive clamp or overflow check is present in this helper;
-this is source arithmetic, not permission to fabricate negative waits.
+this is source arithmetic.
 
 The budget generator increments its count before returning a delay, and is called
 before CmQ and error-code eligibility are checked. Thus a budget count is not a

@@ -34,7 +34,7 @@ Otherwise it iterates Hbw.A01. An Hxy whose path JSONArray has length1 is handle
 
 Other Hxy errors with code0x23f (575) and path length>=3 call HSo.A00 into one captured map as protocol errors; code0x257 (599) with length>=3 populates the other as user errors. HSo.A00 reads path[2], optional backoff and protocol-info fields; full key normalization/collision and downstream metadata use are not reconstructed. Other entries log ignoring and iteration continues. When iteration completes, the callback returns true, allowing the data path to proceed. Do not collapse these scoped errors into request refusal or unconditional request success.
 
-The generic MEX-error branch constructs Giw(Hbw) and invokes FfK.BsR at01da..01f4, returning false. Earlier retained FfK.get wraps this as ExecutionException; A0W has its own exception handling. This is separate from BsT(null), not permission to replay uncertain Rust requests.
+The generic MEX-error branch constructs Giw(Hbw) and invokes FfK.BsR at01da..01f4, returning false. Earlier retained FfK.get wraps this as ExecutionException; A0W has its own exception handling. This is separate from BsT(null).
 
 ## Data continuation and response-state completion
 

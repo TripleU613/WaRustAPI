@@ -58,8 +58,7 @@ A06 cacheA0d is another cache, controlled byA0c. For first-access options the
 selected flow bypasses its ordinary fast-read branch and ultimately usesA07.
 Treating all cache fields as one generic cache would lose this precedence.
 The checked literal specifier table lacks the selected ping entries, as retained
-in the previous bundle; missing mapping is not a duration value or permission
-to select a different branch.
+in the previous bundle; missing mapping is not a duration value.
 
 ## Reset and lifetime boundaries
 

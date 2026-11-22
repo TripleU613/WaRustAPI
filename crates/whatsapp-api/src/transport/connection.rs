@@ -5518,7 +5518,6 @@ pub(super) mod tests {
         let mut next = start(&reopened, false, None);
         next.activate().await;
         (&mut next.ready).await.unwrap();
-        // A stored capture is not authorization to replay an uncertain NACK.
         next.nothing_written(Duration::from_millis(30)).await;
         next.stop_cleanly().await;
     }
