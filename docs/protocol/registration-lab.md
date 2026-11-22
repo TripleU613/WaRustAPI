@@ -571,24 +571,25 @@ echo; do not put it in chat, command arguments, tracked files or logs.
 **Observed (live):** the only APK material available in that environment was
 the 2.26.43.72 asset. `accounts new --user-agent "WhatsApp/2.26.43.72 …"` made
 fresh profiles whose token is derived from that APK, so the request identity
-and the token share one build. Three different US numbers (two area codes,
-none previously configured in that environment) each received, within about
-two minutes:
+and the token share one build. Five different US numbers (two area codes, none
+previously configured in that environment) each received, within a few
+minutes:
 
 ```text
 POST https://v.whatsapp.net/v2/code   ENC + empty H   1,110–1,118 bytes
-HTTP 200   561–734 ms
+HTTP 200   492–734 ms
 {"status":"Fail","reason":"Blocked", custom_block_screen{title,body,btn_primary_text,
  btn_primary_url,btn_secondary_text:null,btn_secondary_url:null,hide_date}}
 ```
 
-The body was 409 bytes for all three and the retained shape was identical.
+The body was 409 bytes for all five and the retained shape was identical.
 No OTP was requested beyond the code request, no code was entered, and no
 number was retried or asked for voice. The block-screen text is withheld by
 the response summarizer, so this does **not** distinguish a number-level block
 from a source/IP-level one. The identical body and sub-second answers across
-three numbers are consistent with a shared cause (source or number batch), so
-the attempt was stopped rather than sweeping the rest of the list.
+five numbers in two area codes are consistent with a shared cause (source or
+number batch); a per-number eligibility difference would not stay byte-identical
+that consistently. The banned/blocked-labelled numbers were not attempted.
 
 **What this does establish:** the 2.26.43.72-derived token sent with the
 2.26.43.72 User-Agent and the `enc_empty_h` body reaches the server and gets a
