@@ -8954,6 +8954,120 @@ pub(super) mod tests {
     }
 
     #[tokio::test]
+    async fn classic_privacy_set_is_sent_settled_and_never_retried() {
+        use super::super::account_privacy::ReadReceiptValue;
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("privacy-set.redb"));
+        super::super::privacy_set::queue(&store, ReadReceiptValue::None).unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (set, written) = fake.written().await;
+        assert_eq!(set.description, "iq");
+        assert_eq!(
+            set.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("privacy")
+        );
+        assert_eq!(set.get_attr("type").and_then(|v| v.as_text()), Some("set"));
+        let privacy = set.child("privacy").expect("privacy child");
+        let categories = privacy.child_nodes();
+        assert_eq!(categories.len(), 1);
+        assert_eq!(categories[0].description, "category");
+        assert_eq!(
+            categories[0].get_attr("name").and_then(|v| v.as_text()),
+            Some("readreceipts")
+        );
+        assert_eq!(
+            categories[0].get_attr("value").and_then(|v| v.as_text()),
+            Some("none")
+        );
+        let id = set
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .unwrap()
+            .to_owned();
+        written.send(Ok(())).unwrap();
+        // The live callback is registered only after the completed write; a
+        // copy dropped by that race changes nothing, so redeliver until settled.
+        let settled = tokio::time::timeout(Duration::from_secs(2), async {
+            loop {
+                fake.deliver(
+                    Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "result"),
+                )
+                .await;
+                tokio::time::sleep(Duration::from_millis(10)).await;
+                if let Some(view) = super::super::privacy_set::inspect(&store).unwrap()
+                    && view.status == "applied"
+                {
+                    return view;
+                }
+            }
+        })
+        .await
+        .expect("set settles");
+        assert_eq!(settled.value, ReadReceiptValue::None);
+        // Our own setter never adopts a notification-side preference.
+        assert!(
+            super::super::account_privacy::read_receipts(&store)
+                .unwrap()
+                .is_none()
+        );
+        fake.stop_cleanly().await;
+        // A different explicit value is a new intent and may be queued after a
+        // definite success. A new session transmits it once.
+        super::super::privacy_set::queue(&store, ReadReceiptValue::All).unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (second, written) = fake.written().await;
+        assert_eq!(
+            second.get_attr("type").and_then(|v| v.as_text()),
+            Some("set")
+        );
+        assert_eq!(
+            second
+                .child("privacy")
+                .and_then(|privacy| privacy.child_nodes().first().cloned())
+                .and_then(|category| category
+                    .get_attr("value")
+                    .and_then(|v| v.as_text())
+                    .map(str::to_owned)),
+            Some("all".to_owned())
+        );
+        let second_id = second
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .unwrap()
+            .to_owned();
+        written.send(Ok(())).unwrap();
+        let refused = tokio::time::timeout(Duration::from_secs(2), async {
+            loop {
+                fake.deliver(
+                    Node::new("iq")
+                        .attr("id", second_id.as_str())
+                        .attr("type", "error")
+                        .children(vec![Node::new("error").attr("code", "403")]),
+                )
+                .await;
+                tokio::time::sleep(Duration::from_millis(10)).await;
+                if let Some(view) = super::super::privacy_set::inspect(&store).unwrap()
+                    && view.status == "refused"
+                {
+                    return view;
+                }
+            }
+        })
+        .await
+        .expect("refusal settles");
+        assert_eq!(refused.value, ReadReceiptValue::All);
+        // A refusal is preserved: the same value is not resent and nothing is
+        // transmitted automatically.
+        assert!(super::super::privacy_set::queue(&store, ReadReceiptValue::All).is_err());
+        fake.nothing_written(Duration::from_millis(200)).await;
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
     async fn queued_prekey_upload_rechecks_authority_before_writer_encoding() {
         let dir = tempfile::tempdir().unwrap();
         for case in [

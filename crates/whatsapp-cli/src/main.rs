@@ -334,6 +334,19 @@ enum Cmd {
     /// Inspect saved clock source and resolution (offline; no timestamps or replay).
     #[cfg(feature = "experimental-transport")]
     ClockInspect,
+    /// Queue one explicit classic privacy setting set; `listen` transmits it.
+    #[cfg(feature = "experimental-transport")]
+    AccountPrivacySet {
+        /// Native category value: all, contacts, none, known, off, on_standard.
+        #[arg(long)]
+        value: String,
+        /// Acknowledge that this changes the server account's read-receipt setting.
+        #[arg(long, requires = "allow_live_request")]
+        confirm: bool,
+        /// Allow the queued setting change to be transmitted by `listen`.
+        #[arg(long, requires = "confirm")]
+        allow_live_request: bool,
+    },
     /// Inspect the saved server read-receipt preference (offline; no policy change).
     #[cfg(feature = "experimental-transport")]
     AccountPrivacyInspect {
@@ -1938,6 +1951,19 @@ async fn run(cli: Cli) -> Result<(), Error> {
         #[cfg(feature = "experimental-transport")]
         Cmd::AbpropsQuery { show } => transport_receive::abprops_query(&cli, *show),
         #[cfg(feature = "experimental-transport")]
+        Cmd::AccountPrivacySet {
+            value,
+            confirm,
+            allow_live_request,
+        } => {
+            if !confirm || !allow_live_request {
+                return Err(Error::invalid(
+                    "privacy_set",
+                    "a server setting change requires --confirm and --allow-live-request",
+                ));
+            }
+            transport_receive::account_privacy_set(&cli, value)
+        }
         Cmd::AccountPrivacyInspect { fetch } => {
             transport_receive::account_privacy_inspect(&cli, *fetch)
         }
@@ -3577,6 +3603,64 @@ mod group_reference_cli_tests {
             ])
             .is_err()
         );
+    }
+}
+
+#[cfg(all(test, feature = "experimental-transport"))]
+mod privacy_set_cli_tests {
+    use super::*;
+    #[test]
+    fn account_privacy_set_requires_confirmation_and_live_permission() {
+        // Neither flag: parsed, but the handler rejects it before touching a store.
+        let cli = Cli::try_parse_from(["whatsapp-cli", "account-privacy-set", "--value", "none"])
+            .unwrap();
+        assert!(matches!(
+            cli.cmd,
+            Cmd::AccountPrivacySet {
+                confirm: false,
+                allow_live_request: false,
+                ..
+            }
+        ));
+        // One flag without the other is a clap error, so permission cannot be
+        // granted implicitly.
+        assert!(
+            Cli::try_parse_from([
+                "whatsapp-cli",
+                "account-privacy-set",
+                "--value",
+                "none",
+                "--confirm",
+            ])
+            .is_err()
+        );
+        assert!(
+            Cli::try_parse_from([
+                "whatsapp-cli",
+                "account-privacy-set",
+                "--value",
+                "none",
+                "--allow-live-request",
+            ])
+            .is_err()
+        );
+        let cli = Cli::try_parse_from([
+            "whatsapp-cli",
+            "account-privacy-set",
+            "--value",
+            "on_standard",
+            "--confirm",
+            "--allow-live-request",
+        ])
+        .unwrap();
+        assert!(matches!(
+            cli.cmd,
+            Cmd::AccountPrivacySet {
+                confirm: true,
+                allow_live_request: true,
+                ..
+            }
+        ));
     }
 }
 

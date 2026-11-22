@@ -163,6 +163,12 @@ pub mod privacy_fetch;
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+pub mod privacy_set;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod retry_answer;
 #[cfg(all(
     feature = "experimental-signal-crypto",

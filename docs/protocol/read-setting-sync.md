@@ -91,6 +91,41 @@ through I4X.A02, then calls 0sv.A0S. A0S's full setter behavior is untraced here
 EcE.A01's relevant branch opens SettingsPrivacy with target_setting set to the
 local key; that branch is navigation, not a preference write.
 
+## Implemented offline: one explicit SMAX set (2026-11-22)
+
+`transport::privacy_set` implements the SMAX branch only, as an explicit
+one-shot action, not as automatic behavior:
+
+- Boolean property **23639** selects the path; `08Y.A0X` registers `0x5c57`
+  (`23639`) with `Boolean.FALSE`, so an absent or false value is the classic
+  branch and any nonzero value refuses with a named diagnostic (the MEX
+  query/body remain untraced).
+- Wire: `iq type="set" xmlns="privacy" id="generated" to="s.whatsapp.net"` with
+  one `<privacy><category name="readreceipts" value="…"/></privacy>` child,
+  matching `0sv.A0P` 0100..01cc.
+- Lifecycle: one durable action per value. A queued or uncertain (`sent`, no
+  reply) setter blocks another. The **same** value is never resent after a
+  refusal or a definite success; a **different** value is a new explicit intent
+  and is allowed. Nothing is retried automatically and no identity is rotated.
+- Interaction with adoption: an outstanding `privacy/set` action (or the MEX
+  setter IQ with `26887749497493182`) already keeps incoming `account_sync`
+  category adoption refused in `account_privacy::unowned_setter_request`, so a
+  notification cannot race the pending write.
+- CLI: `whatsapp-cli account-privacy-set --value <value> --confirm
+  --allow-live-request` queues it; `listen` transmits. `account-privacy-inspect`
+  reports `set_mode` and the saved `set` lifecycle.
+
+Regressions: `classic_set_shape_defaults_to_smax_and_repeats_are_refused`,
+`refused_set_is_not_resent_and_a_different_value_is_a_new_intent`,
+`mex_selected_by_property_23639_is_refused`, and the fake-link
+`classic_privacy_set_is_sent_settled_and_never_retried` (wire shape, applied,
+different value allowed, refusal preserved with no follow-up write).
+
+Still **unknown/unported:** the MEX setter query/body, dispatch timeout and
+server-wait semantics (0h8.A0T request 69 with zero), pending-state durability
+inside the APK, and whether the APK retries a refused set. `0h8.A0T`'s zero
+argument is not treated as evidence of no retry or an infinite wait.
+
 ## Search inventory, limits and reproduction
 
 The [exact-literal/physical-call inventory](read-setting-sync-inventory.txt)

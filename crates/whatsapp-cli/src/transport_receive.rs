@@ -3086,6 +3086,34 @@ pub(super) fn app_state_inspect(
     Ok(())
 }
 
+pub(super) fn account_privacy_set(cli: &super::Cli, value: &str) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let value = whatsapp_api::transport::account_privacy::ReadReceiptValue::parse(value)?;
+    let queued = whatsapp_api::transport::privacy_set::queue(&store, value)?;
+    if !cli.json {
+        println!(
+            "Queued one classic readreceipts set; `listen` transmits it. No retry is automatic."
+        );
+    }
+    let report = serde_json::json!({
+        "action_id": queued.action_id,
+        "value": queued.value,
+        "mode": whatsapp_api::transport::privacy_set::selected_mode(&store)?,
+        "set": whatsapp_api::transport::privacy_set::inspect(&store)?,
+    });
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&report)
+            .map_err(|_| Error::invalid("privacy_set", "cannot encode queued set"))?
+    );
+    Ok(())
+}
+
 pub(super) fn account_privacy_inspect(cli: &super::Cli, fetch: bool) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
@@ -3101,6 +3129,8 @@ pub(super) fn account_privacy_inspect(cli: &super::Cli, fetch: bool) -> Result<(
         None
     };
     let fetch_view = whatsapp_api::transport::privacy_fetch::inspect(&store)?;
+    let set_mode = whatsapp_api::transport::privacy_set::selected_mode(&store)?;
+    let set_view = whatsapp_api::transport::privacy_set::inspect(&store)?;
     if !cli.json {
         println!("Saved server privacy preference; explicit read policy unchanged.");
     }
@@ -3110,6 +3140,8 @@ pub(super) fn account_privacy_inspect(cli: &super::Cli, fetch: bool) -> Result<(
         "fetch_mode": fetch_mode,
         "fetch_action_id": queued,
         "fetch": fetch_view,
+        "set_mode": set_mode,
+        "set": set_view,
     });
     println!(
         "{}",

@@ -258,6 +258,20 @@ Inspect saved clock source and resolution (offline; no timestamps or replay)
 Usage: whatsapp-cli clock-inspect [OPTIONS]...
 ```
 
+## whatsapp-cli account-privacy-set
+
+Queue one explicit classic privacy setting set; `listen` transmits it
+
+```
+Usage: whatsapp-cli account-privacy-set [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --value | VALUE | yes |  |  |  | Native category value: all, contacts, none, known, off, on_standard |
+| --confirm | CONFIRM | no |  |  | `true`, `false` | Acknowledge that this changes the server account's read-receipt setting |
+| --allow-live-request | ALLOW_LIVE_REQUEST | no |  |  | `true`, `false` | Allow the queued setting change to be transmitted by `listen` |
+
 ## whatsapp-cli account-privacy-inspect
 
 Inspect the saved server read-receipt preference (offline; no policy change)

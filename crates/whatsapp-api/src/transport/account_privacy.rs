@@ -49,7 +49,8 @@ pub enum ReadReceiptValue {
     OnStandard,
 }
 impl ReadReceiptValue {
-    pub(crate) fn parse(value: &str) -> Result<Self> {
+    /// Parse a server category value exactly as `8AX.A00/A04` admits it.
+    pub fn parse(value: &str) -> Result<Self> {
         match value {
             "all" => Ok(Self::All),
             "contacts" => Ok(Self::Contacts),

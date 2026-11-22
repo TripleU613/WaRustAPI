@@ -11905,6 +11905,141 @@
                         "boolean",
                         "null"
                       ]
+                    },
+                    "fetch_mode": {
+                      "type": "string",
+                      "enum": [
+                        "smax",
+                        "mex",
+                        "shadow"
+                      ]
+                    },
+                    "fetch_action_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "fetch": {
+                      "type": ["object", "null"]
+                    },
+                    "set_mode": {
+                      "type": "string",
+                      "enum": [
+                        "smax",
+                        "mex"
+                      ]
+                    },
+                    "set": {
+                      "type": ["object", "null"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          }
+        }
+      }
+    },
+    "/v1/account/privacy/set": {
+      "post": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Queue one explicit classic read-receipts setting change",
+        "description": "Queues a single APK 2.26.43.72 classic SMAX privacy setter (`iq type=set xmlns=privacy` with one `<privacy><category name=readreceipts value=.../></privacy>`) on the durable action queue; `listen` transmits it. Both --confirm and --allow-live-request are required. Boolean property 23639 (registered default false) selects MEX when true, which is refused because its wire is not implemented. Safeguards: a queued or uncertain setter blocks another one; the same value is never resent after a refusal or a definite success; a different value is a new explicit intent. An outstanding setter keeps incoming account_sync category adoption refused. No automatic retry, no identity rotation. CLI only; no served HTTP route.",
+        "operationId": "queueAccountPrivacySet",
+        "x-cli": "whatsapp-cli account-privacy-set",
+        "x-transport": [
+          "cli"
+        ],
+        "x-live": false,
+        "x-library": [
+          "whatsapp_api::transport::privacy_set::queue",
+          "whatsapp_api::transport::privacy_set::inspect",
+          "whatsapp_api::transport::privacy_set::selected_mode",
+          "whatsapp_api::transport::account_privacy::ReadReceiptValue::parse"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "value",
+                  "confirm",
+                  "allow_live_request"
+                ],
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "enum": [
+                      "all",
+                      "contacts",
+                      "none",
+                      "known",
+                      "off",
+                      "on_standard"
+                    ]
+                  },
+                  "confirm": {
+                    "type": "boolean",
+                    "const": true
+                  },
+                  "allow_live_request": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Queued setter, selected mode and saved lifecycle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "action_id": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "smax",
+                        "mex"
+                      ]
+                    },
+                    "set": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "queued",
+                            "outcome_unknown",
+                            "refused",
+                            "applied",
+                            "invalid_reply"
+                          ]
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
                     }
                   }
                 }
