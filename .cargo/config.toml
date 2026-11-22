@@ -1,0 +1,7 @@
+# clap derives expand the whole `Cmd` tree into one `augment_subcommands` frame.
+# In debug builds that frame is ~2.1 MiB, just above the 2 MiB default stack of a
+# spawned thread, so libtest's per-test thread overflows while parsing (the
+# release binary runs on the 8 MiB main thread). Give every cargo-spawned
+# process the same headroom instead of letting the next CLI flag tip the edge.
+[env]
+RUST_MIN_STACK = "8388608"

@@ -30,6 +30,10 @@ cargo package --locked -p whatsapp-api --allow-dirty
 git diff --check
 ```
 
+`.cargo/config.toml` raises `RUST_MIN_STACK` to 8 MiB: clap's derive expands
+the whole command tree into one large debug-build frame, which otherwise
+overflows libtest's 2 MiB per-test thread while parsing.
+
 The current optional features are compatible. Normal CI tests default and
 combined features for library changes; weekly/manual extended checks also test
 each feature independently. CLI and tooling edits use scoped tests, and docs
