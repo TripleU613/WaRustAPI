@@ -295,6 +295,9 @@ mod tests {
 
     fn device_config() -> (LabRegistrationConfig, AccountRecord) {
         let (mut config, account) = version_fixture();
+        config.client.user_agent = Some(Zeroizing::new(
+            "WhatsApp/2.26.43.72 Android/13 Device/Google-Pixel 4a".into(),
+        ));
         config.client.device = Some(crate::registration::request::LoginDevice {
             os_version: Some(Zeroizing::new("13".into())),
             manufacturer: Some(Zeroizing::new("Google".into())),
@@ -354,6 +357,9 @@ mod tests {
         assert_eq!(payload.mem_class, None);
         assert_eq!(payload.traffic_anonymization, None);
         // A configured-but-partial block keeps the unset fields absent too.
+        config.client.user_agent = Some(Zeroizing::new(
+            "WhatsApp/2.26.43.72 Android/13 Device/Google-Pixel 4a".into(),
+        ));
         config.client.device = Some(crate::registration::request::LoginDevice {
             os_version: Some(Zeroizing::new("13".into())),
             ..Default::default()
@@ -372,6 +378,9 @@ mod tests {
     #[test]
     fn impossible_device_facts_are_refused_by_validation() {
         let (mut config, _) = version_fixture();
+        config.client.user_agent = Some(Zeroizing::new(
+            "WhatsApp/2.26.43.72 Android/13 Device/Google-Pixel 4a".into(),
+        ));
         let base = crate::registration::request::LoginDevice {
             os_version: Some(Zeroizing::new("13".into())),
             mcc: Some(Zeroizing::new("000".into())),

@@ -142,6 +142,17 @@ Example (private JSON; values are the operator's real device facts):
 
 `preview` reports which device facts are configured, never their values.
 
+**Consistency guard.** The registration User-Agent is produced by the same
+`Build.*` reads (`0re.A00`), so one device must not be reported two ways. When
+`client.user_agent` has the APK shape
+`WhatsApp/<version> Android/<release> Device/<manufacturer>-<model>`, validation
+requires its release, manufacturer and model to equal `client.device`'s
+`os_version`, `manufacturer` and `model`; a disagreement is refused with the
+offending `client.user_agent …` field before any request. A UA outside that
+shape is not parsed as a device claim and is left to the operator (historical
+custom values stay readable). A hyphenated model such as `SM-G975F` keeps its
+hyphens after the first separator.
+
 ## Gaps still open
 
 - Which fillers the server actually enables (AB props 7482/7483) — unknown.

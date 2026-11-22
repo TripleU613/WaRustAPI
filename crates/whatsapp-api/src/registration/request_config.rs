@@ -614,6 +614,37 @@ impl LabRegistrationConfig {
         }
         if let Some(device) = &self.client.device {
             device.validate()?;
+            // A real Android client reports one device in both places: the
+            // registration User-Agent is built from the same Build.* facts.
+            // Contradictory identities are refused before any request.
+            if let Some(ua) = &self.client.user_agent
+                && let Some((release, manufacturer, model)) = parse_apk_user_agent(ua)
+            {
+                for (field, claimed, configured) in [
+                    (
+                        "client.user_agent os release",
+                        release,
+                        device.os_version.as_ref().map(|v| v.as_str()),
+                    ),
+                    (
+                        "client.user_agent manufacturer",
+                        manufacturer,
+                        device.manufacturer.as_ref().map(|v| v.as_str()),
+                    ),
+                    (
+                        "client.user_agent model",
+                        model,
+                        device.model.as_ref().map(|v| v.as_str()),
+                    ),
+                ] {
+                    if configured.is_some_and(|value| value != claimed) {
+                        return Err(Error::invalid(
+                            field,
+                            "disagrees with client.device; one device must be reported everywhere",
+                        ));
+                    }
+                }
+            }
         }
         RegistrationCodeParams::new(self.token.as_str(), "sms")?;
         RegistrationCommonParams::new(
@@ -704,6 +735,21 @@ impl LabRegistrationConfig {
             "invariants": ["TLS verification on", "fixed comparison origin", "no redirects/proxies/automatic retries", "no reset/wipe", "live actions require explicit authorization"]
         })
     }
+}
+
+/// Facts encoded in the APK's registration User-Agent form
+/// `WhatsApp/<version> Android/<release> Device/<manufacturer>-<model>`
+/// (`0re.A00`). Returns `None` for a UA that does not use that exact shape, so
+/// a custom or historical value is never mistaken for a parsed device claim.
+fn parse_apk_user_agent(text: &str) -> Option<(&str, &str, &str)> {
+    let rest = text.strip_prefix("WhatsApp/")?;
+    let (_, rest) = rest.split_once(" Android/")?;
+    let (release, rest) = rest.split_once(" Device/")?;
+    let (manufacturer, model) = rest.split_once('-')?;
+    if release.is_empty() || manufacturer.is_empty() || model.is_empty() {
+        return None;
+    }
+    Some((release, manufacturer, model))
 }
 
 /// Presence-only projection of configured login device facts. Values stay in
@@ -837,6 +883,72 @@ mod tests {
             serde_json::from_str(super::super::request::TEMPLATE_JSON).unwrap();
         assert!(template.validate().is_err());
         config().validate().unwrap();
+    }
+
+    #[test]
+    fn registration_user_agent_must_agree_with_the_login_device_block() {
+        let mut cfg = config();
+        cfg.client.user_agent = Some(Zeroizing::new(
+            "WhatsApp/2.26.43.72 Android/13 Device/Google-Pixel 4a".into(),
+        ));
+        cfg.client.device = Some(LoginDevice {
+            os_version: Some(Zeroizing::new("13".into())),
+            manufacturer: Some(Zeroizing::new("Google".into())),
+            model: Some(Zeroizing::new("Pixel 4a".into())),
+            ..Default::default()
+        });
+        cfg.validate().unwrap();
+        // The APK's own placeholder form disagrees with a configured device.
+        let mut unknown = cfg.clone();
+        unknown.client.user_agent = Some(Zeroizing::new(
+            "WhatsApp/2.26.43.72 Android/unknown Device/unknown-unknown".into(),
+        ));
+        let error = unknown.validate().unwrap_err();
+        assert_eq!(
+            error.to_string(),
+            "invalid input for `client.user_agent os release`: disagrees with client.device; one device must be reported everywhere"
+        );
+        for (ua, field) in [
+            (
+                "WhatsApp/2.26.43.72 Android/14 Device/Google-Pixel 4a",
+                "client.user_agent os release",
+            ),
+            (
+                "WhatsApp/2.26.43.72 Android/13 Device/Samsung-Pixel 4a",
+                "client.user_agent manufacturer",
+            ),
+            (
+                "WhatsApp/2.26.43.72 Android/13 Device/Google-Pixel 5",
+                "client.user_agent model",
+            ),
+        ] {
+            let mut cfg = cfg.clone();
+            cfg.client.user_agent = Some(Zeroizing::new(ua.into()));
+            assert!(
+                cfg.validate()
+                    .unwrap_err()
+                    .to_string()
+                    .starts_with(&format!("invalid input for `{field}`")),
+                "unexpected result for {ua}"
+            );
+        }
+        // A UA outside the APK's shape (for example a historical custom value)
+        // is not parsed as a device claim and stays allowed.
+        let mut custom = cfg.clone();
+        custom.client.user_agent = Some(Zeroizing::new("private-agent-without-device".into()));
+        custom.validate().unwrap();
+        // A hyphenated model keeps its own hyphens after the first separator.
+        let mut hyphenated = cfg;
+        hyphenated.client.user_agent = Some(Zeroizing::new(
+            "WhatsApp/2.26.43.72 Android/13 Device/Samsung-SM-G975F".into(),
+        ));
+        hyphenated.client.device = Some(LoginDevice {
+            os_version: Some(Zeroizing::new("13".into())),
+            manufacturer: Some(Zeroizing::new("Samsung".into())),
+            model: Some(Zeroizing::new("SM-G975F".into())),
+            ..Default::default()
+        });
+        hyphenated.validate().unwrap();
     }
 
     #[test]
