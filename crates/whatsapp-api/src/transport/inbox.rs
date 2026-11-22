@@ -3607,6 +3607,154 @@ mod tests {
             IncomingResult::Decrypted
         );
         assert!(unsupported("peer-edit-outside"));
+        // Media caption edit: the parent is a saved image, the replacement
+        // carries only the new caption, and the attachment must be preserved.
+        let image_payload = |caption: &str| {
+            let mut image = Vec::new();
+            prost::encoding::string::encode(
+                1,
+                &"https://mmg.whatsapp.net/image-fixture".to_owned(),
+                &mut image,
+            );
+            prost::encoding::string::encode(2, &"image/jpeg".to_owned(), &mut image);
+            prost::encoding::string::encode(3, &caption.to_owned(), &mut image);
+            prost::encoding::bytes::encode(4, &[1u8; 32].to_vec(), &mut image);
+            prost::encoding::uint64::encode(5, &12, &mut image);
+            prost::encoding::bytes::encode(8, &[2u8; 32].to_vec(), &mut image);
+            prost::encoding::bytes::encode(9, &[3u8; 32].to_vec(), &mut image);
+            let mut payload = vec![0x1a];
+            prost::encoding::encode_varint(image.len() as u64, &mut payload);
+            payload.extend(image);
+            payload
+        };
+        let image_parent = direct::prepare_payload(
+            &bob_account,
+            &alice_jid,
+            None,
+            Some(&session),
+            Some(&identity),
+            &image_payload("old caption"),
+        )
+        .await
+        .unwrap();
+        session = image_parent.session.clone();
+        identity = image_parent.identity.clone();
+        let image_node = Node::new("message")
+            .attr("from", bob_jid.clone())
+            .attr("id", "IMAGE-PARENT")
+            .attr("t", "1000")
+            .attr("type", "media")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", image_parent.kind)
+                    .attr("v", "2")
+                    .bytes(image_parent.ciphertext.clone()),
+            ]);
+        let capture = preserve(&store, &image_node).unwrap();
+        assert_eq!(
+            process(&store, &alice_account, &image_node, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let caption_body = |caption: &str| {
+            let mut target = Vec::new();
+            prost::encoding::string::encode(3, &"IMAGE-PARENT".to_owned(), &mut target);
+            let mut protocol = Vec::new();
+            prost::encoding::bytes::encode(1, &target, &mut protocol);
+            protocol.extend_from_slice(b"\x10\x0e");
+            prost::encoding::bytes::encode(14, &image_payload(caption), &mut protocol);
+            prost::encoding::int64::encode(15, &6, &mut protocol);
+            let mut body = Vec::new();
+            prost::encoding::bytes::encode(12, &protocol, &mut body);
+            body
+        };
+        let caption_edit = direct::prepare_payload(
+            &bob_account,
+            &alice_jid,
+            None,
+            Some(&session),
+            Some(&identity),
+            &caption_body("new caption"),
+        )
+        .await
+        .unwrap();
+        session = caption_edit.session.clone();
+        identity = caption_edit.identity.clone();
+        let caption_node = Node::new("message")
+            .attr("from", bob_jid.clone())
+            .attr("id", "IMAGE-EDIT-0")
+            .attr("t", "1060")
+            .attr("type", "text")
+            .attr("edit", "1")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", caption_edit.kind)
+                    .attr("v", "2")
+                    .bytes(caption_edit.ciphertext.clone()),
+            ]);
+        let capture = preserve(&store, &caption_node).unwrap();
+        assert_eq!(
+            process(&store, &alice_account, &caption_node, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("media-edit-inside").unwrap(),
+                    crate::model::ids::EventCursor::START,
+                    20,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::MessageUpdated(update) = &events.events.last().unwrap().event
+        else {
+            panic!("media caption edit inside the window was not applied")
+        };
+        assert_eq!(update.key.id.as_str(), "IMAGE-PARENT");
+        assert!(matches!(
+            &update.change,
+            crate::model::message::MessageChange::Edited(content)
+                if matches!(
+                    &**content,
+                    crate::model::message::MessageContent::Media { caption, reference, .. }
+                        if caption.as_deref() == Some("new caption")
+                            && reference.kind == crate::model::message::MediaKind::Image
+                )
+        ));
+        // One second past the window is refused and the chain still advances.
+        let late = direct::prepare_payload(
+            &bob_account,
+            &alice_jid,
+            None,
+            Some(&session),
+            Some(&identity),
+            &caption_body("late caption"),
+        )
+        .await
+        .unwrap();
+        let late_node = Node::new("message")
+            .attr("from", bob_jid.clone())
+            .attr("id", "IMAGE-EDIT-1")
+            .attr("t", "1061")
+            .attr("type", "text")
+            .attr("edit", "1")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", late.kind)
+                    .attr("v", "2")
+                    .bytes(late.ciphertext.to_vec()),
+            ]);
+        let capture = preserve(&store, &late_node).unwrap();
+        assert_eq!(
+            process(&store, &alice_account, &late_node, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert!(unsupported("media-edit-outside"));
     }
 
     #[tokio::test]

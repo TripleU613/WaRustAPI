@@ -52,8 +52,18 @@ is a saved authenticated direct message from that peer, and
 comparison). The value is read with the same collection rules as
 `abprops::property_value`; no default is invented, so without a settled value
 the edit is captured but published as an unsupported event instead of changing
-the parent. Own-device edits keep their existing path; media-caption replacement
-windows remain unported.
+the parent. Own-device edits keep their existing path.
+
+**Media caption edits (implemented 2026-11-22):** when the replacement carries
+a media caption (image, video or document), the parent's saved payload is
+projected through `media::event_content` under its own record key, so the
+original attachment (including its sealed reference) is preserved, and only the
+caption changes. The replacement kind must equal the parent's saved kind
+(`152.A00 0b76..0bd6`); video/GIF share the model kind, so a GIF parent is
+edited as a video replacement, matching the APK's `3`/`13` allowance. Quoted,
+expiring, view-once and unknown-mime parents project to no content and stay
+unsupported. A group parent uses the participant-scoped group record the same
+way; only the direct case has an encrypted regression today.
 
 **Group peer edits (implemented 2026-11-22):** a group edit resolves its parent
 through the participant-scoped group record (`group_inbox::select`), so the
@@ -67,7 +77,9 @@ Encrypted regressions:
 `group_peer_edit_receive_applies_only_inside_the_settled_window` (no property,
 inside, one second past the boundary, sender chain still advances) plus
 `peer_edit_applies_only_inside_the_settled_window` (missing parent) and
-`group_peer_edit` coverage through `publish`.
+`group_peer_edit` coverage through `publish`. The direct encrypted regression
+also covers an image parent with a caption replacement (caption changes,
+`reference.kind` stays `Image`) and a one-second-late caption edit refused.
 
 ## Receive behavior
 

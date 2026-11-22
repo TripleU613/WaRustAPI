@@ -348,11 +348,27 @@ fn unsupported_event(key: &[u8]) -> SyncEvent {
     })
 }
 
+struct DirectEditParent {
+    parent: DirectRevokeParent,
+    /// Decrypted original payload; used to reconstruct a media parent.
+    plaintext: Option<Vec<u8>>,
+    /// Inbox record key, the media-reference seal binding for that payload.
+    record_key: String,
+}
+
 fn direct_parent(
     tx: &WriteTx<'_>,
     node: &Node,
     id: MessageId,
 ) -> Result<Option<DirectRevokeParent>> {
+    Ok(direct_parent_edit(tx, node, id)?.map(|parent| parent.parent))
+}
+
+fn direct_parent_edit(
+    tx: &WriteTx<'_>,
+    node: &Node,
+    id: MessageId,
+) -> Result<Option<DirectEditParent>> {
     let target = node.clone().attr("id", id.as_str());
     let Some(record) =
         super::inbox::direct_record_in(&target, |k| tx.get_json(Table::Checkpoints, k, 1))?
@@ -404,14 +420,18 @@ fn direct_parent(
     } else {
         (DeviceAddress::from_jid(&record.chat)?, None)
     };
-    Ok(Some(DirectRevokeParent {
-        server_timestamp,
-        key: MessageKey {
-            chat: ChatId::from_jid(&record.chat)?,
-            sender: Some(sender),
-            direction: Direction::Incoming,
-            id,
+    Ok(Some(DirectEditParent {
+        parent: DirectRevokeParent {
+            server_timestamp,
+            key: MessageKey {
+                chat: ChatId::from_jid(&record.chat)?,
+                sender: Some(sender),
+                direction: Direction::Incoming,
+                id,
+            },
         },
+        plaintext: serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).ok(),
+        record_key: record.key,
     }))
 }
 
@@ -438,7 +458,7 @@ fn peer_edit_event(
     }
     // The parent's key and server time come from the authenticated saved route;
     // direct and group records use different selectors.
-    let (target, parent_time) =
+    let (target, parent_time, parent_payload, parent_seal) =
         match super::inbox::group_sender(node) {
             Some((chat, actor)) => {
                 if actor.agent != 0 {
@@ -469,13 +489,20 @@ fn peer_edit_event(
                         id: edit.target_id.clone(),
                     },
                     parent_time,
+                    serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()).ok(),
+                    Some(selected.key.clone().into_bytes()),
                 )
             }
             None => {
-                let Some(parent) = direct_parent(tx, node, edit.target_id.clone())? else {
+                let Some(parent) = direct_parent_edit(tx, node, edit.target_id.clone())? else {
                     return Ok(Some(unsupported_event(key)));
                 };
-                (parent.key, parent.server_timestamp)
+                (
+                    parent.parent.key,
+                    parent.parent.server_timestamp,
+                    parent.plaintext,
+                    Some(parent.record_key.into_bytes()),
+                )
             }
         };
     let Some(window) =
@@ -500,15 +527,53 @@ fn peer_edit_event(
     {
         projection = projection.attr("participant", sender.to_jid());
     }
-    let SyncEvent::NewMessage(message) =
-        project(key, &projection, &edit.replacement, None, None, None, own)
-    else {
-        return Ok(Some(unsupported_event(key)));
+    // A media caption replacement edits the parent's existing attachment: the
+    // replacement carries only the caption, and its kind must match the saved
+    // parent (152.A00 0b76..0bd6). The reference is rebuilt under the parent's
+    // own record key, so it still opens the original media.
+    #[cfg(feature = "experimental-registration-https")]
+    let media_caption = super::media::caption_fields(&edit.replacement)?;
+    #[cfg(not(feature = "experimental-registration-https"))]
+    let media_caption: Option<super::media::MediaCaption> = None;
+    let content = if let Some(labels) = media_caption {
+        let (Some(parent_payload), Some(parent_seal)) = (&parent_payload, &parent_seal) else {
+            return Ok(Some(unsupported_event(key)));
+        };
+        let Some((mut content, _expiration)) =
+            super::media::event_content(tx, parent_seal, parent_payload, false)?
+        else {
+            return Ok(Some(unsupported_event(key)));
+        };
+        let parent_kind = match &content {
+            MessageContent::Text { .. } => Some(0),
+            MessageContent::Media { reference, .. } => match reference.kind {
+                crate::model::message::MediaKind::Image => Some(1),
+                crate::model::message::MediaKind::Video => Some(3),
+                crate::model::message::MediaKind::Document => Some(9),
+                _ => None,
+            },
+            _ => None,
+        };
+        if parent_kind != Some(labels.kind) {
+            return Ok(Some(unsupported_event(key)));
+        }
+        let MessageContent::Media { caption, .. } = &mut content else {
+            return Ok(Some(unsupported_event(key)));
+        };
+        *caption = labels.caption;
+        content
+    } else {
+        let SyncEvent::NewMessage(message) =
+            project(key, &projection, &edit.replacement, None, None, None, own)
+        else {
+            return Ok(Some(unsupported_event(key)));
+        };
+        message.content
     };
     Ok(Some(SyncEvent::MessageUpdated(
         crate::model::message::MessageUpdate {
             key: target,
-            change: crate::model::message::MessageChange::Edited(Box::new(message.content)),
+            change: crate::model::message::MessageChange::Edited(Box::new(content)),
             server_timestamp: Some(stanza),
         },
     )))
