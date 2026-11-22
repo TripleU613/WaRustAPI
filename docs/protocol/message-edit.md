@@ -45,6 +45,19 @@ effective integer property **2983** times 1000 at `042c..045a`. Its effective
 runtime value remains unresolved; this implementation does not invent 15 minutes.
 At `0b76..0bd6`, ordinary replacement and original kinds must agree.
 
+**Implemented offline (2026-11-22):** the receive path now applies a peer
+`MESSAGE_EDIT` only when a settled A/B reply returned property 2983, the target
+is a saved authenticated direct message from that peer, and
+`stanza_t − parent_t ≤ 2983` seconds (the boundary applies, like the APK's `>`
+comparison). The value is read with the same collection rules as
+`abprops::property_value`; no default is invented, so without a settled value
+the edit is captured but published as an unsupported event instead of changing
+the parent. Own-device edits keep their existing path; group peer edits and
+media-caption replacement windows remain unported. Encrypted regressions:
+`peer_edit_receive_applies_only_inside_the_settled_window` (no property,
+inside, one second past the boundary, ratchet still advances) and
+`peer_edit_applies_only_inside_the_settled_window` (missing parent).
+
 ## Receive behavior
 
 The existing account/source/recipient/held-pin/session guards authenticate and

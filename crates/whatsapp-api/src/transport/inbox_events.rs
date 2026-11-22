@@ -348,7 +348,7 @@ fn unsupported_event(key: &[u8]) -> SyncEvent {
     })
 }
 
-fn direct_sender_revoke_target(
+fn direct_parent(
     tx: &WriteTx<'_>,
     node: &Node,
     id: MessageId,
@@ -413,6 +413,63 @@ fn direct_sender_revoke_target(
             id,
         },
     }))
+}
+
+/// 43.72 `152.A00`: a peer MESSAGE_EDIT applies only inside the effective
+/// integer property 2983 (seconds) window, measured as the signed
+/// stanza-minus-parent server time. The property is read from a settled A/B
+/// reply; no default is invented, so without it the edit is not applied.
+/// Own-device edits (`recipient` set) go through `own_device_message`, and
+/// group peer edits are not ported here.
+fn peer_edit_event(
+    tx: &WriteTx<'_>,
+    key: &[u8],
+    node: &Node,
+    payload: &[u8],
+    own: &[crate::model::jid::Jid],
+) -> Result<Option<SyncEvent>> {
+    let Some(edit) = super::chat_settings::decode_edit(payload) else {
+        return Ok(None);
+    };
+    if super::inbox::group_sender(node).is_some() {
+        return Ok(None);
+    }
+    // The sender marks an edit with edit="1"; revoke/other versions are
+    // different operations and stay unsupported here.
+    if node.get_attr("edit").and_then(|v| v.as_text()) != Some("1") {
+        return Ok(Some(unsupported_event(key)));
+    }
+    let Some(parent) = direct_parent(tx, node, edit.target_id.clone())? else {
+        return Ok(Some(unsupported_event(key)));
+    };
+    let Some(window) =
+        super::abprops::property_value_in_write(tx, super::abprops::PEER_EDIT_WINDOW_PROPERTY)?
+    else {
+        return Ok(Some(unsupported_event(key)));
+    };
+    let (Some(stanza), Some(parent_time)) = (stanza_timestamp(node), parent.server_timestamp)
+    else {
+        return Ok(Some(unsupported_event(key)));
+    };
+    // Signed sub-long like the APK: a stanza earlier than the parent passes.
+    if stanza.0.wrapping_sub(parent_time.0) > i64::from(window).saturating_mul(1000) {
+        return Ok(Some(unsupported_event(key)));
+    }
+    let projection = Node::new("message")
+        .attr("from", parent.key.chat.jid().clone())
+        .attr("id", parent.key.id.as_str());
+    let SyncEvent::NewMessage(message) =
+        project(key, &projection, &edit.replacement, None, None, None, own)
+    else {
+        return Ok(Some(unsupported_event(key)));
+    };
+    Ok(Some(SyncEvent::MessageUpdated(
+        crate::model::message::MessageUpdate {
+            key: parent.key,
+            change: crate::model::message::MessageChange::Edited(Box::new(message.content)),
+            server_timestamp: Some(stanza),
+        },
+    )))
 }
 
 /// `own` lists this account's identities (phone-number and LID) so a quoted
@@ -1515,7 +1572,7 @@ pub(super) fn publish(
         if already_updated {
             None
         } else {
-            let parent = direct_sender_revoke_target(tx, node, id)?;
+            let parent = direct_parent(tx, node, id)?;
             if let Some(parent) = &parent {
                 revoke_too_old =
                     sender_revoke_too_old(parent.server_timestamp, stanza_timestamp(node));
@@ -1531,7 +1588,14 @@ pub(super) fn publish(
     if let Some(like) = super::status_receipts::like_from_payload(payload, node) {
         super::status_receipts::record_like_in(tx, &like)?;
     }
-    let projected = if revoke_too_old {
+    let peer_edit = if revoke_too_old {
+        None
+    } else {
+        peer_edit_event(tx, key, node, payload, &own)?
+    };
+    let projected = if let Some(event) = peer_edit {
+        event
+    } else if revoke_too_old {
         unsupported_event(key)
     } else {
         project(
@@ -1765,6 +1829,163 @@ mod tests {
         model::ids::{AccountId, EventCursor},
         store::{ConsumerId, MasterKey, OpenOptions, ProtocolStore, StaticKeySource},
     };
+    #[test]
+    fn peer_edit_applies_only_inside_the_settled_window() {
+        use crate::transport::{abprops, actions};
+        let peer = crate::model::jid::Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let parent = Node::new("message")
+            .attr("from", peer.clone())
+            .attr("id", "PEER-PARENT")
+            .attr("t", "1000");
+        let encode = |node: &Node| {
+            crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+                .encode(node)
+                .unwrap()
+        };
+        // Independent ProtocolMessage bytes: key.id=3, type=14, editedMessage=14.
+        let mut target = Vec::new();
+        prost::encoding::string::encode(3, &"PEER-PARENT".to_owned(), &mut target);
+        let mut protocol = Vec::new();
+        prost::encoding::bytes::encode(1, &target, &mut protocol);
+        protocol.extend_from_slice(b"\x10\x0e");
+        prost::encoding::bytes::encode(14, &b"\x0a\x06edited".to_vec(), &mut protocol);
+        let mut payload = Vec::new();
+        prost::encoding::bytes::encode(12, &protocol, &mut payload);
+        let edit = |t: &str| {
+            Node::new("message")
+                .attr("from", peer.clone())
+                .attr("id", "PEER-EDIT")
+                .attr("t", t)
+                .attr("edit", "1")
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("peer-edit.redb"),
+            account_id: AccountId::new("peer-edit").unwrap(),
+            create: true,
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([5; 32]))),
+        })
+        .unwrap();
+        let key = b"received:15551234567@s.whatsapp.net:PEER-EDIT";
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::Checkpoints,
+                    b"received:15551234567@s.whatsapp.net:PEER-PARENT",
+                    1,
+                    &serde_json::json!({
+                        "status": "decrypted",
+                        "route": encode(&parent),
+                        "protobuf": [1, 2, 3]
+                    }),
+                )
+            })
+            .unwrap();
+        let publish_edit =
+            |node: &Node| store.write(|tx| publish(tx, key, node, &payload)).unwrap();
+        // No settled property 2983: no invented default, the edit is not applied.
+        assert!(publish_edit(&edit("1060")));
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &ConsumerId::new("peer-edit").unwrap(),
+                    EventCursor::START,
+                    10,
+                )
+            })
+            .unwrap();
+        assert!(matches!(
+            events.events.last().unwrap().event,
+            SyncEvent::UnsupportedMessage(_)
+        ));
+        // The server returns the window in seconds.
+        let action = abprops::queue(&store).unwrap();
+        actions::reserve_pending(&store).unwrap();
+        actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", action.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "h").children(vec![
+                        Node::new("prop")
+                            .attr("config_code", "2983")
+                            .attr("config_value", "60"),
+                    ])]),
+        )
+        .unwrap();
+        let republished = |node: &Node| {
+            store
+                .write(|tx| {
+                    tx.delete(Table::Inbox, key)?;
+                    tx.delete(Table::Checkpoints, key)?;
+                    publish(tx, key, node, &payload)
+                })
+                .unwrap()
+        };
+        // Exactly the window boundary applies.
+        assert!(republished(&edit("1060")));
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &ConsumerId::new("peer-edit").unwrap(),
+                    EventCursor::START,
+                    10,
+                )
+            })
+            .unwrap();
+        let SyncEvent::MessageUpdated(update) = &events.events.last().unwrap().event else {
+            panic!("peer edit not applied inside the window")
+        };
+        assert_eq!(update.key.id.as_str(), "PEER-PARENT");
+        assert_eq!(update.key.chat.jid(), &peer);
+        assert_eq!(update.key.direction, Direction::Incoming);
+        assert!(matches!(
+            &update.change,
+            crate::model::message::MessageChange::Edited(content)
+                if matches!(&**content, MessageContent::Text { body, .. } if body == "edited")
+        ));
+        // One second past the window is refused like 152.A00.
+        assert!(republished(&edit("1061")));
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &ConsumerId::new("peer-edit").unwrap(),
+                    EventCursor::START,
+                    20,
+                )
+            })
+            .unwrap();
+        assert!(matches!(
+            events.events.last().unwrap().event,
+            SyncEvent::UnsupportedMessage(_)
+        ));
+        // A missing parent is never applied even inside the window.
+        store
+            .write(|tx| {
+                tx.delete(
+                    Table::Checkpoints,
+                    b"received:15551234567@s.whatsapp.net:PEER-PARENT",
+                )?;
+                tx.delete(Table::Inbox, key)?;
+                tx.delete(Table::Checkpoints, key)
+            })
+            .unwrap();
+        assert!(publish_edit(&edit("1060")));
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &ConsumerId::new("peer-edit").unwrap(),
+                    EventCursor::START,
+                    30,
+                )
+            })
+            .unwrap();
+        assert!(matches!(
+            events.events.last().unwrap().event,
+            SyncEvent::UnsupportedMessage(_)
+        ));
+    }
+
     #[test]
     fn backfill_capture_replacement_rolls_back_actual_publication_after_reopen() {
         for change in ["same", "replaced", "removed", "corrupt"] {
@@ -2367,7 +2588,7 @@ mod tests {
             })
             .unwrap();
         let target = store
-            .write(|tx| direct_sender_revoke_target(tx, &input, MessageId::new("abc")?))
+            .write(|tx| direct_parent(tx, &input, MessageId::new("abc")?))
             .unwrap()
             .unwrap();
         assert_eq!(target.key.sender.unwrap().to_jid(), device);

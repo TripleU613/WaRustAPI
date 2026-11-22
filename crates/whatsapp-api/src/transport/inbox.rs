@@ -3333,6 +3333,283 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn peer_edit_receive_applies_only_inside_the_settled_window() {
+        use crate::{
+            model::ids::AccountId,
+            session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+            signal::direct,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        use wacore_libsignal::protocol::{
+            DeviceId, GenericSignedPreKey, IdentityKeyPair, KeyPair, PreKeyBundle,
+            SignedPreKeyRecord, Timestamp as SignalTimestamp,
+        };
+        let alice = IdentityKeyPair::generate(&mut rand::rng());
+        let bob = IdentityKeyPair::generate(&mut rand::rng());
+        let alice_jid = Jid::parse("15555550101@s.whatsapp.net").unwrap();
+        let bob_jid = Jid::parse("15555550102@s.whatsapp.net").unwrap();
+        let account = |identity: &IdentityKeyPair, jid: Jid, id| AccountRecord {
+            own_jid: Some(jid),
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(id),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: identity.public_key().public_key_bytes().try_into().unwrap(),
+                private: *identity.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let alice_account = account(&alice, alice_jid.clone(), 31);
+        let bob_account = account(&bob, bob_jid.clone(), 42);
+        let signed = KeyPair::generate(&mut rand::rng());
+        let signature = alice
+            .private_key()
+            .calculate_signature(&signed.public_key.serialize(), &mut rand::rng())
+            .unwrap();
+        let bundle = PreKeyBundle::new(
+            31,
+            DeviceId::new(0),
+            None,
+            7.into(),
+            signed.public_key,
+            signature.to_vec(),
+            *alice.identity_key(),
+        )
+        .unwrap();
+        // Complete a handshake in memory so both sides hold an established
+        // `msg` session: bob's prekey message, alice's reply, bob consumes it.
+        let first = direct::prepare_payload(
+            &bob_account,
+            &alice_jid,
+            Some(&bundle),
+            None,
+            None,
+            b"\x0a\x04init",
+        )
+        .await
+        .unwrap();
+        let signed_record = SignedPreKeyRecord::new(
+            7.into(),
+            SignalTimestamp::from_epoch_millis(0),
+            &signed,
+            &signature,
+        )
+        .serialize()
+        .unwrap();
+        let handshake = direct::receive_prekey(
+            &alice_account,
+            &bob_jid,
+            (None, None),
+            &signed_record,
+            None,
+            &first.ciphertext,
+        )
+        .await
+        .unwrap();
+        let reply = direct::prepare_payload(
+            &alice_account,
+            &bob_jid,
+            None,
+            Some(&handshake.received.session),
+            Some(&handshake.identity),
+            b"\x0a\x05reply",
+        )
+        .await
+        .unwrap();
+        let settled = direct::receive(
+            &bob_account,
+            &alice_jid,
+            &first.session,
+            &first.identity,
+            &reply.ciphertext,
+        )
+        .await
+        .unwrap();
+        let parent = direct::prepare_payload(
+            &bob_account,
+            &alice_jid,
+            None,
+            Some(&settled.session),
+            Some(&first.identity),
+            b"\x0a\x06parent",
+        )
+        .await
+        .unwrap();
+        assert_eq!(parent.kind, "msg");
+        // Independent ProtocolMessage bytes: key.id=3, type=14, replacement 14.
+        let mut target = Vec::new();
+        prost::encoding::string::encode(3, &"PEER-PARENT".to_owned(), &mut target);
+        let mut protocol = Vec::new();
+        prost::encoding::bytes::encode(1, &target, &mut protocol);
+        protocol.extend_from_slice(b"\x10\x0e");
+        prost::encoding::bytes::encode(14, &b"\x0a\x06edited".to_vec(), &mut protocol);
+        prost::encoding::int64::encode(15, &5, &mut protocol);
+        let mut body = Vec::new();
+        prost::encoding::bytes::encode(12, &protocol, &mut body);
+        // Each edit is a fresh ratchet step; reusing one ciphertext would be a
+        // duplicate, not a second edit.
+        let mut session = parent.session.clone();
+        let mut identity = parent.identity.clone();
+        let mut edits = Vec::new();
+        for _ in 0..3 {
+            let prepared = direct::prepare_payload(
+                &bob_account,
+                &alice_jid,
+                None,
+                Some(&session),
+                Some(&identity),
+                &body,
+            )
+            .await
+            .unwrap();
+            session = prepared.session.clone();
+            identity = prepared.identity.clone();
+            edits.push(prepared);
+        }
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("peer-edit-receive.redb");
+        let open = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: path.clone(),
+                account_id: AccountId::new("peer-edit").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [31; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let store = open(true);
+        let selector = format!("comparison-direct:{bob_jid}");
+        store
+            .write(|tx| {
+                tx.put_json(
+                    Table::SignalSessions,
+                    selector.as_bytes(),
+                    1,
+                    &*reply.session,
+                )?;
+                tx.put_json(
+                    Table::PeerIdentities,
+                    selector.as_bytes(),
+                    1,
+                    &reply.identity,
+                )
+            })
+            .unwrap();
+        let parent_node = Node::new("message")
+            .attr("from", bob_jid.clone())
+            .attr("id", "PEER-PARENT")
+            .attr("t", "1000")
+            .attr("type", "text")
+            .children(vec![
+                Node::new("enc")
+                    .attr("type", parent.kind)
+                    .attr("v", "2")
+                    .bytes(parent.ciphertext.clone()),
+            ]);
+        let capture = preserve(&store, &parent_node).unwrap();
+        assert_eq!(
+            process(&store, &alice_account, &parent_node, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let edit_node = |index: usize, t: &str, id: &str| {
+            let edit = &edits[index];
+            Node::new("message")
+                .attr("from", bob_jid.clone())
+                .attr("id", id)
+                .attr("t", t)
+                .attr("type", "text")
+                .attr("edit", "1")
+                .children(vec![
+                    Node::new("enc")
+                        .attr("type", edit.kind)
+                        .attr("v", "2")
+                        .bytes(edit.ciphertext.to_vec()),
+                ])
+        };
+        // No settled property 2983 yet: the edit is captured but not applied.
+        let first_edit = edit_node(0, "1060", "PEER-EDIT-0");
+        let capture = preserve(&store, &first_edit).unwrap();
+        assert_eq!(
+            process(&store, &alice_account, &first_edit, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let unsupported = |consumer: &str| {
+            let events = store
+                .read(|tx| {
+                    tx.read_events(
+                        &crate::store::ConsumerId::new(consumer).unwrap(),
+                        crate::model::ids::EventCursor::START,
+                        10,
+                    )
+                })
+                .unwrap();
+            matches!(
+                events.events.last().unwrap().event,
+                crate::sync::SyncEvent::UnsupportedMessage(_)
+            )
+        };
+        assert!(unsupported("peer-edit-absent"));
+        // The server returns a 60 second window.
+        let action = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", action.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "h").children(vec![
+                        Node::new("prop")
+                            .attr("config_code", "2983")
+                            .attr("config_value", "60"),
+                    ])]),
+        )
+        .unwrap();
+        let second_edit = edit_node(1, "1060", "PEER-EDIT-1");
+        let capture = preserve(&store, &second_edit).unwrap();
+        assert_eq!(
+            process(&store, &alice_account, &second_edit, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("peer-edit-inside").unwrap(),
+                    crate::model::ids::EventCursor::START,
+                    10,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::MessageUpdated(update) = &events.events.last().unwrap().event
+        else {
+            panic!("peer edit inside the window was not applied")
+        };
+        assert_eq!(update.key.id.as_str(), "PEER-PARENT");
+        assert_eq!(update.key.chat.jid(), &bob_jid);
+        assert!(matches!(
+            &update.change,
+            crate::model::message::MessageChange::Edited(content)
+                if matches!(&**content, crate::model::message::MessageContent::Text { body, .. } if body == "edited")
+        ));
+        // One second past the window is refused, and the ratchet still advances.
+        let third_edit = edit_node(2, "1061", "PEER-EDIT-2");
+        let capture = preserve(&store, &third_edit).unwrap();
+        assert_eq!(
+            process(&store, &alice_account, &third_edit, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert!(unsupported("peer-edit-outside"));
+    }
+
+    #[tokio::test]
     async fn missing_sender_key_recovers_same_capture_after_distribution_without_resetting_retry() {
         use crate::signal::group::{
             commit_skdm, encrypt_group_payload, extract_skdm_from_payload, prepare_own_sender_key,

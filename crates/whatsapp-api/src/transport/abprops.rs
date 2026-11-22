@@ -30,6 +30,9 @@ const TOKEN_PENDING_NAMESPACE_PROPERTY: i32 = 14303;
 const PQ_KEYS_UPLOAD_PROPERTY: i32 = 0x52ce;
 // 43.72 08Y.A0Q registry: PQ inventory target (default 200) and upload batch
 // (default 10), captured by the 0WJ provider. Values are counts, not booleans.
+/// Peer message-edit window in seconds (`152.A00` at 042c..045a multiplies it
+/// by 1000 and compares it with the signed stanza-minus-parent time).
+pub const PEER_EDIT_WINDOW_PROPERTY: i32 = 2983;
 /// `0x5e60` (24160), the second `Can.A00` predicate input, registered false.
 pub const PQ_SUPPORT_PROPERTY: i32 = 0x5e60;
 /// Generation target for unsent one-time KEM keys (`0Yj.A00`).

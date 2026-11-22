@@ -85,10 +85,11 @@ not established by that fixture. No IDs, identities or reservations are rotated.
 exposes a settled reply's last value for any A/B code with the APK's
 collection rules (last duplicate wins, invalid last value hides, delta codes
 override and older replies supply the rest, a newer full reply defines the
-set). Currently applied: 21198 (PQ upload gate), 21200 (KEM inventory target)
-and 21201 (KEM upload batch, clamped locally to 1..=200). Not applied: 2983
-(peer edit window) and 23639/23463 (read-setting MEX/SMAX branch) still have
-no enabled consumer in this client, and MobileConfig precedence is unported.
+set). Currently applied: 21198 (PQ upload gate), 21200 (KEM inventory target),
+21201 (KEM upload batch, clamped locally to 1..=200) and 2983 (peer edit window
+in seconds; without a settled value a peer edit is not applied). Not applied:
+23639/23463 (read-setting MEX/SMAX branch) still has no enabled consumer, and
+MobileConfig precedence is unported.
 
 **Unknown / unfinished:** effective 35661 remains unknown until a supported
 response and complete resolver precedence are established. This command does
