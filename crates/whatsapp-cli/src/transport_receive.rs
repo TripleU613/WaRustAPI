@@ -1789,16 +1789,37 @@ pub(super) async fn run(
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create: false,
     })?;
-    let account = store
-        .read(AccountRecord::load)?
+    let snapshot = store.read_snapshot()?;
+    let account = AccountRecord::load(&snapshot)?
         .ok_or_else(|| Error::invalid("inbox", "missing account"))?;
-    let captures = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
-    if captures.len() == 10000 {
-        return Err(Error::invalid(
-            "inbox",
-            "checkpoint scan limit reached; pagination required",
-        ));
+    let mut keys = Vec::new();
+    // Preserve key order and snapshot membership while reading one value at a
+    // time. Replay writes must not feed new records back into this invocation.
+    for prefix in [
+        b"inbound:".as_slice(),
+        b"login-result:",
+        b"message:",
+        b"received-own:",
+        b"received:",
+    ] {
+        if !inspect && prefix.starts_with(b"received") {
+            continue;
+        }
+        snapshot.visit_checkpoint_keys(prefix, |key| {
+            if is_capture(key)
+                || (inspect && (key.starts_with(b"received") || key.ends_with(b":send")))
+            {
+                keys.push(key.to_vec());
+            }
+            Ok(())
+        })?;
     }
+    let read = |key: &[u8]| {
+        snapshot
+            .get(Table::Checkpoints, key, 1)?
+            .map(zeroize::Zeroizing::new)
+            .ok_or_else(|| Error::invalid("inbox", "capture disappeared from snapshot"))
+    };
     let limits = Limits::default();
     let mut count = 0;
     let mut capture_shapes = std::collections::BTreeSet::new();
@@ -1807,11 +1828,9 @@ pub(super) async fn run(
     let inspection_seconds = whatsapp_api::model::time::Timestamp::now().0 / 1000;
     if inspect {
         let own = account.own_jid.as_ref().map(|j| j.to_non_ad().to_string());
-        for (key, value) in &captures {
-            if !key.starts_with(b"received:") {
-                continue;
-            }
-            let Ok(saved) = serde_json::from_slice::<serde_json::Value>(value) else {
+        for key in keys.iter().filter(|key| key.starts_with(b"received:")) {
+            let value = read(key)?;
+            let Ok(saved) = serde_json::from_slice::<serde_json::Value>(&value) else {
                 continue;
             };
             let Ok(plain) = serde_json::from_value::<Vec<u8>>(saved["protobuf"].clone()) else {
@@ -2078,64 +2097,83 @@ pub(super) async fn run(
             }
         }
     }
-    let mut replayed = (0usize, 0usize, 0usize);
-    if replay_captures {
-        for (key, value) in &captures {
-            if !is_capture(key) {
-                continue;
+    let decode_capture = |value: &[u8]| -> Result<_, Error> {
+        let wire: Vec<u8> = serde_json::from_slice(value)
+            .map_err(|_| Error::invalid("inbox", "invalid capture"))?;
+        let raw = unpack_frame_payload(&wire, &limits)?;
+        Ok(Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits).decode_node()?)
+    };
+    let mut capture_error = None;
+    if replay_captures || !inspect {
+        use whatsapp_api::transport::inbox::IncomingResult;
+        let mut pending: Vec<_> = keys.iter().filter(|key| is_capture(key)).collect();
+        let mut duplicates = 0;
+        let mut unsupported = 0;
+        for pass in 0..2 {
+            let mut deferred = Vec::new();
+            for key in pending {
+                let node = match decode_capture(&read(key)?) {
+                    Ok(node) => node,
+                    Err(error) if replay_captures => {
+                        capture_error.get_or_insert(error);
+                        continue;
+                    }
+                    Err(error) => return Err(error),
+                };
+                if node.description != "message" {
+                    continue;
+                }
+                let result = whatsapp_api::transport::inbox::process_with_policy(
+                    &store,
+                    &account,
+                    &node,
+                    key,
+                    identity_policy,
+                )
+                .await?;
+                match result {
+                    IncomingResult::Decrypted => {
+                        count += 1;
+                        if !replay_captures {
+                            println!("inbox: authenticated payload committed; content redacted");
+                        }
+                    }
+                    IncomingResult::Duplicate => duplicates += 1,
+                    _ => {
+                        unsupported += 1;
+                        if pass == 0 && replay_captures && !inspect {
+                            deferred.push(key);
+                        }
+                        if !replay_captures && result != IncomingResult::Unsupported {
+                            println!(
+                                "inbox: a saved payload could not be decrypted; no receipt sent offline"
+                            );
+                        }
+                    }
+                }
             }
-            let Ok(wire) = serde_json::from_slice::<Vec<u8>>(value) else {
-                continue;
-            };
-            let Ok(raw) = unpack_frame_payload(&wire, &limits) else {
-                continue;
-            };
-            let Ok(node) =
-                Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits).decode_node()
-            else {
-                continue;
-            };
-            if node.description != "message" {
-                continue;
+            // A later capture can install the missing sender key for an earlier
+            // one. Keep the original second chance only for unresolved messages.
+            if count == 0 || deferred.is_empty() {
+                break;
             }
-            // The same durable path a live session uses: dedupe, atomic commit,
-            // no network. A stanza already committed returns Duplicate untouched.
-            match whatsapp_api::transport::inbox::process_with_policy(
-                &store,
-                &account,
-                &node,
-                &wire,
-                identity_policy,
-            )
-            .await?
-            {
-                whatsapp_api::transport::inbox::IncomingResult::Decrypted => replayed.0 += 1,
-                whatsapp_api::transport::inbox::IncomingResult::Duplicate => replayed.1 += 1,
-                // Offline replay sends nothing, so an undecryptable capture is
-                // counted with the unsupported rather than answered.
-                whatsapp_api::transport::inbox::IncomingResult::Unsupported
-                | whatsapp_api::transport::inbox::IncomingResult::InvalidSenderKeySignature
-                | whatsapp_api::transport::inbox::IncomingResult::SenderKeyFutureCounter
-                | whatsapp_api::transport::inbox::IncomingResult::MissingSenderKeyChain
-                | whatsapp_api::transport::inbox::IncomingResult::IncomingLocalPrekey
-                | whatsapp_api::transport::inbox::IncomingResult::UnknownSenderKeyVersion
-                | whatsapp_api::transport::inbox::IncomingResult::MissingSession
-                | whatsapp_api::transport::inbox::IncomingResult::Undecryptable => replayed.2 += 1,
-            }
+            unsupported -= deferred.len();
+            pending = deferred;
         }
-        println!(
-            "inbox: replayed preserved captures: {} newly decrypted, {} already committed, {} still unsupported (no network, no receipts sent)",
-            replayed.0, replayed.1, replayed.2
-        );
+        if replay_captures {
+            println!(
+                "inbox: replayed preserved captures: {count} newly decrypted, {duplicates} already committed, {unsupported} still unsupported (no network, no receipts sent)"
+            );
+        }
     }
-    for (key, value) in &captures {
-        if inspect {
+    if inspect {
+        for key in keys
+            .iter()
+            .filter(|key| is_capture(key) || key.starts_with(b"received"))
+        {
+            let value = read(key)?;
             if is_capture(key) {
-                let wire: Vec<u8> = serde_json::from_slice(value)
-                    .map_err(|_| Error::invalid("inbox", "invalid capture"))?;
-                let raw = unpack_frame_payload(&wire, &limits)?;
-                let node = Decoder::new(&raw, TokenDictionary::comparison_2_26_37_71(), &limits)
-                    .decode_node()?;
+                let node = decode_capture(&value)?;
                 let safe = |value: &str| {
                     value.len() <= 32
                         && value
@@ -2432,7 +2470,7 @@ pub(super) async fn run(
                 }
             }
             if key.starts_with(b"received:") || key.starts_with(b"received-own:") {
-                let mut saved: serde_json::Value = serde_json::from_slice(value)
+                let mut saved: serde_json::Value = serde_json::from_slice(&value)
                     .map_err(|_| Error::invalid("inbox", "invalid saved payload"))?;
                 if saved["status"] == "consumed" {
                     println!("inbox: view-once attachment consumed; content unavailable");
@@ -2460,40 +2498,6 @@ pub(super) async fn run(
                     protobuf.len()
                 );
             }
-            continue;
-        }
-        if !is_capture(key) {
-            continue;
-        }
-        let bytes: Vec<u8> = serde_json::from_slice(value)
-            .map_err(|_| Error::invalid("inbox", "invalid capture"))?;
-        let unpacked = unpack_frame_payload(&bytes, &limits)?;
-        let node = Decoder::new(&unpacked, TokenDictionary::comparison_2_26_37_71(), &limits)
-            .decode_node()?;
-        match whatsapp_api::transport::inbox::process_with_policy(
-            &store,
-            &account,
-            &node,
-            key,
-            identity_policy,
-        )
-        .await?
-        {
-            whatsapp_api::transport::inbox::IncomingResult::Decrypted => {
-                count += 1;
-                println!("inbox: authenticated payload committed; content redacted");
-            }
-            whatsapp_api::transport::inbox::IncomingResult::Duplicate => {}
-            whatsapp_api::transport::inbox::IncomingResult::Unsupported => {}
-            whatsapp_api::transport::inbox::IncomingResult::InvalidSenderKeySignature
-            | whatsapp_api::transport::inbox::IncomingResult::SenderKeyFutureCounter
-            | whatsapp_api::transport::inbox::IncomingResult::MissingSenderKeyChain
-            | whatsapp_api::transport::inbox::IncomingResult::IncomingLocalPrekey
-            | whatsapp_api::transport::inbox::IncomingResult::UnknownSenderKeyVersion
-            | whatsapp_api::transport::inbox::IncomingResult::MissingSession
-            | whatsapp_api::transport::inbox::IncomingResult::Undecryptable => {
-                println!("inbox: a saved payload could not be decrypted; no receipt sent offline");
-            }
         }
     }
     for shape in capture_shapes {
@@ -2505,8 +2509,9 @@ pub(super) async fn run(
         // send that caused it. Request ids are the operator's own labels.
         // Where each received message came from, last four characters only —
         // enough to check a reply or reaction names the right sender.
-        for (key, value) in &captures {
-            let saved: serde_json::Value = serde_json::from_slice(value).unwrap_or_default();
+        for key in keys.iter().filter(|key| key.starts_with(b"received:")) {
+            let value = read(key)?;
+            let saved: serde_json::Value = serde_json::from_slice(&value).unwrap_or_default();
             if let Some((sender, id)) = std::str::from_utf8(key)
                 .ok()
                 .and_then(|k| k.strip_prefix("received:"))
@@ -2531,7 +2536,7 @@ pub(super) async fn run(
                 );
             }
         }
-        for (key, value) in &captures {
+        for key in &keys {
             let Some(request) = std::str::from_utf8(key)
                 .ok()
                 .and_then(|k| k.strip_prefix("message:"))
@@ -2539,7 +2544,8 @@ pub(super) async fn run(
             else {
                 continue;
             };
-            let Ok(saved) = serde_json::from_slice::<serde_json::Value>(value) else {
+            let value = read(key)?;
+            let Ok(saved) = serde_json::from_slice::<serde_json::Value>(&value) else {
                 continue;
             };
             let wire = saved["wire_id"]
@@ -2551,6 +2557,9 @@ pub(super) async fn run(
                 saved["status"].as_str().unwrap_or("?")
             );
         }
+    }
+    if let Some(error) = capture_error {
+        return Err(error);
     }
     println!("inbox: {count} newly decrypted payloads; no network requests");
     Ok(())

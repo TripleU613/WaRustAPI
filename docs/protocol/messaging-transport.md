@@ -225,10 +225,34 @@ open or prefetch, and the first image remains independently usable. The APK
 2.26.43.72 `DiL.dynamicMethod` descriptor confirms the image view-once field
 at tag 25. The selector and history lookup are local Rust behavior. [APK fields](apk/2.26.43.72-media-image-ingress/image-fields.txt)
 
-**Still open.** The separate `lab-inbox` inspection and capture replay command
-checks the first 10,000 checkpoints before processing either mode. It can
-still report `checkpoint scan limit reached; pagination required` in a large
-store. The view-once list and selector bypass that diagnostic command.
+### Offline inbox recovery in large stores
+
+**Confirmed in Rust, offline.** `lab-inbox`, `--inspect` and
+`--replay-captures` previously failed as soon as the store held 10,000
+checkpoints. They now select inbox, capture and inspection keys in one
+database snapshot and read each value as needed. Historical login results and
+frames preserved while sending remain eligible. The scan also keeps previously
+consumed or cleared payloads out of diagnostic content, as before.
+
+Explicit replay used to save the frame bytes in the recovered record's
+`capture` field. Consumers use that field as a database key. Newly recovered
+records now carry the original capture key, just as they do after live
+receive. Existing committed records retain their original bytes. When replay
+commits a message, an earlier unresolved capture can receive one further
+offline attempt in case the commit installed a needed key. The summary counts
+each resolved capture once. Explicit replay reports a malformed capture as an
+error after trying the other decodable frames. No receipt or network operation
+runs here.
+
+The command-line regression reopens a store containing 10,000 unrelated
+checkpoints, a preserved encrypted group message and an installed sender key.
+Inspection finds the capture without advancing the journal. Replay decrypts
+the expected text, stores the original capture key and appends one event. A
+second replay and a subsequent default invocation preserve the inbox record,
+sender-key state and journal position. This checks local recovery and storage.
+The encrypted fixture uses the ordinary group `skmsg` child. A fresh export of
+APK 2.26.43.72 `EuN.A01` matched the retained parser byte for byte. The selected
+parser assigns this child to the group ciphertext slot. [APK parser and field evidence](media-network-outcomes.md#last-group-ciphertext-descriptor-and-consistent-routing-2026-11-07)
 
 ### Voice-note extension
 

@@ -459,11 +459,7 @@ impl ProtocolStore {
                         if acct != opts.account_id.as_str().as_bytes() {
                             return Err(StoreError::AccountMismatch.into());
                         }
-                        let generation = meta
-                            .get(META_GENERATION)
-                            .map_err(StoreError::from)?
-                            .map(|g| AccountGeneration(bytes_to_u32(g.value())))
-                            .unwrap_or(AccountGeneration(1));
+                        let generation = stored_generation(&meta)?;
                         let wrapped = meta
                             .get(META_WRAPPED_KEYS)
                             .map_err(StoreError::from)?
@@ -602,13 +598,19 @@ impl ProtocolStore {
 
     /// Run a read transaction.
     pub fn read<T>(&self, f: impl FnOnce(&ReadTx<'_>) -> Result<T>) -> Result<T> {
+        f(&self.read_snapshot()?)
+    }
+
+    /// Open one consistent read snapshot for multi-pass inspection. Drop the
+    /// snapshot when finished so redb can reclaim pages retained by later writes.
+    pub fn read_snapshot(&self) -> Result<ReadTx<'_>> {
         let tx = self.db.begin_read().map_err(StoreError::from)?;
-        let rtx = ReadTx {
+        let generation = stored_generation(&tx.open_table(META).map_err(StoreError::from)?)?;
+        Ok(ReadTx {
             store: self,
-            tx: &tx,
-            generation: self.generation(),
-        };
-        f(&rtx)
+            tx,
+            generation,
+        })
     }
 
     /// Run a write transaction with durable commit. If `f` fails, nothing is
@@ -716,6 +718,16 @@ fn unwrap_keys(master: &MasterKey, salt: &[u8; 32], wrapped: &[u8]) -> Result<Da
     }
 }
 
+fn stored_generation<T: ReadableTable<&'static str, &'static [u8]>>(
+    meta: &T,
+) -> Result<AccountGeneration> {
+    Ok(meta
+        .get(META_GENERATION)
+        .map_err(StoreError::from)?
+        .map(|g| AccountGeneration(bytes_to_u32(g.value())))
+        .unwrap_or(AccountGeneration(1)))
+}
+
 fn read_salt<T: ReadableTable<&'static str, &'static [u8]>>(meta: &T) -> Result<[u8; 32]> {
     let salt_v = meta
         .get(META_SALT)
@@ -786,7 +798,7 @@ fn from_json<T: for<'de> Deserialize<'de>>(b: &[u8]) -> Result<T> {
 /// A read transaction.
 pub struct ReadTx<'a> {
     store: &'a ProtocolStore,
-    tx: &'a redb::ReadTransaction,
+    tx: redb::ReadTransaction,
     generation: AccountGeneration,
 }
 
@@ -1005,7 +1017,7 @@ impl ReadTx<'_> {
         feature = "experimental-noise",
         feature = "experimental-transport"
     ))]
-    pub(crate) fn visit_checkpoint_keys(
+    pub fn visit_checkpoint_keys(
         &self,
         prefix: &[u8],
         mut visit: impl FnMut(&[u8]) -> Result<()>,
