@@ -402,8 +402,16 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
     let local = saved_noise_identity(&account)?;
     let payload = login
         .then(|| {
+            use whatsapp_api::transport::login;
             let saved_name = whatsapp_api::transport::presence::saved_push_name(&store)?;
-            whatsapp_api::transport::login::primary_login(&account, &config, saved_name.as_deref())
+            // One explicit CLI connection: the user-activated trigger, with the
+            // persisted finished-attempt counter and a fresh random session id.
+            let connection = login::LoginConnection::for_attempt(
+                whatsapp_api::proto::wa_web_protobufs_wa6::client_payload::ConnectReason::UserActivated,
+                login::connection_attempts(&store)?,
+                login::new_session_id()?,
+            );
+            login::primary_login(&account, &config, saved_name.as_deref(), &connection)
         })
         .transpose()?;
     const LOGIN_KEY: &[u8] = b"comparison-primary-login-v1";
@@ -490,6 +498,8 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
             payload.len()
         );
         let mut channel = verified.finish(&payload).await.map_err(map)?;
+        // 43.72 `X.1jy.A05`: count the attempt once its login was written.
+        whatsapp_api::transport::login::record_finished_connection(&store)?;
         let frame = channel.read().await.map_err(map)?.ok_or_else(|| {
             Error::invalid(
                 "transport",

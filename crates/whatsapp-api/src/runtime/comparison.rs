@@ -1,5 +1,6 @@
 //! Explicit comparison driver for the normal account actor API.
 use super::*;
+use crate::proto::wa_web_protobufs_wa6::client_payload::ConnectReason;
 use crate::registration::request::LabRegistrationConfig;
 
 /// Spawn an opt-in live-capable actor. No network occurs until `connect`.
@@ -38,6 +39,9 @@ struct WorkerInput {
     ready: oneshot::Sender<()>,
     send_outbox: bool,
     ticket: Option<crate::model::ids::LocalMessageId>,
+    /// Trigger reported in the login payload: an explicit request is the APK's
+    /// user-activated case, a scheduled retry is its `UNKNOWN` default.
+    reason: ConnectReason,
 }
 fn start_connection(input: WorkerInput) -> tokio::task::JoinHandle<Result<()>> {
     tokio::spawn(crate::transport::connection::run(
@@ -46,8 +50,11 @@ fn start_connection(input: WorkerInput) -> tokio::task::JoinHandle<Result<()>> {
         input.epoch,
         input.stop,
         input.ready,
-        input.send_outbox,
-        input.ticket,
+        crate::transport::connection::RunOptions {
+            send_outbox: input.send_outbox,
+            ticket: input.ticket,
+            reason: input.reason,
+        },
     ))
 }
 struct Running {
@@ -107,6 +114,7 @@ impl Launcher {
         epoch: &mut ConnectionEpoch,
         status: &watch::Sender<ConnectionStatus>,
         waiters: Vec<oneshot::Sender<Result<()>>>,
+        reason: ConnectReason,
     ) -> Running {
         *epoch = epoch.next();
         set(
@@ -124,6 +132,7 @@ impl Launcher {
             ready: ready_tx,
             send_outbox: self.send_outbox,
             ticket: self.ticket,
+            reason,
         });
         Running {
             task,
@@ -194,7 +203,7 @@ async fn actor(
                         let mut waiters=backoff.take().map(|b|b.waiters).unwrap_or_default();
                         if waiters.len()<64 {waiters.push(reply);} else {let _=reply.send(Err(Error::invalid("connect","too many waiting callers")));}
                         attempts=0;
-                        running=Some(launcher.launch(&mut start,&mut epoch,&status,waiters));
+                        running=Some(launcher.launch(&mut start,&mut epoch,&status,waiters,ConnectReason::UserActivated));
                     },
                     Some(Command::Disconnect{reply})=> {
                         if let Some(mut run)=running.take() {
@@ -216,7 +225,7 @@ async fn actor(
             }
             _ = tokio::time::sleep_until(retry_at.unwrap_or_else(tokio::time::Instant::now)), if retry_at.is_some() => {
                 let waiters=backoff.take().map(|b|b.waiters).unwrap_or_default();
-                running=Some(launcher.launch(&mut start,&mut epoch,&status,waiters));
+                running=Some(launcher.launch(&mut start,&mut epoch,&status,waiters,ConnectReason::Unknown));
             }
             event=worker_event(&mut running)=> { match event {
             WorkerEvent::Finished(result)=> {
@@ -512,6 +521,7 @@ mod tests {
     struct Launch {
         epoch: ConnectionEpoch,
         reserved_now: bool,
+        reason: ConnectReason,
         ready: oneshot::Sender<()>,
         end: oneshot::Sender<Result<()>>,
     }
@@ -559,6 +569,7 @@ mod tests {
                         .send(Launch {
                             epoch: input.epoch,
                             reserved_now,
+                            reason: input.reason,
                             ready: input.ready,
                             end,
                         })
@@ -665,6 +676,8 @@ mod tests {
             (first.epoch, first.reserved_now),
             (ConnectionEpoch(1), true)
         );
+        // The explicit request is the APK's user-activated trigger.
+        assert_eq!(first.reason, ConnectReason::UserActivated);
         first.ready.send(()).unwrap();
         connect.await.unwrap().unwrap();
         let checkpoint = format!("outbox-key-query:{}", ticket.local_id);
@@ -697,6 +710,9 @@ mod tests {
             (second.epoch, second.reserved_now),
             (ConnectionEpoch(2), false)
         );
+        // A scheduled retry carries the APK's UNKNOWN reason, never a claim
+        // that a user just opened the app.
+        assert_eq!(second.reason, ConnectReason::Unknown);
         assert_eq!(
             h.runtime.current().state,
             ConnectionState::Connecting {
@@ -735,6 +751,7 @@ mod tests {
             let launch = next_launch(&mut h).await;
             assert_eq!(launch.epoch, ConnectionEpoch(expected_epoch));
             assert!(!launch.reserved_now);
+            assert_eq!(launch.reason, ConnectReason::Unknown);
             launch.ready.send(()).unwrap();
             launch.end.send(peer_closed()).unwrap();
             let waiting = wait_state(&mut status, |s| {

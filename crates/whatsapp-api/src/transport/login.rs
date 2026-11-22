@@ -11,10 +11,97 @@ use crate::proto::wa_web_protobufs_wa6::{
 };
 use crate::{
     Error, Result, registration::request::LabRegistrationConfig,
-    registration::request::TrafficAnonymization, session::AccountRecord,
+    registration::request::TrafficAnonymization, session::AccountRecord, store::ProtocolStore,
 };
 use prost::Message;
 use zeroize::Zeroizing;
+
+/// Checkpoint holding the persisted connection counter.
+///
+/// APK 2.26.43.72 `X.1jy.A05` increments `connection_lc` in `startup_prefs`
+/// after a connection attempt finishes and the filler reads it back
+/// (`AnonymousClass270` case 459). This key is the same counter in this client.
+const CONNECTION_COUNTER: &[u8] = b"comparison-connection-counter-v1";
+
+/// Connection facts the APK's identity filler writes into every login payload
+/// (`AnonymousClass270` case 459, `X.1n9`).
+///
+/// * `reason`: the filler writes `UNKNOWN` first and upgrades to
+///   `USER_ACTIVATED`/`PUSH` only within ten seconds of that trigger, so an
+///   automatic reconnect carries `UNKNOWN`.
+/// * `attempts`/`lifetime_connections`: both count finished connection attempts.
+///   The APK keeps `lc` in preferences and the thread's attempt counter in
+///   memory; this client models both with the persisted counter, so after a
+///   restart the second can be larger than the APK's in-memory value.
+/// * `session_id`: the APK generates a random `int` when a socket connects
+///   (`ConnectionThread/tryOpenSocket: socket connected; sessionId=…`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LoginConnection {
+    /// `connectReason` (13).
+    pub reason: ConnectReason,
+    /// `connectAttemptCount` (16).
+    pub attempts: u32,
+    /// `sessionId` (9).
+    pub session_id: i32,
+    /// `lc` (24).
+    pub lifetime_connections: u32,
+}
+
+impl LoginConnection {
+    /// Facts for one attempt. `finished` is the persisted number of attempts
+    /// that already completed before this one.
+    pub fn for_attempt(reason: ConnectReason, finished: u32, session_id: i32) -> Self {
+        Self {
+            reason,
+            attempts: finished,
+            session_id,
+            lifetime_connections: finished,
+        }
+    }
+}
+
+/// Persisted number of connection attempts that have finished.
+pub fn connection_attempts(store: &ProtocolStore) -> Result<u32> {
+    let value: Option<serde_json::Value> =
+        store.read(|tx| tx.get_json(crate::store::Table::Checkpoints, CONNECTION_COUNTER, 1))?;
+    match value.and_then(|value| value["finished"].as_u64()) {
+        Some(finished) => u32::try_from(finished)
+            .map_err(|_| Error::invalid("login", "saved connection counter is out of range")),
+        None => Ok(0),
+    }
+}
+
+/// Count one finished connection attempt, wrapping like `X.1jy.A05`
+/// (`Integer.MAX_VALUE` becomes 0).
+pub fn record_finished_connection(store: &ProtocolStore) -> Result<()> {
+    store.write(|tx| {
+        let previous: Option<serde_json::Value> =
+            tx.get_json(crate::store::Table::Checkpoints, CONNECTION_COUNTER, 1)?;
+        let finished = previous
+            .as_ref()
+            .and_then(|value| value["finished"].as_u64())
+            .unwrap_or(0);
+        let finished = if finished >= i32::MAX as u64 {
+            0
+        } else {
+            finished + 1
+        };
+        tx.put_json(
+            crate::store::Table::Checkpoints,
+            CONNECTION_COUNTER,
+            1,
+            &serde_json::json!({"finished": finished}),
+        )
+    })
+}
+
+/// One random `int` per socket connection, as the APK generates.
+pub fn new_session_id() -> Result<i32> {
+    let mut bytes = [0u8; 4];
+    getrandom::fill(&mut bytes)
+        .map_err(|_| Error::invalid("login", "entropy source failed for a session id"))?;
+    Ok(i32::from_le_bytes(bytes))
+}
 
 /// Observed-credential name holding the app version an account registered
 /// with (`2.26.43.72`), written by signup on completion.
@@ -73,6 +160,7 @@ pub fn primary_login(
     account: &AccountRecord,
     config: &LabRegistrationConfig,
     push_name: Option<&str>,
+    connection: &LoginConnection,
 ) -> Result<Zeroizing<Vec<u8>>> {
     config.validate()?;
     if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
@@ -125,7 +213,11 @@ pub fn primary_login(
         username: Some(username),
         passive: Some(false),
         short_connect: Some(false),
-        connect_reason: Some(ConnectReason::UserActivated as i32),
+        // 43.72 `X.1n9`: UNKNOWN unless a user trigger is under ten seconds old.
+        connect_reason: Some(connection.reason as i32),
+        connect_attempt_count: Some(connection.attempts),
+        session_id: Some(connection.session_id),
+        lc: Some(connection.lifetime_connections as i32),
         ..Default::default()
     };
     if let Some(device) = &config.client.device {
@@ -168,6 +260,10 @@ mod tests {
         model::time::Timestamp,
         session::{ObservedCredential, RegistrationStatus},
     };
+
+    fn connection() -> LoginConnection {
+        LoginConnection::for_attempt(ConnectReason::UserActivated, 3, 123456)
+    }
     #[test]
     fn uses_saved_login_and_omits_unknown_device_claims() {
         let mut cfg: LabRegistrationConfig =
@@ -184,7 +280,7 @@ mod tests {
             }],
             ..Default::default()
         };
-        let bytes = primary_login(&account, &cfg, None).unwrap();
+        let bytes = primary_login(&account, &cfg, None, &connection()).unwrap();
         let payload = ClientPayload::decode(bytes.as_slice()).unwrap();
         assert_eq!(
             payload.username,
@@ -204,8 +300,12 @@ mod tests {
             observed_at: Timestamp(0),
             source_step: None,
         });
-        let payload =
-            ClientPayload::decode(primary_login(&account, &cfg, None).unwrap().as_slice()).unwrap();
+        let payload = ClientPayload::decode(
+            primary_login(&account, &cfg, None, &connection())
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
         let version = payload.user_agent.unwrap().app_version.unwrap();
         assert_eq!((version.tertiary, version.quaternary), (Some(43), Some(72)));
         account.credentials.pop();
@@ -215,9 +315,9 @@ mod tests {
         );
         assert_eq!(parse_app_version("WhatsApp/2.26"), None);
         account.credentials[0].value = Zeroizing::new(b"not-numeric".to_vec());
-        assert!(primary_login(&account, &cfg, None).is_err());
+        assert!(primary_login(&account, &cfg, None, &connection()).is_err());
         account.credentials.clear();
-        assert!(primary_login(&account, &cfg, None).is_err());
+        assert!(primary_login(&account, &cfg, None, &connection()).is_err());
     }
     fn version_fixture() -> (LabRegistrationConfig, AccountRecord) {
         let mut config: LabRegistrationConfig =
@@ -255,7 +355,7 @@ mod tests {
         ] {
             let mut account = original.clone();
             account.credentials.push(version_credential(value));
-            let error = primary_login(&account, &config, None).unwrap_err();
+            let error = primary_login(&account, &config, None, &connection()).unwrap_err();
             assert_eq!(
                 error.to_string(),
                 "invalid input for `login`: saved app version is malformed"
@@ -265,7 +365,7 @@ mod tests {
         let mut account = original;
         account.credentials.push(version_credential(b"2.26.43.72"));
         account.credentials.push(version_credential(b"2.26.37.70"));
-        let error = primary_login(&account, &config, None).unwrap_err();
+        let error = primary_login(&account, &config, None, &connection()).unwrap_err();
         assert_eq!(
             error.to_string(),
             "invalid input for `login`: saved app versions conflict"
@@ -279,15 +379,18 @@ mod tests {
         account.credentials.push(version_credential(b"2.26.43.72"));
         config.client.user_agent = Some(Zeroizing::new("private-agent-without-version".into()));
         // A valid saved fact still wins over unrelated mutable config.
-        let payload =
-            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
-                .unwrap();
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, None, &connection())
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
         let version = payload.user_agent.unwrap().app_version.unwrap();
         assert_eq!((version.tertiary, version.quaternary), (Some(43), Some(72)));
         account
             .credentials
             .retain(|c| c.name != REGISTERED_APP_VERSION);
-        let error = primary_login(&account, &config, None).unwrap_err();
+        let error = primary_login(&account, &config, None, &connection()).unwrap_err();
         assert_eq!(
             error.to_string(),
             "invalid input for `login`: configured User-Agent has no valid app version"
@@ -333,9 +436,12 @@ mod tests {
     fn configured_device_facts_fill_the_android_user_agent() {
         let (config, account) = device_config();
         config.validate().unwrap();
-        let payload =
-            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
-                .unwrap();
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, None, &connection())
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
         let ua = payload.user_agent.unwrap();
         assert_eq!(ua.platform, Some(Platform::Android as i32));
         assert_eq!(ua.mcc.as_deref(), Some("000"));
@@ -364,9 +470,12 @@ mod tests {
     fn absent_or_partial_device_facts_are_not_invented() {
         let (mut config, account) = version_fixture();
         config.client.device = None;
-        let payload =
-            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
-                .unwrap();
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, None, &connection())
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
         assert_eq!(payload.year_class, None);
         assert_eq!(payload.mem_class, None);
         assert_eq!(payload.traffic_anonymization, None);
@@ -378,9 +487,12 @@ mod tests {
             os_version: Some(Zeroizing::new("13".into())),
             ..Default::default()
         });
-        let payload =
-            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
-                .unwrap();
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, None, &connection())
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
         let ua = payload.user_agent.unwrap();
         assert_eq!(ua.os_version.as_deref(), Some("13"));
         assert_eq!(ua.device, None);
@@ -391,25 +503,110 @@ mod tests {
     }
 
     #[test]
+    fn connection_facts_match_the_traced_filler() {
+        let (config, account) = version_fixture();
+        let explicit = LoginConnection::for_attempt(ConnectReason::UserActivated, 2, 0x0102_0304);
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, None, &explicit)
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
+        assert_eq!(payload.connect_reason, Some(1), "USER_ACTIVATED");
+        assert_eq!(payload.connect_attempt_count, Some(2));
+        assert_eq!(payload.session_id, Some(0x0102_0304));
+        assert_eq!(payload.lc, Some(2));
+        assert_eq!(payload.passive, Some(false));
+        assert_eq!(payload.short_connect, Some(false));
+        // An automatic reconnect is the APK's UNKNOWN default, not a claim that
+        // a user just opened the app.
+        let retry = LoginConnection::for_attempt(ConnectReason::Unknown, 7, 5);
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, None, &retry)
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
+        assert_eq!(payload.connect_reason, Some(6), "UNKNOWN");
+        assert_eq!(payload.connect_attempt_count, Some(7));
+        assert_eq!(payload.lc, Some(7));
+        assert_eq!(payload.session_id, Some(5));
+        // Fresh random session ids are not all equal.
+        let a = new_session_id().unwrap();
+        let b = new_session_id().unwrap();
+        assert_ne!(a, b);
+    }
+
+    fn counter_store() -> (tempfile::TempDir, ProtocolStore) {
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(crate::store::OpenOptions {
+            path: dir.path().join("counter.redb"),
+            account_id: crate::model::ids::AccountId::new("counter").unwrap(),
+            key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
+                crate::store::MasterKey::from_bytes([4; 32]),
+            )),
+            create: true,
+        })
+        .unwrap();
+        (dir, store)
+    }
+
+    #[test]
+    fn finished_connection_counter_starts_at_zero_and_wraps() {
+        let (_dir, store) = counter_store();
+        assert_eq!(connection_attempts(&store).unwrap(), 0);
+        record_finished_connection(&store).unwrap();
+        assert_eq!(connection_attempts(&store).unwrap(), 1);
+        // The APK's `X.1jy.A05` wraps MAX_VALUE to 0 instead of overflowing.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    crate::store::Table::Checkpoints,
+                    CONNECTION_COUNTER,
+                    1,
+                    &serde_json::json!({"finished": i32::MAX}),
+                )
+            })
+            .unwrap();
+        record_finished_connection(&store).unwrap();
+        assert_eq!(connection_attempts(&store).unwrap(), 0);
+        // A damaged record is refused instead of silently restarting the count.
+        store
+            .write(|tx| {
+                tx.put_json(
+                    crate::store::Table::Checkpoints,
+                    CONNECTION_COUNTER,
+                    1,
+                    &serde_json::json!({"finished": 4_294_967_296u64}),
+                )
+            })
+            .unwrap();
+        assert!(connection_attempts(&store).is_err());
+    }
+
+    #[test]
     fn saved_display_name_is_carried_and_never_invented() {
         let (config, account) = version_fixture();
         // A name this account already sent is carried at login.
         let payload = ClientPayload::decode(
-            primary_login(&account, &config, Some("  Lab Phone  "))
+            primary_login(&account, &config, Some("  Lab Phone  "), &connection())
                 .unwrap()
                 .as_slice(),
         )
         .unwrap();
         assert_eq!(payload.push_name.as_deref(), Some("Lab Phone"));
         // No saved name means no pushName field, not an empty claim.
-        let payload =
-            ClientPayload::decode(primary_login(&account, &config, None).unwrap().as_slice())
-                .unwrap();
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, None, &connection())
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
         assert_eq!(payload.push_name, None);
         // An unusable stored value is dropped instead of being sent.
         for name in ["", "   ", "two\nlines"] {
             let payload = ClientPayload::decode(
-                primary_login(&account, &config, Some(name))
+                primary_login(&account, &config, Some(name), &connection())
                     .unwrap()
                     .as_slice(),
             )

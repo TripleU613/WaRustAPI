@@ -104,12 +104,22 @@ Also written by this filler, at top level: `oc`, `yearClass`, `memClass`.
   `WIFI_UNKNOWN`; cellular subtype mapping; otherwise `CELLULAR_UNKNOWN`),
   `dnsSource` from the resolution method, `connectAttemptCount`, and a packed
   `connectionSequenceInfo`. Full bit layout not re-read.
-- `case 459` (`X.1n9`): `passive`; `sessionId` from the caller's per-connection
-  counter; `shortConnect` from a preference; `lc` from the persisted
-  `connection_lc` counter; `connectReason` written as `UNKNOWN` first and
-  upgraded to `USER_ACTIVATED` (1) or `PUSH` (2) only when the trigger is under
-  10 s old. `lidDbMigrated`, `messageSts`, `preacksCount` and
+- `case 459` (`X.1n9`): `passive`; `sessionId` from the caller's
+  `ConnectionMetadata.sessionId`; `shortConnect` from a preference; `lc` from the
+  persisted `connection_lc` counter; `connectReason` written as `UNKNOWN` first
+  and upgraded to `USER_ACTIVATED` (1) or `PUSH` (2) only when the trigger is
+  under 10 s old. `lidDbMigrated`, `messageSts`, `preacksCount` and
   `processingQueueSize` are conditional on companion/queue facts.
+
+  The two counters were traced to their producers in this build:
+  `X.C0ZJ.A1k` runs after the connect routine and both increments
+  `X.C0ZJ.A00` (the in-memory `attemptedSuccessfulConnections` passed as
+  `XmppLoginContext.attemptedSuccessfulConnections`, read in `A0z` and written
+  as `connectAttemptCount`) and calls `X.1jy.A05`, which increments the
+  persisted `connection_lc` preference (wrapping `Integer.MAX_VALUE` to 0).
+  `ConnectionMetadata.sessionId` is not a counter: `ConnectionThread/tryOpenSocket`
+  logs `socket connected; sessionId=<n>` for `nextInt()` of a `Random` created
+  per socket, and that value is passed to the metadata constructor.
 - `case 460` and the remaining fillers were not read.
 - `case 461` (`X.1nX`): `username` from the login JID's numeric user part
   (`userJid.user`, or the LID prefix for a LID login, which also sets
@@ -162,6 +172,22 @@ stanza and dropped if unusable; when nothing was ever sent, `pushName` stays
 absent rather than empty. The caller passes it explicitly, so a login builder
 cannot silently invent a name.
 
+**Connection facts.** Every login carries `LoginConnection`: the reason, the
+finished-attempt count (`connectAttemptCount` 16 and `lc` 24), and a random
+`sessionId` (9). The count is persisted under the private checkpoint
+`comparison-connection-counter-v1` and advances once after a login stanza was
+written, wrapping like `X.1jy.A05`; the payload therefore carries the number of
+attempts that already finished. The APK keeps `lc` in preferences and the thread
+counter in memory, so this client models both with the persisted value: they
+agree within one process, and after a restart the second can be higher than the
+APK's in-memory counter. `sessionId` is four fresh random bytes per attempt,
+matching the APK's `Random.nextInt()`.
+
+**Connect reason.** An explicit request (`connect`, `listen` start,
+`lab-transport --login`) is the APK's `USER_ACTIVATED` trigger. Every automatic
+reconnect carries `UNKNOWN`, the value `X.1n9` writes before any ten-second
+upgrade, so a retry never claims a user action that did not happen.
+
 **Consistency guard.** The registration User-Agent is produced by the same
 `Build.*` reads (`0re.A00`), so one device must not be reported two ways. When
 `client.user_agent` has the APK shape
@@ -176,9 +202,9 @@ hyphens after the first separator.
 ## Gaps still open
 
 - Which fillers the server actually enables (AB props 7482/7483) — unknown.
-- `sessionId`/`lc`: a per-connection counter and a persisted connection
-  counter. Rust has no persisted counter yet.
-- `connectType`/`dnsSource`/`connectAttemptCount`/`connectionSequenceInfo`.
+- `connectType`/`dnsSource`/`connectAttemptCount`'s connection-sequence packing
+  (`connectionSequenceInfo`, 43): the values come from live network state and a
+  packed bit field that was not re-read.
 - `phone_id` auto-generation and persistence (currently operator-supplied only).
 - `deviceExpId` producer body (`StringUtils.A09` input source).
 - `oc` semantics; this client never sets it.

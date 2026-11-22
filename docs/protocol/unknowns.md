@@ -78,12 +78,14 @@ lifecycles remain open. See [the receive evidence](message-edit.md).
 3. **Login payload** (`login.client_payload`): primary-device markers,
    version fields, startup requests, resume behaviour. *Progress 2026-11-22:*
    the 2.26.43.72 builder (`X.1lc`), the filler interface and the user-agent
-   filler (`X.1m5`) are traced: `Build.*`-derived device fields, mcc/mnc
-   normalization, phone-id UUID, year/mem class, traffic anonymization and the
-   `oc`/signature check are now readable. Rust fills the user-agent block from
-   configured real device facts. Session/connection counters, `deviceExpId`,
-   the connection-sequence packing and which fillers the server enables remain
-   open. [Trace, evidence and gaps](login-payload.md).
+   (`X.1m5`), connection (`X.1n9`) and identity/display-name (`X.1nX`) fillers
+   are traced: `Build.*`-derived device fields, mcc/mnc normalization, phone-id
+   UUID, year/mem class, traffic anonymization, `oc`/signature check, the
+   persisted `lc` and in-memory attempt counters, a random per-socket
+   `sessionId`, and the UNKNOWN/USER_ACTIVATED reason rule are readable. Rust
+   fills all of those from configured or persisted facts. `connectType`,
+   `dnsSource`, `connectionSequenceInfo`, `deviceExpId` and which fillers the
+   server enables remain open. [Trace, evidence and gaps](login-payload.md).
 4. **Noise record sizes** (`noise.record_limit`) to accept or reject `snow`.
    The 2.26.37.70 comparison frame writer uses a three-byte big-endian
    length and rejects bodies at or above 16,777,216 bytes. This framing

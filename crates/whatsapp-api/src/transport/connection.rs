@@ -12,6 +12,7 @@ use crate::{
     Error, Result,
     binary::{Encoder, Node, TokenDictionary},
     model::time::Timestamp,
+    proto::wa_web_protobufs_wa6::client_payload::ConnectReason,
     registration::request::LabRegistrationConfig,
     session::{AccountRecord, ObservedCredential},
     store::{ProtocolStore, Table},
@@ -30,7 +31,9 @@ pub async fn connect(
     config: &LabRegistrationConfig,
     epoch: ConnectionEpoch,
 ) -> Result<EncryptedConnection<tokio::net::TcpStream>> {
-    connect_with_authority(store, config, epoch)
+    // A caller asking for a connection right now is the APK's user-activated
+    // trigger; automatic reconnects pass `ConnectReason::Unknown` instead.
+    connect_with_authority(store, config, epoch, ConnectReason::UserActivated)
         .await
         .map(|(channel, _)| channel)
 }
@@ -41,9 +44,10 @@ async fn connect_with_authority(
     store: &ProtocolStore,
     config: &LabRegistrationConfig,
     epoch: ConnectionEpoch,
+    reason: ConnectReason,
 ) -> Result<(EncryptedConnection<tokio::net::TcpStream>, [u8; 32])> {
     // Validate every local login fact before DNS, TCP or Noise work.
-    let (local, payload, snapshot) = login_material(store, config)?;
+    let (local, payload, snapshot) = login_material(store, config, reason)?;
     let endpoint = ComparisonEndpoint::built_in(ComparisonGateway::Primary, 443)
         .map_err(|_| Error::invalid("connection", "invalid built-in endpoint"))?;
     let socket = connect_comparison(
@@ -67,6 +71,9 @@ async fn connect_with_authority(
     .await?;
     let reservation = reserve_login(store, &snapshot)?;
     let mut channel = verified.finish(&payload).await?;
+    // 43.72 `X.1jy.A05`: the persisted counter advances after a connection
+    // attempt wrote its login, so this payload carried the previous value.
+    super::login::record_finished_connection(store)?;
     let reply = super::messaging::read_node(&mut channel).await?;
     super::inbox::preserve_in_epoch(store, &reply, epoch)?;
     let authority = record_login_reply_checked(store, &reply, Some((&snapshot, &reservation)))?;
@@ -171,6 +178,7 @@ fn reserve_login(store: &ProtocolStore, snapshot: &LoginSnapshot) -> Result<Stri
 fn login_material(
     store: &ProtocolStore,
     config: &LabRegistrationConfig,
+    reason: ConnectReason,
 ) -> Result<(StaticKeypair, zeroize::Zeroizing<Vec<u8>>, LoginSnapshot)> {
     config.validate()?;
     let (account, snapshot) = store.read(|tx| {
@@ -189,10 +197,18 @@ fn login_material(
             "previous login refused or uncertain; inspect before retry",
         ));
     }
+    // 43.72 case 459: `sessionId` is a fresh random int per socket, and the
+    // attempt/`lc` counters hold the number of attempts already finished.
+    let connection = super::login::LoginConnection::for_attempt(
+        reason,
+        super::login::connection_attempts(store)?,
+        super::login::new_session_id()?,
+    );
     let payload = super::login::primary_login(
         &account,
         config,
         super::presence::saved_push_name(store)?.as_deref(),
+        &connection,
     )?;
     let key = account
         .noise_static
@@ -1055,6 +1071,18 @@ pub(crate) struct Session {
     pub(crate) ticket: Option<crate::model::ids::LocalMessageId>,
 }
 
+/// What one run needs besides its identity, link and control channels.
+#[derive(Debug, Clone, Copy)]
+pub struct RunOptions {
+    /// Drain and send eligible outbox intents on this session.
+    pub send_outbox: bool,
+    /// Restrict the drain to one saved intent.
+    pub ticket: Option<crate::model::ids::LocalMessageId>,
+    /// Login trigger: `UserActivated` for an explicit request, `Unknown` for a
+    /// scheduled automatic reconnect (43.72 `X.1n9`).
+    pub reason: ConnectReason,
+}
+
 /// Run continuously until explicit stop, EOF, timeout or refusal. Caller owns
 /// reconnect policy; this function never replays uncertain chats or resets state.
 /// `ready` resolves only after the server accepts connection activation.
@@ -1064,10 +1092,10 @@ pub async fn run(
     epoch: ConnectionEpoch,
     stop: watch::Receiver<bool>,
     ready: oneshot::Sender<()>,
-    send_outbox: bool,
-    ticket: Option<crate::model::ids::LocalMessageId>,
+    options: RunOptions,
 ) -> Result<()> {
-    let (channel, expected) = connect_with_authority(&store, &config, epoch).await?;
+    let (channel, expected) =
+        connect_with_authority(&store, &config, epoch, options.reason).await?;
     // Abort-on-drop also covers callers cancelling this whole future.
     let (mut link, tasks) = link_from(channel, store.clone(), epoch, expected)?;
     link.epoch_authority = Some(EpochWriteAuthority {
@@ -1079,8 +1107,8 @@ pub async fn run(
             store,
             config,
             epoch,
-            send_outbox,
-            ticket,
+            send_outbox: options.send_outbox,
+            ticket: options.ticket,
         },
         stop,
         ready,
@@ -2290,6 +2318,53 @@ pub(super) mod tests {
     }
 
     #[test]
+    fn login_material_carries_the_persisted_attempt_counter_and_a_fresh_session() {
+        use crate::session::{KeyMaterial, NoiseStaticKey, RegistrationStatus};
+        use prost::Message;
+        use wacore_libsignal::core::curve::KeyPair;
+        let dir = tempfile::tempdir().unwrap();
+        let store = identity_store(&dir.path().join("counter.redb"));
+        let config = config();
+        let pair = KeyPair::generate(&mut rand::rng());
+        let account = AccountRecord {
+            phone: Some(config.phone.clone()),
+            registration: RegistrationStatus::Registered,
+            noise_static: Some(NoiseStaticKey(KeyMaterial {
+                public: pair.public_key.public_key_bytes().try_into().unwrap(),
+                private: *pair.private_key.serialize(),
+            })),
+            credentials: vec![ObservedCredential {
+                name: "login".into(),
+                value: zeroize::Zeroizing::new(config.phone.protocol_digits().into_bytes()),
+                observed_at: Timestamp(0),
+                source_step: None,
+            }],
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        let decode = |store: &ProtocolStore| {
+            let (_, payload, _) =
+                login_material(store, &config, ConnectReason::Unknown).expect("preflight");
+            crate::proto::wa_web_protobufs_wa6::ClientPayload::decode(payload.as_slice()).unwrap()
+        };
+        let first = decode(&store);
+        assert_eq!(first.lc, Some(0));
+        assert_eq!(first.connect_attempt_count, Some(0));
+        assert_eq!(first.connect_reason, Some(6), "UNKNOWN for a reconnect");
+        let first_session = first.session_id.expect("session id");
+        // Finished attempts advance the counter; the payload that follows
+        // carries the new value and a different random session id.
+        super::super::login::record_finished_connection(&store).unwrap();
+        super::super::login::record_finished_connection(&store).unwrap();
+        let second = decode(&store);
+        assert_eq!(second.lc, Some(2));
+        assert_eq!(second.connect_attempt_count, Some(2));
+        assert_ne!(second.session_id, Some(first_session));
+        // Reading the payload never advances the counter by itself.
+        assert_eq!(super::super::login::connection_attempts(&store).unwrap(), 2);
+    }
+
+    #[test]
     fn invalid_login_material_is_refused_by_offline_preflight_without_reservation() {
         use crate::session::{KeyMaterial, NoiseStaticKey, RegistrationStatus};
         let dir = tempfile::tempdir().unwrap();
@@ -2321,7 +2396,7 @@ pub(super) mod tests {
         };
         store.write(|tx| original.save(tx)).unwrap();
         let before = store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap();
-        let error = match login_material(&store, &config) {
+        let error = match login_material(&store, &config, ConnectReason::UserActivated) {
             Ok(_) => panic!("expected preflight refusal"),
             Err(error) => error,
         };
@@ -2334,7 +2409,7 @@ pub(super) mod tests {
         );
         drop(store);
         let store = identity_store(&path);
-        assert!(login_material(&store, &config).is_err());
+        assert!(login_material(&store, &config, ConnectReason::UserActivated).is_err());
         assert!(last_login_status(&store).unwrap().is_none());
     }
 
@@ -2363,7 +2438,7 @@ pub(super) mod tests {
             ..Default::default()
         };
         store.write(|tx| original.save(tx)).unwrap();
-        assert!(login_material(&store, &config).is_ok());
+        assert!(login_material(&store, &config, ConnectReason::UserActivated).is_ok());
         let journal = store.journal_head().unwrap();
         let mut changed_public = public;
         changed_public[10] ^= 1;
@@ -2376,7 +2451,7 @@ pub(super) mod tests {
             original.noise_static = Some(NoiseStaticKey(KeyMaterial { public, private }));
             store.write(|tx| original.save(tx)).unwrap();
             let before = store.read(|tx| tx.scan(Table::Account, 1, 10)).unwrap();
-            let error = match login_material(&store, &config) {
+            let error = match login_material(&store, &config, ConnectReason::UserActivated) {
                 Ok(_) => panic!("inconsistent pair passed preflight"),
                 Err(error) => error,
             };
@@ -2396,7 +2471,7 @@ pub(super) mod tests {
         }
         drop(store);
         let store = identity_store(&path);
-        assert!(login_material(&store, &config).is_err());
+        assert!(login_material(&store, &config, ConnectReason::UserActivated).is_err());
         assert!(last_login_status(&store).unwrap().is_none());
     }
 
@@ -2422,7 +2497,7 @@ pub(super) mod tests {
                 account.save(tx)
             })
             .unwrap();
-        assert!(login_material(&store, &config).is_ok());
+        assert!(login_material(&store, &config, ConnectReason::UserActivated).is_ok());
         // Both halves remain mathematically valid, but this is not the key
         // recorded as published by registration. Pair validation alone misses it.
         let other = KeyPair::generate(&mut rand::rng());
@@ -2438,7 +2513,7 @@ pub(super) mod tests {
             .unwrap();
         let before = store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap();
         let journal = store.journal_head().unwrap();
-        assert!(login_material(&store, &config).is_err());
+        assert!(login_material(&store, &config, ConnectReason::UserActivated).is_err());
         assert!(last_login_status(&store).unwrap().is_none());
         assert_eq!(store.journal_head().unwrap(), journal);
         assert_eq!(
@@ -2447,7 +2522,7 @@ pub(super) mod tests {
         );
         drop(store);
         let store = identity_store(&path);
-        assert!(login_material(&store, &config).is_err());
+        assert!(login_material(&store, &config, ConnectReason::UserActivated).is_err());
         assert!(last_login_status(&store).unwrap().is_none());
         assert_eq!(
             store.read(|tx| tx.scan(Table::Account, 1, 20)).unwrap(),
@@ -2476,7 +2551,8 @@ pub(super) mod tests {
                     account.save(tx)
                 })
                 .unwrap();
-            let (_, _, snapshot) = login_material(&store, &config).unwrap();
+            let (_, _, snapshot) =
+                login_material(&store, &config, ConnectReason::UserActivated).unwrap();
             store
                 .write(|tx| {
                     if material_change {
@@ -2510,7 +2586,8 @@ pub(super) mod tests {
             );
             // A fresh, valid snapshot still reserves once; deletion of optional
             // lab material does not become an unconditional import prohibition.
-            let (_, _, current) = login_material(&store, &config).unwrap();
+            let (_, _, current) =
+                login_material(&store, &config, ConnectReason::UserActivated).unwrap();
             reserve_login(&store, &current).unwrap();
             assert!(reserve_login(&store, &current).is_err());
         }
@@ -2542,7 +2619,8 @@ pub(super) mod tests {
                         account.save(tx)
                     })
                     .unwrap();
-                let (_, _, snapshot) = login_material(&store, &config).unwrap();
+                let (_, _, snapshot) =
+                    login_material(&store, &config, ConnectReason::UserActivated).unwrap();
                 let owner = reserve_login(&store, &snapshot).unwrap();
                 store.write(|tx| {
                     match case {
