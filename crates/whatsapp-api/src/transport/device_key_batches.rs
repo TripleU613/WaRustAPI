@@ -90,6 +90,10 @@ struct Batch {
     account_authority: Option<[u8; 32]>,
     devices: Vec<Jid>,
     pages: Vec<Page>,
+    /// Chat context frozen when the first page was created (43.72 key-query
+    /// `context_jid`, gated by property 25904). Rebuilds must reproduce it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    context: Option<Jid>,
 }
 fn decode(wire: &[u8]) -> Result<Node> {
     let limits = Limits::default();
@@ -247,7 +251,12 @@ pub(super) fn reserved_write_snapshot_in(
             page.status == Status::OutcomeUnknown && page.query_id.as_deref() == Some(query_id)
         })
         .ok_or_else(|| invalid("reserved key query no longer outstanding"))?;
-    let expected = super::messaging::key_request_many(batch.expected(index), query_id)?;
+    let expected = super::messaging::key_request_many_with_context(
+        batch.expected(index),
+        query_id,
+        false,
+        batch.context.as_ref(),
+    )?;
     let encode = |node: &Node| Encoder::new(TokenDictionary::comparison_2_26_37_71()).encode(node);
     if encode(&expected)? != encode(node)? {
         return Err(invalid("reserved key query payload changed before write"));
@@ -286,20 +295,36 @@ pub fn reserve_next(
     id: &ClientRequestId,
     input: &[Jid],
 ) -> Result<Option<Node>> {
-    reserve_next_inner(store, id, input, None)
+    reserve_next_inner(store, id, input, None, None)
 }
+#[cfg(test)]
 pub(crate) fn reserve_next_owned(
     store: &ProtocolStore,
     id: &ClientRequestId,
     input: &[Jid],
     expected: [u8; 32],
 ) -> Result<Option<Node>> {
-    reserve_next_inner(store, id, input, Some(expected))
+    reserve_next_inner(store, id, input, None, Some(expected))
+}
+
+/// Reserve one next query with the chat context that owns the fan-out.
+/// 43.72 `X.0v0.A00` attaches `context_jid` when a settled A/B reply leaves
+/// property 25904 enabled (the registered default) and the context is a
+/// group/broadcast address; the decision is frozen with the first page.
+pub(crate) fn reserve_next_owned_in_context(
+    store: &ProtocolStore,
+    id: &ClientRequestId,
+    input: &[Jid],
+    context: &Jid,
+    expected: [u8; 32],
+) -> Result<Option<Node>> {
+    reserve_next_inner(store, id, input, Some(context), Some(expected))
 }
 fn reserve_next_inner(
     store: &ProtocolStore,
     id: &ClientRequestId,
     input: &[Jid],
+    context: Option<&Jid>,
     expected: Option<[u8; 32]>,
 ) -> Result<Option<Node>> {
     let input = devices(input)?;
@@ -315,7 +340,11 @@ fn reserve_next_inner(
                     return Err(invalid("legacy key outcome lacks frozen batch provenance; original attempt preserved"));
                 }
                 if input.is_empty() { return Ok(None); }
-                Batch { account_authority:Some(super::account_authority::fingerprint(tx.generation(), account.as_ref())?), pages:(0..input.len().div_ceil(QUERY_WIDTH)).map(|_|Page { status:Status::Ready,query_id:None,reply:None,reason:None }).collect(), devices:input.clone() }
+                let context = match context {
+                    Some(jid) if super::abprops::context_jid_enabled_in_write(tx)? => Some(jid.clone()),
+                    _ => None,
+                };
+                Batch { account_authority:Some(super::account_authority::fingerprint(tx.generation(), account.as_ref())?), pages:(0..input.len().div_ceil(QUERY_WIDTH)).map(|_|Page { status:Status::Ready,query_id:None,reply:None,reason:None }).collect(), devices:input.clone(), context }
             },
         };
         batch.validate()?;batch.check_account(tx.generation(), account.as_ref())?;batch.matches_devices(&input)?;
@@ -326,7 +355,7 @@ fn reserve_next_inner(
         let Some(index)=batch.pages.iter().position(|p|p.status!=Status::Answered) else { return Ok(None); };
         if batch.pages[index].status!=Status::Ready { return Err(blocked(batch.pages[index].status)); }
         let query_id=super::messaging::new_message_id()?;
-        let node=super::messaging::key_request_many(batch.expected(index),&query_id)?;
+        let node=super::messaging::key_request_many_with_context(batch.expected(index),&query_id,false,batch.context.as_ref())?;
         batch.pages[index].status=Status::OutcomeUnknown;batch.pages[index].query_id=Some(query_id);
         tx.put_json(Table::Checkpoints,&key(id),1,&batch)?;
         Ok(Some(node))
@@ -700,6 +729,84 @@ mod tests {
             })
             .unwrap()
     }
+    #[test]
+    fn group_context_rides_on_the_key_query_and_survives_rebuild() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("group-context.redb"));
+        let account = crate::session::AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        let expected =
+            super::super::account_authority::fingerprint(store.generation(), Some(&account))
+                .unwrap();
+        let targets = [target(0)];
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let query = reserve_next_owned_in_context(&store, &id(), &targets, &group, expected)
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            query
+                .child("key")
+                .unwrap()
+                .get_attr("context_jid")
+                .and_then(|v| v.as_jid()),
+            Some(&group)
+        );
+        // The frozen context is part of the reserved payload a later dequeue
+        // must reproduce byte-for-byte.
+        store
+            .read(|tx| reserved_write_snapshot_in(tx, &id(), &targets, &query, &expected))
+            .unwrap();
+        let without = super::super::messaging::key_request_many(
+            &targets,
+            query.get_attr("id").and_then(|v| v.as_text()).unwrap(),
+        )
+        .unwrap();
+        assert!(
+            store
+                .read(|tx| reserved_write_snapshot_in(tx, &id(), &targets, &without, &expected))
+                .is_err(),
+            "a rebuilt query without context_jid must be refused"
+        );
+    }
+
+    #[test]
+    fn disabled_context_property_leaves_the_key_query_without_the_attribute() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("group-context-off.redb"));
+        let account = crate::session::AccountRecord {
+            generation: store.generation(),
+            signal_registration_id: Some(31),
+            ..Default::default()
+        };
+        store.write(|tx| account.save(tx)).unwrap();
+        let expected =
+            super::super::account_authority::fingerprint(store.generation(), Some(&account))
+                .unwrap();
+        let action = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", action.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "h").children(vec![
+                        Node::new("prop")
+                            .attr("config_code", "25904")
+                            .attr("config_value", "0"),
+                    ])]),
+        )
+        .unwrap();
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let query = reserve_next_owned_in_context(&store, &id(), &[target(0)], &group, expected)
+            .unwrap()
+            .unwrap();
+        assert_eq!(query.child("key").unwrap().get_attr("context_jid"), None);
+    }
+
     #[test]
     fn caller_owner_cannot_be_replaced_when_first_key_page_is_created() {
         let dir = tempfile::tempdir().unwrap();

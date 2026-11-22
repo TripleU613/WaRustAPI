@@ -3325,10 +3325,11 @@ impl Pending {
                 return self.block(store, Block::KeysInvalid);
             }
         }
-        match device_key_batches::reserve_next_owned(
+        match device_key_batches::reserve_next_owned_in_context(
             store,
             &bundle_selector(self.entry.local_id)?,
             &self.needed,
+            self.entry.intent.chat.jid(),
             self.row.authority()?,
         ) {
             Ok(Some(query)) => {

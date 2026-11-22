@@ -630,7 +630,20 @@ pub fn key_request(recipient: &Jid, id: &str) -> Node {
 /// the job's `fetchPqPrekey` boolean is set (from `Can.A04(jid)`); it is a
 /// request for post-quantum material, not a claim that this client has keys.
 pub fn key_request_with_pq(recipient: &Jid, id: &str, pq_support: bool) -> Node {
-    key_request_many_with_pq(std::slice::from_ref(recipient), id, pq_support)
+    key_request_many_with_context(std::slice::from_ref(recipient), id, pq_support, None)
+        .expect("one recipient is always in range")
+}
+
+/// One-recipient key query with the `context_jid` attribute when the context
+/// address is a group/broadcast address (43.72 `X.0v0.A00` accepts types
+/// 1/2/3/5, so an ordinary user chat contributes no attribute).
+pub fn key_request_with_context(
+    recipient: &Jid,
+    id: &str,
+    pq_support: bool,
+    context: Option<&Jid>,
+) -> Node {
+    key_request_many_with_context(std::slice::from_ref(recipient), id, pq_support, context)
         .expect("one recipient is always in range")
 }
 
@@ -658,7 +671,17 @@ pub fn key_request_many_with_pq(
     id: &str,
     pq_support: bool,
 ) -> crate::Result<Node> {
-    key_request_many_selected(recipients, &[], id, pq_support)
+    key_request_many_with_context(recipients, id, pq_support, None)
+}
+
+/// Several-recipient query with the optional shared `context_jid` attribute.
+pub fn key_request_many_with_context(
+    recipients: &[Jid],
+    id: &str,
+    pq_support: bool,
+    context: Option<&Jid>,
+) -> crate::Result<Node> {
+    key_request_many_selected(recipients, &[], id, pq_support, context)
 }
 
 /// Build the legacy directory query, marking exactly the affected devices.
@@ -670,7 +693,7 @@ pub fn key_request_many_with_identity_changes(
     changed: &[Jid],
     id: &str,
 ) -> crate::Result<Node> {
-    key_request_many_selected(recipients, changed, id, false)
+    key_request_many_selected(recipients, changed, id, false, None)
 }
 
 fn key_request_many_selected(
@@ -678,6 +701,7 @@ fn key_request_many_selected(
     changed: &[Jid],
     id: &str,
     pq_support: bool,
+    context: Option<&Jid>,
 ) -> crate::Result<Node> {
     if recipients.is_empty() || recipients.len() > KEY_QUERY_MAX_DEVICES {
         return Err(crate::Error::invalid(
@@ -700,10 +724,19 @@ fn key_request_many_selected(
         ));
     }
     // 43.72 writer X.0v0.A00: the key element carries pqsupport="true" when the
-    // caller asked for PQ material, before its user children.
+    // caller asked for PQ material and context_jid when the context address is a
+    // group/broadcast JID (types 1/2/3/5), in that order, before its children.
     let mut key = Node::new("key");
     if pq_support {
         key = key.attr("pqsupport", "true");
+    }
+    if let Some(context) = context.filter(|jid| {
+        matches!(
+            jid.server,
+            crate::model::jid::Server::Group | crate::model::jid::Server::Broadcast
+        )
+    }) {
+        key = key.attr("context_jid", context.clone());
     }
     let key = key.children(
         recipients
@@ -3906,6 +3939,38 @@ mod tests {
         assert_eq!(
             key.get_attr("pqsupport").and_then(|v| v.as_text()),
             Some("true")
+        );
+    }
+
+    #[test]
+    fn context_jid_is_attached_for_group_and_broadcast_contexts_only() {
+        let peer = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        let status = Jid::parse("status@broadcast").unwrap();
+        // A user chat is outside the traced type set (1/2/3/5): no attribute.
+        let user = key_request_with_context(&peer, "C1", false, Some(&peer));
+        assert_eq!(user.child("key").unwrap().get_attr("context_jid"), None);
+        let query = key_request_with_context(&peer, "C2", true, Some(&group));
+        let key = query.child("key").expect("key child");
+        let names: Vec<&str> = key
+            .attributes
+            .iter()
+            .map(|attribute| attribute.name.as_str())
+            .collect();
+        // Writer order: pqsupport, then context_jid.
+        assert_eq!(names, ["pqsupport", "context_jid"]);
+        assert_eq!(
+            key.get_attr("context_jid").and_then(|v| v.as_jid()),
+            Some(&group)
+        );
+        let status_query = key_request_with_context(&peer, "C3", false, Some(&status));
+        assert_eq!(
+            status_query
+                .child("key")
+                .unwrap()
+                .get_attr("context_jid")
+                .and_then(|v| v.as_jid()),
+            Some(&status)
         );
     }
 

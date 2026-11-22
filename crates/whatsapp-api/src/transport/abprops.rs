@@ -30,6 +30,9 @@ const TOKEN_PENDING_NAMESPACE_PROPERTY: i32 = 14303;
 const PQ_KEYS_UPLOAD_PROPERTY: i32 = 0x52ce;
 // 43.72 08Y.A0Q registry: PQ inventory target (default 200) and upload batch
 // (default 10), captured by the 0WJ provider. Values are counts, not booleans.
+/// `0x6530` (25904): `context_jid` on the key query. Registered **true** in
+/// `08Y.A0H` (`v2 = Boolean.valueOf(true)`), so absence keeps it enabled.
+pub const CONTEXT_JID_PROPERTY: i32 = 0x6530;
 /// Peer message-edit window in seconds (`152.A00` at 042c..045a multiplies it
 /// by 1000 and compares it with the signed stanza-minus-parent time).
 pub const PEER_EDIT_WINDOW_PROPERTY: i32 = 2983;
@@ -372,6 +375,15 @@ pub(crate) fn pq_support_for_in_write(tx: &crate::store::WriteTx<'_>, peer: &Jid
     Ok(property_value_in_write(tx, PQ_SUPPORT_PROPERTY)?.is_some_and(|value| value != 0))
 }
 
+/// Whether the key query may carry `context_jid` (property 25904, default true).
+pub fn context_jid_enabled(store: &ProtocolStore) -> Result<bool> {
+    Ok(property_value(store, CONTEXT_JID_PROPERTY)?.is_none_or(|value| value != 0))
+}
+
+pub(crate) fn context_jid_enabled_in_write(tx: &crate::store::WriteTx<'_>) -> Result<bool> {
+    Ok(property_value_in_write(tx, CONTEXT_JID_PROPERTY)?.is_none_or(|value| value != 0))
+}
+
 /// Last returned signed integer for one A/B property code.
 ///
 /// Collection follows the same rules as [`inspect`]: duplicate rows take the
@@ -629,6 +641,32 @@ mod tests {
             )
             .unwrap()
         );
+    }
+
+    #[test]
+    fn context_jid_property_defaults_true_and_follows_the_settled_reply() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("context-jid.redb"), true);
+        // 08Y.A0H registers 0x6530 with Boolean.TRUE.
+        assert!(context_jid_enabled(&store).unwrap());
+        let id = queue(&store).unwrap();
+        settle(
+            &store,
+            &id,
+            Node::new("props")
+                .attr("hash", "h")
+                .children(vec![prop("25904", "0")]),
+        );
+        assert!(!context_jid_enabled(&store).unwrap());
+        let forced = queue_forced(&store).unwrap().unwrap();
+        settle(
+            &store,
+            &forced,
+            Node::new("props")
+                .attr("hash", "h2")
+                .children(vec![prop("25904", "1")]),
+        );
+        assert!(context_jid_enabled(&store).unwrap());
     }
 
     #[test]
