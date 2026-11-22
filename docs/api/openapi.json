@@ -2869,6 +2869,68 @@
                 ],
                 "description": "User-Agent header value for compatibility",
                 "default": "WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown"
+              },
+              "device": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "Android hardware facts for the login ClientPayload user agent (APK 2.26.43.72 X.1m5). Absent keeps the historical minimal payload; no value is invented.",
+                "properties": {
+                  "os_version": {
+                    "type": ["string", "null"],
+                    "description": "Build.VERSION.RELEASE → userAgent.osVersion"
+                  },
+                  "manufacturer": {
+                    "type": ["string", "null"],
+                    "description": "Build.MANUFACTURER → userAgent.manufacturer"
+                  },
+                  "device": {
+                    "type": ["string", "null"],
+                    "description": "Build.DEVICE → userAgent.device (not the marketing model)"
+                  },
+                  "model": {
+                    "type": ["string", "null"],
+                    "description": "Build.MODEL → userAgent.deviceModelType"
+                  },
+                  "os_build_number": {
+                    "type": ["string", "null"],
+                    "description": "Build.DISPLAY → userAgent.osBuildNumber"
+                  },
+                  "board": {
+                    "type": ["string", "null"],
+                    "description": "Build.BOARD → userAgent.deviceBoard; omitted when empty"
+                  },
+                  "mcc": {
+                    "type": ["string", "null"],
+                    "description": "Three-digit mobile country code; the APK normalizes an absent SIM to 000"
+                  },
+                  "mnc": {
+                    "type": ["string", "null"],
+                    "description": "Three-digit mobile network code (the APK formats %03d)"
+                  },
+                  "phone_id": {
+                    "type": ["string", "null"],
+                    "description": "Canonical UUID persisted per install → userAgent.phoneId; null means absent, never generated silently"
+                  },
+                  "year_class": {
+                    "type": ["integer", "null"],
+                    "minimum": 2000,
+                    "maximum": 2100,
+                    "description": "Device performance year → ClientPayload.yearClass (36)"
+                  },
+                  "mem_class": {
+                    "type": ["integer", "null"],
+                    "minimum": 16,
+                    "maximum": 2048,
+                    "description": "Android heap class in MiB → ClientPayload.memClass (37)"
+                  },
+                  "traffic_anonymization": {
+                    "type": ["string", "null"],
+                    "enum": ["off", "standard", null],
+                    "description": "Server-configured traffic anonymization → ClientPayload.trafficAnonymization (40)"
+                  }
+                }
               }
             },
             "description": "Client identity and version"

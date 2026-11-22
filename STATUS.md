@@ -1,3 +1,5 @@
+**Android login user agent (offline).** The 2.26.43.72 login payload builder and its Android user-agent filler are traced, and the client now fills `Build.*`-derived device facts, three-digit mcc/mnc, year/heap class and traffic anonymization from a private `client.device` block. Absent facts stay absent; validation refuses impossible values. [Trace, gaps and tests](docs/protocol/login-payload.md).
+
 **Stalled socket writes (offline).** Activation, keepalives and comparison requests now expire on their original response deadlines even when the encrypted writer stalls. A partially written request retains its uncertain outcome. [Encrypted-peer tests and APK evidence](docs/protocol/messaging-transport.md#activation-and-keepalive-during-a-stalled-write).
 
 **Server-ended sessions (offline).** The encrypted reader now stops reconnects when it receives a decoded server end while the listener is busy writing. Both terminal roots survived restart as a single observation in the local peer tests. [Race reproduction and APK anchors](docs/protocol/terminal-errors.md#server-end-received-during-a-competing-write).

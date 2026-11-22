@@ -104,13 +104,146 @@ pub struct ClientSettings {
     /// Optional HTTP User-Agent, absent unless explicitly provided.
     /// New comparison media uploads require it; saved outcomes remain readable.
     pub user_agent: Option<Zeroizing<String>>,
+    /// Android hardware facts for the login `ClientPayload`. Absent keeps the
+    /// historical minimal payload; it never invents values on its own.
+    pub device: Option<LoginDevice>,
 }
 impl Default for ClientSettings {
     fn default() -> Self {
         Self {
             profile_id: profile_id(),
             user_agent: None,
+            device: None,
         }
+    }
+}
+
+/// Android hardware facts the comparison APK reads from `android.os.Build` and
+/// related services and always carries in the login `ClientPayload` (43.72
+/// `X.1m5`, the filler constructed by `AnonymousClass270` case 456). Values are
+/// real facts about the represented device, supplied by the operator; no value
+/// here is invented, attested or derived from the network.
+///
+/// Sources in 43.72: `userAgent.device` = `Build.DEVICE` (`X.1mk.A06` lazy
+/// value, which only appends a `_cheets`/`_alexatab`/`_fireos`/`_gbos` suffix),
+/// `deviceModelType` = `Build.MODEL`, `osVersion` = `Build.VERSION.RELEASE`,
+/// `manufacturer` = `Build.MANUFACTURER`, `osBuildNumber` = `Build.DISPLAY`,
+/// `deviceBoard` = `Build.BOARD`, `mcc`/`mnc` = parsed
+/// `TelephonyManager.getNetworkOperator()` with `000`/`000` fallbacks, `phoneId`
+/// = a persisted per-install random UUID, `yearClass`/`memClass` = device
+/// performance classes, `trafficAnonymization` = a server-configured mode.
+#[derive(Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(default, deny_unknown_fields)]
+pub struct LoginDevice {
+    /// `Build.VERSION.RELEASE` (`userAgent.osVersion`).
+    pub os_version: Option<Zeroizing<String>>,
+    /// `Build.MANUFACTURER` (`userAgent.manufacturer`).
+    pub manufacturer: Option<Zeroizing<String>>,
+    /// `Build.DEVICE` (`userAgent.device`), not the marketing model name.
+    pub device: Option<Zeroizing<String>>,
+    /// `Build.MODEL` (`userAgent.deviceModelType`).
+    pub model: Option<Zeroizing<String>>,
+    /// `Build.DISPLAY` (`userAgent.osBuildNumber`).
+    pub os_build_number: Option<Zeroizing<String>>,
+    /// `Build.BOARD` (`userAgent.deviceBoard`); the APK omits an empty value.
+    pub board: Option<Zeroizing<String>>,
+    /// Mobile country code, three digits; the APK normalizes an absent SIM to
+    /// `000` rather than omitting the field once the SIM path runs.
+    pub mcc: Option<Zeroizing<String>>,
+    /// Mobile network code, normalized to three digits by the APK.
+    pub mnc: Option<Zeroizing<String>>,
+    /// Persisted per-install UUID (`userAgent.phoneId`). Null means absent;
+    /// this client never generates one silently.
+    pub phone_id: Option<Zeroizing<String>>,
+    /// Device performance class (`yearClass`), 2000..=2100.
+    pub year_class: Option<u32>,
+    /// Android heap class in MiB (`memClass`), 16..=2048.
+    pub mem_class: Option<u32>,
+    /// `trafficAnonymization` (40). The APK writes OFF or STANDARD from a
+    /// server-configured experiment; absent means the stored default.
+    pub traffic_anonymization: Option<TrafficAnonymization>,
+}
+
+/// Server-configured traffic-anonymization mode carried in the login payload.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum TrafficAnonymization {
+    /// No relay.
+    Off,
+    /// Anonymized transport.
+    Standard,
+}
+
+impl LoginDevice {
+    /// Reject values the APK cannot produce, before any payload is built.
+    pub fn validate(&self) -> Result<()> {
+        for (field, value) in [
+            ("client.device.os_version", self.os_version.as_ref()),
+            ("client.device.manufacturer", self.manufacturer.as_ref()),
+            ("client.device.device", self.device.as_ref()),
+            ("client.device.model", self.model.as_ref()),
+            (
+                "client.device.os_build_number",
+                self.os_build_number.as_ref(),
+            ),
+            ("client.device.board", self.board.as_ref()),
+        ] {
+            if let Some(value) = value
+                && (value.is_empty()
+                    || value.len() > 64
+                    || !value.bytes().all(|b| (0x20..=0x7e).contains(&b)))
+            {
+                return Err(Error::invalid(
+                    field,
+                    "must contain 1..=64 printable ASCII bytes",
+                ));
+            }
+        }
+        for (field, value) in [
+            ("client.device.mcc", self.mcc.as_ref()),
+            ("client.device.mnc", self.mnc.as_ref()),
+        ] {
+            if let Some(value) = value
+                && (value.len() != 3 || !value.bytes().all(|b| b.is_ascii_digit()))
+            {
+                return Err(Error::invalid(
+                    field,
+                    "must be exactly three ASCII digits (the APK normalizes mnc to %03d)",
+                ));
+            }
+        }
+        if let Some(value) = &self.phone_id
+            && (value.len() != 36
+                || !value.bytes().enumerate().all(|(i, b)| {
+                    if [8, 13, 18, 23].contains(&i) {
+                        b == b'-'
+                    } else {
+                        b.is_ascii_hexdigit()
+                    }
+                }))
+        {
+            return Err(Error::invalid(
+                "client.device.phone_id",
+                "must be a canonical UUID",
+            ));
+        }
+        if let Some(year) = self.year_class
+            && !(2000..=2100).contains(&year)
+        {
+            return Err(Error::invalid(
+                "client.device.year_class",
+                "must be a device performance year in 2000..=2100",
+            ));
+        }
+        if let Some(class) = self.mem_class
+            && !(16..=2048).contains(&class)
+        {
+            return Err(Error::invalid(
+                "client.device.mem_class",
+                "must be a heap class in 16..=2048 MiB",
+            ));
+        }
+        Ok(())
     }
 }
 
@@ -479,6 +612,9 @@ impl LabRegistrationConfig {
                 "must contain 1..=512 printable ASCII bytes",
             ));
         }
+        if let Some(device) = &self.client.device {
+            device.validate()?;
+        }
         RegistrationCodeParams::new(self.token.as_str(), "sms")?;
         RegistrationCommonParams::new(
             self.phone.clone(),
@@ -544,7 +680,8 @@ impl LabRegistrationConfig {
             "mode": "preview: no network, no store writes", "method": self.method, "phone": if show_phone { self.phone.e164() } else { "<redacted>".into() },
             "location": {"country_code": self.phone.country_code(), "language": self.language, "locale": self.locale},
             "client": {"profile": self.client.profile_id, "version": WHATSAPP_2_26_37_70.version_name,
-                "apk_sha256": WHATSAPP_2_26_37_70.apk_sha256, "user_agent": if self.client.user_agent.is_some() { "<configured, redacted>" } else { "absent" }},
+                "apk_sha256": WHATSAPP_2_26_37_70.apk_sha256, "user_agent": if self.client.user_agent.is_some() { "<configured, redacted>" } else { "absent" },
+                "login_device": self.client.device.as_ref().map(login_device_presence).unwrap_or_else(|| serde_json::json!({"configured": false}))},
             "transport": self.transport, "origin": WHATSAPP_2_26_37_70.base_url,
             "extra_fields": {"code": self.fields.code.keys().collect::<Vec<_>>(), "register": self.fields.register.keys().collect::<Vec<_>>(), "security": self.fields.security.keys().collect::<Vec<_>>()},
             "additional_byte_fields": {"code": self.fields.code_bytes.keys().collect::<Vec<_>>(), "register": self.fields.register_bytes.keys().collect::<Vec<_>>(), "security": self.fields.security_bytes.keys().collect::<Vec<_>>()},
@@ -569,6 +706,34 @@ impl LabRegistrationConfig {
     }
 }
 
+/// Presence-only projection of configured login device facts. Values stay in
+/// private JSON; previews and logs name what is set, never the bytes.
+fn login_device_presence(device: &LoginDevice) -> serde_json::Value {
+    let mut configured = Vec::new();
+    for (name, present) in [
+        ("os_version", device.os_version.is_some()),
+        ("manufacturer", device.manufacturer.is_some()),
+        ("device", device.device.is_some()),
+        ("model", device.model.is_some()),
+        ("os_build_number", device.os_build_number.is_some()),
+        ("board", device.board.is_some()),
+        ("mcc", device.mcc.is_some()),
+        ("mnc", device.mnc.is_some()),
+        ("phone_id", device.phone_id.is_some()),
+        ("year_class", device.year_class.is_some()),
+        ("mem_class", device.mem_class.is_some()),
+        (
+            "traffic_anonymization",
+            device.traffic_anonymization.is_some(),
+        ),
+    ] {
+        if present {
+            configured.push(name);
+        }
+    }
+    serde_json::json!({"configured": true, "fields": configured})
+}
+
 macro_rules! redacted_debug {
     ($($name:ty),*) => { $(impl fmt::Debug for $name {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct(stringify!($name)).finish_non_exhaustive() }
@@ -578,7 +743,8 @@ redacted_debug!(
     LabRegistrationConfig,
     ClientSettings,
     DeviceSettings,
-    EndpointFields
+    EndpointFields,
+    LoginDevice
 );
 
 #[cfg(test)]

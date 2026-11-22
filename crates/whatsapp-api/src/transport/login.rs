@@ -5,11 +5,14 @@
 use crate::proto::wa_web_protobufs_wa6::{
     ClientPayload,
     client_payload::{
-        ConnectReason, UserAgent,
+        self, ConnectReason, UserAgent,
         user_agent::{AppVersion, Platform},
     },
 };
-use crate::{Error, Result, registration::request::LabRegistrationConfig, session::AccountRecord};
+use crate::{
+    Error, Result, registration::request::LabRegistrationConfig,
+    registration::request::TrafficAnonymization, session::AccountRecord,
+};
 use prost::Message;
 use zeroize::Zeroizing;
 
@@ -98,26 +101,52 @@ pub fn primary_login(
         ));
     }
     let [primary, secondary, tertiary, quaternary] = login_app_version(account, config)?;
-    let payload = ClientPayload {
+    // 43.72 `X.1m5` (AnonymousClass270 case 456) always fills the Android
+    // user agent from `android.os.Build` and related services. Each field is
+    // filled only from configured facts: an absent fact stays absent instead of
+    // becoming an invented device claim.
+    let mut user_agent = UserAgent {
+        platform: Some(Platform::Android as i32),
+        app_version: Some(AppVersion {
+            primary: Some(primary),
+            secondary: Some(secondary),
+            tertiary: Some(tertiary),
+            quaternary: Some(quaternary),
+            ..Default::default()
+        }),
+        locale_language_iso6391: Some(config.language.clone()),
+        locale_country_iso31661_alpha2: Some(config.locale.clone()),
+        ..Default::default()
+    };
+    let mut payload = ClientPayload {
         username: Some(username),
         passive: Some(false),
         short_connect: Some(false),
         connect_reason: Some(ConnectReason::UserActivated as i32),
-        user_agent: Some(UserAgent {
-            platform: Some(Platform::Android as i32),
-            app_version: Some(AppVersion {
-                primary: Some(primary),
-                secondary: Some(secondary),
-                tertiary: Some(tertiary),
-                quaternary: Some(quaternary),
-                ..Default::default()
-            }),
-            locale_language_iso6391: Some(config.language.clone()),
-            locale_country_iso31661_alpha2: Some(config.locale.clone()),
-            ..Default::default()
-        }),
         ..Default::default()
     };
+    if let Some(device) = &config.client.device {
+        let text = |value: &Option<Zeroizing<String>>| value.as_ref().map(|v| v.to_string());
+        user_agent.mcc = text(&device.mcc);
+        user_agent.mnc = text(&device.mnc);
+        user_agent.os_version = text(&device.os_version);
+        user_agent.manufacturer = text(&device.manufacturer);
+        user_agent.device = text(&device.device);
+        user_agent.os_build_number = text(&device.os_build_number);
+        user_agent.phone_id = text(&device.phone_id);
+        user_agent.device_board = text(&device.board);
+        user_agent.device_model_type = text(&device.model);
+        // The APK marks the ordinary handset explicitly; this client never
+        // claims a tablet/desktop/VR class.
+        user_agent.device_type = Some(client_payload::user_agent::DeviceType::Phone as i32);
+        payload.year_class = device.year_class.map(|year| year as i32);
+        payload.mem_class = device.mem_class.map(|class| class as i32);
+        payload.traffic_anonymization = device.traffic_anonymization.map(|mode| match mode {
+            TrafficAnonymization::Off => client_payload::TrafficAnonymization::Off as i32,
+            TrafficAnonymization::Standard => client_payload::TrafficAnonymization::Standard as i32,
+        });
+    }
+    payload.user_agent = Some(user_agent);
     Ok(Zeroizing::new(payload.encode_to_vec()))
 }
 
@@ -262,5 +291,133 @@ mod tests {
             login_app_version(&account, &config).unwrap(),
             [2, 26, 43, 72]
         );
+    }
+
+    fn device_config() -> (LabRegistrationConfig, AccountRecord) {
+        let (mut config, account) = version_fixture();
+        config.client.device = Some(crate::registration::request::LoginDevice {
+            os_version: Some(Zeroizing::new("13".into())),
+            manufacturer: Some(Zeroizing::new("Google".into())),
+            device: Some(Zeroizing::new("sunfish".into())),
+            model: Some(Zeroizing::new("Pixel 4a".into())),
+            os_build_number: Some(Zeroizing::new("TQ3A.230805.001.S1".into())),
+            board: Some(Zeroizing::new("sunfish".into())),
+            mcc: Some(Zeroizing::new("000".into())),
+            mnc: Some(Zeroizing::new("000".into())),
+            phone_id: Some(Zeroizing::new(
+                "0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f".into(),
+            )),
+            year_class: Some(2020),
+            mem_class: Some(512),
+            traffic_anonymization: Some(TrafficAnonymization::Standard),
+        });
+        (config, account)
+    }
+
+    #[test]
+    fn configured_device_facts_fill_the_android_user_agent() {
+        let (config, account) = device_config();
+        config.validate().unwrap();
+        let payload =
+            ClientPayload::decode(primary_login(&account, &config).unwrap().as_slice()).unwrap();
+        let ua = payload.user_agent.unwrap();
+        assert_eq!(ua.platform, Some(Platform::Android as i32));
+        assert_eq!(ua.mcc.as_deref(), Some("000"));
+        assert_eq!(ua.mnc.as_deref(), Some("000"));
+        assert_eq!(ua.os_version.as_deref(), Some("13"));
+        assert_eq!(ua.manufacturer.as_deref(), Some("Google"));
+        // Build.DEVICE, not the marketing model name.
+        assert_eq!(ua.device.as_deref(), Some("sunfish"));
+        assert_eq!(ua.device_model_type.as_deref(), Some("Pixel 4a"));
+        assert_eq!(ua.os_build_number.as_deref(), Some("TQ3A.230805.001.S1"));
+        assert_eq!(ua.device_board.as_deref(), Some("sunfish"));
+        assert_eq!(
+            ua.phone_id.as_deref(),
+            Some("0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f")
+        );
+        assert_eq!(ua.device_type, Some(0), "PHONE");
+        assert_eq!(payload.year_class, Some(2020));
+        assert_eq!(payload.mem_class, Some(512));
+        assert_eq!(payload.traffic_anonymization, Some(1), "STANDARD");
+        // The official-client marker stays absent; nothing is attested here.
+        assert_eq!(payload.oc, None);
+        assert!(payload.device_pairing_data.is_none());
+    }
+
+    #[test]
+    fn absent_or_partial_device_facts_are_not_invented() {
+        let (mut config, account) = version_fixture();
+        config.client.device = None;
+        let payload =
+            ClientPayload::decode(primary_login(&account, &config).unwrap().as_slice()).unwrap();
+        assert_eq!(payload.year_class, None);
+        assert_eq!(payload.mem_class, None);
+        assert_eq!(payload.traffic_anonymization, None);
+        // A configured-but-partial block keeps the unset fields absent too.
+        config.client.device = Some(crate::registration::request::LoginDevice {
+            os_version: Some(Zeroizing::new("13".into())),
+            ..Default::default()
+        });
+        let payload =
+            ClientPayload::decode(primary_login(&account, &config).unwrap().as_slice()).unwrap();
+        let ua = payload.user_agent.unwrap();
+        assert_eq!(ua.os_version.as_deref(), Some("13"));
+        assert_eq!(ua.device, None);
+        assert_eq!(ua.manufacturer, None);
+        assert_eq!(ua.mcc, None);
+        assert_eq!(ua.phone_id, None);
+        assert_eq!(payload.year_class, None);
+    }
+
+    #[test]
+    fn impossible_device_facts_are_refused_by_validation() {
+        let (mut config, _) = version_fixture();
+        let base = crate::registration::request::LoginDevice {
+            os_version: Some(Zeroizing::new("13".into())),
+            mcc: Some(Zeroizing::new("000".into())),
+            mnc: Some(Zeroizing::new("000".into())),
+            phone_id: Some(Zeroizing::new(
+                "0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f".into(),
+            )),
+            year_class: Some(2020),
+            mem_class: Some(512),
+            ..Default::default()
+        };
+        config.client.device = Some(base.clone());
+        config.validate().unwrap();
+        let cases = [
+            crate::registration::request::LoginDevice {
+                os_version: Some(Zeroizing::new("".into())),
+                ..base.clone()
+            },
+            crate::registration::request::LoginDevice {
+                device: Some(Zeroizing::new("sun\nfish".into())),
+                ..base.clone()
+            },
+            crate::registration::request::LoginDevice {
+                mcc: Some(Zeroizing::new("00".into())),
+                ..base.clone()
+            },
+            crate::registration::request::LoginDevice {
+                mnc: Some(Zeroizing::new("0000".into())),
+                ..base.clone()
+            },
+            crate::registration::request::LoginDevice {
+                phone_id: Some(Zeroizing::new("not-a-uuid".into())),
+                ..base.clone()
+            },
+            crate::registration::request::LoginDevice {
+                year_class: Some(1999),
+                ..base.clone()
+            },
+            crate::registration::request::LoginDevice {
+                mem_class: Some(4096),
+                ..base.clone()
+            },
+        ];
+        for device in cases {
+            config.client.device = Some(device);
+            assert!(config.validate().is_err());
+        }
     }
 }

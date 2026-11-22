@@ -9,6 +9,11 @@
 //! Keep real numbers/tokens out of this tracked file. Null device values mean
 //! generate once and persist; they do not mean rotate on every request.
 //!
+//! `client.device` is the optional login `ClientPayload` user-agent block
+//! (43.72 `X.1m5`): real `Build.*` facts, three-digit mcc/mnc, phone id, heap
+//! and year classes, traffic anonymization. Null keeps the historical minimal
+//! payload; see docs/protocol/login-payload.md.
+//!
 //! Observed optional `/v2/code` fields (bridge A09): context, advertising_id,
 //! clicked_education_link, manage_call_permission, call_log_permission,
 //! client_start_message, type. Leave absent until their real producers and
@@ -25,8 +30,8 @@
 
 pub use super::request_config::{
     ClientSettings, DeliveryMethod, DeviceSettings, EndpointFields, IdentityChangePolicy,
-    LAB_PROFILE_ID, LabRegistrationConfig, MAX_CONFIG_BYTES, ProfileSettings, ReconnectSettings,
-    RequestBodyMode, TransportSettings,
+    LAB_PROFILE_ID, LabRegistrationConfig, LoginDevice, MAX_CONFIG_BYTES, ProfileSettings,
+    ReconnectSettings, RequestBodyMode, TrafficAnonymization, TransportSettings,
 };
 #[cfg(feature = "experimental-signal-crypto")]
 pub(crate) use super::request_config::{append_byte_fields, append_fields};
@@ -48,7 +53,8 @@ pub const TEMPLATE_JSON: &str = r#"{
   "method": "sms",
   "client": {
     "profile_id": "android-2.26.37.70-registration-lab",
-    "user_agent": "WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown"
+    "user_agent": "WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown",
+    "device": null
   },
   "device": {
     "facebook_device_id": null,
