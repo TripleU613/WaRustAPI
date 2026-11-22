@@ -620,7 +620,9 @@ pub fn begin_selected(
                 )?;
                 return Ok(None);
             }
-            let node = super::messaging::key_request(peer, &query_id);
+            // 43.72 X.0v0.A00: request PQ material when Can.A04(jid) holds.
+            let pq = super::abprops::pq_support_for_in_write(tx, peer)?;
+            let node = super::messaging::key_request_with_pq(peer, &query_id, pq);
             let request_sha256 = write_payload_sha256(&node)?;
             let saved = AccountRecord::load_in_write(tx)?;
             let authority = super::account_authority::fingerprint(tx.generation(), saved.as_ref())?;

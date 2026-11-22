@@ -320,6 +320,34 @@ the accessor; `kyber_inventory_and_batch_follow_returned_properties` shows a
 SET batch of 3, an ADD inventory of 5 with a batch of 3, and a later full reply
 without the codes restoring the defaults. No live account ran.
 
+### `pqsupport` on the key query (implemented 2026-11-22)
+
+**Confirmed static, 43.72.** The only wire use of the flag is the key-query
+writer `X.0v0.A00` (the `pqsupport` literal at dex offset 0x739878): when the
+job's `fetchPqPrekey` boolean is true it adds `pqsupport="true"` to the `<key>`
+element before its `<user>` children, inside the `iq xmlns=encrypt type=get`
+query. The same writer checks property **25904** (`0x6530`) and the peer's
+address class (`X.0Dn.A0l`, `A0Q`, `A0h`) to add a **`context_jid`** attribute;
+that attribute's effect is not traced and it is not implemented.
+
+`Can.A04(jid)` resolves to `(0DE.A0l(jid) || 0DE.A0T(jid)) && 21198 && 0jc.A11()
+&& property 24160`, where `0jc.A11` is "a last-resort KEM row exists and was
+uploaded" and 24160 (`0x5e60`) is registered false. For the observed account
+both 21198 and 24160 were false, so the official client does not send the flag
+there either.
+
+Rust: `abprops::pq_support_for` (and its write-transaction form) evaluates the
+same predicate against the settled A/B reply, the KEM inventory and the peer's
+address class; `messaging::key_request_with_pq` / `key_request_many_with_pq`
+add the attribute. It is used for the ordinary direct key query, the peer
+directory inspection and the retry refetch. Device-key batches keep their
+unchanged query because their boolean provenance is not retained. No PQ
+material is claimed: the flag requests it.
+
+Tests: `pq_support_flag_rides_on_the_key_element_only_when_requested` (wire
+shape) and `pq_support_needs_both_properties_and_a_sent_last_resort_row`
+(gate truth table, including a group JID).
+
 ### KEM batch scans refuse corrupt owned inventory (2026-11-05)
 
 **Confirmed local defect, fixed offline:** kem_prekeys.all_rows skipped JSON

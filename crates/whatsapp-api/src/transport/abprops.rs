@@ -30,6 +30,8 @@ const TOKEN_PENDING_NAMESPACE_PROPERTY: i32 = 14303;
 const PQ_KEYS_UPLOAD_PROPERTY: i32 = 0x52ce;
 // 43.72 08Y.A0Q registry: PQ inventory target (default 200) and upload batch
 // (default 10), captured by the 0WJ provider. Values are counts, not booleans.
+/// `0x5e60` (24160), the second `Can.A00` predicate input, registered false.
+pub const PQ_SUPPORT_PROPERTY: i32 = 0x5e60;
 /// Generation target for unsent one-time KEM keys (`0Yj.A00`).
 pub const PQ_INVENTORY_PROPERTY: i32 = 21200;
 /// Upload batch size for one-time KEM keys (`0jc.A1C`).
@@ -327,6 +329,44 @@ pub(crate) fn pq_keys_upload_enabled_in_write(tx: &crate::store::WriteTx<'_>) ->
         return Err(Error::invalid("abprops", "saved query action is missing"));
     };
     Ok(inspect_saved(&id, outcome, reply)?.pq_keys_upload_value == Some(true))
+}
+
+/// `Can.A04(jid)` for a user-addressable peer: the APK's key-fetch
+/// `pqsupport="true"` attribute (writer `X.0v0.A00`) is added only when
+///
+/// ```text
+/// (0DE.A0l(jid) || 0DE.A0T(jid))          // user/LID-style peer
+///   && property 21198                      // PQ keys enabled
+///   && 0jc.A11()                           // a sent last-resort KEM row exists
+///   && property 24160 (0x5e60)             // second gate, default false
+/// ```
+///
+/// A group, status or broadcast address never qualifies.
+pub fn pq_support_for(store: &ProtocolStore, peer: &Jid) -> Result<bool> {
+    if !peer.is_user_like() {
+        return Ok(false);
+    }
+    if !pq_keys_upload_enabled(store)? {
+        return Ok(false);
+    }
+    if !store.read(super::kem_prekeys::migrated_read_in)? {
+        return Ok(false);
+    }
+    Ok(property_value(store, PQ_SUPPORT_PROPERTY)?.is_some_and(|value| value != 0))
+}
+
+/// [`pq_support_for`] inside an existing write transaction.
+pub(crate) fn pq_support_for_in_write(tx: &crate::store::WriteTx<'_>, peer: &Jid) -> Result<bool> {
+    if !peer.is_user_like() {
+        return Ok(false);
+    }
+    if !pq_keys_upload_enabled_in_write(tx)? {
+        return Ok(false);
+    }
+    if !super::kem_prekeys::migrated_in(tx)? {
+        return Ok(false);
+    }
+    Ok(property_value_in_write(tx, PQ_SUPPORT_PROPERTY)?.is_some_and(|value| value != 0))
 }
 
 /// Last returned signed integer for one A/B property code.

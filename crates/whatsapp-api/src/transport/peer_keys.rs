@@ -155,8 +155,9 @@ pub fn queue(store: &ProtocolStore, peer: &Jid, refresh: bool) -> Result<String>
                 Error::invalid("peer_keys", "prior bundle signature is invalid; no refresh")
             })?;
         }
+        let pq = super::abprops::pq_support_for_in_write(tx, peer)?;
         let id = actions::queue_in(tx, "peer_keys", "peer directory inspection", |id| {
-            Ok(messaging::key_request(peer, id))
+            Ok(messaging::key_request_with_pq(peer, id, pq))
         })?;
         tx.put_json(Table::Checkpoints, key(peer).as_bytes(), 1, &id)?;
         Ok(id)

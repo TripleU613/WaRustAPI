@@ -295,6 +295,10 @@ pub(crate) fn upload_rows_in(tx: &mut WriteTx<'_>, batch: usize) -> Result<Vec<S
 
 /// Current-build migration predicate is an uploaded last-resort row
 /// (43.72 0WJ.A0z). The caller separately applies gate21198.
+pub(crate) fn migrated_read_in(tx: &ReadTx<'_>) -> Result<bool> {
+    Ok(all_rows(tx)?.iter().any(|r| r.last_resort && r.sent))
+}
+
 pub(crate) fn migrated_in(tx: &WriteTx<'_>) -> Result<bool> {
     Ok(all_rows(tx)?.iter().any(|r| r.last_resort && r.sent))
 }

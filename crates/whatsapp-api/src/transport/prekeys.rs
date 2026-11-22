@@ -2117,6 +2117,82 @@ mod tests {
     }
 
     #[test]
+    fn pq_support_needs_both_properties_and_a_sent_last_resort_row() {
+        use crate::transport::abprops::{PQ_SUPPORT_PROPERTY, pq_support_for};
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("pqsupport.redb"));
+        let (account, signed) = account_and_signed(&store);
+        let peer = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let group = Jid::parse("120363000000000001@g.us").unwrap();
+        // 21198 off at the static default: no PQ request even if 24160 were on.
+        assert!(!pq_support_for(&store, &peer).unwrap());
+        generate(&store).unwrap();
+        let (pending, iq) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        let id = iq.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        pending
+            .settle(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result"),
+            )
+            .unwrap();
+        // The server turns 21198 on; the last-resort row is not sent yet, so
+        // `0jc.A11` is still false.
+        let action = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", action.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "h").children(vec![
+                        Node::new("prop")
+                            .attr("config_code", "21198")
+                            .attr("config_value", "1"),
+                    ])]),
+        )
+        .unwrap();
+        assert!(!pq_support_for(&store, &peer).unwrap());
+        // One SET upload settles the last-resort row (`sent_to_server`).
+        generate(&store).unwrap();
+        let (pending, iq) = begin_upload(&store, &account, &signed).unwrap().unwrap();
+        let id = iq.get_attr("id").unwrap().as_text().unwrap().to_owned();
+        pending
+            .settle(
+                &store,
+                &Node::new("iq")
+                    .attr("id", id.as_str())
+                    .attr("type", "result"),
+            )
+            .unwrap();
+        // 24160 is the second predicate input and defaults false.
+        assert!(!pq_support_for(&store, &peer).unwrap());
+        let forced = super::super::abprops::queue_forced(&store)
+            .unwrap()
+            .unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", forced.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "h2").children(vec![
+                        Node::new("prop")
+                            .attr("config_code", "21198")
+                            .attr("config_value", "1"),
+                        Node::new("prop")
+                            .attr("config_code", PQ_SUPPORT_PROPERTY.to_string())
+                            .attr("config_value", "1"),
+                    ])]),
+        )
+        .unwrap();
+        assert!(pq_support_for(&store, &peer).unwrap());
+        // Only user/LID-style peers qualify (0DE.A0l / A0T).
+        assert!(!pq_support_for(&store, &group).unwrap());
+    }
+
+    #[test]
     fn kyber_keys_upload_only_behind_the_server_property() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("kyber.redb"));

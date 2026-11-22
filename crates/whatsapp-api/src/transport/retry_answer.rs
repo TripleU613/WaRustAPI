@@ -537,7 +537,9 @@ async fn answer_inner(
                 unanswered_key: key.clone(),
                 count: retry.count,
             };
-            let request = super::messaging::key_request(&peer, &query);
+            // 43.72 X.0v0.A00: ask for PQ material only when Can.A04 holds.
+            let pq = super::abprops::pq_support_for(store, &peer)?;
+            let request = super::messaging::key_request_with_pq(&peer, &query, pq);
             let request_sha256 = retry_payload_sha256(&request)?;
             let reserved = reserve_refetch(
                 store,

@@ -621,7 +621,17 @@ pub async fn write_node_until<S: AsyncRead + AsyncWrite + Unpin>(
 /// APK 2.26.37.71 0y0.A00 1786..193a: iq/get/encrypt -> key -> user/jid.
 /// Source: group-ack-writer-dispatch in the versioned groups research bundle.
 pub fn key_request(recipient: &Jid, id: &str) -> Node {
-    key_request_many(std::slice::from_ref(recipient), id).expect("one recipient is always in range")
+    key_request_with_pq(recipient, id, false)
+}
+
+/// One-recipient key query carrying the APK's `pqsupport="true"` flag.
+///
+/// 43.72 writer `X.0v0.A00` adds `pqsupport="true"` to the `<key>` element when
+/// the job's `fetchPqPrekey` boolean is set (from `Can.A04(jid)`); it is a
+/// request for post-quantum material, not a claim that this client has keys.
+pub fn key_request_with_pq(recipient: &Jid, id: &str, pq_support: bool) -> Node {
+    key_request_many_with_pq(std::slice::from_ref(recipient), id, pq_support)
+        .expect("one recipient is always in range")
 }
 
 /// Local maximum number of devices in one directory query; not a server limit.
@@ -639,7 +649,16 @@ pub const KEY_QUERY_MAX_DEVICES: usize = 32;
 /// **unknown**, so this refuses an unreasonably wide query rather than
 /// discovering the limit against a live account.
 pub fn key_request_many(recipients: &[Jid], id: &str) -> crate::Result<Node> {
-    key_request_many_with_identity_changes(recipients, &[], id)
+    key_request_many_with_pq(recipients, id, false)
+}
+
+/// Several-recipient query with the `pqsupport` flag on the shared `<key>`.
+pub fn key_request_many_with_pq(
+    recipients: &[Jid],
+    id: &str,
+    pq_support: bool,
+) -> crate::Result<Node> {
+    key_request_many_selected(recipients, &[], id, pq_support)
 }
 
 /// Build the legacy directory query, marking exactly the affected devices.
@@ -650,6 +669,15 @@ pub fn key_request_many_with_identity_changes(
     recipients: &[Jid],
     changed: &[Jid],
     id: &str,
+) -> crate::Result<Node> {
+    key_request_many_selected(recipients, changed, id, false)
+}
+
+fn key_request_many_selected(
+    recipients: &[Jid],
+    changed: &[Jid],
+    id: &str,
+    pq_support: bool,
 ) -> crate::Result<Node> {
     if recipients.is_empty() || recipients.len() > KEY_QUERY_MAX_DEVICES {
         return Err(crate::Error::invalid(
@@ -671,6 +699,25 @@ pub fn key_request_many_with_identity_changes(
             "identity-change devices must belong to the requested device set",
         ));
     }
+    // 43.72 writer X.0v0.A00: the key element carries pqsupport="true" when the
+    // caller asked for PQ material, before its user children.
+    let mut key = Node::new("key");
+    if pq_support {
+        key = key.attr("pqsupport", "true");
+    }
+    let key = key.children(
+        recipients
+            .iter()
+            .map(|jid| {
+                let node = Node::new("user").attr("jid", jid.clone());
+                if changed.iter().any(|peer| same(jid, peer)) {
+                    node.attr("reason", "identity")
+                } else {
+                    node
+                }
+            })
+            .collect(),
+    );
     Ok(Node::new("iq")
         .attr("id", id)
         .attr("xmlns", "encrypt")
@@ -679,21 +726,7 @@ pub fn key_request_many_with_identity_changes(
             "to",
             Jid::parse("s.whatsapp.net").expect("constant server JID"),
         )
-        .children(vec![
-            Node::new("key").children(
-                recipients
-                    .iter()
-                    .map(|jid| {
-                        let node = Node::new("user").attr("jid", jid.clone());
-                        if changed.iter().any(|peer| same(jid, peer)) {
-                            node.attr("reason", "identity")
-                        } else {
-                            node
-                        }
-                    })
-                    .collect(),
-            ),
-        ]))
+        .children(vec![key]))
 }
 
 /// Ask a sender to send a message again, because we could not decrypt it.
@@ -3846,6 +3879,33 @@ mod tests {
                 "too-wide"
             )
             .is_err()
+        );
+    }
+
+    #[test]
+    fn pq_support_flag_rides_on_the_key_element_only_when_requested() {
+        let peer = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let plain = key_request(&peer, "PQ0");
+        assert_eq!(plain.child("key").unwrap().get_attr("pqsupport"), None);
+        let requested = key_request_with_pq(&peer, "PQ1", true);
+        let key = requested.child("key").expect("key child");
+        assert_eq!(
+            key.get_attr("pqsupport").and_then(|v| v.as_text()),
+            Some("true")
+        );
+        assert_eq!(key.child_nodes().len(), 1);
+        assert_eq!(
+            key.child_nodes()[0]
+                .get_attr("jid")
+                .and_then(|v| v.as_jid()),
+            Some(&peer)
+        );
+        // Several devices share one key element and one flag.
+        let many = key_request_many_with_pq(&[peer.clone(), peer], "PQ2", true).unwrap();
+        let key = many.child("key").expect("key child");
+        assert_eq!(
+            key.get_attr("pqsupport").and_then(|v| v.as_text()),
+            Some("true")
         );
     }
 
