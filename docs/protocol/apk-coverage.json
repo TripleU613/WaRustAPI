@@ -176,7 +176,7 @@
     },
     "missing": [],
     "scope": "crates/whatsapp-api/src/**/*.rs excluding generated proto code",
-    "total": 157,
+    "total": 158,
     "uncited": [
       "crates/whatsapp-api/src/binary/mod.rs",
       "crates/whatsapp-api/src/capabilities.rs",
@@ -256,6 +256,7 @@
       "crates/whatsapp-api/src/transport/send_path.rs",
       "crates/whatsapp-api/src/transport/token_issue.rs",
       "crates/whatsapp-api/src/transport/two_factor.rs",
+      "crates/whatsapp-api/src/transport/unified_session.rs",
       "crates/whatsapp-api/src/transport/voice_note.rs"
     ]
   },

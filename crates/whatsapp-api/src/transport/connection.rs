@@ -1549,6 +1549,10 @@ pub(crate) async fn drive(
                         if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
                             return Err(Error::invalid("connection", "activation refused"));
                         }
+                        // 43.72 selected startup block: the unified-session
+                        // node is written right after the config GET and before
+                        // availability (`X.0Sb.A02` -> `X.1rj.A02/A03`).
+                        link.send(&super::unified_session::startup_node(&store)?).await?;
                         // Announce availability, as every real client does
                         // (LX/1Rd->A01). Sent only once activation is confirmed:
                         // writing it alongside the activation request would block
@@ -3502,9 +3506,21 @@ pub(super) mod tests {
                     .attr("type", "result"),
             )
             .await;
-            // Availability is announced once activation is confirmed, so every
-            // test that reasons about the next written stanza must account for
-            // it here rather than each re-deriving the session's opening.
+            // The unified-session node and availability are announced once
+            // activation is confirmed, so every test that reasons about the
+            // next written stanza must account for them here rather than each
+            // re-deriving the session's opening.
+            let (session, session_reply) = self.written().await;
+            assert_eq!(session.description, "ib");
+            let children = session.child_nodes();
+            assert_eq!(children.len(), 1);
+            assert_eq!(children[0].description, "unified_session");
+            let unified = children[0]
+                .get_attr("id")
+                .and_then(|v| v.as_text())
+                .expect("unified_session id");
+            assert!(unified.parse::<u64>().is_ok(), "numeric id: {unified}");
+            session_reply.send(Ok(())).unwrap();
             let (presence, presence_reply) = self.written().await;
             assert_eq!(presence.description, "presence");
             assert_eq!(
@@ -3764,6 +3780,9 @@ pub(super) mod tests {
                     written.send(Ok(())).unwrap();
                     fake.deliver(Node::new("iq").attr("type", "result").attr("id", id))
                         .await;
+                    let (session, written) = fake.written().await;
+                    assert_eq!(session.description, "ib");
+                    written.send(Ok(())).unwrap();
                 } else if phase != "activation" {
                     fake.activate().await;
                     let incoming = if phase == "pong" {
@@ -5614,6 +5633,9 @@ pub(super) mod tests {
         }
         fake.deliver(Node::new("iq").attr("id", active_id).attr("type", "result"))
             .await;
+        let (session, written) = fake.written().await;
+        assert_eq!(session.description, "ib");
+        written.send(Ok(())).unwrap();
         let (presence, written) = fake.written().await;
         assert_eq!(presence.description, "presence");
         written.send(Ok(())).unwrap();
@@ -6003,6 +6025,9 @@ pub(super) mod tests {
         }
         fake.deliver(Node::new("iq").attr("id", id).attr("type", "result"))
             .await;
+        let (session, written) = fake.written().await;
+        assert_eq!(session.description, "ib");
+        written.send(Ok(())).unwrap();
         let (presence, written) = fake.written().await;
         assert_eq!(presence.description, "presence");
         written.send(Ok(())).unwrap();

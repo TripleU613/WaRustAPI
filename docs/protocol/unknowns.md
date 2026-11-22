@@ -76,7 +76,10 @@ lifecycles remain open. See [the receive evidence](message-edit.md).
    `IKKEM`), but its remotely configured effective mode/variant must be
    observed at runtime.
 3. **Login payload** (`login.client_payload`): primary-device markers,
-   version fields, startup requests, resume behaviour. *Progress 2026-11-22:*
+   version fields, startup requests, resume behaviour. The selected startup
+   order and the `unified_session` stanza are now implemented; the push-config
+   GET, history sync and remaining startup gates stay open
+   ([startup requests](startup-requests.md)). *Progress 2026-11-22:*
    the 2.26.43.72 builder (`X.1lc`), the filler interface and the user-agent
    (`X.1m5`), connection (`X.1n9`) and identity/display-name (`X.1nX`) fillers
    are traced: `Build.*`-derived device fields, mcc/mnc normalization, phone-id

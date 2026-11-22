@@ -402,6 +402,9 @@ pub mod two_factor;
 #[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
 pub mod presence;
 
+#[cfg(all(feature = "experimental-noise", feature = "experimental-transport"))]
+pub mod unified_session;
+
 #[cfg(all(
     feature = "experimental-signal-crypto",
     feature = "experimental-noise",

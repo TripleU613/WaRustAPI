@@ -516,6 +516,12 @@ mod tests {
                         )
                         .await
                         .unwrap();
+                    // 43.72 startup: unified session first, then availability.
+                    let frame = reader.read_frame(&mut server).await.unwrap().unwrap();
+                    let session =
+                        super::super::inbox::decode_frame(&transport.decrypt(&frame).unwrap())
+                            .unwrap();
+                    assert_eq!(session.description, "ib");
                     let frame = reader.read_frame(&mut server).await.unwrap().unwrap();
                     let presence =
                         super::super::inbox::decode_frame(&transport.decrypt(&frame).unwrap())
