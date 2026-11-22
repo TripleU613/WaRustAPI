@@ -83,7 +83,9 @@ to="server"><privacy><category name="category" value="value"/></privacy></iq>`
 does not establish an infinite timeout, no retry, or a server-directed wait.
 Dispatch result/timeout handling and pending-state durability remain **unknown**.
 This is source authority for the local-off correction request, not authorization
-to send a request or add a settings mutation command now.
+to send a request automatically. (At trace time it was also not authorization to
+add a settings mutation command; that command now exists as an explicitly
+confirmed one-shot, see *Implemented offline* below.)
 
 **Confirmed scoped boundaries:** SettingsPrivacy.C62 maps the local key
 `read_receipts_enabled` to category `readreceipts`, converts an integer selection
