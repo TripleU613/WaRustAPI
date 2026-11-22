@@ -2028,6 +2028,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             }
             transport_receive::pq_delete(&cli, *show)
         }
+        #[cfg(feature = "experimental-transport")]
         Cmd::AccountPrivacySet {
             value,
             confirm,
@@ -2041,6 +2042,7 @@ async fn run(cli: Cli) -> Result<(), Error> {
             }
             transport_receive::account_privacy_set(&cli, value)
         }
+        #[cfg(feature = "experimental-transport")]
         Cmd::AccountPrivacyInspect { fetch } => {
             transport_receive::account_privacy_inspect(&cli, *fetch)
         }
