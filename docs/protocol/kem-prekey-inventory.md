@@ -395,7 +395,10 @@ that attribute's effect is not traced and it is not implemented.
 
 `Can.A04(jid)` resolves to `(0DE.A0l(jid) || 0DE.A0T(jid)) && 21198 && 0jc.A11()
 && property 24160`, where `0jc.A11` is "a last-resort KEM row exists and was
-uploaded" and 24160 (`0x5e60`) is registered false. For the observed account
+uploaded" and 24160 (`0x5e60`) is registered false. In 43.72 the equivalent
+names are `C33998Ex8.A04()` = 21198, `A03()` = `A04` + a sent last-resort row
+(`C0WJ.A0z`), `A02()` = `A03` + 24160, and `A06(jid)` = user-like address +
+`A02`; our `pq_support_for` matches `A06`. For the observed account
 both 21198 and 24160 were false, so the official client does not send the flag
 there either.
 
@@ -405,11 +408,19 @@ address class; `messaging::key_request_with_pq` / `key_request_many_with_pq`
 add the attribute. It is used for the ordinary direct key query, the peer
 directory inspection and the retry refetch. Device-key batches keep their
 unchanged query because their boolean provenance is not retained. No PQ
-material is claimed: the flag requests it.
+material is claimed: the flag requests it. This predicate is **not** the PQ
+session-upgrade producer; that is the candidate drain described in
+[key-query-context](key-query-context.md#producer-is-candidate-driven-not-a-property-predicate-2026-11-22).
+
+`prekeys --json` reports the settled gate inputs directly: `pq_keys_upload`
+(21198), `pq_second_gate` (24160) and `pq_support_ready` (`Can.A02`: upload on,
+a sent last-resort row, second gate on). An unsettled or absent value is null,
+never the default.
 
 Tests: `pq_support_flag_rides_on_the_key_element_only_when_requested` (wire
-shape) and `pq_support_needs_both_properties_and_a_sent_last_resort_row`
-(gate truth table, including a group JID).
+shape), `pq_support_needs_both_properties_and_a_sent_last_resort_row`
+(gate truth table, including a group JID) and
+`pq_support_gate_is_reported_from_settled_values` (summary truth table).
 
 ### KEM batch scans refuse corrupt owned inventory (2026-11-05)
 

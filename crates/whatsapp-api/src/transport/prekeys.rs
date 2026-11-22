@@ -216,6 +216,15 @@ pub struct Summary {
     pub kem_last_resort: usize,
     /// Historical acknowledged batches reporting PQ count_low; not current demand.
     pub pq_low_acknowledged_batches: usize,
+    /// Settled property 21198 (`PQ_KEYS_UPLOAD_CODE`); `None` when no settled
+    /// reply names it (unknown, not the registered default).
+    pub pq_keys_upload: Option<bool>,
+    /// Settled property 24160, the second PQ support gate; `None` when unknown.
+    pub pq_second_gate: Option<i32>,
+    /// `Can.A02`: upload enabled, a sent last-resort KEM row exists, and the
+    /// second gate is on. `pq_support_for` additionally requires a user-like
+    /// peer address.
+    pub pq_support_ready: bool,
     /// Saved refusal holds upload until the native retry policy is implemented.
     pub upload_held_after_refusal: bool,
 }
@@ -1266,6 +1275,12 @@ pub fn summary(store: &ProtocolStore) -> Result<Summary> {
             *summary.batches.entry(batch.status).or_default() += 1;
         }
         (summary.kem_local, summary.kem_last_resort) = super::kem_prekeys::counts(tx)?;
+        let (upload, second) = super::abprops::pq_gate_values_in(tx)?;
+        summary.pq_keys_upload = upload;
+        summary.pq_second_gate = second;
+        summary.pq_support_ready = upload == Some(true)
+            && super::kem_prekeys::migrated_read_in(tx)?
+            && second.is_some_and(|value| value != 0);
         Ok(summary)
     })
 }
@@ -2048,6 +2063,68 @@ mod tests {
     /// 13c.A03: Kyber keys ride with the upload only while property 21198 is
     /// on, and only with an unsent last-resort key; once that is acknowledged
     /// the next upload carries none.
+    #[test]
+    fn pq_support_gate_is_reported_from_settled_values() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("pq-gate.redb"));
+        // Unknown before any settled reply.
+        let view = summary(&store).unwrap();
+        assert_eq!(view.pq_keys_upload, None);
+        assert_eq!(view.pq_second_gate, None);
+        assert!(!view.pq_support_ready);
+        let settle = |code: &str, value: &str, delta: bool| {
+            let action = if delta {
+                super::super::abprops::queue_forced(&store)
+                    .unwrap()
+                    .unwrap()
+            } else {
+                super::super::abprops::queue(&store).unwrap()
+            };
+            super::super::actions::reserve_pending(&store).unwrap();
+            let mut props = Node::new("props").attr("hash", "h");
+            if delta {
+                props = props.attr("delta_update", "true");
+            }
+            super::super::actions::record_reply(
+                &store,
+                &Node::new("iq")
+                    .attr("id", action.as_str())
+                    .attr("type", "result")
+                    .children(vec![props.children(vec![Node::new("prop")
+                        .attr("config_code", code)
+                        .attr("config_value", value)])]),
+            )
+            .unwrap();
+        };
+        // 21198 on but no sent last-resort row yet.
+        settle("21198", "1", false);
+        let view = summary(&store).unwrap();
+        assert_eq!(view.pq_keys_upload, Some(true));
+        assert!(!view.pq_support_ready);
+        // A sent last-resort row needs the second gate (24160) too.
+        store
+            .write(|tx| super::super::kem_prekeys::generate_in(tx, true))
+            .unwrap();
+        let id = store
+            .read(|tx| super::super::kem_prekeys::all_rows(tx))
+            .unwrap()[0]
+            .id;
+        store
+            .write(|tx| super::super::kem_prekeys::mark_sent_in(tx, &[id]))
+            .unwrap();
+        assert!(!summary(&store).unwrap().pq_support_ready);
+        settle("24160", "1", true);
+        let view = summary(&store).unwrap();
+        assert_eq!(view.pq_second_gate, Some(1));
+        assert!(view.pq_support_ready);
+        // Turning the upload property off removes readiness without forgetting
+        // the second gate.
+        settle("21198", "0", true);
+        let view = summary(&store).unwrap();
+        assert_eq!(view.pq_keys_upload, Some(false));
+        assert!(!view.pq_support_ready);
+    }
+
     #[test]
     fn kyber_inventory_and_batch_follow_returned_properties() {
         use crate::transport::abprops::{PQ_BATCH_PROPERTY, PQ_INVENTORY_PROPERTY};

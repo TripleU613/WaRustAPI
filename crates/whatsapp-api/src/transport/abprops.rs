@@ -365,6 +365,18 @@ pub(crate) fn settled_reply_in(tx: &crate::store::ReadTx<'_>) -> Result<bool> {
     Ok(false)
 }
 
+/// 43.72 `Can.A02` inputs as settled values: property 21198 (upload enabled)
+/// and the second gate 24160 (`PQ_SUPPORT_PROPERTY`). `None` means no settled
+/// value, which is unknown, not a default.
+pub(crate) fn pq_gate_values_in(
+    tx: &crate::store::ReadTx<'_>,
+) -> Result<(Option<bool>, Option<i32>)> {
+    Ok((
+        property_value_in(tx, PQ_KEYS_UPLOAD_PROPERTY)?.map(|value| value != 0),
+        property_value_in(tx, PQ_SUPPORT_PROPERTY)?,
+    ))
+}
+
 /// `Can.A04(jid)` for a user-addressable peer: the APK's key-fetch
 /// `pqsupport="true"` attribute (writer `X.0v0.A00`) is added only when
 ///

@@ -706,9 +706,12 @@ pub fn key_request_many_with_identity_changes(
 /// native producer never supplies identity users on this path, but the writer
 /// checks identity first, so that precedence is preserved.
 ///
-/// This client does not generate or upload KEM prekeys yet, so it cannot
-/// complete a PQ upgrade; the builder exists for the exact wire and is exposed
-/// as an offline preview only. No send path selects it.
+/// The native producer is the `PqSessionUpgradeManager` daily drain of
+/// candidate devices, not this predicate: it selects devices with a REGULAR
+/// session and no PQ session (`C33732EsZ.A00`). Our session store keys by
+/// address only, with no REGULAR/PQ/STATELESS dimension, so the builder is an
+/// offline preview and no send path selects it yet. KEM publication does exist
+/// behind property 21198.
 pub fn key_request_many_with_pq_upgrade(
     recipients: &[Jid],
     changed: &[Jid],

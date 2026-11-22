@@ -75,9 +75,10 @@ pub struct PqUpgradePreview {
 /// Build the 43.72 PQ session-upgrade query offline (`isPqSessionUpgrade`):
 /// `pqsupport="true"` on `<key>` and `reason="pq"` on each user. The native
 /// writer refuses the request without PQ prekeys (1706..171e), so the same
-/// combination is refused here. Preview only: this client cannot complete a PQ
-/// upgrade until it generates and uploads KEM prekeys, so no send path selects
-/// this builder.
+/// combination is refused here. Preview only: the native producer is the
+/// candidate-driven `PqSessionUpgradeManager` drain (a REGULAR session exists
+/// and no PQ session does), and our session store cannot yet represent that
+/// session-type dimension, so no send path selects this builder.
 pub fn pq_upgrade_preview(peer: &Jid) -> Result<PqUpgradePreview> {
     validate(peer)?;
     let node = messaging::key_request_many_with_pq_upgrade(

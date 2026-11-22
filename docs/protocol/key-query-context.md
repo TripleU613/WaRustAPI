@@ -91,17 +91,59 @@ diagnostic text. `peer_keys::pq_upgrade_preview` builds the exact stanza
 offline and is exposed as `peer-keys --preview-pq-upgrade` (redacted:
 namespace, type, reason, `pq_support`, encoded size).
 
-**Why no send path:** a PQ session upgrade requires our KEM prekey to be
-published before a PQ bundle can be built; this client does not generate or
-upload one ([KEM inventory](kem-prekey-inventory.md)). Selecting the marker
-early would request material the upgrade cannot use, so it stays an offline
-builder until KEM generation exists. The `pqsupport` predicate
-([`pq_support_for`](kem-prekey-inventory.md#pqsupport-on-the-key-query-implemented-2026-11-22))
-is unchanged and already requires a sent KEM row.
+**Why no send path:** the producer is not the `pqsupport` predicate. It is a
+candidate drain, and our session store cannot yet represent its state (see the
+next section). The earlier reason given here — "no KEM prekey is generated or
+uploaded" — is **outdated**: the gated KEM producer and upload exist
+([KEM inventory](kem-prekey-inventory.md#producer-and-upload-gated-implemented-2026-11-01)).
+`abprops::pq_support_for` matches the 43.72 per-JID predicate
+([`A06`](kem-prekey-inventory.md#pqsupport-on-the-key-query-implemented-2026-11-22))
+but that only says *we* can use PQ material; it does not say a device needs an
+upgrade.
 
 Tests: `pq_upgrade_marks_each_user_with_reason_pq_after_identity`,
 `pq_upgrade_preview_requires_pq_support_and_prints_no_address`; the existing
 identity-change tests pin that ordinary producers never emit `reason="pq"`.
+
+### Producer is candidate-driven, not a property predicate (2026-11-22)
+
+**Confirmed static, 43.72:**
+
+- `LX/FK8.onDailyCron` (`PqSessionUpgradeManager`) is the only caller that
+  passes `isPqSessionUpgrade=true`. It requires server config `EMv.A06`
+  (wakeup threshold, `int > 0`) and `EMv.A05` (batch limit, `<= 500`),
+  `C33998Ex8.A05()` (21198 + 24160 + those config bounds) and `A02()`
+  (21198 + a sent last-resort row + 24160). It drains
+  `pq_session_upgrade_device_state` rows with `status = 0`, filters them with
+  `C33732EsZ.A00`, and calls
+  `C243214t.A00(null, E78.A02, manager, devices, 18, 0, 0, false, true, true)`
+  — `fetchPqPrekey=true`, `isPqSessionUpgrade=true`.
+- Predicate names in 43.72 (they differ from the 37.71 `Can.A0x` names):
+  `A04()` = 21198; `A03()` = `A04` && `C0WJ.A0z` (a **sent** last-resort row);
+  `A02()` = `A03` && 24160; `A06(jid)` = user-like address && `A02`.
+  `abprops::pq_support_for` already matches `A06`.
+- `C33732EsZ.A00(device)` is the "still needs upgrading" test: true when the
+  store has **no** session for `F3k.A06(device, E78.A02, E7N.A02)` and **has**
+  one for `E7N.A03`. `E7N` is the session key type: `REGULAR=0`, `PQ=1`,
+  `STATELESS=2`. A candidate is therefore "a REGULAR session exists and no PQ
+  session does".
+- A candidate that returns no PQ key is marked status `1` (not upgradable) by
+  the prekey listener (`C242814o` case 74 -> `RunnableC35142Fc2` case 9);
+  upgrade none/error answers are ignored without queuing a retry.
+
+**Our gap:** `SignalSessions` keys a session by address only
+(`comparison-direct:<jid>`); there is no REGULAR/PQ/STATELESS dimension, so
+"REGULAR session present, PQ session absent" cannot be represented, and an
+upgrade fetch would overwrite the same record. Sending the marker on ordinary
+key queries would therefore mark every new session as an upgrade and never
+converge. The builder stays preview-only until session-type keying exists.
+
+**Not established:** where a status-0 candidate row is inserted. The schema is
+in `C36821jC`, the drain in `FK8`, `markNotUpgradable` in
+`RunnableC35142Fc2`, `clear` in `C32659EaO`, and status reads in
+`C35428Fge`; no status-0 insert was found by searching the table name across
+the decompiled sources. The wakeup counter (`pq_session_upgrade_cron_wakeups`)
+is reset when the drain runs, but its increment site was not traced.
 
 ## Limits
 
