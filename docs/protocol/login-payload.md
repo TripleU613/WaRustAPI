@@ -1,5 +1,9 @@
 # Login `ClientPayload` construction (Android primary)
 
+What the client writes *after* this payload is accepted is covered in
+[startup requests](startup-requests.md) (push-config GET, `ib`/`unified_session`,
+availability).
+
 Status: **partly implemented**. The Android user-agent block is filled from
 configured, real device facts. The remaining top-level fields are traced below
 but still absent (see [Gaps](#gaps-still-open)).
