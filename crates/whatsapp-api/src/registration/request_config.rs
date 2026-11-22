@@ -155,7 +155,8 @@ pub struct LoginDevice {
     /// Persisted per-install UUID (`userAgent.phoneId`). Null means absent;
     /// this client never generates one silently.
     pub phone_id: Option<Zeroizing<String>>,
-    /// Device performance class (`yearClass`), 2000..=2100.
+    /// Device performance class (`yearClass`), 2009..=2016. This is the APK's
+    /// RAM/CPU class, not the model's release year.
     pub year_class: Option<u32>,
     /// Android heap class in MiB (`memClass`), 16..=2048.
     pub mem_class: Option<u32>,
@@ -228,11 +229,11 @@ impl LoginDevice {
             ));
         }
         if let Some(year) = self.year_class
-            && !(2000..=2100).contains(&year)
+            && !(2009..=2016).contains(&year)
         {
             return Err(Error::invalid(
                 "client.device.year_class",
-                "must be a device performance year in 2000..=2100",
+                "must be an APK device year class in 2009..=2016 (RAM/CPU class, not the model year)",
             ));
         }
         if let Some(class) = self.mem_class

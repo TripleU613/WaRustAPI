@@ -310,7 +310,7 @@ mod tests {
             phone_id: Some(Zeroizing::new(
                 "0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f".into(),
             )),
-            year_class: Some(2020),
+            year_class: Some(2016),
             mem_class: Some(512),
             traffic_anonymization: Some(TrafficAnonymization::Standard),
         });
@@ -339,7 +339,7 @@ mod tests {
             Some("0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f")
         );
         assert_eq!(ua.device_type, Some(0), "PHONE");
-        assert_eq!(payload.year_class, Some(2020));
+        assert_eq!(payload.year_class, Some(2016));
         assert_eq!(payload.mem_class, Some(512));
         assert_eq!(payload.traffic_anonymization, Some(1), "STANDARD");
         // The official-client marker stays absent; nothing is attested here.
@@ -388,7 +388,7 @@ mod tests {
             phone_id: Some(Zeroizing::new(
                 "0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f".into(),
             )),
-            year_class: Some(2020),
+            year_class: Some(2016),
             mem_class: Some(512),
             ..Default::default()
         };
@@ -416,7 +416,7 @@ mod tests {
                 ..base.clone()
             },
             crate::registration::request::LoginDevice {
-                year_class: Some(1999),
+                year_class: Some(2008),
                 ..base.clone()
             },
             crate::registration::request::LoginDevice {

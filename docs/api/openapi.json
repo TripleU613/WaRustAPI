@@ -2915,9 +2915,9 @@
                   },
                   "year_class": {
                     "type": ["integer", "null"],
-                    "minimum": 2000,
-                    "maximum": 2100,
-                    "description": "Device performance year → ClientPayload.yearClass (36)"
+                    "minimum": 2009,
+                    "maximum": 2016,
+                    "description": "APK device RAM/CPU year class → ClientPayload.yearClass (36); not the model release year"
                   },
                   "mem_class": {
                     "type": ["integer", "null"],

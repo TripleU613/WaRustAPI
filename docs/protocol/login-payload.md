@@ -85,11 +85,16 @@ Also written by this filler, at top level: `oc`, `yearClass`, `memClass`.
   XOR-decodes a fixed key and compares against an allowlist of signature bytes.
   An app with an allow-listed signature therefore ends with `oc = false`. The
   semantic meaning of the flag is **not** established from this trace.
-- `yearClass` = `C38351mz.A01(prefs, app)`: a RAM/CPU-derived performance year
-  cached in `startup_prefs` (`year_class_cached_value_2016_pref`); e.g. ≤768 MiB
-  → 2010/2009, ≤1 GiB → 2012/2011, ≤1.5 GiB → 2013, ≤3 GiB → 2014, ≤5 GiB →
-  2015, else 2016.
-- `memClass` = `C1n0.A01(app)` = `ActivityManager.getMemoryClass()` in MiB.
+- `yearClass` = `C38351mz.A01(prefs, app)`: a **RAM/CPU class**, not the model's
+  release year. It is cached in `startup_prefs`
+  (`year_class_cached_value_2016_pref`) and computed from
+  `ActivityManager.MemoryInfo.totalMem` with a core-count tie-break
+  (`AbstractC50846MVc.A02/A01/A00`): ≤768 MiB → 2010/2009, ≤1 GiB → 2012/2011,
+  ≤1.5 GiB → 2013, ≤2 GiB → 2013, ≤3 GiB → 2014, ≤5 GiB → 2015, else 2016. The
+  observed range is therefore **2009..=2016** and Linux-swap/RAM class, not
+  hardware age.
+- `memClass` = `C1n0.A01(app)` = `ActivityManager.getMemoryClass()` in MiB
+  (the app heap growth limit, e.g. 256 on a 6 GiB phone).
 
 ## Other confirmed fillers
 
@@ -117,24 +122,26 @@ Validation refuses values the APK cannot produce: printable ASCII 1..=64 for
 the text facts, exactly three digits for `mcc`/`mnc`, a canonical UUID for
 `phone_id`, `year_class` 2000..=2100, `mem_class` 16..=2048.
 
-Example (private JSON; values are the operator's real device facts):
+Example (private JSON; the values below are what the plugged-in Pixel 4a
+reports today, with `<mcc>`/`<mnc>` left as the operator's own network code — a
+tracked file must not carry a personal carrier identity):
 
 ```json
 "client": {
   "profile_id": "android-2.26.37.70-registration-lab",
-  "user_agent": "WhatsApp/2.26.43.72 Android/13 Device/Google-Pixel 4a",
+  "user_agent": "WhatsApp/2.26.43.72 Android/17 Device/Google-Pixel 4a",
   "device": {
-    "os_version": "13",
+    "os_version": "17",
     "manufacturer": "Google",
     "device": "sunfish",
     "model": "Pixel 4a",
-    "os_build_number": "TQ3A.230805.001.S1",
+    "os_build_number": "CP2A.260605.016",
     "board": "sunfish",
-    "mcc": "000",
-    "mnc": "000",
+    "mcc": "<mcc>",
+    "mnc": "<mnc>",
     "phone_id": "<uuid>",
-    "year_class": 2020,
-    "mem_class": 512,
+    "year_class": 2016,
+    "mem_class": 256,
     "traffic_anonymization": "off"
   }
 }
@@ -169,3 +176,29 @@ hyphens after the first separator.
 
 No live login was performed for this change; it is an offline construction
 parity change.
+
+## Observed device facts (2026-11-22, USB-connected Pixel 4a)
+
+**Observed**, read with `adb shell getprop …`, `/proc/meminfo` and
+`dumpsys telephony.registry`; these are the values `Build.*` hands the filler,
+not values invented for a test:
+
+| Fact | Device value | Command |
+| --- | --- | --- |
+| `ro.product.model` | `Pixel 4a` | `getprop ro.product.model` |
+| `ro.product.manufacturer` | `Google` | `getprop ro.product.manufacturer` |
+| `ro.product.device` | `sunfish` | `getprop ro.product.device` |
+| `ro.product.board` | `sunfish` | `getprop ro.product.board` |
+| `ro.build.version.release` | `17` | `getprop ro.build.version.release` |
+| `ro.build.display.id` | `CP2A.260605.016` | `getprop ro.build.display.id` |
+| `ro.build.version.sdk` | `37` | `getprop ro.build.version.sdk` |
+| `dalvik.vm.heapgrowthlimit` | `256m` → `memClass` 256 | `getprop dalvik.vm.heapgrowthlimit` |
+| `MemTotal` | 5,717,360 kB ≈ 5.45 GiB → `yearClass` **2016** (>5 GiB branch) | `/proc/meminfo` |
+
+Two caveats worth keeping: the device's `ro.build.fingerprint` still names
+`…:13/TQ3A.230805.001.S1:…` while `ro.build.version.release` reports `17`, so
+this handset's release/display props do not match its fingerprint — the APK
+sends the props it reads, and so does this client. The network operator code
+(`TelephonyManager.getNetworkOperator()`, derived from
+`gsm.operator.numeric`/registration state, `mcc`/`mnc`) is deliberately not
+recorded here.
