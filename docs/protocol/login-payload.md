@@ -102,17 +102,49 @@ Also written by this filler, at top level: `oc`, `yearClass`, `memClass`.
   server-configured experiment is on, else `OFF` (AB prop **4982**).
 - `case 458` (`X.1n3`): always writes `connectType` from the live network
   (WiFi → `WIFI_UNKNOWN`; cellular subtype; otherwise `CELLULAR_UNKNOWN`),
-  `dnsSource` `{dnsMethod, appCached}` from the resolver that answered,
-  `connectAttemptCount` = the login context's `attemptedSuccessfulConnections`,
-  and a packed `connectionSequenceInfo` (43). Confirmed bit layout of the
-  packed value: bits 0..2 port class (80→0, 443→1, 5222→2, other→3), bits 2..5
-  host-type code via `AbstractC37551kP.A00`, bit 5 `!pref.A02`, bits 7..12 the
-  sequence step (`& 31`), bit 12 `networkProvider.A0P() == true`. The host-type
-  input (`ConnectionMetadata.A06`), sequence step and the two provider booleans
-  remain untraced, so Rust writes none of these four fields yet.
-  `X.1je.A01` shows the resolver's own hardcoded path for `g.whatsapp.net` is
-  `dnsMethod=HARDCODED, appCached=false`; the system path is
-  `dnsMethod=SYSTEM, appCached=false`.
+  `dnsSource` `{dnsMethod, appCached}`, `connectAttemptCount`, and a packed
+  `connectionSequenceInfo` (43). Full trace in
+  [the connection-sequence section](#connectionsequenceinfo-43).
+
+## `connectionSequenceInfo` (43)
+
+**Confirmed static** for 43.72.
+
+`X.1jv.A0I` (advance-sequence) runs before each socket attempt. It increments
+the sequence-step counter `X.1jv.A08` by one (`iget`/`add-int/lit8`/`iput`, the
+only writer of that field) and stores the attempt time in `A09`. The login
+context `X.1lb.A01` is that counter ("sequenceStep" in `XmppLoginContext`),
+and `ConnectionMetadata.A06` is the current sequence *state* code, set from
+`X.1k5.A00` in `tryOpenSocket` (state 15 replays the last successful state).
+
+First attempt with no cached lookup IPs, no fallback cache, no user proxy and
+no `ipaddress` override (`X.1jv.A0I` case 0 → state 5): `X.1k5.A02` case 5
+resolves `g.whatsapp.net` through `X.1k5.A03`, and that resolver's system path
+returns `C37531kN(0, false)` (SYSTEM, not app-cached); its MNS path returns
+5/6 (with `appCached` from the MNS answer), hardcoded returns 2, and an edge
+host returns 3. The APK picks 443 or 5222 at random per sequence instance
+(`X.1k5.<init>` `random.nextBoolean()`).
+
+`AbstractC37551kP.A00(state)` maps the state code to the packed host code:
+
+| state | 1,5,9 | 2,3,4 | 6,10 | 7,11 | 8 | 13,14 | 12, other |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| host code | 2 | 1 | 5 | 6 | 3 | 4 | null → 1 |
+
+Packing (`AnonymousClass270` case 458):
+
+```text
+bits 0..2   port class: 80→0, 443→1, 5222→2, other→3
+bits 2..5   host-type code (above)
+bit  5      !X.0BD.A02  (A02 is the app-backgrounded flag)
+bits 7..12  sequence step & 31
+bit  12     active network has TRANSPORT_VPN (X.0BD provider `A0P`)
+```
+
+`X.0BD.A02` is written `true` by one app-state observer and `false` by the
+other (`X.1Wb.run`, `X.Fem.run`), so bit 5 answers "was the app foregrounded
+when it connected". Bit 12 comes from
+`NetworkCapabilities.hasTransport(4)` (VPN).
 - `case 459` (`X.1n9`): `passive`; `sessionId` from the caller's
   `ConnectionMetadata.sessionId`; `shortConnect` from a preference; `lc` from the
   persisted `connection_lc` counter; `connectReason` written as `UNKNOWN` first
@@ -191,8 +223,9 @@ absent rather than empty. The caller passes it explicitly, so a login builder
 cannot silently invent a name.
 
 **Connection facts.** Every login carries `LoginConnection`: the reason, the
-finished-attempt count (`connectAttemptCount` 16 and `lc` 24), and a random
-`sessionId` (9). The count is persisted under the private checkpoint
+finished-attempt count (`connectAttemptCount` 16 and `lc` 24), a random
+`sessionId` (9), `dnsSource` (15) and the packed `connectionSequenceInfo` (43).
+The count is persisted under the private checkpoint
 `comparison-connection-counter-v1` and advances once after a login stanza was
 written, wrapping like `X.1jy.A05`; the payload therefore carries the number of
 attempts that already finished. The APK keeps `lc` in preferences and the thread
@@ -200,6 +233,18 @@ counter in memory, so this client models both with the persisted value: they
 agree within one process, and after a restart the second can be higher than the
 APK's in-memory counter. `sessionId` is four fresh random bytes per attempt,
 matching the APK's `Random.nextInt()`.
+
+`dnsSource` is `SYSTEM` with `appCached=false`: this client resolves the
+gateway through the operating system resolver, which is the APK's own system
+fallback path (`X.1je.A03`), not a hardcoded, MNS or cached answer.
+
+`connectionSequenceInfo` is packed from what this client actually does: TCP 443
+to `g.whatsapp.net` resolved by the system, no proxy, no VPN transport, and the
+interactive process that initiated the login. That gives port class 1, host
+code 2 (state 5), bit 5 set, and step `finished + 1` (masked to 31). The
+segments are fields on `LoginConnection`, so a different endpoint or a
+backgrounded listener can be represented without changing the encoder. A unit
+test checks each segment and the 31 step wrap against the traced layout.
 
 **Connect reason.** An explicit request (`connect`, `listen` start,
 `lab-transport --login`) is the APK's `USER_ACTIVATED` trigger. Every automatic
@@ -220,14 +265,17 @@ hyphens after the first separator.
 ## Gaps still open
 
 - Which fillers the server actually enables (AB props 7482/7483) — unknown.
-- `connectType`/`dnsSource`/`connectAttemptCount`'s connection-sequence packing
-  (`connectionSequenceInfo`, 43): the values come from live network state and a
-  packed bit field that was not re-read.
+- `connectType` (12): the APK reads the live Android network type. A non-Android
+  process has no portable equivalent, so the field stays absent until a truthful
+  value is supplied; no network type is invented.
 - `oc` semantics; this client never sets it.
 - `messageSts` field number, and whether `product`, `shards`, `pull`,
   `paddingBytes`, `lidDbMigrated`, `paaLink`, `preacksCount`,
   `processingQueueSize` or `interopData` are written for an ordinary primary
   Android login.
+- The packed `foreground`/`vpn` segments are local state, not device facts: this
+  client reports "foreground, no VPN transport" and never probes the host
+  network for a VPN.
 
 No live login was performed for this change; it is an offline construction
 parity change.

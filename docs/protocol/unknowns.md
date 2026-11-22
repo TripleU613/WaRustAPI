@@ -82,10 +82,11 @@ lifecycles remain open. See [the receive evidence](message-edit.md).
    are traced: `Build.*`-derived device fields, mcc/mnc normalization, phone-id
    UUID, year/mem class, traffic anonymization, `oc`/signature check, the
    persisted `lc` and in-memory attempt counters, a random per-socket
-   `sessionId`, the UNKNOWN/USER_ACTIVATED reason rule and the
-   `deviceExpId`/`perf_device_id` encoding are readable. Rust fills all of
-   those from configured or persisted facts. `connectType`, `dnsSource`,
-   `connectionSequenceInfo` and which fillers the server enables remain open. [Trace, evidence and gaps](login-payload.md).
+   `sessionId`, the UNKNOWN/USER_ACTIVATED reason rule, the
+   `deviceExpId`/`perf_device_id` encoding, `dnsSource` and the packed
+   `connectionSequenceInfo` layout are readable. Rust fills all of those except
+   `connectType` (no portable non-Android network type) from configured or
+   persisted facts; which fillers the server enables remains open. [Trace, evidence and gaps](login-payload.md).
 4. **Noise record sizes** (`noise.record_limit`) to accept or reject `snow`.
    The 2.26.37.70 comparison frame writer uses a three-byte big-endian
    length and rejects bodies at or above 16,777,216 bytes. This framing

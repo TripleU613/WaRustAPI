@@ -35,6 +35,9 @@ const CONNECTION_COUNTER: &[u8] = b"comparison-connection-counter-v1";
 ///   restart the second can be larger than the APK's in-memory value.
 /// * `session_id`: the APK generates a random `int` when a socket connects
 ///   (`ConnectionThread/tryOpenSocket: socket connected; sessionId=…`).
+/// * `port_class`/`host_type`/`sequence_step`/`foreground`/`vpn` are the five
+///   segments of `connectionSequenceInfo` (43). See
+///   [`LoginConnection::sequence_info`] for the traced layout.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LoginConnection {
     /// `connectReason` (13).
@@ -45,18 +48,61 @@ pub struct LoginConnection {
     pub session_id: i32,
     /// `lc` (24).
     pub lifetime_connections: u32,
+    /// Packed bits 0..2: port class (80→0, 443→1, 5222→2, other→3).
+    pub port_class: u8,
+    /// Packed bits 2..5: host-type code from `AbstractC37551kP.A00(step)`.
+    pub host_type: u8,
+    /// Packed bits 7..12: the sequence-step counter, masked to 31.
+    pub sequence_step: u32,
+    /// Packed bit 5: the app was not backgrounded when it connected.
+    pub foreground: bool,
+    /// Packed bit 12: the active network is an Android VPN transport.
+    pub vpn: bool,
 }
 
 impl LoginConnection {
     /// Facts for one attempt. `finished` is the persisted number of attempts
     /// that already completed before this one.
+    ///
+    /// The packed segments describe what this client actually does: it opens
+    /// TCP/443 to the primary gateway `g.whatsapp.net` resolved by the system
+    /// resolver, with no proxy, VPN transport or fallback host. That is the
+    /// APK's sequence state 5 with no cached answer
+    /// (`AbstractC37551kP.A00(5) == 2`), whose step counter is advanced once
+    /// per attempt (`A08++` in `X.1jv.A0I`), so this attempt is step
+    /// `finished + 1`.
     pub fn for_attempt(reason: ConnectReason, finished: u32, session_id: i32) -> Self {
         Self {
             reason,
             attempts: finished,
             session_id,
             lifetime_connections: finished,
+            port_class: 1,
+            host_type: 2,
+            sequence_step: finished.wrapping_add(1),
+            foreground: true,
+            vpn: false,
         }
+    }
+
+    /// Packed `connectionSequenceInfo` (43), traced from 43.72
+    /// `AnonymousClass270` case 458 (`X.1n3`):
+    ///
+    /// ```text
+    /// bits 0..2   port class: 80→0, 443→1, 5222→2, other→3
+    /// bits 2..5   host-type code from AbstractC37551kP.A00(step)
+    /// bit  5      !appBackgrounded (C0BD.A02)
+    /// bits 7..12  sequence step & 31
+    /// bit  12     active network has TRANSPORT_VPN
+    /// ```
+    pub fn sequence_info(&self) -> i32 {
+        let port = i32::from(self.port_class & 0x03);
+        let host = i32::from(self.host_type & 0x07) << 2;
+        let foreground = i32::from(self.foreground) << 5;
+        let step = (self.sequence_step & 0x1f) as i32;
+        let step = step << 7;
+        let vpn = i32::from(self.vpn) << 12;
+        port | host | foreground | step | vpn
     }
 }
 
@@ -252,6 +298,14 @@ pub fn primary_login(
         connect_attempt_count: Some(connection.attempts),
         session_id: Some(connection.session_id),
         lc: Some(connection.lifetime_connections as i32),
+        connection_sequence_info: Some(connection.sequence_info()),
+        // 43.72 `X.1n3` always writes `dnsSource`. This client resolves the
+        // gateway with the operating system's resolver: the APK's system path
+        // (`X.1je.A03` → `C37531kN(0, false)`), not its hardcoded/MNS caches.
+        dns_source: Some(client_payload::DnsSource {
+            dns_method: Some(client_payload::dns_source::DnsResolutionMethod::System as i32),
+            app_cached: Some(false),
+        }),
         ..Default::default()
     };
     if let Some(device) = &config.client.device {
@@ -559,6 +613,12 @@ mod tests {
         assert_eq!(payload.lc, Some(2));
         assert_eq!(payload.passive, Some(false));
         assert_eq!(payload.short_connect, Some(false));
+        // 443 class 1, host code 2, foreground, step 3, no VPN:
+        // 1 | (2<<2) | (1<<5) | (3<<7) = 425.
+        assert_eq!(payload.connection_sequence_info, Some(425));
+        let dns = payload.dns_source.expect("dns source");
+        assert_eq!(dns.dns_method, Some(0), "SYSTEM");
+        assert_eq!(dns.app_cached, Some(false));
         // An automatic reconnect is the APK's UNKNOWN default, not a claim that
         // a user just opened the app.
         let retry = LoginConnection::for_attempt(ConnectReason::Unknown, 7, 5);
@@ -677,6 +737,34 @@ mod tests {
         assert_eq!(
             payload.user_agent.unwrap().device_exp_id.as_deref(),
             Some("DW8PmhwrTD2OT1prfI2eDw")
+        );
+    }
+
+    #[test]
+    fn connection_sequence_info_matches_the_traced_packing() {
+        // First attempt from a clean install: 443 (1), primary host (2),
+        // foreground (1 at bit 5), step 1 (bit 7), no VPN.
+        let first = LoginConnection::for_attempt(ConnectReason::UserActivated, 0, 1);
+        assert_eq!(first.sequence_info(), 1 | 8 | 32 | 128);
+        assert_eq!(first.sequence_info(), 169);
+        // Step is the attempt counter + 1, masked to 31 by the packing.
+        let third = LoginConnection::for_attempt(ConnectReason::Unknown, 2, 1);
+        assert_eq!(third.sequence_info(), 1 | 8 | 32 | (3 << 7));
+        let wrapped = LoginConnection::for_attempt(ConnectReason::Unknown, 31, 1);
+        assert_eq!(wrapped.sequence_step, 32);
+        assert_eq!(wrapped.sequence_info(), 1 | 8 | 32, "32 & 31 == 0");
+        // The other segments pack where the trace says they do.
+        let background_vpn = LoginConnection {
+            foreground: false,
+            vpn: true,
+            port_class: 3,
+            host_type: 5,
+            sequence_step: 31,
+            ..first
+        };
+        assert_eq!(
+            background_vpn.sequence_info(),
+            3 | (5 << 2) | (31 << 7) | (1 << 12)
         );
     }
 
