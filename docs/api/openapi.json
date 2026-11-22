@@ -11863,7 +11863,7 @@
           "Accounts"
         ],
         "summary": "Inspect the saved server read-receipt preference offline",
-        "description": "Reads only the supported account_sync/privacy/readreceipts checkpoint. Missing remains unknown (null), never an inferred default. Native Boolean conversion is true for all/on_standard and false for contacts/none/known/off. This does not change explicit local read or read-self policy, queue a refresh, send traffic, or create a missing store. Current APK 2.26.43.72 evidence in docs/protocol/account-privacy-notifications.md. CLI only; no served HTTP route.",
+        "description": "Reads only the supported account_sync/privacy/readreceipts checkpoint. Missing remains unknown (null), never an inferred default. Native Boolean conversion is true for all/on_standard and false for contacts/none/known/off. This does not change explicit local read or read-self policy, queue a refresh, send traffic, or create a missing store. Current APK 2.26.43.72 evidence in docs/protocol/account-privacy-notifications.md. CLI only; no served HTTP route. With --fetch the classic SMAX privacy read (iq get xmlns=privacy with an empty privacy child) is queued on the durable action queue for listen to transmit; property 23463 selects MEX/shadow, which is refused because those forms are unimplemented. The correlated reply is parsed into a category count/names and a validated readreceipts value only; fetched values are never adopted and MEX set/fetch remain unported. Evidence docs/protocol/read-setting-bootstrap.md.",
         "operationId": "inspectAccountPrivacy",
         "x-cli": "whatsapp-cli account-privacy-inspect",
         "x-transport": [
@@ -11872,7 +11872,10 @@
         "x-live": false,
         "x-library": [
           "whatsapp_api::transport::account_privacy::read_receipts",
-          "whatsapp_api::transport::account_privacy::ReadReceiptValue::enabled"
+          "whatsapp_api::transport::account_privacy::ReadReceiptValue::enabled",
+          "whatsapp_api::transport::privacy_fetch::queue",
+          "whatsapp_api::transport::privacy_fetch::inspect",
+          "whatsapp_api::transport::privacy_fetch::mode"
         ],
         "responses": {
           "200": {

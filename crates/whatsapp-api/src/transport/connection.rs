@@ -8884,6 +8884,76 @@ pub(super) mod tests {
     }
 
     #[tokio::test]
+    async fn classic_privacy_fetch_is_sent_settled_and_never_adopted() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("privacy-fetch.redb"));
+        // Queued before the session starts; the action drain transmits it after
+        // activation.
+        super::super::privacy_fetch::queue(&store).unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (fetch, written) = fake.written().await;
+        assert_eq!(fetch.description, "iq");
+        assert_eq!(
+            fetch.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("privacy")
+        );
+        assert_eq!(
+            fetch.get_attr("type").and_then(|v| v.as_text()),
+            Some("get")
+        );
+        let children = fetch.child_nodes();
+        assert_eq!(children.len(), 1);
+        assert_eq!(children[0].description, "privacy");
+        let id = fetch
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .unwrap()
+            .to_owned();
+        written.send(Ok(())).unwrap();
+        // The live callback is registered only after the writer reports the
+        // completed write, so a reply can race it. Redeliver the same reply
+        // until it settles; a dropped copy has no effect and the id is consumed
+        // exactly once.
+        let reply = || {
+            Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("privacy").children(vec![
+                    Node::new("category")
+                        .attr("name", "readreceipts")
+                        .attr("value", "none"),
+                ])])
+        };
+        let settled = tokio::time::timeout(Duration::from_secs(2), async {
+            loop {
+                fake.deliver(reply()).await;
+                tokio::time::sleep(Duration::from_millis(10)).await;
+                if let Some(view) = super::super::privacy_fetch::inspect(&store).unwrap()
+                    && view.status == "received"
+                {
+                    return view;
+                }
+            }
+        })
+        .await
+        .expect("fetch settles");
+        assert_eq!(settled.status, "received");
+        assert_eq!(settled.categories, 1);
+        assert_eq!(
+            settled.read_receipts,
+            Some(super::super::account_privacy::ReadReceiptValue::None)
+        );
+        // The fetched value is evidence only; it was not adopted.
+        assert!(
+            super::super::account_privacy::read_receipts(&store)
+                .unwrap()
+                .is_none()
+        );
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
     async fn queued_prekey_upload_rechecks_authority_before_writer_encoding() {
         let dir = tempfile::tempdir().unwrap();
         for case in [

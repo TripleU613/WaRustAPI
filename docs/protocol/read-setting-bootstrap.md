@@ -1,5 +1,25 @@
 # Privacy setting fetch, callback and observer boundaries
 
+**Implemented offline (2026-11-22):** `transport::privacy_fetch` queues the
+classic SMAX fetch (`iq type=get xmlns=privacy` to `s.whatsapp.net` with a
+single empty `<privacy/>` child) on the durable action queue and inspects the
+correlated reply. The path is selected by integer property **23463** (1 → MEX,
+2 → shadow, other/absent → SMAX, per `0sv.A0M`); an account whose property
+selects MEX or shadow is refused with a named diagnostic instead of sending the
+wrong form. Reply parsing follows `FdY.C8f`: the first child must be `privacy`;
+each `category` takes text `name`/`value`, a value of `error` takes the first
+child's `code`, and entries with a missing name/value/code are dropped; the last
+duplicate wins. The inspection reports the category count, names and a validated
+`readreceipts` value, and **adopts nothing** — adoption stays with the
+notification/map authority below. CLI: `account-privacy-inspect --fetch`.
+Tests: `fetch_mode_follows_property_23463_and_defaults_to_smax`,
+`mex_or_shadow_fetch_is_refused_instead_of_sending_the_wrong_form`,
+`reply_categories_are_parsed_without_adoption`,
+`error_categories_and_invalid_values_follow_the_native_map_rules` and the
+fake-link `classic_privacy_fetch_is_sent_settled_and_never_adopted`.
+MEX/shadow fetching, the `action=modify` envelope and set scheduling remain
+unported.
+
 2026-10-09. **Confirmed static**, APK **2.26.37.71**, SHA-256
 `1755111afa2a1f24020411c1fd72ac13db1489b623a9ff7a30be3d98b7bc7d5c`.
 [13-topic recipe](apk/recipes/2.26.37.71-read-setting-bootstrap.json),

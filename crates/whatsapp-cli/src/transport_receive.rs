@@ -3086,7 +3086,7 @@ pub(super) fn app_state_inspect(
     Ok(())
 }
 
-pub(super) fn account_privacy_inspect(cli: &super::Cli) -> Result<(), Error> {
+pub(super) fn account_privacy_inspect(cli: &super::Cli, fetch: bool) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),
         account_id: AccountId::new(cli.account.clone())?,
@@ -3094,12 +3094,22 @@ pub(super) fn account_privacy_inspect(cli: &super::Cli) -> Result<(), Error> {
         create: false,
     })?;
     let preference = whatsapp_api::transport::account_privacy::read_receipts(&store)?;
+    let fetch_mode = whatsapp_api::transport::privacy_fetch::mode(&store)?;
+    let queued = if fetch {
+        Some(whatsapp_api::transport::privacy_fetch::queue(&store)?)
+    } else {
+        None
+    };
+    let fetch_view = whatsapp_api::transport::privacy_fetch::inspect(&store)?;
     if !cli.json {
         println!("Saved server privacy preference; explicit read policy unchanged.");
     }
     let report = serde_json::json!({
         "server_read_receipts": preference.map(|p| p.value),
         "server_read_receipts_enabled": preference.map(|p| p.value.enabled()),
+        "fetch_mode": fetch_mode,
+        "fetch_action_id": queued,
+        "fetch": fetch_view,
     });
     println!(
         "{}",

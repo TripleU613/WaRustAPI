@@ -266,6 +266,10 @@ Inspect the saved server read-receipt preference (offline; no policy change)
 Usage: whatsapp-cli account-privacy-inspect [OPTIONS]...
 ```
 
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --fetch | FETCH | no |  |  | `true`, `false` | Queue one classic privacy fetch for `listen` to transmit; repeats reuse the original action. Refuses when property 23463 selects the unimplemented MEX or shadow path |
+
 ## whatsapp-cli app-state-inspect
 
 Inspect validated app-state versions and logical-index provenance (offline)

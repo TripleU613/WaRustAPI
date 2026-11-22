@@ -49,7 +49,7 @@ pub enum ReadReceiptValue {
     OnStandard,
 }
 impl ReadReceiptValue {
-    fn parse(value: &str) -> Result<Self> {
+    pub(crate) fn parse(value: &str) -> Result<Self> {
         match value {
             "all" => Ok(Self::All),
             "contacts" => Ok(Self::Contacts),

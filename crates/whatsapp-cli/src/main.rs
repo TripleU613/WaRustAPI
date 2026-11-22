@@ -336,7 +336,13 @@ enum Cmd {
     ClockInspect,
     /// Inspect the saved server read-receipt preference (offline; no policy change).
     #[cfg(feature = "experimental-transport")]
-    AccountPrivacyInspect,
+    AccountPrivacyInspect {
+        /// Queue one classic privacy fetch for `listen` to transmit; repeats
+        /// reuse the original action. Refuses when property 23463 selects the
+        /// unimplemented MEX or shadow path.
+        #[arg(long)]
+        fetch: bool,
+    },
     /// Inspect validated app-state versions and logical-index provenance (offline).
     #[cfg(feature = "experimental-transport")]
     AppStateInspect {
@@ -1932,7 +1938,9 @@ async fn run(cli: Cli) -> Result<(), Error> {
         #[cfg(feature = "experimental-transport")]
         Cmd::AbpropsQuery { show } => transport_receive::abprops_query(&cli, *show),
         #[cfg(feature = "experimental-transport")]
-        Cmd::AccountPrivacyInspect => transport_receive::account_privacy_inspect(&cli),
+        Cmd::AccountPrivacyInspect { fetch } => {
+            transport_receive::account_privacy_inspect(&cli, *fetch)
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::AppStateInspect {
             reconstruct_snapshot,
