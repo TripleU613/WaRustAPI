@@ -1,3 +1,5 @@
+**View-once image selection (offline).** List unopened images and select one for prefetch or one-time opening, including after restart in large stores. [Commands and regression](messaging-transport.md#selecting-an-unopened-image).
+
 **Ordinary media in large stores (offline).** Listing, resolving and opening a cached attachment now work beyond 10,000 checkpoints. [Restart regression](video-media.md#media-lookup-in-large-stores).
 
 **Outgoing documents (offline).** Newly prepared document messages carry the validated upload URL and direct path. [APK trace and wire test](document-media.md#outgoing-document-download-locations).

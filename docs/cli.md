@@ -1048,6 +1048,11 @@ Display one downloaded view-once picture locally for 30 seconds, consuming it
 Usage: whatsapp-cli lab-open-view-once [OPTIONS]...
 ```
 
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --list | LIST | no |  |  | `true`, `false` | List unopened image selectors and advertised sizes locally |
+| --id | ID | no |  |  |  | Opaque image selector from --list. Required when multiple images qualify |
+
 ## whatsapp-cli lab-download-view-once
 
 Download one authenticated view-once image as private ciphertext; do not open it
@@ -1058,6 +1063,7 @@ Usage: whatsapp-cli lab-download-view-once [OPTIONS]...
 
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
+| --id | ID | no |  |  |  | Opaque image selector from lab-open-view-once --list |
 | --config | CONFIG | no |  |  |  | Private request configuration; defaults to the profile's |
 | --allow-live-request | ALLOW_LIVE_REQUEST | no |  |  | `true`, `false` |  |
 

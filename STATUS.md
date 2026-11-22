@@ -1,3 +1,5 @@
+**View-once image selection (offline).** List unopened images and select one for prefetch or one-time opening, including after restart in large stores. [Commands and regression](docs/protocol/messaging-transport.md#selecting-an-unopened-image).
+
 **Ordinary media in large stores (offline).** Listing, resolving and opening a cached attachment now work beyond 10,000 checkpoints. [Restart regression](docs/protocol/video-media.md#media-lookup-in-large-stores).
 
 **Saved video sends (offline).** Reopening an MP4 request with its original ID now passes the outbox attachment check. Changing its attachment type raises a conflict before file access. [Restart regression](docs/protocol/replay-safety-audit.md#reopening-a-video-send).

@@ -117,6 +117,92 @@ fn state_size(state: &serde_json::Value) -> Result<u64> {
         .ok_or_else(|| invalid("invalid saved download state"))
 }
 
+struct UnopenedImage {
+    key: Vec<u8>,
+    image: Image,
+    source: Zeroizing<Vec<u8>>,
+}
+
+fn visit_unopened_images(
+    store: &ProtocolStore,
+    selector: Option<&str>,
+    mut visit: impl FnMut(String, UnopenedImage) -> Result<()>,
+) -> Result<()> {
+    let selected = selector
+        .map(|id| {
+            let mut digest = [0u8; 32];
+            hex::decode_to_slice(id, &mut digest)
+                .map_err(|_| invalid("expected a 64-character hexadecimal image selector"))?;
+            Ok::<_, Error>(digest)
+        })
+        .transpose()?;
+    store.read(|tx| {
+        tx.visit_checkpoint_keys(b"received:", |key| {
+            let digest: [u8; 32] = Sha256::digest(key).into();
+            if selected.is_some_and(|id| id != digest) {
+                return Ok(());
+            }
+            let source = Zeroizing::new(
+                tx.get(Table::Checkpoints, key, 1)?
+                    .ok_or_else(|| invalid("missing inbox record"))?,
+            );
+            let mut saved: serde_json::Value =
+                serde_json::from_slice(&source).map_err(|_| invalid("invalid inbox record"))?;
+            if saved["status"] == "decrypted" {
+                let protobuf: Zeroizing<Vec<u8>> = serde_json::from_value(saved["protobuf"].take())
+                    .map_err(|_| invalid("invalid saved protobuf"))?;
+                if let Some(image) = descriptor(&protobuf, 0, false)? {
+                    visit(
+                        hex::encode(digest),
+                        UnopenedImage {
+                            key: key.to_vec(),
+                            image,
+                            source,
+                        },
+                    )?;
+                }
+            }
+            Ok(())
+        })
+    })
+}
+
+/// Metadata for a saved view-once image. Inspection never consumes the image.
+#[derive(Debug, PartialEq, Eq)]
+pub struct ViewOnceImageEntry {
+    /// Opaque selector derived from the source checkpoint key.
+    pub id: String,
+    /// Plaintext size advertised by the descriptor.
+    pub bytes: u64,
+}
+
+/// List selectors and advertised sizes without fetching or opening any image.
+pub fn list_view_once_images(store: &ProtocolStore) -> Result<Vec<ViewOnceImageEntry>> {
+    let mut entries = Vec::new();
+    visit_unopened_images(store, None, |id, selected| {
+        entries.push(ViewOnceImageEntry {
+            id,
+            bytes: selected.image.length,
+        });
+        Ok(())
+    })?;
+    Ok(entries)
+}
+
+fn select_unopened_image(store: &ProtocolStore, id: Option<&str>) -> Result<Option<UnopenedImage>> {
+    let mut selected = None;
+    visit_unopened_images(store, id, |_, image| {
+        if selected.is_some() {
+            return Err(invalid(
+                "multiple view-once images; use lab-open-view-once --list and select one with --id",
+            ));
+        }
+        selected = Some(image);
+        Ok(())
+    })?;
+    Ok(selected)
+}
+
 /// Consume one downloaded view-once image before returning plaintext to a local
 /// viewer. A crash after commit must not reopen it. This is local consumption,
 /// not a server opened receipt. No plaintext is written to storage.
@@ -129,34 +215,19 @@ pub fn consume_view_once(store: &ProtocolStore) -> Result<Zeroizing<Vec<u8>>> {
 pub fn consume_view_once_with_ticket(
     store: &ProtocolStore,
 ) -> Result<(String, Zeroizing<Vec<u8>>)> {
-    let records = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
-    if records.len() == 10000 {
-        return Err(invalid("checkpoint scan limit reached"));
-    }
-    let mut candidate = None;
-    for (key, bytes) in records {
-        if !key.starts_with(b"received:") {
-            continue;
-        }
-        let mut saved: serde_json::Value =
-            serde_json::from_slice(&bytes).map_err(|_| invalid("invalid inbox record"))?;
-        if saved["status"] != "decrypted" {
-            continue;
-        }
-        let protobuf: Zeroizing<Vec<u8>> = serde_json::from_value(saved["protobuf"].take())
-            .map_err(|_| invalid("invalid saved protobuf"))?;
-        if let Some(image) = descriptor(&protobuf, 0, false)? {
-            if candidate.is_some() {
-                return Err(invalid(
-                    "multiple view-once images; explicit selection needed",
-                ));
-            }
-            candidate = Some((key, image, Zeroizing::new(bytes)));
-        }
-    }
-    let (key, image, source) = candidate
-        .ok_or_else(|| invalid("no unopened view-once image; consumed images cannot reopen"))?;
-    consume_selected(store, &key, image, &source)
+    consume_view_once_selected(store, None)
+}
+
+/// Consume the selected downloaded image and return its viewer ticket. With no
+/// selector exactly one unopened image must exist.
+pub fn consume_view_once_selected(
+    store: &ProtocolStore,
+    id: Option<&str>,
+) -> Result<(String, Zeroizing<Vec<u8>>)> {
+    let selected = select_unopened_image(store, id)?.ok_or_else(|| {
+        invalid("no matching unopened view-once image; consumed images cannot reopen")
+    })?;
+    consume_selected(store, &selected.key, selected.image, &selected.source)
 }
 
 fn consume_selected(
@@ -199,6 +270,16 @@ pub async fn download_view_once(
     store: &ProtocolStore,
     config: &LabRegistrationConfig,
 ) -> Result<u64> {
+    download_view_once_selected(store, config, None).await
+}
+
+/// Prefetch the selected view-once image as ciphertext. Omitting the selector
+/// retains the single-image requirement.
+pub async fn download_view_once_selected(
+    store: &ProtocolStore,
+    config: &LabRegistrationConfig,
+    id: Option<&str>,
+) -> Result<u64> {
     // Same pre-network account/config fence as ordinary media::open. A saved
     // inbox descriptor cannot authorize using another account's configuration.
     config.validate()?;
@@ -210,34 +291,10 @@ pub async fn download_view_once(
     if !account.is_registered() || account.phone.as_ref() != Some(&config.phone) {
         return Err(Error::NotRegistered);
     }
-    let records = store.read(|tx| tx.scan(Table::Checkpoints, 1, 10000))?;
-    if records.len() == 10000 {
-        return Err(invalid("checkpoint scan limit reached"));
-    }
-    let mut candidate = None;
-    for (key, bytes) in records {
-        if !key.starts_with(b"received:") {
-            continue;
-        }
-        let mut saved: serde_json::Value =
-            serde_json::from_slice(&bytes).map_err(|_| invalid("invalid inbox record"))?;
-        if saved["status"] != "decrypted" {
-            continue;
-        }
-        let protobuf: Zeroizing<Vec<u8>> = serde_json::from_value(saved["protobuf"].take())
-            .map_err(|_| invalid("invalid saved protobuf"))?;
-        if let Some(image) = descriptor(&protobuf, 0, false)? {
-            if candidate.is_some() {
-                return Err(invalid(
-                    "multiple view-once images; explicit message selection needed",
-                ));
-            }
-            candidate = Some((key, image, Zeroizing::new(bytes)));
-        }
-    }
-    let (key, image, source) = candidate.ok_or_else(|| {
-        invalid("no authenticated view-once image in saved inbox; nothing downloaded")
-    })?;
+    let UnopenedImage { key, image, source } =
+        select_unopened_image(store, id)?.ok_or_else(|| {
+            invalid("no matching authenticated view-once image in saved inbox; nothing downloaded")
+        })?;
     let state_key = format!("view-once-download:{}", hex::encode(Sha256::digest(&key)));
     let previous: Option<serde_json::Value> =
         store.read(|tx| tx.get_json(Table::Checkpoints, state_key.as_bytes(), 1))?;
@@ -976,6 +1033,99 @@ mod tests {
             assert!(saved.get("protobuf").is_none());
         }
     }
+    #[tokio::test]
+    async fn multiple_unopened_images_can_be_selected_once_across_restart_in_large_stores() {
+        use crate::{
+            model::ids::AccountId,
+            session::{AccountRecord, RegistrationStatus},
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let open_store = |create| {
+            ProtocolStore::open(OpenOptions {
+                path: dir.path().join("multiple.redb"),
+                account_id: AccountId::new("fixture").unwrap(),
+                key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes(
+                    [9; 32],
+                ))),
+                create,
+            })
+            .unwrap()
+        };
+        let mut config: LabRegistrationConfig =
+            serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
+        config.token = Zeroizing::new("offline-fixture".into());
+        let store = open_store(true);
+        let keys = [b"received:first".as_slice(), b"received:second"];
+        let ids = keys.map(|key| hex::encode(Sha256::digest(key)));
+        let bodies = [b"first".as_slice(), b"second image has its own content"];
+        let mut sizes = Vec::new();
+        store.write(|tx| {
+            AccountRecord {phone:Some(config.phone.clone()), registration:RegistrationStatus::Registered, ..Default::default()}.save(tx)?;
+            for i in 0..10_000 {
+                tx.put(Table::Checkpoints, format!("history:{i:05}").as_bytes(), 1, b"fixture")?;
+            }
+            for ((key, id), plain) in keys.iter().zip(&ids).zip(bodies) {
+                let encrypted = crate::signal::image::encrypt(plain)?;
+                let image = Image {
+                    url: "https://offline.invalid/image".into(),
+                    mime: "image/png".into(),
+                    plaintext_hash: encrypted.plaintext_hash.to_vec(),
+                    length: encrypted.plaintext_len,
+                    key: encrypted.media_key.to_vec(),
+                    encrypted_hash: encrypted.encrypted_hash.to_vec(),
+                    view_once: true,
+                };
+                let protobuf = Envelope {image: Some(image), ..Default::default()}.encode_to_vec();
+                sizes.push(encrypted.body.len() as u64);
+                tx.put_json(Table::Checkpoints, key, 1, &serde_json::json!({"status":"decrypted","protobuf":protobuf}))?;
+                tx.put_json(Table::Checkpoints, format!("view-once-download:{id}").as_bytes(), 1,
+                    &serde_json::json!({"status":"downloaded_unopened","body":encrypted.body,"encrypted_bytes":encrypted.body.len()}))?;
+            }
+            Ok(())
+        }).unwrap();
+        drop(store);
+        let store = open_store(false);
+        let expected = [0, 1].map(|i| ViewOnceImageEntry {
+            id: ids[i].clone(),
+            bytes: bodies[i].len() as u64,
+        });
+        assert_eq!(list_view_once_images(&store).unwrap(), expected);
+        assert!(download_view_once(&store, &config).await.is_err());
+        assert!(consume_view_once(&store).is_err());
+        for missing in ["invalid", &"0".repeat(64)] {
+            assert!(
+                download_view_once_selected(&store, &config, Some(missing))
+                    .await
+                    .is_err()
+            );
+            assert!(consume_view_once_selected(&store, Some(missing)).is_err());
+        }
+        let second = Some(ids[1].as_str());
+        assert_eq!(
+            download_view_once_selected(&store, &config, second)
+                .await
+                .unwrap(),
+            sizes[1]
+        );
+        assert_eq!(list_view_once_images(&store).unwrap(), expected);
+        let (ticket, plaintext) = consume_view_once_selected(&store, second).unwrap();
+        assert_eq!(ticket, ids[1]);
+        assert_eq!(plaintext.as_slice(), bodies[1]);
+        drop(store);
+        let store = open_store(false);
+        assert!(consume_view_once_selected(&store, second).is_err());
+        assert!(
+            download_view_once_selected(&store, &config, second)
+                .await
+                .is_err()
+        );
+        assert_eq!(list_view_once_images(&store).unwrap(), expected[..1]);
+        assert_eq!(download_view_once(&store, &config).await.unwrap(), sizes[0]);
+        assert_eq!(consume_view_once(&store).unwrap().as_slice(), bodies[0]);
+        assert!(list_view_once_images(&store).unwrap().is_empty());
+    }
+
     #[test]
     fn media_url_rejects_credentials_redirect_targets_and_non_https() {
         let mut image = Image {

@@ -1893,6 +1893,14 @@
         },
         "description": "Name of the environment variable holding the hex master key; defaults to WHATSAPP_API_MASTER_KEY"
       },
+      "ViewOnceImageId": {
+        "name": "id",
+        "in": "query",
+        "required": false,
+        "schema": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+        "x-cli-flag": "--id",
+        "description": "Opaque selector from lab-open-view-once --list. Without it exactly one unopened image must qualify. A consumed or unknown ID never selects another image."
+      },
       "ProfilesDir": {
         "name": "profiles-dir",
         "in": "query",
@@ -9841,6 +9849,7 @@
         ],
         "x-live": true,
         "parameters": [
+          {"$ref": "#/components/parameters/ViewOnceImageId"},
           {
             "$ref": "#/components/parameters/Profile"
           },
@@ -9869,7 +9878,8 @@
           }
         },
         "x-library": [
-          "whatsapp_api::transport::image_download::download_view_once"
+          "whatsapp_api::transport::image_download::download_view_once",
+          "whatsapp_api::transport::image_download::download_view_once_selected"
         ]
       }
     },
@@ -9887,6 +9897,15 @@
         ],
         "x-live": false,
         "parameters": [
+          {"$ref": "#/components/parameters/ViewOnceImageId"},
+          {
+            "name": "list",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "boolean", "default": false},
+            "x-cli-flag": "--list",
+            "description": "Print one opaque ID and advertised byte count per unopened image. Offline inspection. Mutually exclusive with --id."
+          },
           {
             "$ref": "#/components/parameters/Profile"
           },
@@ -9905,13 +9924,9 @@
         ],
         "responses": {
           "200": {
-            "description": "View-once picture displayed and consumed",
+            "description": "With --list, the CLI prints one line per image as <id> <bytes> bytes and prints nothing for an empty list. Otherwise it reports local consumption and viewer completion.",
             "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Ok"
-                }
-              }
+              "text/plain": {"schema": {"type": "string"}}
             }
           },
           "400": {
@@ -9922,7 +9937,9 @@
           }
         },
         "x-library": [
-          "whatsapp_api::transport::image_download::consume_view_once_with_ticket"
+          "whatsapp_api::transport::image_download::consume_view_once_with_ticket",
+          "whatsapp_api::transport::image_download::consume_view_once_selected",
+          "whatsapp_api::transport::image_download::list_view_once_images"
         ]
       }
     },

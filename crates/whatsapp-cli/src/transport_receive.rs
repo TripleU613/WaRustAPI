@@ -1567,7 +1567,7 @@ pub(super) fn outbox_pending(cli: &super::Cli) -> Result<(), Error> {
     Ok(())
 }
 
-pub(super) fn open_view_once(cli: &super::Cli) -> Result<(), Error> {
+pub(super) fn open_view_once(cli: &super::Cli, list: bool, id: Option<&str>) -> Result<(), Error> {
     use std::{
         io::Write,
         process::{Command, Stdio},
@@ -1579,6 +1579,12 @@ pub(super) fn open_view_once(cli: &super::Cli) -> Result<(), Error> {
         key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
         create: false,
     })?;
+    if list {
+        for entry in whatsapp_api::transport::image_download::list_view_once_images(&store)? {
+            println!("{} {} bytes", entry.id, entry.bytes);
+        }
+        return Ok(());
+    }
     // Spawn first so a missing viewer cannot consume the attachment. No custom
     // config, scripts, screenshot bindings, history, plaintext path or master key.
     let mut child = Command::new("mpv")
@@ -1611,7 +1617,7 @@ pub(super) fn open_view_once(cli: &super::Cli) -> Result<(), Error> {
         })?;
     let outcome = (|| {
         let (ticket, plaintext) =
-            whatsapp_api::transport::image_download::consume_view_once_with_ticket(&store)?;
+            whatsapp_api::transport::image_download::consume_view_once_selected(&store, id)?;
         let mut input = child
             .stdin
             .take()
@@ -1661,6 +1667,7 @@ pub(super) async fn download_view_once(
     cli: &super::Cli,
     path: &std::path::Path,
     allow_live: bool,
+    id: Option<&str>,
 ) -> Result<(), Error> {
     if !allow_live {
         return Err(Error::invalid(
@@ -1684,7 +1691,9 @@ pub(super) async fn download_view_once(
             "requires matching registered account",
         ));
     }
-    let size = whatsapp_api::transport::image_download::download_view_once(&store, &config).await?;
+    let size =
+        whatsapp_api::transport::image_download::download_view_once_selected(&store, &config, id)
+            .await?;
     println!(
         "image: {size} encrypted bytes downloaded and authenticated; privately stored unopened; no plaintext export or opened receipt"
     );

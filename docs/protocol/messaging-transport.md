@@ -173,9 +173,8 @@ There is now a bounded local viewer (below), but no server opened receipt;
 do not treat descriptor decryption or inspection as a successful first/second open.
 
 `lab-download-view-once --config <private-registration.json> --allow-live-request`
-uses the same global store/account/key settings. It requires exactly one saved
-authenticated view-once image; ordinary images and ambiguous selections are
-rejected. It makes one bounded HTTPS GET without redirects/retries, verifies
+uses the same global store/account/key settings. Pass an ID from the local list to select a saved authenticated view-once
+image. Omitting the ID requires exactly one qualifying image. It makes one bounded HTTPS GET without redirects/retries, verifies
 encrypted length, SHA-256 and truncated HMAC, and keeps only ciphertext in
 encrypted `downloaded_unopened` storage. There is no plaintext export or opened
 receipt. Repeat calls reuse that state; uncertain/refused/consumed states block.
@@ -186,7 +185,7 @@ One direct ImageMessage carried flag 25. A single live GET downloaded 91,562
 encrypted bytes with valid size/SHA-256/MAC, saved as `downloaded_unopened`.
 No attachment plaintext was exported or viewed, and no opened receipt was sent.
 
-`lab-open-view-once` subsequently adds local one-use display of the single
+`lab-open-view-once` subsequently adds local one-use display of the selected
 downloaded image. It verifies encrypted and plaintext hashes, MAC, padding and
 length, then atomically replaces the downloaded ciphertext and key-bearing
 inbox protobuf with consumed markers **before** returning plaintext. The CLI
@@ -199,6 +198,37 @@ consumed transition, removal of accessible content and rejection of reopening.
 `Message.associatedChildMessage` (91, `LX/BXF`) embeds `LX/BM5.message` (1);
 inspection now identifies the formerly unclassified payload as an ordinary-image
 child, with no view-once flag.
+
+### Selecting an unopened image
+
+**Confirmed in Rust, offline.** `lab-open-view-once --list` prints one line per
+qualifying image with its opaque selector and advertised size in bytes. Listing
+reads the inbox without starting the viewer, fetching media or consuming an image.
+A cached and an unfetched image can both appear. Use the same selector in both commands.
+
+```sh
+whatsapp-cli lab-open-view-once --list
+whatsapp-cli lab-download-view-once --id "$image_id" --config "$config" --allow-live-request
+whatsapp-cli lab-open-view-once --id "$image_id"
+```
+
+The selector is the SHA-256 of the existing inbox key, also used for the download
+checkpoint and consumption ticket. The lookup scans only received-message keys.
+A missing, consumed or malformed explicit ID fails locally. Without an ID,
+multiple qualifying images still require a choice. The prior lookup refused
+both operations at 10,000 total checkpoints, including unrelated records.
+
+**Regression evidence.** A reopened store with 10,000 unrelated checkpoints
+and two cached images lists both IDs. Selecting the second returns its own
+authenticated bytes and ticket. After another restart, its ID refuses a repeat
+open or prefetch, and the first image remains independently usable. The APK
+2.26.43.72 `DiL.dynamicMethod` descriptor confirms the image view-once field
+at tag 25. The selector and history lookup are local Rust behavior. [APK fields](apk/2.26.43.72-media-image-ingress/image-fields.txt)
+
+**Still open.** The separate `lab-inbox` inspection and capture replay command
+checks the first 10,000 checkpoints before processing either mode. It can
+still report `checkpoint scan limit reached; pagination required` in a large
+store. The view-once list and selector bypass that diagnostic command.
 
 ### Voice-note extension
 

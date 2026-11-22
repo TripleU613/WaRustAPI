@@ -669,10 +669,20 @@ enum Cmd {
     },
     /// Display one downloaded view-once picture locally for 30 seconds, consuming it.
     #[cfg(feature = "experimental-transport")]
-    LabOpenViewOnce,
+    LabOpenViewOnce {
+        /// List unopened image selectors and advertised sizes locally.
+        #[arg(long, conflicts_with = "id")]
+        list: bool,
+        /// Opaque image selector from --list. Required when multiple images qualify.
+        #[arg(long)]
+        id: Option<String>,
+    },
     /// Download one authenticated view-once image as private ciphertext; do not open it.
     #[cfg(feature = "experimental-transport")]
     LabDownloadViewOnce {
+        /// Opaque image selector from lab-open-view-once --list.
+        #[arg(long)]
+        id: Option<String>,
         /// Private request configuration; defaults to the profile's.
         #[arg(long)]
         config: Option<PathBuf>,
@@ -1980,14 +1990,18 @@ async fn run(cli: Cli) -> Result<(), Error> {
             transport_receive::mark_read(&cli, &config, chat, ids, participant.as_deref()).await
         }
         #[cfg(feature = "experimental-transport")]
-        Cmd::LabOpenViewOnce => transport_receive::open_view_once(&cli),
+        Cmd::LabOpenViewOnce { list, id } => {
+            transport_receive::open_view_once(&cli, *list, id.as_deref())
+        }
         #[cfg(feature = "experimental-transport")]
         Cmd::LabDownloadViewOnce {
             config,
+            id,
             allow_live_request,
         } => {
             let config = cli.config_path(config.as_ref(), None)?;
-            transport_receive::download_view_once(&cli, &config, *allow_live_request).await
+            transport_receive::download_view_once(&cli, &config, *allow_live_request, id.as_deref())
+                .await
         }
         #[cfg(feature = "experimental-transport")]
         Cmd::LabInbox {
