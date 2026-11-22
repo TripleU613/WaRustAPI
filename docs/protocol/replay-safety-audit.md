@@ -1784,3 +1784,20 @@ Drive now retains the bound epoch authority for inbound admission too. Decoded f
 Raw capture is evidence, not receipt, delivery, callback or state-application authority. Existing terminal capture metadata remains part of raw observation. Parsing, native timing and wire formats are unchanged. Observation-only authentication timestamps remain excluded by the existing fingerprint. This is an entry admission check, not a global lock across all handlers/awaits or a claim of atomic account fencing in every downstream transaction. Concurrent changes after admission, fields outside that fingerprint and offline reprocessing remain separate audit scope.
 
 The actor regression uses actual server-ping clock and account_sync privacy producers. Unchanged and observation-only controls must produce a reply and change protocol state. Changed/removed accounts must end without an outbound envelope; every table is compared excluding only raw inbound captures, which are independently checked against exact encoded input. Reopen preserves protocol state and journal. Existing undecodable-capture and callback tests remain. No live account operation was performed; server acceptance, complete native lifecycle and ban immunity are not established.
+
+## Reopening a video send
+
+**Confirmed in Rust, offline.** The private JSON send path accepted an MP4 on
+first use but omitted video from the check for an existing outbox intent. The
+same request could therefore report an idempotency conflict after a restart.
+Initial preparation and that check now use the same attachment classification.
+The check compares the requested kind with the stored media reference before
+accessing the file. Upload preparation still checks the file contents. For a
+document, the upload hash also binds the filename and inferred MIME type.
+
+The CLI regression reopens a store containing a queued video and its sealed
+upload reference. The original video passes preflight. Switching the same path
+and request ID to a document raises a conflict and preserves the saved intent
+and journal position. This test exercises local request identity. APK
+2.26.37.71 distinguishes ordinary video in the `BZc` Message descriptor
+(field 9, type `BZE`), as recorded in [video media](video-media.md#schema-and-type-evidence).

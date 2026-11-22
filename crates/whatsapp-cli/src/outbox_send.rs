@@ -1,5 +1,6 @@
 //! One selected normal-outbox send, using the public client and private JSON.
 use super::*;
+use whatsapp_api::model::message::MediaKind;
 use whatsapp_api::session::AccountRecord;
 use whatsapp_api::store::Table;
 use whatsapp_api::{
@@ -123,6 +124,18 @@ fn destination(message: &MessageRequest) -> Result<Jid, Error> {
     }
 }
 
+fn attachment_kind(message: &MessageRequest) -> Option<MediaKind> {
+    if message.image.is_some() {
+        Some(MediaKind::Image)
+    } else if message.voice_note.is_some() {
+        Some(MediaKind::Audio)
+    } else if message.document.is_some() {
+        Some(MediaKind::Document)
+    } else {
+        message.video.as_ref().map(|_| MediaKind::Video)
+    }
+}
+
 // Run before media preparation: a reused text ID must never upload a new file.
 // Existing media must already have its account-bound reference; prepare then
 // checks the saved upload's file hash/view-once flag without another upload.
@@ -140,24 +153,17 @@ fn preflight(
     if saved.intent.chat != ChatId::from_jid(&peer)? {
         return Err(Error::IdempotencyConflict(id));
     }
+    let kind = attachment_kind(message);
     let matches = match &saved.intent.content {
         MessageContent::Text { body, quoted, .. } => {
-            message.image.is_none()
-                && message.voice_note.is_none()
-                && message.document.is_none()
-                && message.video.is_none()
-                && quoted.as_ref() == quote
-                && body == message.text.as_str()
+            kind.is_none() && quoted.as_ref() == quote && body == message.text.as_str()
         }
         MessageContent::Media {
             reference,
             caption,
             file_name,
             quoted,
-        } if message.image.is_some()
-            || message.voice_note.is_some()
-            || message.document.is_some() =>
-        {
+        } if kind == Some(reference.kind) => {
             quoted.as_ref() == quote
                 && caption.is_none()
                 && file_name.is_none()
@@ -223,11 +229,7 @@ pub(super) async fn run(
         }
         let quote = quoted(&store, &account, &message)?;
         preflight(&store, &message, quote.as_ref())?;
-        if message.image.is_some()
-            || message.voice_note.is_some()
-            || message.document.is_some()
-            || message.video.is_some()
-        {
+        if attachment_kind(&message).is_some() {
             whatsapp_api::transport::image_upload::prepare_outbox(&store, &message, &config)
                 .await?;
             let reference = whatsapp_api::transport::outgoing_media::reference(
@@ -373,6 +375,65 @@ pub(super) async fn run(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn reopened_video_intent_accepts_the_original_kind_and_refuses_a_document() {
+        use whatsapp_api::{
+            outbox::Outbox,
+            store::{MasterKey, StaticKeySource},
+            transport::outgoing_media,
+        };
+        let dir = tempfile::tempdir().unwrap();
+        let options = || OpenOptions {
+            path: dir.path().join("video.redb"),
+            account_id: AccountId::new("test").unwrap(),
+            key_source: Arc::new(StaticKeySource::new(MasterKey::from_bytes([8; 32]))),
+            create: true,
+        };
+        let store = ProtocolStore::open(options()).unwrap();
+        let mut message: MessageRequest = serde_json::from_value(serde_json::json!({
+            "request_id": "stable-video", "to": "15550000000", "video": "clip.mp4"
+        }))
+        .unwrap();
+        let id = ClientRequestId::new(message.request_id.clone()).unwrap();
+        let peer = message.recipient().unwrap();
+        store.write(|tx| tx.put_json(
+            Table::Checkpoints,
+            b"message:stable-video:upload",
+            1,
+            &serde_json::json!({"status":"uploaded","to":peer.user,"hash":"video:fixture","protobuf":[74,0]}),
+        )).unwrap();
+        let request = SendRequest {
+            chat: ChatId::from_jid(&peer).unwrap(),
+            content: MessageContent::Media {
+                reference: outgoing_media::reference(&store, &id, &peer).unwrap(),
+                caption: None,
+                file_name: None,
+                quoted: None,
+            },
+            client_request_id: id,
+        };
+        let outbox = Outbox::new("default", Default::default());
+        store.write(|tx| outbox.enqueue(tx, &request)).unwrap();
+        drop(store);
+        let store = ProtocolStore::open(options()).unwrap();
+        let head = store.journal_head().unwrap();
+        preflight(&store, &message, None).unwrap();
+        message.document = message.video.take();
+        assert!(matches!(
+            preflight(&store, &message, None),
+            Err(Error::IdempotencyConflict(_))
+        ));
+        assert_eq!(store.journal_head().unwrap(), head);
+        assert_eq!(
+            store
+                .read(|tx| outbox.get_by_request_id(tx, &request.client_request_id))
+                .unwrap()
+                .unwrap()
+                .intent,
+            request
+        );
+    }
 
     #[test]
     fn changed_text_id_is_rejected_before_media_file_or_upload_access() {
