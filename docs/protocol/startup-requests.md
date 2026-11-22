@@ -73,6 +73,34 @@ APK's own fetch is also conditional (stale refresh interval or a server
 `abprops` notification that requires message sending to be ready), so this
 client does not send it at every startup.
 
+## Server-requested refetch (`abprops` notification)
+
+**Confirmed static.** The notification dispatcher (`X.15I.A09`, stanza kind 235)
+reads the **first child** of the incoming notification and compares its tag:
+
+- `log` → bug-report logging path.
+- `abprops` → if the sending-channel predicate `X.0AI.A06` is true, log
+  `MessagingSendMethods/forceFetchABPropsAndMobileConfig/fetch` and call
+  `X.HBE.A00(true, false, 0)` (forced read, same `abt`/`props` shape as the
+  initial read because the forced branch skips the saved hash). If the
+  predicate is false it logs `…/skip: message sending not ready` and sends
+  nothing. An optional MobileConfig refresh follows under `X.00E.A0E`.
+- `push-config` → a `gcm` (or absent) type forces the push token refresh; other
+  types are logged as unknown.
+
+`X.0AI.A06` is set true on `handleConnectionThreadReady` and false on the
+service stop/unregister path — the "sending channel ready" state.
+
+Rust: `transport::abprops::forced_fetch_requested` implements the first-child
+test (not the outer `type` attribute, which this branch ignores) and
+`queue_forced` queues the same wire node. `listen` calls it from the
+notification path once activation is confirmed, then triggers the action
+drain. Replay policy: a still-queued read is returned and sent once; a reserved
+but unanswered read and a refused read are never repeated; only a settled
+successful read allows the next notification to fetch again (a new IQ, not a
+replay of the old one). This is stricter than the APK, which would send a fresh
+read on every such notification.
+
 ## Still open
 
 - The push-config GET at startup, with its staleness/notification predicate and

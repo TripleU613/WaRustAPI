@@ -2,6 +2,13 @@
 
 ## AB-property initial read (2026-10-08)
 
+**Re-anchored 2.26.43.72:** the same builder is `X.HBE.A00(force, refresh,
+refresh_id)`; `X.15I.A09` (stanza kind 235) forces it with
+`A00(true, false, 0)` when a notification's **first child** is `<abprops/>` and
+`X.0AI.A06` (sending channel ready) is true. `queue_forced` in
+`transport::abprops` implements that trigger; see
+[startup requests](startup-requests.md#server-requested-refetch-abprops-notification).
+
 **Confirmed static, APK 2.26.37.71**, SHA-256 `1755111a…7d5c`:
 `Hgb.A00(VZZI)` builds `iq type=get to=s.whatsapp.net xmlns=abt`, with
 `props protocol=1` and a hash from `ab_props:sys:config_hash` when neither

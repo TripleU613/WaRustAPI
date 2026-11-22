@@ -1683,6 +1683,28 @@ pub(crate) async fn drive(
                 if receipt_recorded && let Some(receipt) = super::status_receipts::parse(&node) {
                     super::status_receipts::record(&store, &receipt)?;
                 }
+                // 43.72 X.15I.A09: a notification whose first child is
+                // <abprops/> forces one push-config read, but only once the
+                // sending channel is ready (X.0AI.A06). The forced read keeps
+                // the initial node shape (empty hash); it is not a replay of a
+                // queued, uncertain or refused read.
+                if super::abprops::forced_fetch_requested(&node) {
+                    if ready.is_none() {
+                        match super::abprops::queue_forced(&store)? {
+                            Some(_) => {
+                                tracing::info!("abprops notification: forced push-config read queued");
+                                action_drain.trigger();
+                            }
+                            None => tracing::warn!(
+                                "abprops notification: earlier read is queued, uncertain or refused; not repeated"
+                            ),
+                        }
+                    } else {
+                        tracing::info!(
+                            "abprops notification: sending channel not ready; fetch skipped"
+                        );
+                    }
+                }
                 match super::account_privacy::validate(&node) {
                     Ok(()) => {
                         if let Some(ack) = super::account_privacy::handle(&store, &node)? {
@@ -8805,6 +8827,60 @@ pub(super) mod tests {
             let store = identity_store(&path);
             assert_eq!(snapshot(&store), before);
         }
+    }
+
+    #[tokio::test]
+    async fn abprops_notification_forces_one_read_and_never_repeats_an_uncertain_one() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("abprops-notify.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let notification = || {
+            Node::new("notification")
+                .attr("type", "abprops")
+                .children(vec![Node::new("abprops")])
+        };
+        fake.deliver(notification()).await;
+        let (fetch, written) = fake.written().await;
+        assert_eq!(fetch.description, "iq");
+        assert_eq!(
+            fetch.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("abt")
+        );
+        let props = fetch.child("props").expect("props child");
+        assert_eq!(
+            props.get_attr("protocol").and_then(|v| v.as_text()),
+            Some("1")
+        );
+        assert_eq!(props.get_attr("hash").and_then(|v| v.as_text()), Some(""));
+        let id = fetch
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .unwrap()
+            .to_owned();
+        written.send(Ok(())).unwrap();
+        // Reserved but unanswered: a second notification must not send again.
+        fake.deliver(notification()).await;
+        fake.nothing_written(Duration::from_millis(200)).await;
+        // A settled successful read lets the next notification fetch again.
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result"),
+        )
+        .await;
+        fake.deliver(notification()).await;
+        let (second, written) = fake.written().await;
+        assert_eq!(
+            second.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("abt")
+        );
+        assert_ne!(
+            second.get_attr("id").and_then(|v| v.as_text()),
+            Some(id.as_str())
+        );
+        written.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
     }
 
     #[tokio::test]

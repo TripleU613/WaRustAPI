@@ -1,6 +1,11 @@
 //! APK 37.71 Hgb.A00 / IWy.C8f case 1 AB-property read.
 //! Saved replies are evidence only: MobileConfig precedence and application
 //! are unfinished. This does not set the companion removal gate.
+//!
+//! 43.72 `X.15I.A09` additionally forces the same read (`HBE.A00(true, false,
+//! 0)`) when a notification's first child is `<abprops/>` and the sending
+//! channel is ready. [`queue_forced`] implements that trigger; see
+//! docs/protocol/startup-requests.md.
 use super::actions;
 use crate::{
     Error, Result,
@@ -12,6 +17,8 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 const MARKER: &[u8] = b"abprops-initial-query";
+/// Marker for a read the server asked for with a notification.
+const FORCED_MARKER: &[u8] = b"abprops-forced-query";
 // 0bq.<clinit> 0050..0064 and 07t.A0J 1ed2..1ee6, APK 2.26.37.71.
 const REMOVAL_PROPERTY: i32 = 35661;
 // 37.71 07t.A0L 1594..15a6 / 0q2.A02: Boolean counterpart suppression.
@@ -43,6 +50,59 @@ pub fn queue(store: &ProtocolStore) -> Result<String> {
         })?;
         tx.put_json(Table::Checkpoints, MARKER, 1, &id)?;
         Ok(id)
+    })
+}
+
+/// `<notification><abprops/></notification>`: the trigger for the APK's forced
+/// read. 2.26.43.72 `X.15I.A09` dispatches stanza kind 235 (notification) on the
+/// **first child's tag** and compares it to `abprops`; it does not read an outer
+/// `type` attribute for this branch. `X.37W` then checks the sending-channel
+/// predicate (`X.0AI.A06`) and calls `X.HBE.A00(true, false, 0)`.
+pub fn forced_fetch_requested(node: &Node) -> bool {
+    node.description == "notification"
+        && node
+            .child_nodes()
+            .first()
+            .is_some_and(|child| child.description == "abprops")
+}
+
+/// Queue the forced push-config read (`force=true, refresh=false, refresh_id=0`).
+///
+/// The forced node has the same wire shape as the initial read: the forced
+/// branch skips the saved hash, so `props` carries `protocol=1` and an empty
+/// hash. A queued-but-unsent read is returned for sending; an uncertain or
+/// refused read is never repeated; only a settled successful read allows a new
+/// notification-triggered fetch, which is a new IQ rather than a replay.
+pub fn queue_forced(store: &ProtocolStore) -> Result<Option<String>> {
+    store.write(|tx| {
+        if let Some(id) = tx.get_json::<String>(Table::Checkpoints, FORCED_MARKER, 1)? {
+            let Some((outcome, _reply, _request)) = actions::view_in_write(tx, &id)? else {
+                return Err(Error::invalid(
+                    "abprops",
+                    "saved forced query action is missing",
+                ));
+            };
+            match outcome.status {
+                // Already queued: the caller's drain sends it once.
+                actions::ActionStatus::Queued => return Ok(Some(id)),
+                // A completed fetch may be refreshed by a later notification.
+                actions::ActionStatus::Ok => {}
+                // Uncertain or refused: no automatic repeat.
+                actions::ActionStatus::Sent | actions::ActionStatus::Error => return Ok(None),
+            }
+        }
+        let id = actions::queue_in(tx, "abprops_query", "forced AB-property read", |id| {
+            Ok(Node::new("iq")
+                .attr("id", id)
+                .attr("type", "get")
+                .attr("xmlns", "abt")
+                .attr("to", Jid::parse("s.whatsapp.net")?)
+                .children(vec![
+                    Node::new("props").attr("protocol", "1").attr("hash", ""),
+                ]))
+        })?;
+        tx.put_json(Table::Checkpoints, FORCED_MARKER, 1, &id)?;
+        Ok(Some(id))
     })
 }
 
@@ -360,6 +420,78 @@ mod tests {
             .attr("type", "result")
             .children(vec![props])
     }
+    #[test]
+    fn forced_fetch_is_triggered_by_the_first_child_tag_not_the_type_attribute() {
+        let with_child = |children: Vec<Node>| {
+            Node::new("notification")
+                .attr("type", "abprops")
+                .children(children)
+        };
+        let abprops = Node::new("abprops");
+        assert!(forced_fetch_requested(&with_child(vec![abprops.clone()])));
+        // The APK reads only the first child (`X.0Tp.A0E(0)`).
+        assert!(!forced_fetch_requested(&with_child(vec![
+            Node::new("log"),
+            abprops.clone(),
+        ])));
+        assert!(!forced_fetch_requested(&with_child(vec![])));
+        assert!(!forced_fetch_requested(&Node::new("abprops")));
+        // An outer type attribute alone is not the trigger.
+        assert!(!forced_fetch_requested(
+            &Node::new("notification").attr("type", "abprops")
+        ));
+    }
+
+    #[test]
+    fn forced_fetch_queues_the_initial_shape_once_and_allows_a_settled_refetch() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("forced.redb"), true);
+        let id = queue_forced(&store).unwrap().expect("first forced read");
+        let (outcome, _reply) = store
+            .read(|tx| actions::view_in(tx, &id))
+            .unwrap()
+            .expect("queued action");
+        let request = actions::request(&store, &id)
+            .unwrap()
+            .expect("request node");
+        assert_eq!(outcome.kind, "abprops_query");
+        assert_eq!(outcome.status, actions::ActionStatus::Queued);
+        // Forced branch skips the saved hash, so the node matches the initial read.
+        assert_eq!(request.description, "iq");
+        assert_eq!(
+            request.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("abt")
+        );
+        let props = request.child("props").expect("props child");
+        assert_eq!(
+            props.get_attr("protocol").and_then(|v| v.as_text()),
+            Some("1")
+        );
+        assert_eq!(props.get_attr("hash").and_then(|v| v.as_text()), Some(""));
+        // Still queued: the same action is returned for the caller's drain.
+        assert_eq!(queue_forced(&store).unwrap().as_deref(), Some(id.as_str()));
+        // Reserved but unanswered: never repeat.
+        actions::reserve_pending(&store).unwrap();
+        assert_eq!(queue_forced(&store).unwrap(), None);
+        // A settled successful read lets a later notification queue a new IQ.
+        actions::record_reply(&store, &reply(&id, Node::new("props"))).unwrap();
+        let next = queue_forced(&store)
+            .unwrap()
+            .expect("refetch after success");
+        assert_ne!(next, id);
+        // A refused read is not repeated either.
+        actions::reserve_pending(&store).unwrap();
+        actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", next.as_str())
+                .attr("type", "error")
+                .children(vec![Node::new("error").attr("code", "400")]),
+        )
+        .unwrap();
+        assert_eq!(queue_forced(&store).unwrap(), None);
+    }
+
     #[test]
     fn pq_gate_uses_the_callers_snapshot_and_uncommitted_reservation_state() {
         let dir = tempfile::tempdir().unwrap();
