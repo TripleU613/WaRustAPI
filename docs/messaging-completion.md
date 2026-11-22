@@ -1,3 +1,5 @@
+**Empty incoming documents (offline).** An explicitly empty document now survives inbox projection and authenticated export after restart. [APK evidence and test scope](protocol/document-media.md#receiving-an-empty-document).
+
 2026-11-04 — **Offline implementation batch:** current-build PIN re-entry now
 preserves guessing waits and bound-step identity across restart; own-message
 undo-keep metadata is corrected in direct/group outbox; direct saved/refetched

@@ -196,11 +196,10 @@ fn mp4_info(bytes: &[u8]) -> Result<(u32, u32, u32)> {
     Err(bad())
 }
 
-/// `DocumentMessage` (`Message` field 7). **Confirmed static, 2.26.37.71**
-/// `xtask apk-proto-fields --class 'LX/BZ6;'`: mimetype 2, title 3,
-/// fileSha256 4, fileLength 5, mediaKey 7, fileName 8, fileEncSha256 9,
-/// directPath 10, mediaKeyTimestamp 11. There is no field 1 (`url`) in this
-/// build, so none is sent.
+/// Outgoing subset of Message.documentMessage (tag 7). APK 2.26.37.71
+/// BZc/BZB and 2.26.43.72 Di0 define both url (1) and directPath (10).
+/// This sender emits directPath. The descriptor alone cannot tell us when
+/// the native sender also populates url. See docs/protocol/document-media.md.
 #[derive(Clone, PartialEq, Message)]
 struct DocumentMessage {
     #[prost(string, tag = "2")]
@@ -1085,7 +1084,6 @@ async fn upload_prepared(
             .encode_to_vec(),
         )
     } else if let Some((file_name, mimetype)) = document {
-        let _ = url; // DocumentMessage has no url field in 2.26.37.71.
         Zeroizing::new(
             Envelope {
                 video: None,

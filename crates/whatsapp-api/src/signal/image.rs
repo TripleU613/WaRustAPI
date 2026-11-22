@@ -25,6 +25,8 @@ impl std::fmt::Debug for EncryptedImage {
     }
 }
 
+const DOCUMENT_KEYS: &[u8] = b"WhatsApp Document Keys";
+
 fn invalid() -> Error {
     Error::invalid("image", "invalid image input or encryption failure")
 }
@@ -51,7 +53,8 @@ fn verify_kind(
     plaintext_len: u64,
     info: &[u8],
 ) -> Result<()> {
-    if plaintext_len == 0
+    // APK 2.26.43.72 Eel.A01 accepts zero for documents. The padded block and MAC are still required.
+    if (plaintext_len == 0 && info != DOCUMENT_KEYS)
         || plaintext_len > 8 * 1024 * 1024
         || body.len() as u64 != (plaintext_len / 16 + 1) * 16 + 10
         || Sha256::digest(body).as_slice() != expected_hash
@@ -140,7 +143,7 @@ pub fn decrypt_document(
         encrypted_hash,
         plaintext_hash,
         plaintext_len,
-        b"WhatsApp Document Keys",
+        DOCUMENT_KEYS,
     )
 }
 fn decrypt_kind(
@@ -190,7 +193,7 @@ pub fn encrypt_video(bytes: &[u8]) -> Result<EncryptedImage> {
 /// Documents use the document key domain (`WhatsApp Document Keys`, a
 /// 2.26.37.71 string constant beside the image and audio labels).
 pub fn encrypt_document(bytes: &[u8]) -> Result<EncryptedImage> {
-    encrypt_kind(bytes, b"WhatsApp Document Keys")
+    encrypt_kind(bytes, DOCUMENT_KEYS)
 }
 
 fn encrypt_kind(bytes: &[u8], info: &[u8]) -> Result<EncryptedImage> {

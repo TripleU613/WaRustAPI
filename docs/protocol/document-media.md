@@ -130,8 +130,46 @@ integration work remains open; the goal is not complete.
 ## Current-build ingress comparison (2026-11-06)
 
 Pinned2.26.43.72 Di0/Eel confirms the core tags and ordinary converter/hash chain.
-The native selected parser permits zero length, unlike Rust's local nonempty
-admission/crypto limits; full empty-file transfer parity remains unverified.
+At the time of this comparison, Rust rejected the zero length the native
+parser permits; full empty-file transfer parity remains unverified.
 Document MIME is stored without an audio-style allowlist in this selected method,
 so Rust's export token/size bounds remain local policy. No runtime behavior changed.
 [Current evidence and precise limits](apk/2.26.43.72-media-document-ingress/README.md).
+
+## Receiving an empty document
+
+**Confirmed static, APK 2.26.43.72.** In `Eel.A01` (00c6..00e8), the
+conditional update path tests presence bit 0x10 before loading Di0.fileLength.
+The signed comparison accepts zero. The field is tag 5 in Di0.dynamicMethod.
+[Method export](apk/2.26.43.72-media-document-ingress/document-projector.txt)
+
+**Implemented and tested offline.** An explicitly zero-length ordinary document
+can appear in the inbox and be exported by `media-save`. Rust requires tag 5
+and the SHA-256 of empty plaintext before listing it. Its encrypted body still
+occupies 26 bytes (one AES-CBC padding block and a ten-byte MAC). Export checks
+the ciphertext digest, MAC, padding, plaintext length and digest using the
+document key domain. A missing length stays ineligible. The public reference
+retains `Some(0)` across store reopen.
+
+The regression uses an independently encrypted empty fixture with the same key
+and derivation as the nonempty document fixture above. It covers journal
+projection, cached retrieval after restart, and creation of a mode-0600 empty
+file. **Unknown:** live transfer of an empty attachment and handset presentation.
+
+**Confirmed schema and selected writer.** Both the retained 2.26.37.71
+BZc/BZB evidence and the 2.26.43.72 Di0 descriptor include URL (tag 1).
+The earlier outgoing encoder comment attributed the omission of URL to a
+missing field. The Rust encoder sends directPath (tag 10).
+
+In the pinned 2.26.43.72 APK, a DEX field-reference search found 13 direct
+accesses to Di0.url_, including writes in Eel.A00, FPY.AET, F3d.A07 and the
+Di0 constructor. Eel.A00 reads the message's AtH() at 0014. A nonempty value
+reaches the URL write at 0048 in either mode. A null value skips the write.
+F1S.A03 distinguishes how the writer treats an empty string. DirectPath is
+written separately at 0504. The three direct Eel.A00 caller sites are
+E3q.AET, FOt.A00 and FQg.AET. **Unknown:** when the native upload result becomes
+AtH() in each caller. This distinction matters before changing Rust's sender.
+
+Reproduce against the APK identified above with
+`xtask apk-smali <apk> --class 'LX/Eel;' --method A00 --signatures --exceptions`.
+The complete stdout SHA-256 is `34d7d6bdd2a25093017e1a1e5d47dc6b734fe356e5a8a8ffcd8ae122a3bb4a3f`.

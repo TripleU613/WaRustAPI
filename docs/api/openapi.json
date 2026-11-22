@@ -865,9 +865,9 @@
   },
   "x-media-document-current-ingress-boundary": {
     "x-cli": "existing document references/open/save/export; no new command or flag",
-    "x-transport": "research-only current document schema/parser comparison; source provenance comments only",
+    "x-transport": "ordinary incoming document length presence, authenticated retrieval and create-only export",
     "x-live": false,
-    "description": "Di0/Eel core document tags and selected hash-width checks match Rust. Ordinary FOt converter excludes medianotify before Eel projection. Native parser permits zero length; Rust Descriptor and shared crypto retain local nonempty limits pending complete native empty-file transfer evidence. Document MIME lacks audio-style allowlist in this selected method; Rust export token/size bounds remain local. Separate title/caption/filename fields do not grant sender-controlled output paths. No request/retry/status relaxation or live traffic; wrapper/update/URL/range/account behavior remains open.",
+    "description": "Di0/Eel core document tags and selected hash-width checks match Rust. Ordinary FOt converter excludes medianotify before Eel projection. Native parser accepts zero length. Rust requires explicit fileLength and the SHA-256 of empty plaintext for empty documents, and authenticates a 26-byte encrypted body before export. Tested offline through store reopen and cached export. Document MIME lacks audio-style allowlist in this selected method; Rust export token/size bounds remain local. Separate title/caption/filename fields do not grant sender-controlled output paths. No request/retry/status relaxation or live traffic; wrapper/update/URL/range/account behavior remains open.",
     "evidence": "docs/protocol/apk/2.26.43.72-media-document-ingress/README.md"
   },
   "x-media-audio-opus-mime-admission": {
@@ -3691,7 +3691,7 @@
           "bytes": {
             "type": "integer",
             "minimum": 0,
-            "description": "Advertised plaintext length from the attachment descriptor (not verified until download)."
+            "description": "Advertised plaintext length from the attachment descriptor. Zero is supported for an explicitly empty document. Retrieval verifies the advertised length."
           }
         },
         "description": "Redacted ordinary incoming attachment selector (media-list). Corrected 2026-10-13: earlier versions of this schema listed mime, downloaded and opened fields and a view_once_image kind that the list never produced.",
@@ -15057,7 +15057,7 @@
           "Media"
         ],
         "summary": "Authenticate and save an ordinary incoming attachment to a new private file",
-        "description": "CLI only; no HTTP route. media-save requires config, opaque id, explicit output and allow-live-request. Supports ordinary URL-bearing images, voice notes, stickers, MP4 video/video notes and documents. Uses saved account binding, one-shot download reservation and encrypted ciphertext cache. Authenticates encrypted hash/MAC/CBC/plain hash/length before create-only mode-0600 export. Existing targets (including symlinks) refuse before download, with an atomic create_new check after retrieval. Uses only the operator output path; sender filename and MIME never choose a path or executable/viewer. Expiration and view-once exclusions remain enforced. I/O failure truncates the owned output descriptor; an empty private file may remain. DirectPath-only, large files over local 8 MiB bound and live incoming-document interoperability remain unverified/unsupported. No chat send or registration is performed. Ordinary attachment expiry now shares the explicit root t Java signed BMP-decimal/wrapping-ms parser used by incoming events, for saved routes and historical captures. Missing time/route still refuses access; expiry is rechecked on retrieval. Offline tested, fresh live behavior unverified. Evidence: docs/protocol/message-timestamps.md#attachment-expiry-continuation.",
+        "description": "CLI only; no HTTP route. media-save requires config, opaque id, explicit output and allow-live-request. Supports ordinary URL-bearing images, voice notes, stickers, MP4 video/video notes and documents, including explicitly empty documents with a valid encrypted body. Uses saved account binding, one-shot download reservation and encrypted ciphertext cache. Authenticates encrypted hash/MAC/CBC/plain hash/length before create-only mode-0600 export. Existing targets (including symlinks) refuse before download, with an atomic create_new check after retrieval. Uses only the operator output path; sender filename and MIME never choose a path or executable/viewer. Expiration and view-once exclusions remain enforced. I/O failure truncates the owned output descriptor; an empty private file may remain. DirectPath-only, large files over local 8 MiB bound and live incoming-document interoperability remain unverified/unsupported. No chat send or registration is performed. Ordinary attachment expiry now shares the explicit root t Java signed BMP-decimal/wrapping-ms parser used by incoming events, for saved routes and historical captures. Missing time/route still refuses access; expiry is rechecked on retrieval. Offline tested, fresh live behavior unverified. Evidence: docs/protocol/message-timestamps.md#attachment-expiry-continuation.",
         "operationId": "saveMedia",
         "x-cli": "whatsapp-cli media-save",
         "x-transport": [

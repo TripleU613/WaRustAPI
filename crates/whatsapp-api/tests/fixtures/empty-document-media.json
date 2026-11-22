@@ -1,0 +1,8 @@
+{
+  "source": "Empty plaintext fixture. Independent Python HKDF/HMAC/SHA-256 and OpenSSL AES-256-CBC with PKCS padding.",
+  "plaintext": "",
+  "media_key": "0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c",
+  "body": "48141f19e888874273b252a870428d869880c812a9ba27b67186",
+  "plaintext_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "encrypted_hash": "24725131540f1a4d7b439fca937eeba5f919c1f2685f90553b589173a3cd3b9f"
+}

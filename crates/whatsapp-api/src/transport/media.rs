@@ -120,7 +120,7 @@ struct Video {
 // APK 37.71 BZB.dynamicMethod 011e..012c, with Ayp.A1K name helper:
 // DocumentMessage tags differ from image/video; caption=20, fileName=8.
 // Pinned43.72 Di0/Eel confirms the core tags; native parser permits zero size.
-// Nonempty admission/crypto remain local limits; see
+// Keep tag presence distinct from a declared empty file; see
 // docs/protocol/apk/2.26.43.72-media-document-ingress.
 #[derive(Message)]
 struct Document {
@@ -130,8 +130,8 @@ struct Document {
     mime: String,
     #[prost(bytes = "vec", tag = "4")]
     hash: Vec<u8>,
-    #[prost(uint64, tag = "5")]
-    length: u64,
+    #[prost(uint64, optional, tag = "5")]
+    length: Option<u64>,
     #[prost(bytes = "vec", tag = "7")]
     key: Vec<u8>,
     #[prost(bytes = "vec", tag = "9")]
@@ -339,7 +339,9 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
             hash: doc.hash,
             key: doc.key,
             enc_hash: doc.enc_hash,
-            length: doc.length,
+            length: doc
+                .length
+                .ok_or_else(|| bad("missing document file length"))?,
         }
     } else if let Some(s) = e.sticker {
         // Pinned43.72 FPx.A00 compares the whole non-Lottie WebP MIME
@@ -361,7 +363,8 @@ fn descriptor(bytes: &[u8]) -> Result<Option<Descriptor>> {
     } else {
         return Ok(None);
     };
-    if d.length == 0
+    // An empty document has a known plaintext digest before any download.
+    if (d.length == 0 && (d.kind != MediaKind::Document || d.hash != Sha256::digest([]).as_slice()))
         || d.length > 8 * 1024 * 1024
         || d.key.len() != 32
         || d.hash.len() != 32
@@ -1931,7 +1934,7 @@ mod tests {
                     hash: vec![1; 32],
                     key: vec![2; 32],
                     enc_hash: vec![3; 32],
-                    length: 42,
+                    length: Some(42),
                 }
                 .encode_to_vec(),
                 _ => Video {
@@ -2805,8 +2808,11 @@ mod tests {
     }
 
     fn document_fixture() -> crate::signal::image::EncryptedImage {
-        let f: serde_json::Value =
-            serde_json::from_str(include_str!("../../tests/fixtures/document-media.json")).unwrap();
+        read_document_fixture(include_str!("../../tests/fixtures/document-media.json"))
+    }
+
+    fn read_document_fixture(json: &str) -> crate::signal::image::EncryptedImage {
+        let f: serde_json::Value = serde_json::from_str(json).unwrap();
         let bytes = |name: &str| hex::decode(f[name].as_str().unwrap()).unwrap();
         crate::signal::image::EncryptedImage {
             media_key: Zeroizing::new(bytes("media_key").try_into().unwrap()),
@@ -2904,6 +2910,35 @@ mod tests {
     }
     #[tokio::test]
     async fn document_journal_cached_save_restart_metadata_and_overwrite_guards() {
+        check_cached_document(document_fixture(), b"synthetic document domain fixture").await;
+    }
+
+    #[tokio::test]
+    async fn empty_document_requires_explicit_length_and_authenticated_body() {
+        let fixture = read_document_fixture(include_str!(
+            "../../tests/fixtures/empty-document-media.json"
+        ));
+        let wire = document_payload(&fixture, &[]);
+        let mut envelope = Envelope::decode(wire.as_slice()).unwrap();
+        let doc = envelope.document.as_mut().unwrap();
+        doc.length = None;
+        assert!(descriptor(&envelope.encode_to_vec()).is_err());
+        let doc = envelope.document.as_mut().unwrap();
+        doc.length = Some(0);
+        doc.hash[0] ^= 1;
+        assert!(descriptor(&envelope.encode_to_vec()).is_err());
+
+        let mut d = descriptor(&wire).unwrap().unwrap();
+        assert_eq!(fixture.body.len(), 26);
+        assert!(decrypt(&d, &[]).is_err());
+        let mut corrupt = fixture.body.clone();
+        corrupt[25] ^= 1;
+        d.enc_hash = Sha256::digest(&corrupt).to_vec();
+        assert!(decrypt(&d, &corrupt).is_err());
+        check_cached_document(fixture, b"").await;
+    }
+
+    async fn check_cached_document(fixture: crate::signal::image::EncryptedImage, expected: &[u8]) {
         use crate::{
             model::ids::{AccountId, EventCursor},
             store::{ConsumerId, MasterKey, OpenOptions, StaticKeySource},
@@ -2919,7 +2954,6 @@ mod tests {
         let mut config: LabRegistrationConfig =
             serde_json::from_str(crate::registration::request::TEMPLATE_JSON).unwrap();
         config.token = Zeroizing::new("offline-fixture".into());
-        let fixture = document_fixture();
         // Sender filename is metadata only, even if it looks like a relative path.
         let payload = document_payload(&fixture, b"\x42\x0b../file.txt\xa2\x01\x07caption");
         let key = b"received:document";
@@ -2974,6 +3008,7 @@ mod tests {
         else {
             panic!("missing document reference")
         };
+        assert_eq!(reference.length, Some(fixture.plaintext_len));
         assert_eq!(reference.kind, crate::model::message::MediaKind::Document);
         assert_eq!(caption.as_deref(), Some("caption"));
         assert_eq!(file_name.as_deref(), Some("../file.txt"));
@@ -2983,10 +3018,7 @@ mod tests {
             save(&store, &config, &id, &output).await.unwrap(),
             fixture.plaintext_len
         );
-        assert_eq!(
-            std::fs::read(&output).unwrap(),
-            b"synthetic document domain fixture"
-        );
+        assert_eq!(std::fs::read(&output).unwrap(), expected);
         use std::os::unix::fs::PermissionsExt;
         assert_eq!(
             std::fs::metadata(&output).unwrap().permissions().mode() & 0o777,
@@ -2996,10 +3028,7 @@ mod tests {
         let link = dir.path().join("link");
         std::os::unix::fs::symlink(&output, &link).unwrap();
         assert!(save(&store, &config, &id, &link).await.is_err());
-        assert_eq!(
-            std::fs::read(&output).unwrap(),
-            b"synthetic document domain fixture"
-        );
+        assert_eq!(std::fs::read(&output).unwrap(), expected);
         let (kind, _) = open(&store, &config, &id).await.unwrap();
         assert_eq!(kind, MediaKind::Document);
         let quoted = document_payload(&fixture, b"\x8a\x01\x03\x0a\x01q");

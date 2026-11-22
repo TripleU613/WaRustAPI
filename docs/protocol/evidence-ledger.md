@@ -1,3 +1,5 @@
+**Empty incoming documents (offline).** An explicitly empty document now survives inbox projection and authenticated export after restart. [APK evidence and test scope](document-media.md#receiving-an-empty-document).
+
 **Pinned ordinary receipt-driven retry-key cleanup traced.** Message-status processing groups full message keys by recipient device under selected received-target codes and outgoing/self ownership, then queues bulk deletion. A separate pending-prekey path requires retained-key equality. Async completion, TTL and Rust integration remain open. [Evidence and limits](retry-answers.md#pinned-receipt-driven-bulk-base-key-cleanup-2026-11-07).
 
 **Pinned base-key delete producers narrowed to selected status and VoIP paths.** Status-state cleanup is queued before its transaction success marker; enc_rekey receipt handling queues call_rekey cleanup before native invocation. Asynchronous submission does not prove completed deletion or a global TTL. Ordinary-chat/bulk cleanup and Rust persistence remain open. [Evidence and limits](retry-answers.md#pinned-status-and-voip-base-key-delete-producers-2026-11-07).
