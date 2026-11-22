@@ -128,6 +128,32 @@ struct Row {
     error_text: Option<String>,
 }
 
+impl Row {
+    fn parse(bytes: &[u8]) -> Result<Self> {
+        serde_json::from_slice(bytes)
+            .map_err(|error| crate::store::StoreError::Serialization(error.to_string()).into())
+    }
+    fn into_outcome(self, id: &str) -> ActionOutcome {
+        ActionOutcome {
+            settlement_sequence: self.settlement_sequence,
+            id: id.to_owned(),
+            kind: self.kind,
+            label: self.label,
+            status: self.status,
+            deferred_reason: self.deferred_reason,
+            token_issue_completion: self.token_issue_completion,
+            contact_projection: self.contact_projection,
+            usync_refusal: self.usync_refusal,
+            contact_protocol_refusal: self.contact_protocol_refusal,
+            about_refusal: self.about_refusal,
+            blocklist_error_code: self.blocklist_error_code,
+            photo_error: self.photo_error,
+            error_code: self.error_code,
+            error_text: self.error_text,
+        }
+    }
+}
+
 /// Redacted operator view of one action.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct ActionOutcome {
@@ -332,28 +358,8 @@ pub(crate) fn view_in_write(
     };
     check_prepared_account(&row, account_authority_in(tx)?)?;
     let request = decode(&row.wire)?;
-    let reply = row.reply.map(|wire| decode(&wire)).transpose()?;
-    Ok(Some((
-        ActionOutcome {
-            settlement_sequence: row.settlement_sequence,
-            id: id.to_owned(),
-            kind: row.kind,
-            label: row.label,
-            status: row.status,
-            deferred_reason: row.deferred_reason,
-            token_issue_completion: row.token_issue_completion,
-            contact_projection: row.contact_projection,
-            usync_refusal: row.usync_refusal,
-            contact_protocol_refusal: row.contact_protocol_refusal,
-            about_refusal: row.about_refusal,
-            blocklist_error_code: row.blocklist_error_code,
-            photo_error: row.photo_error,
-            error_code: row.error_code,
-            error_text: row.error_text,
-        },
-        reply,
-        request,
-    )))
+    let reply = row.reply.as_deref().map(decode).transpose()?;
+    Ok(Some((row.into_outcome(id), reply, request)))
 }
 
 pub(crate) fn settled_at_in(tx: &crate::store::WriteTx<'_>, id: &str) -> Result<Option<Timestamp>> {
@@ -387,27 +393,8 @@ pub(crate) fn view_in(
     let Some(row) = row else {
         return Ok(None);
     };
-    let reply = row.reply.map(|wire| decode(&wire)).transpose()?;
-    Ok(Some((
-        ActionOutcome {
-            settlement_sequence: row.settlement_sequence,
-            id: id.to_owned(),
-            kind: row.kind,
-            label: row.label,
-            status: row.status,
-            deferred_reason: row.deferred_reason,
-            token_issue_completion: row.token_issue_completion,
-            contact_projection: row.contact_projection,
-            usync_refusal: row.usync_refusal,
-            contact_protocol_refusal: row.contact_protocol_refusal,
-            about_refusal: row.about_refusal,
-            blocklist_error_code: row.blocklist_error_code,
-            photo_error: row.photo_error,
-            error_code: row.error_code,
-            error_text: row.error_text,
-        },
-        reply,
-    )))
+    let reply = row.reply.as_deref().map(decode).transpose()?;
+    Ok(Some((row.into_outcome(id), reply)))
 }
 
 // Complete, identity-checked producer inventory for legacy token-owner recovery.
@@ -415,30 +402,15 @@ pub(crate) fn for_kind_in(
     tx: &crate::store::WriteTx<'_>,
     kind: &str,
 ) -> Result<Vec<(String, ActionStatus, Node)>> {
-    let mut out = Vec::new();
-    let mut cursor = None;
-    loop {
-        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-        let done = rows.len() < 256;
-        cursor = rows.last().map(|(key, _)| key.clone());
-        for (key, _) in rows
-            .iter()
-            .filter(|(key, _)| key.starts_with(PREFIX.as_bytes()))
-        {
-            let Some(row): Option<Row> = tx.get_json(Table::Checkpoints, key, 1)? else {
-                continue;
-            };
-            if row.kind != kind {
-                continue;
-            }
+    tx.fold_checkpoints(PREFIX.as_bytes(), Vec::new(), |mut out, key, bytes| {
+        let row = Row::parse(bytes)?;
+        if row.kind == kind {
             let id = std::str::from_utf8(&key[PREFIX.len()..])
                 .map_err(|_| Error::invalid("action", "invalid saved action row identity"))?;
             out.push((id.to_owned(), row.status, decode_owned(id, &row.wire)?));
         }
-        if done {
-            return Ok(out);
-        }
-    }
+        Ok(out)
+    })
 }
 
 fn prepare_for_reservation_in(
@@ -602,15 +574,12 @@ fn reserve_limit_owned(store: &ProtocolStore, limit: usize) -> Result<Vec<Reserv
         let mut out = Vec::new();
         let mut cursor = None;
         while out.len() < limit {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            if rows.is_empty() {
+            let keys = tx.checkpoint_keys_after(PREFIX.as_bytes(), cursor.as_deref(), 256)?;
+            if keys.is_empty() {
                 break;
             }
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows
-                .iter()
-                .filter(|(key, _)| key.starts_with(PREFIX.as_bytes()))
-            {
+            cursor = keys.last().cloned();
+            for key in &keys {
                 if out.len() == limit {
                     break;
                 }
@@ -1245,29 +1214,16 @@ fn next_settlement_sequence_in(tx: &mut crate::store::WriteTx<'_>) -> Result<u64
         ));
     }
     if current.is_none() {
-        let mut cursor = None;
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            let done = rows.len() < 256;
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows
-                .iter()
-                .filter(|(key, _)| key.starts_with(PREFIX.as_bytes()))
-            {
-                let row: Row = tx.get_json(Table::Checkpoints, key, 1)?.ok_or_else(|| {
-                    Error::invalid("action", "missing action during sequence check")
-                })?;
-                if row.settlement_sequence.is_some() {
-                    return Err(Error::invalid(
-                        "action",
-                        "settlement sequence counter missing; no order reset",
-                    ));
-                }
+        tx.fold_checkpoints(PREFIX.as_bytes(), (), |(), _, bytes| {
+            let row = Row::parse(bytes)?;
+            if row.settlement_sequence.is_some() {
+                return Err(Error::invalid(
+                    "action",
+                    "settlement sequence counter missing; no order reset",
+                ));
             }
-            if done {
-                break;
-            }
-        }
+            Ok(())
+        })?;
     }
     let next = current
         .unwrap_or(0)
@@ -1279,88 +1235,23 @@ fn next_settlement_sequence_in(tx: &mut crate::store::WriteTx<'_>) -> Result<u64
 
 /// Every action ever queued, in key order, redacted.
 pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ActionOutcome>> {
-    store.read(|tx| {
-        let mut out = Vec::new();
-        let mut cursor = None;
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            let done = rows.len() < 256;
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows {
-                let Some(id) = std::str::from_utf8(&key)
-                    .ok()
-                    .and_then(|k| k.strip_prefix(PREFIX))
-                else {
-                    continue;
-                };
-                let Some(row): Option<Row> = tx.get_json(Table::Checkpoints, &key, 1)? else {
-                    continue;
-                };
-                out.push(ActionOutcome {
-                    settlement_sequence: row.settlement_sequence,
-                    id: id.to_owned(),
-                    kind: row.kind,
-                    label: row.label,
-                    status: row.status,
-                    deferred_reason: row.deferred_reason,
-                    token_issue_completion: row.token_issue_completion,
-                    contact_projection: row.contact_projection,
-                    usync_refusal: row.usync_refusal,
-                    contact_protocol_refusal: row.contact_protocol_refusal,
-                    about_refusal: row.about_refusal,
-                    blocklist_error_code: row.blocklist_error_code,
-                    photo_error: row.photo_error,
-                    error_code: row.error_code,
-                    error_text: row.error_text,
-                });
-            }
-            if done {
-                return Ok(out);
-            }
-        }
-    })
+    store.read(|tx| tx.fold_checkpoints(PREFIX.as_bytes(), Vec::new(), collect_outcome))
+}
+
+fn collect_outcome(
+    mut out: Vec<ActionOutcome>,
+    key: &[u8],
+    bytes: &[u8],
+) -> Result<Vec<ActionOutcome>> {
+    if let Ok(id) = std::str::from_utf8(&key[PREFIX.len()..]) {
+        out.push(Row::parse(bytes)?.into_outcome(id));
+    }
+    Ok(out)
 }
 
 // Used by bounded local migrations so attribution cannot race a new action.
 pub(crate) fn outcomes_in_write(tx: &crate::store::WriteTx<'_>) -> Result<Vec<ActionOutcome>> {
-    let mut out = Vec::new();
-    let mut cursor = None;
-    loop {
-        let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-        let done = rows.len() < 256;
-        cursor = rows.last().map(|(key, _)| key.clone());
-        for (key, _) in rows {
-            let Some(id) = std::str::from_utf8(&key)
-                .ok()
-                .and_then(|k| k.strip_prefix(PREFIX))
-            else {
-                continue;
-            };
-            let Some(row): Option<Row> = tx.get_json(Table::Checkpoints, &key, 1)? else {
-                continue;
-            };
-            out.push(ActionOutcome {
-                settlement_sequence: row.settlement_sequence,
-                id: id.to_owned(),
-                kind: row.kind,
-                label: row.label,
-                status: row.status,
-                deferred_reason: row.deferred_reason,
-                token_issue_completion: row.token_issue_completion,
-                contact_projection: row.contact_projection,
-                usync_refusal: row.usync_refusal,
-                contact_protocol_refusal: row.contact_protocol_refusal,
-                about_refusal: row.about_refusal,
-                blocklist_error_code: row.blocklist_error_code,
-                photo_error: row.photo_error,
-                error_code: row.error_code,
-                error_text: row.error_text,
-            });
-        }
-        if done {
-            return Ok(out);
-        }
-    }
+    tx.fold_checkpoints(PREFIX.as_bytes(), Vec::new(), collect_outcome)
 }
 
 /// The queued request of an action, decoded (for diagnostics).
@@ -1422,64 +1313,38 @@ pub fn settled_for_kinds(
 ) -> Result<Vec<(ActionOutcome, Option<Node>)>> {
     store.read(|tx| {
         let mut ordered = std::collections::BTreeMap::new();
-        let mut cursor = None;
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            let done = rows.len() < 256;
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows {
-                let Some(id) = std::str::from_utf8(&key)
-                    .ok()
-                    .and_then(|key| key.strip_prefix(PREFIX))
-                else {
-                    continue;
-                };
-                let Some(row): Option<Row> = tx.get_json(Table::Checkpoints, &key, 1)? else {
-                    continue;
-                };
-                if !kinds.contains(&row.kind.as_str())
-                    || !matches!(row.status, ActionStatus::Ok | ActionStatus::Error)
-                {
-                    continue;
-                }
-                let Some(sequence) = row.settlement_sequence else {
-                    continue;
-                };
-                if sequence == 0 {
-                    return Err(Error::invalid(
-                        "action",
-                        "invalid saved settlement sequence",
-                    ));
-                }
-                let reply = row.reply.map(|wire| decode(&wire)).transpose()?;
-                let outcome = ActionOutcome {
-                    settlement_sequence: Some(sequence),
-                    id: id.to_owned(),
-                    kind: row.kind,
-                    label: row.label,
-                    status: row.status,
-                    deferred_reason: row.deferred_reason,
-                    token_issue_completion: row.token_issue_completion,
-                    contact_projection: row.contact_projection,
-                    usync_refusal: row.usync_refusal,
-                    contact_protocol_refusal: row.contact_protocol_refusal,
-                    about_refusal: row.about_refusal,
-                    blocklist_error_code: row.blocklist_error_code,
-                    photo_error: row.photo_error,
-                    error_code: row.error_code,
-                    error_text: row.error_text,
-                };
-                if ordered.insert(sequence, (outcome, reply)).is_some() {
-                    return Err(Error::invalid(
-                        "action",
-                        "duplicate saved settlement sequence",
-                    ));
-                }
+        tx.fold_checkpoints(PREFIX.as_bytes(), (), |(), key, bytes| {
+            let Ok(id) = std::str::from_utf8(&key[PREFIX.len()..]) else {
+                return Ok(());
+            };
+            let row = Row::parse(bytes)?;
+            if !kinds.contains(&row.kind.as_str())
+                || !matches!(row.status, ActionStatus::Ok | ActionStatus::Error)
+            {
+                return Ok(());
             }
-            if done {
-                return Ok(ordered.into_values().collect());
+            let Some(sequence) = row.settlement_sequence else {
+                return Ok(());
+            };
+            if sequence == 0 {
+                return Err(Error::invalid(
+                    "action",
+                    "invalid saved settlement sequence",
+                ));
             }
-        }
+            let reply = row.reply.as_deref().map(decode).transpose()?;
+            if ordered
+                .insert(sequence, (row.into_outcome(id), reply))
+                .is_some()
+            {
+                return Err(Error::invalid(
+                    "action",
+                    "duplicate saved settlement sequence",
+                ));
+            }
+            Ok(())
+        })?;
+        Ok(ordered.into_values().collect())
     })
 }
 

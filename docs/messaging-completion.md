@@ -1,3 +1,5 @@
+**Keepalive queue lookup (offline).** The listener now checks its three queues without decrypting unrelated inbox history. On an 8 MiB synthetic store the combined median fell from 3.34 s to 0.19 ms. [Measurements and acknowledgement tests](protocol/messaging-transport.md#keepalive-queue-lookup-in-large-stores).
+
 **Offline IQ reply recovery.** An unreadable reply can settle only the action already reserved when it was first captured. Conflicting replies leave that action pending across restart. [Regression and APK evidence](protocol/replay-safety-audit.md#offline-recovery-of-an-unreadable-iq-reply).
 
 **Unreadable session endings (offline).** The Rust listener stops automatic reconnects after a damaged terminal stanza or a stream end immediately following an unidentified stanza. Encrypted split-reader tests cover capture across restart and a competing writer failure. [APK evidence and local policy](protocol/frame-admission.md#reconnect-after-an-unreadable-session-ending).

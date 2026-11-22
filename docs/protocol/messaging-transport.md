@@ -1634,6 +1634,50 @@ The native pre-ACK delay does not replace Rust's local keepalive setting. This
 does not port durable ACK replay/retirement, or guarantee timely observation
 while the actor is blocked in a write. No live operation was performed.
 
+### Keepalive queue lookup in large stores
+
+**Confirmed in Rust, offline.** On a maintenance tick the listener checks for
+pending device syncs and read receipts before sending a due ping. It also
+starts draining pending actions. Each queue used to decrypt the whole checkpoint
+table to find its rows, including archived inbound frames.
+
+Device selection now reads the `device-sync-pending:` range. Automatic selection
+and reservation share one write transaction, so a completed or changed device
+request cannot disappear between selection and reservation. Device ordering,
+the local 64-user batch size and the connection's attempted revisions still
+apply. Action and receipt reservations page through the `action-outbox:` and
+`receipt-outbox:` keys respectively. They open the current row in the reservation
+transaction, where the account, deferral and pending-state checks run. Receipt
+ACKs open their original callback and members. Action settlement validates the
+first sequence counter against the action rows. Receipt and action inspection
+also read only their respective ranges.
+
+| Median time for three idle queue checks | Empty store | With 8 MiB of unrelated checkpoints |
+| --- | ---: | ---: |
+| Before | 207 µs | 3,337,277 µs |
+| After | 250 µs | 190 µs |
+
+**Observed locally.** Both binaries used the debug workspace library on the
+same workstation and database files. The fixture wrote 1,024 encrypted v1
+checkpoint values of 8,192 bytes each. Each sample called
+`DeviceSyncCursor::begin_next(Interactive)`, `receipts::reserve_pending_owned`
+and `actions::reserve_pending` against empty queues. Each cell is the median of
+five passes after a warm-up. Network latency, phone performance and the cost of
+scanning a queue with many settled rows were outside this measurement.
+
+The actor regression places an unrelated checkpoint with a different record
+version in the active store. Previously the listener closed before the next
+scheduled write. The corrected listener writes the device query, read receipt,
+ping and action, processes both matching acknowledgements, then answers a
+server ping. Reopening the store shows the accepted outcomes and the original
+unrelated bytes. A separate regression places an unreadable row inside each
+queue and verifies that reservation fails atomically and pending work survives.
+
+**Confirmed in APK 2.26.43.72.** `0Sf.A06` calls `0ln.A08` to register the
+callback before dispatch on its ready branch. The database measurements describe
+the Rust implementation. Actual keepalive timing during multi-week use remains
+**unknown**. [APK request and timer evidence](apk/2.26.43.72-prekey-upload-replies/README.md#confirmation-ping-request-and-independent-timeout-2026-11-04).
+
 ### Actor IQ waits expire independently (2026-11-04)
 
 **Confirmed local defects, fixed offline:** prekey upload and device-query waits

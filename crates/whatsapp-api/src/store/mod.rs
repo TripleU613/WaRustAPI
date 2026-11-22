@@ -1139,6 +1139,42 @@ impl WriteTx<'_> {
         fold_checkpoint_prefix(self.store, self.generation, &table, prefix, initial, fold)
     }
 
+    /// Page keys of one checkpoint namespace before mutating its rows. Release
+    /// the range handle before opening values, which may change within a batch.
+    #[cfg(all(
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    ))]
+    pub(crate) fn checkpoint_keys_after(
+        &self,
+        prefix: &[u8],
+        after: Option<&[u8]>,
+        limit: usize,
+    ) -> Result<Vec<Vec<u8>>> {
+        use std::ops::Bound::{Excluded, Included, Unbounded};
+        let table = self
+            .tx
+            .open_table(Table::Checkpoints.def())
+            .map_err(StoreError::from)?;
+        let lower = after
+            .filter(|key| *key >= prefix)
+            .map_or(Included(prefix), Excluded);
+        let mut keys = Vec::new();
+        for entry in table
+            .range::<&[u8]>((lower, Unbounded))
+            .map_err(StoreError::from)?
+            .take(limit)
+        {
+            let (key, _) = entry.map_err(StoreError::from)?;
+            if !key.value().starts_with(prefix) {
+                break;
+            }
+            keys.push(key.value().to_vec());
+        }
+        Ok(keys)
+    }
+
     /// Read a bounded page after an exclusive physical-key cursor within this
     /// write transaction. Includes this transaction's uncommitted changes.
     /// Blinded-table cursors are physical keys, not logical lookup keys.

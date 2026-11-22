@@ -9932,6 +9932,146 @@ pub(super) mod tests {
     }
 
     #[tokio::test(start_paused = true)]
+    async fn keepalive_drains_owned_work_without_opening_unrelated_history() {
+        use super::super::{about, actions, devices, receipts};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("maintenance.redb");
+        let store = open(&path);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        fake.nothing_written(Duration::from_secs(1)).await;
+        let id = about::queue_set(&store, "Available").unwrap();
+        queue_read_receipt(&store, "maintenance-read");
+        devices::request_sync(&store, None, &peer(), None, "fixture").unwrap();
+        // This independently versioned checkpoint is an authenticated tripwire:
+        // opening it as v1 fails. None of the three queues owns this key.
+        store
+            .write(|tx| {
+                tx.put(
+                    Table::Checkpoints,
+                    b"inbound:maintenance-fixture",
+                    2,
+                    b"fixture",
+                )
+            })
+            .unwrap();
+        for expected in ["usync", "receipt", "w:p", "action"] {
+            let (node, written) = fake.written_within(Duration::from_secs(30)).await;
+            match expected {
+                "receipt" => assert_eq!(
+                    node.get_attr("id").unwrap().as_text(),
+                    Some("maintenance-read")
+                ),
+                "action" => assert_eq!(node.get_attr("id").unwrap().as_text(), Some(id.as_str())),
+                namespace => assert_eq!(node.get_attr("xmlns").unwrap().as_text(), Some(namespace)),
+            }
+            written.send(Ok(())).unwrap();
+        }
+        fake.deliver(
+            Node::new("ack")
+                .attr("class", "receipt")
+                .attr("type", "read")
+                .attr("id", "maintenance-read")
+                .attr("from", peer()),
+        )
+        .await;
+        fake.deliver(
+            Node::new("iq")
+                .attr("id", id.as_str())
+                .attr("type", "result"),
+        )
+        .await;
+        // The pong confirms both earlier replies finished processing.
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(pong.get_attr("type").unwrap().as_text(), Some("result"));
+        written.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+        drop(store);
+        let reopened = open(&path);
+        assert!(actions::reserve_pending(&reopened).unwrap().is_empty());
+        assert!(
+            receipts::reserve_pending_owned(&reopened)
+                .unwrap()
+                .is_empty()
+        );
+        assert_eq!(
+            receipt_status(&reopened, "maintenance-read"),
+            "server_acknowledged"
+        );
+        assert_eq!(
+            actions::outcomes(&reopened).unwrap()[0].status,
+            actions::ActionStatus::Ok
+        );
+        assert_eq!(
+            receipts::outcomes(&reopened).unwrap()[0].status,
+            "server_acknowledged"
+        );
+        assert_eq!(devices::pending_users(&reopened).unwrap(), vec![peer()]);
+        assert_eq!(
+            reopened
+                .read(|tx| tx.get(Table::Checkpoints, b"inbound:maintenance-fixture", 2))
+                .unwrap()
+                .unwrap(),
+            b"fixture"
+        );
+    }
+
+    #[test]
+    fn maintenance_refuses_unreadable_owned_rows_atomically() {
+        use super::super::{about, actions, devices, receipts};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("owned-checkpoints.redb");
+        let store = open(&path);
+        let id = about::queue_set(&store, "Available").unwrap();
+        queue_read_receipt(&store, "owned-read");
+        devices::request_sync(&store, None, &peer(), None, "fixture").unwrap();
+        let bad = [
+            "action-outbox:zzz",
+            "receipt-outbox:zzz",
+            "device-sync-pending:zzz",
+        ];
+        store
+            .write(|tx| {
+                for key in bad {
+                    tx.put(Table::Checkpoints, key.as_bytes(), 2, b"fixture")?;
+                }
+                Ok(())
+            })
+            .unwrap();
+        for error in [
+            actions::reserve_pending(&store).unwrap_err(),
+            receipts::reserve_pending(&store).unwrap_err(),
+            devices::begin_query(&store, devices::SyncContext::Interactive).unwrap_err(),
+        ] {
+            assert!(matches!(
+                error,
+                Error::Storage(crate::store::StoreError::AuthenticationFailed)
+            ));
+        }
+        drop(store);
+        let reopened = open(&path);
+        reopened
+            .write(|tx| {
+                for key in bad {
+                    assert!(tx.delete(Table::Checkpoints, key.as_bytes())?);
+                }
+                Ok(())
+            })
+            .unwrap();
+        let actions = actions::outcomes(&reopened).unwrap();
+        assert_eq!(actions[0].id, id);
+        assert_eq!(actions[0].status, actions::ActionStatus::Queued);
+        assert_eq!(receipt_status(&reopened, "owned-read"), "pending");
+        assert_eq!(devices::pending_users(&reopened).unwrap(), vec![peer()]);
+    }
+
+    #[tokio::test(start_paused = true)]
     async fn delayed_ping_response_restarts_only_ping_schedule_not_maintenance() {
         use super::super::{about, actions};
         for outcome in ["result", "error"] {

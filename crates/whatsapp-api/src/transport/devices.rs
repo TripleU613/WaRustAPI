@@ -483,29 +483,31 @@ pub(super) fn after_primary_identity_change_in(
     // This refresh intent does not claim that job or authorize a resend.
     request_sync_in(tx, peer, None, "authenticated-primary-change")
 }
+fn collect_pending_user(mut users: Vec<Jid>, key: &[u8], _: &[u8]) -> Result<Vec<Jid>> {
+    if let Some(suffix) = key.strip_prefix(PENDING_PREFIX.as_bytes())
+        && let Ok(text) = std::str::from_utf8(suffix)
+        && let Ok(jid) = Jid::parse(text)
+    {
+        users.push(jid);
+    }
+    Ok(users)
+}
+
 /// Users waiting for a device query, ascending.
 pub fn pending_users(store: &ProtocolStore) -> Result<Vec<Jid>> {
     store.read(|tx| {
-        let mut out = Vec::new();
-        let mut cursor = None;
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 512)?;
-            let done = rows.len() < 512;
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows {
-                if let Ok(name) = std::str::from_utf8(&key)
-                    && let Some(rest) = name.strip_prefix(PENDING_PREFIX)
-                    && let Ok(jid) = Jid::parse(rest)
-                {
-                    out.push(jid);
-                }
-            }
-            if done {
-                out.sort();
-                return Ok(out);
-            }
-        }
+        let mut users =
+            tx.fold_checkpoints(PENDING_PREFIX.as_bytes(), Vec::new(), collect_pending_user)?;
+        users.sort();
+        Ok(users)
     })
+}
+
+fn pending_users_in(tx: &crate::store::WriteTx<'_>) -> Result<Vec<Jid>> {
+    let mut users =
+        tx.fold_checkpoints(PENDING_PREFIX.as_bytes(), Vec::new(), collect_pending_user)?;
+    users.sort();
+    Ok(users)
 }
 
 /// A reserved device query awaiting its `iq` reply on this connection.
@@ -543,10 +545,9 @@ impl DeviceSyncCursor {
         store: &ProtocolStore,
         context: SyncContext,
     ) -> Result<Option<(DeviceQuery, Node)>> {
-        let pending = pending_users(store)?;
-        let users = store.read(|tx| {
+        let next = store.write(|tx| {
             let mut selected = Vec::new();
-            for user in pending {
+            for user in pending_users_in(tx)? {
                 let pending: Option<Pending> =
                     tx.get_json(Table::Checkpoints, pending_key(&user).as_bytes(), 1)?;
                 if let Some(pending) = pending
@@ -559,9 +560,9 @@ impl DeviceSyncCursor {
                     }
                 }
             }
-            Ok(selected)
+            reserve_query_in(tx, context, selected_users(&selected)?)
         })?;
-        let Some((query, node)) = begin_query_for_users(store, context, &users)? else {
+        let Some((query, node)) = next else {
             return Ok(None);
         };
         self.observe_query(&query);
@@ -604,11 +605,11 @@ pub fn begin_query(
     store: &ProtocolStore,
     context: SyncContext,
 ) -> Result<Option<(DeviceQuery, Node)>> {
-    let users: Vec<Jid> = pending_users(store)?
-        .into_iter()
-        .take(MAX_USERS_PER_QUERY)
-        .collect();
-    reserve_query(store, context, users)
+    store.write(|tx| {
+        let mut users = pending_users_in(tx)?;
+        users.truncate(MAX_USERS_PER_QUERY);
+        reserve_query_in(tx, context, users)
+    })
 }
 
 /// Reserve exactly this pending device-user batch, never unrelated pending
@@ -619,6 +620,11 @@ pub fn begin_query_for_users(
     context: SyncContext,
     users: &[Jid],
 ) -> Result<Option<(DeviceQuery, Node)>> {
+    let users = selected_users(users)?;
+    store.write(|tx| reserve_query_in(tx, context, users))
+}
+
+fn selected_users(users: &[Jid]) -> Result<Vec<Jid>> {
     if users.len() > MAX_USERS_PER_QUERY {
         return Err(invalid(
             "selected device query exceeds the local 64-user limit",
@@ -628,16 +634,9 @@ pub fn begin_query_for_users(
         .iter()
         .map(primary_of)
         .collect::<Result<std::collections::BTreeSet<_>>>()?;
-    reserve_query(store, context, users.into_iter().collect())
+    Ok(users.into_iter().collect())
 }
 
-fn reserve_query(
-    store: &ProtocolStore,
-    context: SyncContext,
-    users: Vec<Jid>,
-) -> Result<Option<(DeviceQuery, Node)>> {
-    store.write(|tx| reserve_query_in(tx, context, users))
-}
 pub(crate) fn reserve_query_in(
     tx: &mut crate::store::WriteTx<'_>,
     context: SyncContext,

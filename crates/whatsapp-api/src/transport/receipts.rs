@@ -700,63 +700,48 @@ fn batch_ack_id(row: &serde_json::Value) -> Result<Option<&str>> {
 /// rewrites or repairs a reservation, including uncertain outcomes.
 pub fn outcomes(store: &ProtocolStore) -> Result<Vec<ReceiptOutcome>> {
     store.read(|tx| {
-        let mut out = Vec::new();
-        let mut cursor = None;
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            let done = rows.len() < 256;
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows {
-                let Ok(name) = std::str::from_utf8(&key) else {
-                    continue;
-                };
-                let Some(rest) = name.strip_prefix("receipt-outbox:") else {
-                    continue;
-                };
-                let Some(row): Option<serde_json::Value> =
-                    tx.get_json(Table::Checkpoints, &key, 1)?
-                else {
-                    continue;
-                };
-                let kind = rest.rsplit(':').next().unwrap_or("").to_owned();
-                let _ = batch_ack_id(&row)?;
-                if row["wire"].is_null() {
-                    return Err(Error::invalid("receipt", "missing saved receipt wire"));
-                }
-                // Do not drop non-byte values or truncate integers: inspection
-                // must diagnose corrupt reservations without changing their outcome.
-                let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
-                    .map_err(|_| Error::invalid("receipt", "invalid saved receipt wire bytes"))?;
-                // Decoder errors can contain input-derived detail; this offline
-                // operator path reports a fixed diagnosis, never stored route data.
-                let node = decode(&wire)
-                    .map_err(|_| Error::invalid("receipt", "cannot decode saved receipt wire"))?;
-                if node.description != "receipt" {
-                    return Err(Error::invalid(
-                        "receipt",
-                        "saved receipt wire is not a receipt",
-                    ));
-                }
-                let message_id = node
-                    .get_attr("id")
-                    .and_then(|value| value.as_text())
-                    .filter(|id| !id.is_empty())
-                    .ok_or_else(|| {
-                        Error::invalid("receipt", "missing or invalid saved receipt message id")
-                    })?
-                    .to_owned();
-                out.push(ReceiptOutcome {
-                    kind,
-                    status: row["status"].as_str().unwrap_or("").to_owned(),
-                    message_id,
-                    automatic: automatic_origin(&row)?,
-                    deferred_reason: deferred_reason(&row)?,
-                });
-            }
-            if done {
+        tx.fold_checkpoints(b"receipt-outbox:", Vec::new(), |mut out, key, bytes| {
+            let Ok(rest) = std::str::from_utf8(&key[b"receipt-outbox:".len()..]) else {
                 return Ok(out);
+            };
+            let row: serde_json::Value = serde_json::from_slice(bytes)
+                .map_err(|e| crate::store::StoreError::Serialization(e.to_string()))?;
+            let kind = rest.rsplit(':').next().unwrap_or("").to_owned();
+            let _ = batch_ack_id(&row)?;
+            if row["wire"].is_null() {
+                return Err(Error::invalid("receipt", "missing saved receipt wire"));
             }
-        }
+            // Do not drop non-byte values or truncate integers: inspection
+            // must diagnose corrupt reservations without changing their outcome.
+            let wire: Vec<u8> = serde_json::from_value(row["wire"].clone())
+                .map_err(|_| Error::invalid("receipt", "invalid saved receipt wire bytes"))?;
+            // Decoder errors can contain input-derived detail; this offline
+            // operator path reports a fixed diagnosis, never stored route data.
+            let node = decode(&wire)
+                .map_err(|_| Error::invalid("receipt", "cannot decode saved receipt wire"))?;
+            if node.description != "receipt" {
+                return Err(Error::invalid(
+                    "receipt",
+                    "saved receipt wire is not a receipt",
+                ));
+            }
+            let message_id = node
+                .get_attr("id")
+                .and_then(|value| value.as_text())
+                .filter(|id| !id.is_empty())
+                .ok_or_else(|| {
+                    Error::invalid("receipt", "missing or invalid saved receipt message id")
+                })?
+                .to_owned();
+            out.push(ReceiptOutcome {
+                kind,
+                status: row["status"].as_str().unwrap_or("").to_owned(),
+                message_id,
+                automatic: automatic_origin(&row)?,
+                deferred_reason: deferred_reason(&row)?,
+            });
+            Ok(out)
+        })
     })
 }
 
@@ -940,15 +925,12 @@ pub fn reserve_pending_owned(store: &ProtocolStore) -> Result<Vec<ReservedReceip
         let mut pending = Vec::new();
         let mut cursor = None;
         while pending.len() < 16 {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            if rows.is_empty() {
+            let keys = tx.checkpoint_keys_after(b"receipt-outbox:", cursor.as_deref(), 256)?;
+            if keys.is_empty() {
                 break;
             }
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows
-                .iter()
-                .filter(|(key, _)| key.starts_with(b"receipt-outbox:"))
-            {
+            cursor = keys.last().cloned();
+            for key in &keys {
                 if pending.len() == 16 {
                     break;
                 }
@@ -1209,15 +1191,12 @@ pub fn record_ack(store: &ProtocolStore, node: &Node) -> Result<bool> {
         let mut cursor = None;
         let mut matched = false;
         loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            if rows.is_empty() {
+            let keys = tx.checkpoint_keys_after(b"receipt-outbox:", cursor.as_deref(), 256)?;
+            if keys.is_empty() {
                 return Ok(matched);
             }
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows
-                .iter()
-                .filter(|(key, _)| key.starts_with(b"receipt-outbox:"))
-            {
+            cursor = keys.last().cloned();
+            for key in &keys {
                 let Some(row): Option<serde_json::Value> =
                     tx.get_json(Table::Checkpoints, key, 1)?
                 else {
