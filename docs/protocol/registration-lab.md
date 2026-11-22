@@ -596,3 +596,27 @@ that consistently. The banned/blocked-labelled numbers were not attempted.
 parsed decision, consistent with the 2026-11-02 `sent` for the same build. It
 does not establish eligibility of any other number, and `Blocked` must not be
 treated as retryable.
+
+### Cross-source check (same day)
+
+To separate a source block from a number block, the same request recipe was
+run once from two other machines on the tailnet with different public
+addresses (a DigitalOcean host and a second host in a different network).
+
+| Number | Source | Answer |
+| --- | --- | --- |
+| first pending number | third source | `TemporarilyUnavailable`, `retry_after=300` (after three attempts in minutes) |
+| second pending number | third source | HTTP 200 `Fail/Blocked`, 409-byte block screen |
+| first pending number | second source | HTTP 200 `Fail/Blocked`, 409-byte block screen |
+
+The block followed the numbers, not the network: a fresh number answered
+`Blocked` from a source that had never contacted WhatsApp, and the one
+`TemporarilyUnavailable` belonged to a number that had just been attempted
+three times. That is a per-number cooldown after repeated attempts, not a
+reversal of the block. No request was made after the advertised wait and no
+number was retried again.
+
+**Conclusion:** the five pending numbers are blocked server-side. Changing
+source/IP does not change it. A usable account needs a number that has never
+been registered or blocked; the banned/blocked batch needs the official
+appeal, not another registration. No OTP was requested or delivered.
