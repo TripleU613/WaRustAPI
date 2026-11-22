@@ -620,6 +620,7 @@ Usage: whatsapp-cli accounts new [OPTIONS]...
 | --country-code | COUNTRY_CODE | yes |  |  |  | Country calling code |
 | --national-number | NATIONAL_NUMBER | yes |  |  |  | National phone number digits |
 | --material | MATERIAL | yes |  | `WHATSAPP_API_TOKEN_MATERIAL` |  | Path to APK or material archive |
+| --user-agent | USER_AGENT | no |  |  |  | Override the template User-Agent; must match the material's APK build. The default remains the 2.26.37.70 recipe |
 | --dir | DIR | no |  |  |  | Account directory (defaults to `lab/accounts/<NAME>`) |
 | --method | METHOD | no | `sms` |  | `sms`, `voice` | Verification delivery method |
 

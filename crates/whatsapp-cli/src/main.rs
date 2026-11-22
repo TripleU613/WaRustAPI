@@ -1219,6 +1219,10 @@ enum AccountsCmd {
         /// Path to APK or material archive.
         #[arg(long, env = "WHATSAPP_API_TOKEN_MATERIAL")]
         material: PathBuf,
+        /// Override the template User-Agent; must match the material's APK
+        /// build. The default remains the 2.26.37.70 recipe.
+        #[arg(long)]
+        user_agent: Option<String>,
         /// Account directory (defaults to `lab/accounts/<NAME>`).
         #[arg(long)]
         dir: Option<PathBuf>,
@@ -1295,12 +1299,34 @@ async fn open_client(cli: &Cli, create: bool) -> Result<WhatsAppClient, Error> {
         .await
 }
 
+/// Apply an explicit User-Agent to the template before material validation.
+/// The version in `WhatsApp/<version> ...` must name the same build as the
+/// material. The fixed lab profile id is a local selector (the config
+/// validator rejects any other value), so only the User-Agent changes.
+fn apply_user_agent(config: &mut serde_json::Value, user_agent: &str) -> Result<(), Error> {
+    user_agent
+        .trim()
+        .strip_prefix("WhatsApp/")
+        .and_then(|rest| rest.split_whitespace().next())
+        .filter(|version| version.split('.').count() == 4)
+        .ok_or_else(|| {
+            Error::invalid(
+                "accounts",
+                "user agent must start with WhatsApp/<4-part version>",
+            )
+        })?;
+    config["client"]["user_agent"] = serde_json::json!(user_agent.trim());
+    Ok(())
+}
+
+#[allow(clippy::too_many_arguments)] // mirrors the CLI flags one-for-one
 fn accounts_new(
     cli: &Cli,
     name: &str,
     country_code: u16,
     national_number: &str,
     material_path: &std::path::Path,
+    user_agent: Option<&str>,
     dir: Option<&PathBuf>,
     method: &Method,
 ) -> Result<(), Error> {
@@ -1336,6 +1362,9 @@ fn accounts_new(
     let mut config: serde_json::Value =
         serde_json::from_str(whatsapp_api::registration::request::TEMPLATE_JSON)
             .map_err(|e| Error::invalid("accounts", format!("template JSON parse failed: {e}")))?;
+    if let Some(user_agent) = user_agent {
+        apply_user_agent(&mut config, user_agent)?;
+    }
     material.validate_user_agent(config["client"]["user_agent"].as_str())?;
     let token = material.derive(&phone)?;
 
@@ -1814,6 +1843,7 @@ fn accounts(cli: &Cli, cmd: &AccountsCmd) -> Result<(), Error> {
             country_code,
             national_number,
             material,
+            user_agent,
             dir,
             method,
         } => accounts_new(
@@ -1822,6 +1852,7 @@ fn accounts(cli: &Cli, cmd: &AccountsCmd) -> Result<(), Error> {
             *country_code,
             national_number,
             material,
+            user_agent.as_deref(),
             dir.as_ref(),
             method,
         ),
@@ -3267,6 +3298,26 @@ mod accounts_tests {
     use super::*;
 
     #[test]
+    fn user_agent_override_must_name_a_build() {
+        let mut config = serde_json::json!({
+            "client": {"user_agent": "WhatsApp/2.26.37.70 x", "profile_id": "fixed-lab-id"}
+        });
+        apply_user_agent(
+            &mut config,
+            "WhatsApp/2.26.43.72 Android/unknown Device/unknown-unknown",
+        )
+        .unwrap();
+        assert_eq!(
+            config["client"]["user_agent"],
+            "WhatsApp/2.26.43.72 Android/unknown Device/unknown-unknown"
+        );
+        // The lab profile id is a fixed local selector, not a build name.
+        assert_eq!(config["client"]["profile_id"], "fixed-lab-id");
+        assert!(apply_user_agent(&mut config, "WhatsApp/2.26.43").is_err());
+        assert!(apply_user_agent(&mut config, "curl/8").is_err());
+    }
+
+    #[test]
     fn only_registration_begin_creates_a_store() {
         assert!(registration_creates_store(&RegCmd::Begin {
             country: 1,
@@ -3365,6 +3416,7 @@ mod accounts_tests {
             1,
             "5551234567",
             &temp_dir.path().join("unused.zip"),
+            None,
             Some(&account_dir),
             &Method::Sms,
         )
@@ -3402,6 +3454,7 @@ mod accounts_tests {
             1,
             "5551234567",
             &material_path,
+            None,
             Some(&account_dir),
             &Method::Sms,
         );
@@ -3416,6 +3469,7 @@ mod accounts_tests {
             1,
             "5551234567",
             &material_path,
+            None,
             None,
             &Method::Sms,
         );
