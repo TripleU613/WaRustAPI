@@ -100,10 +100,19 @@ Also written by this filler, at top level: `oc`, `yearClass`, `memClass`.
 
 - `case 457` (`X.1n1`): `trafficAnonymization = STANDARD` when the
   server-configured experiment is on, else `OFF` (AB prop **4982**).
-- `case 458` (`X.1n3`): `connectType` from the live network (WiFi →
-  `WIFI_UNKNOWN`; cellular subtype mapping; otherwise `CELLULAR_UNKNOWN`),
-  `dnsSource` from the resolution method, `connectAttemptCount`, and a packed
-  `connectionSequenceInfo`. Full bit layout not re-read.
+- `case 458` (`X.1n3`): always writes `connectType` from the live network
+  (WiFi → `WIFI_UNKNOWN`; cellular subtype; otherwise `CELLULAR_UNKNOWN`),
+  `dnsSource` `{dnsMethod, appCached}` from the resolver that answered,
+  `connectAttemptCount` = the login context's `attemptedSuccessfulConnections`,
+  and a packed `connectionSequenceInfo` (43). Confirmed bit layout of the
+  packed value: bits 0..2 port class (80→0, 443→1, 5222→2, other→3), bits 2..5
+  host-type code via `AbstractC37551kP.A00`, bit 5 `!pref.A02`, bits 7..12 the
+  sequence step (`& 31`), bit 12 `networkProvider.A0P() == true`. The host-type
+  input (`ConnectionMetadata.A06`), sequence step and the two provider booleans
+  remain untraced, so Rust writes none of these four fields yet.
+  `X.1je.A01` shows the resolver's own hardcoded path for `g.whatsapp.net` is
+  `dnsMethod=HARDCODED, appCached=false`; the system path is
+  `dnsMethod=SYSTEM, appCached=false`.
 - `case 459` (`X.1n9`): `passive`; `sessionId` from the caller's
   `ConnectionMetadata.sessionId`; `shortConnect` from a preference; `lc` from the
   persisted `connection_lc` counter; `connectReason` written as `UNKNOWN` first

@@ -626,6 +626,28 @@ mod tests {
     }
 
     #[test]
+    fn finished_connection_counter_survives_reopening_the_store() {
+        let (dir, store) = counter_store();
+        let path = dir.path().join("counter.redb");
+        record_finished_connection(&store).unwrap();
+        record_finished_connection(&store).unwrap();
+        drop(store);
+        let reopened = ProtocolStore::open(crate::store::OpenOptions {
+            path,
+            account_id: crate::model::ids::AccountId::new("counter").unwrap(),
+            key_source: std::sync::Arc::new(crate::store::StaticKeySource::new(
+                crate::store::MasterKey::from_bytes([4; 32]),
+            )),
+            create: false,
+        })
+        .unwrap();
+        // The APK keeps `lc` in preferences across restarts; so does this.
+        assert_eq!(connection_attempts(&reopened).unwrap(), 2);
+        record_finished_connection(&reopened).unwrap();
+        assert_eq!(connection_attempts(&reopened).unwrap(), 3);
+    }
+
+    #[test]
     fn device_exp_id_encodes_the_perf_uuid_like_android_base64() {
         // Independent vectors: `uuid.UUID(...).bytes` under URL-safe Base64
         // without padding, which is Android Base64 flag 11.
