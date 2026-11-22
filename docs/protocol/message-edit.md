@@ -63,7 +63,8 @@ caption changes. The replacement kind must equal the parent's saved kind
 edited as a video replacement, matching the APK's `3`/`13` allowance. Quoted,
 expiring, view-once and unknown-mime parents project to no content and stay
 unsupported. A group parent uses the participant-scoped group record the same
-way; only the direct case has an encrypted regression today.
+way, and the rebuilt reference opens the original attachment (both the direct
+and the group case are covered by encrypted regressions).
 
 **Group peer edits (implemented 2026-11-22):** a group edit resolves its parent
 through the participant-scoped group record (`group_inbox::select`), so the
@@ -79,7 +80,10 @@ inside, one second past the boundary, sender chain still advances) plus
 `peer_edit_applies_only_inside_the_settled_window` (missing parent) and
 `group_peer_edit` coverage through `publish`. The direct encrypted regression
 also covers an image parent with a caption replacement (caption changes,
-`reference.kind` stays `Image`) and a one-second-late caption edit refused.
+`reference.kind` stays `Image`) and a one-second-late caption edit refused;
+`group_media_caption_edit_keeps_the_saved_attachment` runs the same flow over a
+sender-key group message and asserts the rebuilt reference still opens the
+original sealed attachment.
 
 ## Receive behavior
 

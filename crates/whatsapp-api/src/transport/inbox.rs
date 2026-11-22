@@ -3942,6 +3942,246 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn group_media_caption_edit_keeps_the_saved_attachment() {
+        use crate::{
+            model::ids::AccountId,
+            session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+            signal::group,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        use wacore_libsignal::protocol::IdentityKeyPair;
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("group-media-edit.redb"),
+            account_id: AccountId::new("group-media-edit").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([23; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let identity = IdentityKeyPair::generate(&mut rand::rng());
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(37),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: identity.public_key().public_key_bytes().try_into().unwrap(),
+                private: *identity.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let group_jid = Jid::parse("120363000000000002@g.us").unwrap();
+        let sender_device = Jid::parse("15555550106:3@s.whatsapp.net").unwrap();
+        let theirs = group::prepare_own_sender_key(&group_jid, &sender_device, None)
+            .await
+            .unwrap();
+        let (_, skdm) = group::extract_skdm_from_payload(&theirs.distribution_message).unwrap();
+        let installed = group::process_skdm(
+            &group_jid,
+            &sender_device,
+            group::sender_key_db_key(&group_jid, &sender_device),
+            None,
+            &skdm,
+        )
+        .await
+        .unwrap();
+        assert!(
+            store
+                .write(|tx| group::commit_skdm(tx, &installed))
+                .unwrap()
+        );
+        let image_payload = |caption: &str, descriptor: bool| {
+            let mut image = Vec::new();
+            prost::encoding::string::encode(
+                1,
+                &"https://mmg.whatsapp.net/group-image-fixture".to_owned(),
+                &mut image,
+            );
+            prost::encoding::string::encode(2, &"image/jpeg".to_owned(), &mut image);
+            prost::encoding::string::encode(3, &caption.to_owned(), &mut image);
+            if descriptor {
+                prost::encoding::bytes::encode(4, &[4u8; 32].to_vec(), &mut image);
+                prost::encoding::uint64::encode(5, &12, &mut image);
+                prost::encoding::bytes::encode(8, &[5u8; 32].to_vec(), &mut image);
+                prost::encoding::bytes::encode(9, &[6u8; 32].to_vec(), &mut image);
+            }
+            let mut payload = vec![0x1a];
+            prost::encoding::encode_varint(image.len() as u64, &mut payload);
+            payload.extend(image);
+            payload
+        };
+        let group_node = |id: &str, t: &str, kind: &str, cipher: &[u8], edit: bool| {
+            let mut node = Node::new("message")
+                .attr("from", group_jid.clone())
+                .attr("participant", sender_device.clone())
+                .attr("id", id)
+                .attr("t", t)
+                .attr("type", kind);
+            if edit {
+                node = node.attr("edit", "1");
+            }
+            node.children(vec![
+                Node::new("enc")
+                    .attr("type", "skmsg")
+                    .attr("v", "2")
+                    .bytes(cipher.to_vec()),
+            ])
+        };
+        let (parent_cipher, next_key) = group::encrypt_group_payload(
+            &group_jid,
+            &sender_device,
+            &theirs.updated_key,
+            &image_payload("old group caption", true),
+        )
+        .await
+        .unwrap();
+        let parent = group_node("GROUP-IMAGE", "1000", "media", &parent_cipher, false);
+        let capture = preserve(&store, &parent).unwrap();
+        assert_eq!(
+            process(&store, &account, &parent, &capture).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("group-media-parent").unwrap(),
+                    crate::model::ids::EventCursor::START,
+                    10,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::NewMessage(parent_message) =
+            &events.events.last().unwrap().event
+        else {
+            panic!("group image parent was not published")
+        };
+        let crate::model::message::MessageContent::Media {
+            reference: parent_reference,
+            caption: parent_caption,
+            ..
+        } = &parent_message.content
+        else {
+            panic!("group image parent did not project as media")
+        };
+        assert_eq!(parent_caption.as_deref(), Some("old group caption"));
+        assert_eq!(
+            parent_reference.kind,
+            crate::model::message::MediaKind::Image
+        );
+        let original = store
+            .open_media_reference(
+                super::super::media::reference_binding(),
+                &parent_reference.sealed,
+            )
+            .unwrap();
+        // The server returns a 60 second edit window.
+        let action = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", action.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "h").children(vec![
+                    Node::new("prop")
+                        .attr("config_code", "2983")
+                        .attr("config_value", "60"),
+                ])]),
+        )
+        .unwrap();
+        let caption_body = |caption: &str| {
+            let mut target = Vec::new();
+            prost::encoding::string::encode(3, &"GROUP-IMAGE".to_owned(), &mut target);
+            let mut protocol = Vec::new();
+            prost::encoding::bytes::encode(1, &target, &mut protocol);
+            protocol.extend_from_slice(b"\x10\x0e");
+            prost::encoding::bytes::encode(14, &image_payload(caption, false), &mut protocol);
+            prost::encoding::int64::encode(15, &6, &mut protocol);
+            let mut body = Vec::new();
+            prost::encoding::bytes::encode(12, &protocol, &mut body);
+            body
+        };
+        let (caption_cipher, key) = group::encrypt_group_payload(
+            &group_jid,
+            &sender_device,
+            &next_key,
+            &caption_body("new group caption"),
+        )
+        .await
+        .unwrap();
+        let edit = group_node("GROUP-IMAGE-EDIT-0", "1060", "text", &caption_cipher, true);
+        let capture = preserve(&store, &edit).unwrap();
+        assert_eq!(
+            process(&store, &account, &edit, &capture).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("group-media-edit").unwrap(),
+                    crate::model::ids::EventCursor::START,
+                    20,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::MessageUpdated(update) = &events.events.last().unwrap().event
+        else {
+            panic!("group media caption edit inside the window was not applied")
+        };
+        assert_eq!(update.key.id.as_str(), "GROUP-IMAGE");
+        assert_eq!(update.key.chat.jid(), &group_jid);
+        assert_eq!(
+            update.key.sender.as_ref().map(|sender| sender.to_jid()),
+            Some(sender_device.clone())
+        );
+        let crate::model::message::MessageChange::Edited(content) = &update.change else {
+            panic!("group media caption edit was not an edit")
+        };
+        let crate::model::message::MessageContent::Media {
+            reference, caption, ..
+        } = &**content
+        else {
+            panic!("group media caption edit lost the attachment")
+        };
+        assert_eq!(caption.as_deref(), Some("new group caption"));
+        assert_eq!(reference.kind, crate::model::message::MediaKind::Image);
+        // The rebuilt reference still resolves the original attachment.
+        assert_eq!(
+            *store
+                .open_media_reference(super::super::media::reference_binding(), &reference.sealed)
+                .unwrap(),
+            *original
+        );
+        // One second past the window is refused and the sender chain advances.
+        let (late_cipher, _) = group::encrypt_group_payload(
+            &group_jid,
+            &sender_device,
+            &key,
+            &caption_body("late group caption"),
+        )
+        .await
+        .unwrap();
+        let late = group_node("GROUP-IMAGE-EDIT-1", "1061", "text", &late_cipher, true);
+        let capture = preserve(&store, &late).unwrap();
+        assert_eq!(
+            process(&store, &account, &late, &capture).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("group-media-outside").unwrap(),
+                    crate::model::ids::EventCursor::START,
+                    10,
+                )
+            })
+            .unwrap();
+        assert!(matches!(
+            events.events.last().unwrap().event,
+            crate::sync::SyncEvent::UnsupportedMessage(_)
+        ));
+    }
+
+    #[tokio::test]
     async fn missing_sender_key_recovers_same_capture_after_distribution_without_resetting_retry() {
         use crate::signal::group::{
             commit_skdm, encrypt_group_payload, extract_skdm_from_payload, prepare_own_sender_key,

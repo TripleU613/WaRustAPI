@@ -455,6 +455,13 @@ pub fn list(store: &ProtocolStore) -> Result<Vec<MediaEntry>> {
 
 const REFERENCE_BINDING: &[u8] = b"incoming-ordinary-media-v1";
 
+/// Test-only access to the ordinary-media seal binding, so receive regressions
+/// can prove an edited caption still resolves the original attachment.
+#[cfg(test)]
+pub(super) fn reference_binding() -> &'static [u8] {
+    REFERENCE_BINDING
+}
+
 pub(super) struct MediaCaption {
     pub(super) kind: i32,
     pub(super) caption: Option<String>,
