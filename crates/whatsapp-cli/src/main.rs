@@ -1296,6 +1296,17 @@ fn accounts_new(
     material.validate_user_agent(config["client"]["user_agent"].as_str())?;
     let token = material.derive(&phone)?;
 
+    // A fresh install generates its own per-install identifiers once and keeps
+    // them (APK `X.1mm.AzD` phone id, `X.1JX.A04` perf device id). They are
+    // written into the private config here so they never rotate per request.
+    if config["client"]["device"].is_null() {
+        config["client"]["device"] = serde_json::json!({});
+    }
+    config["client"]["device"]["phone_id"] =
+        serde_json::json!(whatsapp_api::registration::prerequisites::random_canonical_uuid_v4()?);
+    config["client"]["device"]["perf_device_id"] =
+        serde_json::json!(whatsapp_api::registration::prerequisites::random_canonical_uuid_v4()?);
+
     std::fs::create_dir_all(&account_dir).map_err(|e| {
         Error::invalid(
             "accounts",

@@ -155,6 +155,10 @@ pub struct LoginDevice {
     /// Persisted per-install UUID (`userAgent.phoneId`). Null means absent;
     /// this client never generates one silently.
     pub phone_id: Option<Zeroizing<String>>,
+    /// Persisted per-install performance-device UUID (`userAgent.deviceExpId`,
+    /// APK `X.1JX.A04` `perf_device_id`). Sent as URL-safe Base64 of its 16 raw
+    /// bytes without padding (`StringUtils.A09`). Null means absent.
+    pub perf_device_id: Option<Zeroizing<String>>,
     /// Device performance class (`yearClass`), 2009..=2016. This is the APK's
     /// RAM/CPU class, not the model's release year.
     pub year_class: Option<u32>,
@@ -213,20 +217,22 @@ impl LoginDevice {
                 ));
             }
         }
-        if let Some(value) = &self.phone_id
-            && (value.len() != 36
-                || !value.bytes().enumerate().all(|(i, b)| {
-                    if [8, 13, 18, 23].contains(&i) {
-                        b == b'-'
-                    } else {
-                        b.is_ascii_hexdigit()
-                    }
-                }))
-        {
-            return Err(Error::invalid(
-                "client.device.phone_id",
-                "must be a canonical UUID",
-            ));
+        for (field, value) in [
+            ("client.device.phone_id", self.phone_id.as_ref()),
+            ("client.device.perf_device_id", self.perf_device_id.as_ref()),
+        ] {
+            if let Some(value) = value
+                && (value.len() != 36
+                    || !value.bytes().enumerate().all(|(i, b)| {
+                        if [8, 13, 18, 23].contains(&i) {
+                            b == b'-'
+                        } else {
+                            b.is_ascii_hexdigit()
+                        }
+                    }))
+            {
+                return Err(Error::invalid(field, "must be a canonical UUID"));
+            }
         }
         if let Some(year) = self.year_class
             && !(2009..=2016).contains(&year)
@@ -767,6 +773,7 @@ fn login_device_presence(device: &LoginDevice) -> serde_json::Value {
         ("mcc", device.mcc.is_some()),
         ("mnc", device.mnc.is_some()),
         ("phone_id", device.phone_id.is_some()),
+        ("perf_device_id", device.perf_device_id.is_some()),
         ("year_class", device.year_class.is_some()),
         ("mem_class", device.mem_class.is_some()),
         (

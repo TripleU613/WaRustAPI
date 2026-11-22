@@ -73,7 +73,7 @@ string alone is not a field number).
 | `deviceBoard` | `C38211mk.A01` = `Build.BOARD` | omitted when empty |
 | `deviceModelType` | `C38211mk.A04` = `Build.MODEL` | the marketing model; `device` above is *not* the model |
 | `phoneId` | `C38231mm.AzD().A01` | random UUID generated once and persisted with a timestamp (`phoneid_id`/`phoneid_timestamp`) |
-| `deviceExpId` | `StringUtils.A09(...A0J().A04())` | provider body not traced; see gaps |
+| `deviceExpId` | `StringUtils.A09(X.1JX.A04())` | `X.1JX.A04` persists a `perf_device_id` UUID in `DebugWaSharedPreferences` (a `UUID.nameUUIDFromBytes` of the OS performance id when present, else a random UUID); `StringUtils.A09` converts it to its 16 raw bytes and Android Base64 flags 11 (URL-safe, no wrap, no padding) |
 | `deviceType` | device-form setting | PHONE default, else TABLET/VR/DESKTOP |
 | `localeLanguageIso6391` | locale language | omitted when empty or `"zz"` |
 | `localeCountryIso31661Alpha2` | locale country | omitted when `"ZZ"` |
@@ -155,6 +155,7 @@ tracked file must not carry a personal carrier identity):
     "mcc": "<mcc>",
     "mnc": "<mnc>",
     "phone_id": "<uuid>",
+    "perf_device_id": "<uuid>",
     "year_class": 2016,
     "mem_class": 256,
     "traffic_anonymization": "off"
@@ -163,6 +164,14 @@ tracked file must not carry a personal carrier identity):
 ```
 
 `preview` reports which device facts are configured, never their values.
+
+**Install identifiers.** `phone_id` and `perf_device_id` are persisted
+per-install UUIDs. `accounts new` writes a fresh canonical UUID v4 for each,
+the way a fresh install generates them; `primary_login` sends `phone_id` as-is
+(`userAgent.phoneId`) and `perf_device_id` as `userAgent.deviceExpId`, which is
+the URL-safe unpadded Base64 of its 16 raw bytes. They are never rotated per
+request. Unit vectors compare the encoder with independent `base64.urlsafe`
+output for two UUIDs.
 
 **Display name.** `primary_login` takes the name this account already sent,
 read from the `push-name` record written when its presence went out
@@ -205,8 +214,6 @@ hyphens after the first separator.
 - `connectType`/`dnsSource`/`connectAttemptCount`'s connection-sequence packing
   (`connectionSequenceInfo`, 43): the values come from live network state and a
   packed bit field that was not re-read.
-- `phone_id` auto-generation and persistence (currently operator-supplied only).
-- `deviceExpId` producer body (`StringUtils.A09` input source).
 - `oc` semantics; this client never sets it.
 - `messageSts` field number, and whether `product`, `shards`, `pull`,
   `paddingBytes`, `lidDbMigrated`, `paaLink`, `preacksCount`,

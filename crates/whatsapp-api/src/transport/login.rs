@@ -95,6 +95,40 @@ pub fn record_finished_connection(store: &ProtocolStore) -> Result<()> {
     })
 }
 
+/// The APK's `deviceExpId`: `StringUtils.A09` converts the `perf_device_id`
+/// UUID string to its 16 raw bytes and encodes them with Android Base64 flags
+/// 11 (URL-safe alphabet, no wrapping, no padding).
+fn device_exp_id(uuid: &str) -> Option<String> {
+    let hex: String = uuid.chars().filter(|c| *c != '-').collect();
+    let bytes: [u8; 16] = hex::decode(hex).ok()?.try_into().ok()?;
+    Some(url_safe_base64_unpadded(&bytes))
+}
+
+fn url_safe_base64_unpadded(input: &[u8]) -> String {
+    const TABLE: &[u8; 64] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    let mut output = String::with_capacity(input.len().div_ceil(3) * 4);
+    for chunk in input.chunks(3) {
+        let first = chunk[0];
+        output.push(char::from(TABLE[usize::from(first >> 2)]));
+        if let Some(&second) = chunk.get(1) {
+            output.push(char::from(
+                TABLE[usize::from(((first & 0x03) << 4) | (second >> 4))],
+            ));
+            if let Some(&third) = chunk.get(2) {
+                output.push(char::from(
+                    TABLE[usize::from(((second & 0x0f) << 2) | (third >> 6))],
+                ));
+                output.push(char::from(TABLE[usize::from(third & 0x3f)]));
+            } else {
+                output.push(char::from(TABLE[usize::from((second & 0x0f) << 2)]));
+            }
+        } else {
+            output.push(char::from(TABLE[usize::from((first & 0x03) << 4)]));
+        }
+    }
+    output
+}
+
 /// One random `int` per socket connection, as the APK generates.
 pub fn new_session_id() -> Result<i32> {
     let mut bytes = [0u8; 4];
@@ -229,6 +263,10 @@ pub fn primary_login(
         user_agent.device = text(&device.device);
         user_agent.os_build_number = text(&device.os_build_number);
         user_agent.phone_id = text(&device.phone_id);
+        user_agent.device_exp_id = device
+            .perf_device_id
+            .as_ref()
+            .and_then(|uuid| device_exp_id(uuid));
         user_agent.device_board = text(&device.board);
         user_agent.device_model_type = text(&device.model);
         // The APK marks the ordinary handset explicitly; this client never
@@ -425,6 +463,9 @@ mod tests {
             phone_id: Some(Zeroizing::new(
                 "0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f".into(),
             )),
+            perf_device_id: Some(Zeroizing::new(
+                "11111111-2222-4333-8444-555555555555".into(),
+            )),
             year_class: Some(2016),
             mem_class: Some(512),
             traffic_anonymization: Some(TrafficAnonymization::Standard),
@@ -585,6 +626,39 @@ mod tests {
     }
 
     #[test]
+    fn device_exp_id_encodes_the_perf_uuid_like_android_base64() {
+        // Independent vectors: `uuid.UUID(...).bytes` under URL-safe Base64
+        // without padding, which is Android Base64 flag 11.
+        assert_eq!(
+            device_exp_id("0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f").as_deref(),
+            Some("DW8PmhwrTD2OT1prfI2eDw")
+        );
+        assert_eq!(
+            device_exp_id("00000000-0000-4000-8000-000000000000").as_deref(),
+            Some("AAAAAAAAQACAAAAAAAAAAA")
+        );
+        assert_eq!(device_exp_id("not-a-uuid"), None);
+        assert_eq!(device_exp_id("0d6f0f9a-1c2b-4c3d-8e4f"), None);
+        let (mut config, account) = version_fixture();
+        config.client.device = Some(crate::registration::request::LoginDevice {
+            perf_device_id: Some(Zeroizing::new(
+                "0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f".into(),
+            )),
+            ..Default::default()
+        });
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, None, &connection())
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
+        assert_eq!(
+            payload.user_agent.unwrap().device_exp_id.as_deref(),
+            Some("DW8PmhwrTD2OT1prfI2eDw")
+        );
+    }
+
+    #[test]
     fn saved_display_name_is_carried_and_never_invented() {
         let (config, account) = version_fixture();
         // A name this account already sent is carried at login.
@@ -627,6 +701,9 @@ mod tests {
             mnc: Some(Zeroizing::new("000".into())),
             phone_id: Some(Zeroizing::new(
                 "0d6f0f9a-1c2b-4c3d-8e4f-5a6b7c8d9e0f".into(),
+            )),
+            perf_device_id: Some(Zeroizing::new(
+                "11111111-2222-4333-8444-555555555555".into(),
             )),
             year_class: Some(2016),
             mem_class: Some(512),

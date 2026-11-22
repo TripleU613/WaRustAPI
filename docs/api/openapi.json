@@ -2911,7 +2911,11 @@
                   },
                   "phone_id": {
                     "type": ["string", "null"],
-                    "description": "Canonical UUID persisted per install → userAgent.phoneId; null means absent, never generated silently"
+                    "description": "Canonical UUID persisted per install → userAgent.phoneId; null means absent, never generated silently. `accounts new` writes a fresh value."
+                  },
+                  "perf_device_id": {
+                    "type": ["string", "null"],
+                    "description": "Canonical per-install performance-device UUID → userAgent.deviceExpId as URL-safe unpadded Base64 of its 16 raw bytes (APK X.1JX.A04 / StringUtils.A09). `accounts new` writes a fresh value."
                   },
                   "year_class": {
                     "type": ["integer", "null"],

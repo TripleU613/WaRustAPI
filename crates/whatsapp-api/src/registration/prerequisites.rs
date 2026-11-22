@@ -112,6 +112,12 @@ fn fill_random(output: &mut [u8]) -> Result<()> {
     })
 }
 
+/// A canonical UUID v4 for a fresh-install identifier such as `phone_id` or
+/// `perf_device_id`. The APK generates and persists these once at install.
+pub fn random_canonical_uuid_v4() -> Result<String> {
+    Ok(canonical_uuid(random_uuid_v4()?))
+}
+
 fn random_uuid_v4() -> Result<[u8; 16]> {
     let mut bytes = [0u8; 16];
     fill_random(&mut bytes)?;
@@ -135,6 +141,32 @@ fn canonical_uuid(bytes: [u8; 16]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn fresh_install_identifiers_are_canonical_v4_uuids() {
+        for _ in 0..4 {
+            let id = random_canonical_uuid_v4().unwrap();
+            assert_eq!(id.len(), 36);
+            assert_eq!(&id[8..9], "-");
+            assert_eq!(&id[13..14], "-");
+            assert_eq!(&id[18..19], "-");
+            assert_eq!(&id[23..24], "-");
+            assert_eq!(&id[14..15], "4", "version nibble");
+            assert!(
+                matches!(&id[19..20], "8" | "9" | "a" | "b"),
+                "variant nibble"
+            );
+            assert!(
+                id.bytes()
+                    .enumerate()
+                    .all(|(i, b)| [8, 13, 18, 23].contains(&i) || b.is_ascii_hexdigit())
+            );
+        }
+        assert_ne!(
+            random_canonical_uuid_v4().unwrap(),
+            random_canonical_uuid_v4().unwrap()
+        );
+    }
 
     #[test]
     fn generated_values_have_observed_shapes_and_redacted_debug() {
