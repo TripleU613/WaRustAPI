@@ -52,11 +52,22 @@ is a saved authenticated direct message from that peer, and
 comparison). The value is read with the same collection rules as
 `abprops::property_value`; no default is invented, so without a settled value
 the edit is captured but published as an unsupported event instead of changing
-the parent. Own-device edits keep their existing path; group peer edits and
-media-caption replacement windows remain unported. Encrypted regressions:
-`peer_edit_receive_applies_only_inside_the_settled_window` (no property,
-inside, one second past the boundary, ratchet still advances) and
-`peer_edit_applies_only_inside_the_settled_window` (missing parent).
+the parent. Own-device edits keep their existing path; media-caption replacement
+windows remain unported.
+
+**Group peer edits (implemented 2026-11-22):** a group edit resolves its parent
+through the participant-scoped group record (`group_inbox::select`), so the
+embedded key cannot retarget another member's message; the update key keeps the
+authenticated original participant device, and the parent's server time comes
+from that record's authenticated route. The same settled property-2983 window
+applies. A group projection must carry `participant` (a direct one must not).
+
+Encrypted regressions:
+`peer_edit_receive_applies_only_inside_the_settled_window` and
+`group_peer_edit_receive_applies_only_inside_the_settled_window` (no property,
+inside, one second past the boundary, sender chain still advances) plus
+`peer_edit_applies_only_inside_the_settled_window` (missing parent) and
+`group_peer_edit` coverage through `publish`.
 
 ## Receive behavior
 

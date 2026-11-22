@@ -3610,6 +3610,190 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn group_peer_edit_receive_applies_only_inside_the_settled_window() {
+        use crate::{
+            model::ids::AccountId,
+            session::{KeyMaterial, RegistrationStatus, SignalIdentityKey},
+            signal::group,
+            store::{MasterKey, OpenOptions, StaticKeySource},
+        };
+        use wacore_libsignal::protocol::IdentityKeyPair;
+        let dir = tempfile::tempdir().unwrap();
+        let store = ProtocolStore::open(OpenOptions {
+            path: dir.path().join("group-edit.redb"),
+            account_id: AccountId::new("group-edit").unwrap(),
+            key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([19; 32]))),
+            create: true,
+        })
+        .unwrap();
+        let identity = IdentityKeyPair::generate(&mut rand::rng());
+        let account = AccountRecord {
+            own_jid: Some(Jid::parse("15555550199@s.whatsapp.net").unwrap()),
+            registration: RegistrationStatus::Registered,
+            signal_registration_id: Some(31),
+            signal_identity: Some(SignalIdentityKey(KeyMaterial {
+                public: identity.public_key().public_key_bytes().try_into().unwrap(),
+                private: *identity.private_key().serialize(),
+            })),
+            ..Default::default()
+        };
+        let group_jid = Jid::parse("120363000000000001@g.us").unwrap();
+        let sender_device = Jid::parse("15555550105:2@s.whatsapp.net").unwrap();
+        // Install the sender's key the way an SKDM stanza would.
+        let theirs = group::prepare_own_sender_key(&group_jid, &sender_device, None)
+            .await
+            .unwrap();
+        let (_, skdm) = group::extract_skdm_from_payload(&theirs.distribution_message).unwrap();
+        let installed = group::process_skdm(
+            &group_jid,
+            &sender_device,
+            group::sender_key_db_key(&group_jid, &sender_device),
+            None,
+            &skdm,
+        )
+        .await
+        .unwrap();
+        assert!(
+            store
+                .write(|tx| group::commit_skdm(tx, &installed))
+                .unwrap()
+        );
+        let (parent_cipher, next_key) = group::encrypt_group_payload(
+            &group_jid,
+            &sender_device,
+            &theirs.updated_key,
+            &super::super::group_send::text_payload("group parent").unwrap(),
+        )
+        .await
+        .unwrap();
+        let group_node = |id: &str, t: &str, cipher: &[u8], edit: bool| {
+            let mut node = Node::new("message")
+                .attr("from", group_jid.clone())
+                .attr("participant", sender_device.clone())
+                .attr("id", id)
+                .attr("t", t)
+                .attr("type", "text");
+            if edit {
+                node = node.attr("edit", "1");
+            }
+            node.children(vec![
+                Node::new("enc")
+                    .attr("type", "skmsg")
+                    .attr("v", "2")
+                    .bytes(cipher.to_vec()),
+            ])
+        };
+        let parent = group_node("GROUP-PARENT", "1000", &parent_cipher, false);
+        let capture = preserve(&store, &parent).unwrap();
+        assert_eq!(
+            process(&store, &account, &parent, &capture).await.unwrap(),
+            IncomingResult::Decrypted
+        );
+        // Independent ProtocolMessage bytes: key.id=3, type=14, replacement 14.
+        let mut target = Vec::new();
+        prost::encoding::string::encode(3, &"GROUP-PARENT".to_owned(), &mut target);
+        let mut protocol = Vec::new();
+        prost::encoding::bytes::encode(1, &target, &mut protocol);
+        protocol.extend_from_slice(b"\x10\x0e");
+        prost::encoding::bytes::encode(14, &b"\x0a\x0cedited group".to_vec(), &mut protocol);
+        prost::encoding::int64::encode(15, &5, &mut protocol);
+        let mut body = Vec::new();
+        prost::encoding::bytes::encode(12, &protocol, &mut body);
+        // No settled property 2983 yet: captured but not applied.
+        let (cipher0, key0) =
+            group::encrypt_group_payload(&group_jid, &sender_device, &next_key, &body)
+                .await
+                .unwrap();
+        let first_edit = group_node("GROUP-EDIT-0", "1060", &cipher0, true);
+        let capture = preserve(&store, &first_edit).unwrap();
+        assert_eq!(
+            process(&store, &account, &first_edit, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let unsupported = |consumer: &str| {
+            let events = store
+                .read(|tx| {
+                    tx.read_events(
+                        &crate::store::ConsumerId::new(consumer).unwrap(),
+                        crate::model::ids::EventCursor::START,
+                        10,
+                    )
+                })
+                .unwrap();
+            matches!(
+                events.events.last().unwrap().event,
+                crate::sync::SyncEvent::UnsupportedMessage(_)
+            )
+        };
+        assert!(unsupported("group-edit-absent"));
+        let action = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", action.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "h").children(vec![
+                        Node::new("prop")
+                            .attr("config_code", "2983")
+                            .attr("config_value", "60"),
+                    ])]),
+        )
+        .unwrap();
+        let (cipher1, key1) =
+            group::encrypt_group_payload(&group_jid, &sender_device, &key0, &body)
+                .await
+                .unwrap();
+        let second_edit = group_node("GROUP-EDIT-1", "1060", &cipher1, true);
+        let capture = preserve(&store, &second_edit).unwrap();
+        assert_eq!(
+            process(&store, &account, &second_edit, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        let events = store
+            .read(|tx| {
+                tx.read_events(
+                    &crate::store::ConsumerId::new("group-edit-inside").unwrap(),
+                    crate::model::ids::EventCursor::START,
+                    10,
+                )
+            })
+            .unwrap();
+        let crate::sync::SyncEvent::MessageUpdated(update) = &events.events.last().unwrap().event
+        else {
+            panic!("group peer edit inside the window was not applied")
+        };
+        assert_eq!(update.key.id.as_str(), "GROUP-PARENT");
+        assert_eq!(update.key.chat.jid(), &group_jid);
+        assert_eq!(
+            update.key.sender.as_ref().map(|sender| sender.to_jid()),
+            Some(sender_device.clone())
+        );
+        assert!(matches!(
+            &update.change,
+            crate::model::message::MessageChange::Edited(content)
+                if matches!(&**content, crate::model::message::MessageContent::Text { body, .. } if body == "edited group")
+        ));
+        // One second past the window is refused; the sender chain still advances.
+        let (cipher2, _) = group::encrypt_group_payload(&group_jid, &sender_device, &key1, &body)
+            .await
+            .unwrap();
+        let third_edit = group_node("GROUP-EDIT-2", "1061", &cipher2, true);
+        let capture = preserve(&store, &third_edit).unwrap();
+        assert_eq!(
+            process(&store, &account, &third_edit, &capture)
+                .await
+                .unwrap(),
+            IncomingResult::Decrypted
+        );
+        assert!(unsupported("group-edit-outside"));
+    }
+
+    #[tokio::test]
     async fn missing_sender_key_recovers_same_capture_after_distribution_without_resetting_retry() {
         use crate::signal::group::{
             commit_skdm, encrypt_group_payload, extract_skdm_from_payload, prepare_own_sender_key,

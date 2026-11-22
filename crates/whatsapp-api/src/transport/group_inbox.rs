@@ -96,6 +96,15 @@ pub(super) fn original_participant(
         .map(|(_, p, _)| p)
         .ok_or_else(|| invalid("saved group route has no participant"))
 }
+/// Server time of the selected parent's authenticated original route.
+pub(super) fn original_timestamp(
+    saved: &Value,
+    mut get: impl FnMut(&[u8]) -> Result<Option<Vec<u8>>>,
+) -> Result<Option<crate::model::time::Timestamp>> {
+    let node = route(saved, &mut get)?;
+    Ok(super::inbox_events::stanza_timestamp(&node))
+}
+
 /// Verify a canonical selector or an unchanged legacy group/id selector against
 /// the original route. This function does not authorize decryption or receipt.
 pub(super) fn matches(record_key: &[u8], node: &Node) -> bool {

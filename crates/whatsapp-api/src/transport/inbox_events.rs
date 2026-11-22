@@ -431,33 +431,75 @@ fn peer_edit_event(
     let Some(edit) = super::chat_settings::decode_edit(payload) else {
         return Ok(None);
     };
-    if super::inbox::group_sender(node).is_some() {
-        return Ok(None);
-    }
     // The sender marks an edit with edit="1"; revoke/other versions are
     // different operations and stay unsupported here.
     if node.get_attr("edit").and_then(|v| v.as_text()) != Some("1") {
         return Ok(Some(unsupported_event(key)));
     }
-    let Some(parent) = direct_parent(tx, node, edit.target_id.clone())? else {
-        return Ok(Some(unsupported_event(key)));
-    };
+    // The parent's key and server time come from the authenticated saved route;
+    // direct and group records use different selectors.
+    let (target, parent_time) =
+        match super::inbox::group_sender(node) {
+            Some((chat, actor)) => {
+                if actor.agent != 0 {
+                    return Ok(Some(unsupported_event(key)));
+                }
+                let parent_node = Node::new("message")
+                    .attr("from", chat.clone())
+                    .attr("participant", actor)
+                    .attr("id", edit.target_id.as_str());
+                let selected =
+                    super::group_inbox::select(&parent_node, |k| tx.get(Table::Checkpoints, k, 1))?;
+                let Some(saved) = selected.saved.as_ref().filter(|saved| {
+                    matches!(saved["status"].as_str(), Some("decrypted" | "consumed"))
+                }) else {
+                    return Ok(Some(unsupported_event(key)));
+                };
+                let original = super::group_inbox::original_participant(saved, |k| {
+                    tx.get(Table::Checkpoints, k, 1)
+                })?;
+                let parent_time = super::group_inbox::original_timestamp(saved, |k| {
+                    tx.get(Table::Checkpoints, k, 1)
+                })?;
+                (
+                    MessageKey {
+                        chat: ChatId::from_jid(&chat)?,
+                        sender: Some(DeviceAddress::from_jid(&original)?),
+                        direction: Direction::Incoming,
+                        id: edit.target_id.clone(),
+                    },
+                    parent_time,
+                )
+            }
+            None => {
+                let Some(parent) = direct_parent(tx, node, edit.target_id.clone())? else {
+                    return Ok(Some(unsupported_event(key)));
+                };
+                (parent.key, parent.server_timestamp)
+            }
+        };
     let Some(window) =
         super::abprops::property_value_in_write(tx, super::abprops::PEER_EDIT_WINDOW_PROPERTY)?
     else {
         return Ok(Some(unsupported_event(key)));
     };
-    let (Some(stanza), Some(parent_time)) = (stanza_timestamp(node), parent.server_timestamp)
-    else {
+    let (Some(stanza), Some(parent_time)) = (stanza_timestamp(node), parent_time) else {
         return Ok(Some(unsupported_event(key)));
     };
     // Signed sub-long like the APK: a stanza earlier than the parent passes.
     if stanza.0.wrapping_sub(parent_time.0) > i64::from(window).saturating_mul(1000) {
         return Ok(Some(unsupported_event(key)));
     }
-    let projection = Node::new("message")
-        .attr("from", parent.key.chat.jid().clone())
-        .attr("id", parent.key.id.as_str());
+    let mut projection = Node::new("message")
+        .attr("from", target.chat.jid().clone())
+        .attr("id", target.id.as_str());
+    // A group/broadcast projection names the author as `participant`; a direct
+    // projection must not carry it (session_sender rejects it there).
+    if matches!(target.chat, ChatId::Group(_))
+        && let Some(sender) = &target.sender
+    {
+        projection = projection.attr("participant", sender.to_jid());
+    }
     let SyncEvent::NewMessage(message) =
         project(key, &projection, &edit.replacement, None, None, None, own)
     else {
@@ -465,7 +507,7 @@ fn peer_edit_event(
     };
     Ok(Some(SyncEvent::MessageUpdated(
         crate::model::message::MessageUpdate {
-            key: parent.key,
+            key: target,
             change: crate::model::message::MessageChange::Edited(Box::new(message.content)),
             server_timestamp: Some(stanza),
         },
