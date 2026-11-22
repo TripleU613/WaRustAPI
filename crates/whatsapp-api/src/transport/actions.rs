@@ -899,7 +899,7 @@ impl LiveReplies {
             .2
             .remove(id)
             .ok_or_else(|| Error::invalid("action", "live callback lacks written reservation"))?;
-        record_reply_inner(store, node, Some(&owner))
+        record_reply_inner(store, node, ReplyAuthority::Written(&owner))
     }
 }
 
@@ -909,242 +909,331 @@ impl LiveReplies {
 /// reconciliation authority; a durable Sent row alone is not a live callback.
 /// The normal driver enforces this through LiveReplies.
 pub fn record_reply(store: &ProtocolStore, node: &Node) -> Result<bool> {
-    record_reply_inner(store, node, None)
+    record_reply_inner(store, node, ReplyAuthority::Caller)
 }
 
-fn record_reply_inner(
-    store: &ProtocolStore,
-    node: &Node,
-    owner: Option<&ActionWriteGuard>,
-) -> Result<bool> {
-    // Current APK 0ln.A01 dispatches only result/error; another IQ carrying
-    // the same ID is not a definite refusal of the original request.
+// The first capture binds the exact reserved bytes, including the original
+// request, plus account ownership. These hashes stay in the encrypted store.
+#[derive(Serialize, Deserialize)]
+pub(super) struct CapturedReservation {
+    pub(super) id: String,
+    row_digest: [u8; 32],
+    account_authority: [u8; 32],
+}
+
+impl CapturedReservation {
+    fn matches(&self, raw: &[u8], authority: [u8; 32]) -> bool {
+        use sha2::{Digest, Sha256};
+        self.account_authority == authority
+            && self.row_digest == <[u8; 32]>::from(Sha256::digest(raw))
+    }
+
+    pub(super) fn is_current(&self, tx: &crate::store::WriteTx<'_>) -> Result<bool> {
+        let Some(raw) = tx.get(Table::Checkpoints, key(&self.id).as_bytes(), 1)? else {
+            return Ok(false);
+        };
+        let raw = zeroize::Zeroizing::new(raw);
+        Ok(self.matches(&raw, account_authority_in(tx)?))
+    }
+}
+
+pub(super) fn reply_id(node: &Node) -> Option<&str> {
     if node.description != "iq"
         || !matches!(
             node.get_attr("type").and_then(|v| v.as_text()),
             Some("result" | "error")
         )
     {
-        return Ok(false);
+        return None;
     }
-    let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) else {
+    node.get_attr("id")?
+        .as_text()
+        .filter(|id| id.len() == 32 && id.bytes().all(|b| b.is_ascii_hexdigit()))
+}
+
+pub(super) fn capture_reservation_in(
+    tx: &crate::store::WriteTx<'_>,
+    id: &str,
+    epoch_account: Option<&[u8; 32]>,
+) -> Result<Option<CapturedReservation>> {
+    use sha2::{Digest, Sha256};
+    let Some(raw) = tx.get(Table::Checkpoints, key(id).as_bytes(), 1)? else {
+        return Ok(None);
+    };
+    let raw = zeroize::Zeroizing::new(raw);
+    let row: Row = serde_json::from_slice(&raw)
+        .map_err(|_| Error::invalid("action", "invalid action row during reply capture"))?;
+    if row.status != ActionStatus::Sent {
+        return Ok(None);
+    }
+    let authority = account_authority_in(tx)?;
+    if epoch_account.is_some_and(|expected| *expected != authority)
+        || row
+            .prepared_account_authority
+            .is_some_and(|prepared| prepared != authority)
+    {
+        return Ok(None);
+    }
+    Ok(Some(CapturedReservation {
+        id: id.to_owned(),
+        row_digest: Sha256::digest(&raw).into(),
+        account_authority: authority,
+    }))
+}
+
+enum ReplyAuthority<'a> {
+    Caller,
+    Written(&'a ActionWriteGuard),
+    Captured(&'a CapturedReservation),
+}
+
+pub(super) fn record_captured_reply_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    node: &Node,
+    owner: &CapturedReservation,
+) -> Result<bool> {
+    let Some(id) = reply_id(node) else {
         return Ok(false);
     };
-    if id.len() != 32 || !id.bytes().all(|b| b.is_ascii_hexdigit()) {
+    record_reply_in(tx, node, id, ReplyAuthority::Captured(owner))
+}
+
+fn record_reply_inner(
+    store: &ProtocolStore,
+    node: &Node,
+    source: ReplyAuthority<'_>,
+) -> Result<bool> {
+    // APK 2.26.43.72 0ln.A01 dispatches result/error for the pending IQ id.
+    let Some(id) = reply_id(node) else {
+        return Ok(false);
+    };
+    store.write(|tx| record_reply_in(tx, node, id, source))
+}
+
+fn record_reply_in(
+    tx: &mut crate::store::WriteTx<'_>,
+    node: &Node,
+    id: &str,
+    source: ReplyAuthority<'_>,
+) -> Result<bool> {
+    let key = key(id);
+    let raw = tx
+        .get(Table::Checkpoints, key.as_bytes(), 1)?
+        .map(zeroize::Zeroizing::new);
+    if let ReplyAuthority::Written(owner) = source
+        && (owner.key != key.as_bytes() || raw.as_ref() != Some(&owner.row))
+    {
+        return Err(Error::invalid(
+            "action",
+            "written action changed before reply settlement",
+        ));
+    }
+    let Some(raw) = raw else {
+        return Ok(false);
+    };
+    let mut row: Row = serde_json::from_slice(&raw)
+        .map_err(|e| crate::store::StoreError::Serialization(e.to_string()))?;
+    if row.status != ActionStatus::Sent {
         return Ok(false);
     }
-    let key = key(id);
-    store.write(|tx| {
-        if let Some(owner) = owner {
-            let current = zeroize::Zeroizing::new(
-                tx.get(Table::Checkpoints, key.as_bytes(), 1)?
-                    .unwrap_or_default(),
-            );
-            if owner.key != key.as_bytes() || *current != *owner.row {
-                return Err(Error::invalid(
-                    "action",
-                    "written action changed before reply settlement",
-                ));
-            }
-        }
-        let Some(mut row): Option<Row> = tx.get_json(Table::Checkpoints, key.as_bytes(), 1)? else {
-            return Ok(false);
-        };
-        if row.status != ActionStatus::Sent {
-            return Ok(false);
-        }
-        let authority = account_authority_in(tx)?;
-        check_prepared_account(&row, authority)?;
-        if owner.is_some_and(|owner| owner.account_authority != authority) {
-            return Err(Error::invalid(
-                "action",
-                "written action account changed before reply",
-            ));
-        }
-        // A damaged saved request must not settle a different row merely
-        // because the incoming ID matches that row's key.
-        let request = decode_owned(id, &row.wire)?;
-        let kind = node.get_attr("type").and_then(|v| v.as_text());
-        let photo_error = super::profile_picture::error_outcome(&row.kind, &request, node);
-        // APK43.72 1rA.A03 selects result -> JAj.A02; that About callback
-        // ignores the response payload. Do not reinterpret an extension child
-        // as a refusal, or extend this producer-specific rule to app-state.
-        let about_result = kind == Some("result")
-            && row.kind == super::about::ACTION_KIND
-            && super::about::is_set_request(&request);
-        // APK43.72 Hyd.CK4 for a nonnull upload validates the first child
-        // as picture, reads its attributes and ignores subsequent extensions.
-        // Missing/wrong first child and lookup/removal policies remain separate.
-        let photo_set_result = kind == Some("result")
-            && row.kind == super::profile_picture::SET_KIND
-            && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("w:profile:picture")
-            && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
-            && matches!(request.child_nodes(), [picture]
+    let authority = account_authority_in(tx)?;
+    if let ReplyAuthority::Captured(proof) = source
+        && (id != proof.id || !proof.matches(&raw, authority))
+    {
+        return Ok(false);
+    }
+    check_prepared_account(&row, authority)?;
+    if let ReplyAuthority::Written(owner) = source
+        && owner.account_authority != authority
+    {
+        return Err(Error::invalid(
+            "action",
+            "written action account changed before reply",
+        ));
+    }
+    // A damaged saved request must not settle a different row merely
+    // because the incoming ID matches that row's key.
+    let request = decode_owned(id, &row.wire)?;
+    let kind = node.get_attr("type").and_then(|v| v.as_text());
+    let photo_error = super::profile_picture::error_outcome(&row.kind, &request, node);
+    // APK43.72 1rA.A03 selects result -> JAj.A02; that About callback
+    // ignores the response payload. Do not reinterpret an extension child
+    // as a refusal, or extend this producer-specific rule to app-state.
+    let about_result = kind == Some("result")
+        && row.kind == super::about::ACTION_KIND
+        && super::about::is_set_request(&request);
+    // APK43.72 Hyd.CK4 for a nonnull upload validates the first child
+    // as picture, reads its attributes and ignores subsequent extensions.
+    // Missing/wrong first child and lookup/removal policies remain separate.
+    let photo_set_result = kind == Some("result")
+        && row.kind == super::profile_picture::SET_KIND
+        && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("w:profile:picture")
+        && request.get_attr("type").and_then(|v| v.as_text()) == Some("set")
+        && matches!(request.child_nodes(), [picture]
                 if picture.description == "picture"
                     && picture.get_attr("type").and_then(|v| v.as_text()) == Some("image")
                     && matches!(&picture.content, crate::binary::NodeContent::Bytes(_)))
-            && node
-                .child_nodes()
-                .first()
-                .is_some_and(|child| child.description == "picture");
-        // APK43.72 6p1.CK4 selects picture by name, otherwise empty metadata;
-        // it never searches error extensions. This is outer callback dispatch,
-        // not validation of URL/id or native photo/cache adoption.
-        let photo_lookup_result = kind == Some("result")
-            && row.kind == super::profile_picture::GET_KIND
-            && super::profile_picture::is_lookup_request(&request);
-        // APK43.72 FUS.CK4 schedules the originally requested values without
-        // reading response payload. Preserve outer-type dispatch for this
-        // typed producer, independently of unrelated nested-refusal parsers.
-        let two_factor_result = kind == Some("result")
-            && row.kind == super::two_factor::ACTION_KIND
-            && super::two_factor::is_set_request(&request);
-        // APK43.72 8R8.CK4 selector3 uses captured user/timestamp and
-        // resolves the job future without parsing the response payload.
-        let privacy_token_result = kind == Some("result")
-            && row.kind == super::token_issue::ACTION_KIND
-            && super::token_issue::is_issue_request(&request);
-        // APK43.72 SpamRPCManager.A01 tries Rv2 selector1 first; its
-        // report/id success reader does not select unrelated error extensions.
-        // This is envelope dispatch, not full native schema/report adoption.
-        // docs/protocol/apk/2.26.43.72-report-response-bounds/README.md.
-        let report_result =
-            kind == Some("result") && row.kind == "report" && super::report::is_request(&request);
-        // APK43.72 8R7/6p9 select CK4 from the outer result, then parse
-        // their list. Unrelated error extensions cannot select Bvj instead.
-        let blocklist_reply = matches!(row.kind.as_str(), "blocklist" | "block" | "unblock")
-            && super::blocklist::require_request(&request, id, &row.kind).is_ok();
-        // APK43.72 1rA.A03 dispatches result to Dxh.A02, which reads
-        // per-user errors under list, not root extensions. Keep this scoped to
-        // the typed peer directory producer; app-state has different semantics.
-        let peer_directory_reply = matches!(kind, Some("result" | "error"))
-            && row.kind == "peer_keys"
-            && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
-            && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
-            && request.child("key").is_some();
-        // APK43.72 FeM.run case16 binds identity/user to FUP case0;
-        // 0ln.A01 -> CK4 selects list/user errors instead of root extensions.
-        let identity_only_reply = matches!(kind, Some("result" | "error"))
-            && row.kind == "peer_identity_query"
-            && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
-            && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
-            && request.child("identity").is_some();
-        // APK43.72 0v0.A00 binds identityJids/reason=identity key reads
-        // to Dxh too. Preserve its selected-device errors and outer dispatch.
-        let identity_refresh_peer =
-            if matches!(kind, Some("result" | "error")) && row.kind == "identity_refresh" {
-                Some(super::identity_notifications::request_peer(&request, id)?)
-            } else {
-                None
-            };
-        // An `iq type=result` can still carry a refusal further in. App-state
-        // answers per collection: `<sync><collection type="error"><error
-        // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
-        // the outer type recorded that as success, which is worse than an error
-        // — it is an error the caller is told is fine.
-        let inner_error = if about_result
-            || photo_set_result
-            || photo_lookup_result
-            || two_factor_result
-            || privacy_token_result
-            || report_result
-            || (blocklist_reply && kind == Some("result"))
-        {
+        && node
+            .child_nodes()
+            .first()
+            .is_some_and(|child| child.description == "picture");
+    // APK43.72 6p1.CK4 selects picture by name, otherwise empty metadata;
+    // it never searches error extensions. This is outer callback dispatch,
+    // not validation of URL/id or native photo/cache adoption.
+    let photo_lookup_result = kind == Some("result")
+        && row.kind == super::profile_picture::GET_KIND
+        && super::profile_picture::is_lookup_request(&request);
+    // APK43.72 FUS.CK4 schedules the originally requested values without
+    // reading response payload. Preserve outer-type dispatch for this
+    // typed producer, independently of unrelated nested-refusal parsers.
+    let two_factor_result = kind == Some("result")
+        && row.kind == super::two_factor::ACTION_KIND
+        && super::two_factor::is_set_request(&request);
+    // APK43.72 8R8.CK4 selector3 uses captured user/timestamp and
+    // resolves the job future without parsing the response payload.
+    let privacy_token_result = kind == Some("result")
+        && row.kind == super::token_issue::ACTION_KIND
+        && super::token_issue::is_issue_request(&request);
+    // APK43.72 SpamRPCManager.A01 tries Rv2 selector1 first; its
+    // report/id success reader does not select unrelated error extensions.
+    // This is envelope dispatch, not full native schema/report adoption.
+    // docs/protocol/apk/2.26.43.72-report-response-bounds/README.md.
+    let report_result =
+        kind == Some("result") && row.kind == "report" && super::report::is_request(&request);
+    // APK43.72 8R7/6p9 select CK4 from the outer result, then parse
+    // their list. Unrelated error extensions cannot select Bvj instead.
+    let blocklist_reply = matches!(row.kind.as_str(), "blocklist" | "block" | "unblock")
+        && super::blocklist::require_request(&request, id, &row.kind).is_ok();
+    // APK43.72 1rA.A03 dispatches result to Dxh.A02, which reads
+    // per-user errors under list, not root extensions. Keep this scoped to
+    // the typed peer directory producer; app-state has different semantics.
+    let peer_directory_reply = matches!(kind, Some("result" | "error"))
+        && row.kind == "peer_keys"
+        && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
+        && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+        && request.child("key").is_some();
+    // APK43.72 FeM.run case16 binds identity/user to FUP case0;
+    // 0ln.A01 -> CK4 selects list/user errors instead of root extensions.
+    let identity_only_reply = matches!(kind, Some("result" | "error"))
+        && row.kind == "peer_identity_query"
+        && request.get_attr("xmlns").and_then(|v| v.as_text()) == Some("encrypt")
+        && request.get_attr("type").and_then(|v| v.as_text()) == Some("get")
+        && request.child("identity").is_some();
+    // APK43.72 0v0.A00 binds identityJids/reason=identity key reads
+    // to Dxh too. Preserve its selected-device errors and outer dispatch.
+    let identity_refresh_peer =
+        if matches!(kind, Some("result" | "error")) && row.kind == "identity_refresh" {
+            Some(super::identity_notifications::request_peer(&request, id)?)
+        } else {
             None
-        } else if (blocklist_reply || photo_error.is_some()) && kind == Some("error") {
-            // APK43.72 1ud.A01 scans direct error children, skipping
-            // missing code. It returns the first coded error, not a nested
-            // user error or an earlier uncoded extension (8R7/6p9.Bvj).
-            // Hyd.Bvj and 6p1.Bvj select the same 1ud parser for photos.
-            node.child_nodes().iter().find(|child| {
-                child.description == "error"
-                    && child.get_attr("code").and_then(|v| v.as_text()).is_some()
-            })
-        } else if kind == Some("error")
-            && (peer_directory_reply || identity_only_reply || identity_refresh_peer.is_some())
-        {
-            // APK43.72 1rA.A03 and 0ln.A01 select outer-error
-            // callbacks. Nested device errors are not this query's code.
-            let mut errors = node
-                .child_nodes()
-                .iter()
-                .filter(|child| child.description == "error");
-            let error = errors.next();
-            errors.next().is_none().then_some(error).flatten()
-        } else if peer_directory_reply {
-            // Bind refusal to the original single-peer request. A foreign
-            // user's error must not poison this peer's completion/refresh.
-            crate::signal::direct::child(&request, "key")
-                .ok()
-                .and_then(|key| crate::signal::direct::child(key, "user").ok())
-                .and_then(|user| super::receipts::jid(user, "jid"))
-                .and_then(|peer| super::peer_keys::selected_user(node, &peer).ok())
-                .and_then(|user| user.child("error"))
-        } else if let Some(peer) = identity_refresh_peer.as_ref() {
-            super::peer_keys::selected_user(node, peer)
-                .ok()
-                .and_then(|user| user.child("error"))
-        } else {
-            node.child_nodes()
-                .iter()
-                .flat_map(|child| child.child_nodes())
-                .find_map(|child| {
-                    // An encrypt directory result can carry <list><user><error/>
-                    // without type=error on user. Preserve that refusal too.
-                    (child.description == "user"
-                        || child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
-                    .then(|| child.child("error"))
-                    .flatten()
-                })
-                .or_else(|| {
-                    (!peer_directory_reply && !identity_only_reply)
-                        .then(|| node.child("error"))
-                        .flatten()
-                })
         };
-        if kind == Some("result") && inner_error.is_none() {
-            if privacy_token_result {
-                row.token_issue_completion =
-                    Some(super::token_issue::record_success_in(tx, id, &request)?);
-            }
-            row.status = ActionStatus::Ok;
-        } else {
-            row.status = ActionStatus::Error;
-            if let Some(error) = inner_error {
-                row.error_code = error
-                    .get_attr("code")
-                    .and_then(|v| v.as_text())
-                    .and_then(|v| v.parse().ok());
-                row.error_text = error
-                    .get_attr("text")
-                    .and_then(|v| v.as_text())
-                    .map(str::to_owned);
-            }
+    // An `iq type=result` can still carry a refusal further in. App-state
+    // answers per collection: `<sync><collection type="error"><error
+    // code="409" text="conflict"/>`, observed live 2026-09-24. Reading only
+    // the outer type recorded that as success, which is worse than an error
+    // — it is an error the caller is told is fine.
+    let inner_error = if about_result
+        || photo_set_result
+        || photo_lookup_result
+        || two_factor_result
+        || privacy_token_result
+        || report_result
+        || (blocklist_reply && kind == Some("result"))
+    {
+        None
+    } else if (blocklist_reply || photo_error.is_some()) && kind == Some("error") {
+        // APK43.72 1ud.A01 scans direct error children, skipping
+        // missing code. It returns the first coded error, not a nested
+        // user error or an earlier uncoded extension (8R7/6p9.Bvj).
+        // Hyd.Bvj and 6p1.Bvj select the same 1ud parser for photos.
+        node.child_nodes().iter().find(|child| {
+            child.description == "error"
+                && child.get_attr("code").and_then(|v| v.as_text()).is_some()
+        })
+    } else if kind == Some("error")
+        && (peer_directory_reply || identity_only_reply || identity_refresh_peer.is_some())
+    {
+        // APK43.72 1rA.A03 and 0ln.A01 select outer-error
+        // callbacks. Nested device errors are not this query's code.
+        let mut errors = node
+            .child_nodes()
+            .iter()
+            .filter(|child| child.description == "error");
+        let error = errors.next();
+        errors.next().is_none().then_some(error).flatten()
+    } else if peer_directory_reply {
+        // Bind refusal to the original single-peer request. A foreign
+        // user's error must not poison this peer's completion/refresh.
+        crate::signal::direct::child(&request, "key")
+            .ok()
+            .and_then(|key| crate::signal::direct::child(key, "user").ok())
+            .and_then(|user| super::receipts::jid(user, "jid"))
+            .and_then(|peer| super::peer_keys::selected_user(node, &peer).ok())
+            .and_then(|user| user.child("error"))
+    } else if let Some(peer) = identity_refresh_peer.as_ref() {
+        super::peer_keys::selected_user(node, peer)
+            .ok()
+            .and_then(|user| user.child("error"))
+    } else {
+        node.child_nodes()
+            .iter()
+            .flat_map(|child| child.child_nodes())
+            .find_map(|child| {
+                // An encrypt directory result can carry <list><user><error/>
+                // without type=error on user. Preserve that refusal too.
+                (child.description == "user"
+                    || child.get_attr("type").and_then(|v| v.as_text()) == Some("error"))
+                .then(|| child.child("error"))
+                .flatten()
+            })
+            .or_else(|| {
+                (!peer_directory_reply && !identity_only_reply)
+                    .then(|| node.child("error"))
+                    .flatten()
+            })
+    };
+    if kind == Some("result") && inner_error.is_none() {
+        if privacy_token_result {
+            row.token_issue_completion =
+                Some(super::token_issue::record_success_in(tx, id, &request)?);
         }
-        // APK43.72 8R7/6p9.Bvj -> 1ud.A00/A01 -> 0HF.A00(code,0):
-        // Java Integer.parseInt, signed32 with zero on missing/invalid code.
-        // Keep compatibility u16 diagnostics separate; neither field retries.
-        row.blocklist_error_code = (blocklist_reply && kind == Some("error")).then(|| {
-            inner_error
-                .and_then(|error| error.get_attr("code"))
-                .and_then(|value| value.as_text())
-                .and_then(super::mex::java_decimal_long)
-                .and_then(|value| i32::try_from(value).ok())
-                .unwrap_or(0)
-        });
-        row.photo_error = photo_error;
-        row.about_refusal = (row.kind == super::about::ACTION_KIND)
-            .then(|| super::about::refusal(&request, node))
-            .flatten();
-        row.usync_refusal = super::contacts::outer_usync_refusal(&request, node);
-        row.contact_protocol_refusal = super::contacts::contact_protocol_refusal(&request, node);
-        row.settlement_sequence = Some(next_settlement_sequence_in(tx)?);
-        row.settled_at = Some(Timestamp::now());
-        row.reply = Some(encode(node)?);
-        super::groups::mark_pending_in(tx, &row.kind, id)?;
-        tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
-        Ok(true)
-    })
+        row.status = ActionStatus::Ok;
+    } else {
+        row.status = ActionStatus::Error;
+        if let Some(error) = inner_error {
+            row.error_code = error
+                .get_attr("code")
+                .and_then(|v| v.as_text())
+                .and_then(|v| v.parse().ok());
+            row.error_text = error
+                .get_attr("text")
+                .and_then(|v| v.as_text())
+                .map(str::to_owned);
+        }
+    }
+    // APK43.72 8R7/6p9.Bvj -> 1ud.A00/A01 -> 0HF.A00(code,0):
+    // Java Integer.parseInt, signed32 with zero on missing/invalid code.
+    // Keep compatibility u16 diagnostics separate; neither field retries.
+    row.blocklist_error_code = (blocklist_reply && kind == Some("error")).then(|| {
+        inner_error
+            .and_then(|error| error.get_attr("code"))
+            .and_then(|value| value.as_text())
+            .and_then(super::mex::java_decimal_long)
+            .and_then(|value| i32::try_from(value).ok())
+            .unwrap_or(0)
+    });
+    row.photo_error = photo_error;
+    row.about_refusal = (row.kind == super::about::ACTION_KIND)
+        .then(|| super::about::refusal(&request, node))
+        .flatten();
+    row.usync_refusal = super::contacts::outer_usync_refusal(&request, node);
+    row.contact_protocol_refusal = super::contacts::contact_protocol_refusal(&request, node);
+    row.settlement_sequence = Some(next_settlement_sequence_in(tx)?);
+    row.settled_at = Some(Timestamp::now());
+    row.reply = Some(encode(node)?);
+    super::groups::mark_pending_in(tx, &row.kind, id)?;
+    tx.put_json(Table::Checkpoints, key.as_bytes(), 1, &row)?;
+    Ok(true)
 }
 
 fn next_settlement_sequence_in(tx: &mut crate::store::WriteTx<'_>) -> Result<u64> {

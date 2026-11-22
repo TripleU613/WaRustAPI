@@ -6260,9 +6260,14 @@
           "bytes",
           "observed_at",
           "epoch",
-          "current_class"
+          "current_class",
+          "reservation_at_capture"
         ],
         "properties": {
+          "reservation_at_capture": {
+            "type": "boolean",
+            "description": "The first capture bound an existing reserved action and account. Historical or unbound captures return false. Recovery still requires full decoding, an unchanged reservation and an unambiguous reply."
+          },
           "capture": {
             "type": "string",
             "description": "inbound-undecodable:sha256:<digest of the decrypted frame>; a digest, not content or an address."
@@ -6270,6 +6275,11 @@
           "class": {
             "type": "string",
             "enum": [
+              "header_only_frame",
+              "fragmented_frame",
+              "stream_end",
+              "invalid_packed_length",
+              "invalid_wire_structure",
               "unexpected_eof",
               "unknown_tag",
               "unknown_token",
@@ -6310,6 +6320,11 @@
               "null"
             ],
             "enum": [
+              "header_only_frame",
+              "fragmented_frame",
+              "stream_end",
+              "invalid_packed_length",
+              "invalid_wire_structure",
               "unexpected_eof",
               "unknown_tag",
               "unknown_token",
@@ -16602,6 +16617,13 @@
         "summary": "List received frames listen could not decode (offline, redacted)",
         "operationId": "getUndecodableFrames",
         "description": "Lists decrypted frames the receive loop could not unpack or decode, which it stores once (encrypted, keyed by digest) and skips instead of ending the session (2026-10-13). Each entry gives the capture digest, the fixed decoder error class when captured, the class the current decoder reports (null when it now decodes, for example after a dictionary update), the frame size, first observation and capturing epoch. Never frame bytes, stanza content or an address. Read-only: nothing is decoded into the inbox, acknowledged or sent; an unacknowledged stanza is redelivered by the server. Evidence docs/protocol/replay-safety-audit.md#network-input-panic-audit-2026-10-13. HTTP (2026-10-13): served read-only by `whatsapp-cli serve --store-routes --token-file <new path>` (experimental-transport build), loopback only, with `Authorization: Bearer <token>`; the store is opened per request with the serve process's --store/--account/--key-env, so it answers 503 store_unavailable only while another command (for example listen) holds the store, and 500 store_read_failed for any other read failure. HEAD is also served. The parameters listed here are CLI flags; over HTTP the store comes from the serve process. Any query string 400. 2026-11-01: --settle-replies (CLI only; the HTTP route stays read-only) also settles captured IQ replies that the current decoder now reads to the one-shot action still waiting for them (offline, sends nothing). Used once to settle an A/B-property reply refused by the former 4,096-child decoder bound.",
+        "x-cli-recovery": {
+          "x-cli": "whatsapp-cli undecodable --settle-replies",
+          "x-transport": ["cli"],
+          "x-live": false,
+          "description": "Offline only. Recovery checks the fully decoded IQ against the reservation and account bound at first capture. Identical decoded replies settle once. Conflicting captures are counted on stderr and leave their reservation pending. The JSON inspection array remains on stdout. Existing unbound captures remain inspectable.",
+          "evidence": "docs/protocol/replay-safety-audit.md#offline-recovery-of-an-unreadable-iq-reply"
+        },
         "x-reconnect-policy": "The persistent listener preserves a damaged failure or stream:error and stops automatic reconnects. A peer EOF or root stream-end after a stanza with an unreadable name also stops automatic reconnects. A fully decoded intervening stanza clears that uncertainty. The reader records its decision before closing on a terminal frame, so a later writer failure preserves that decision. Verified with an offline encrypted peer. See docs/protocol/frame-admission.md#reconnect-after-an-unreadable-session-ending.",
         "x-cli": "whatsapp-cli undecodable",
         "x-transport": [
@@ -16611,6 +16633,8 @@
         "x-live": false,
         "x-library": [
           "whatsapp_api::transport::inbox::undecodable_frames",
+          "whatsapp_api::transport::inbox::recover_undecodable_replies",
+          "whatsapp_api::transport::inbox::settle_undecodable_replies",
           "whatsapp_cli::http::serve"
         ],
         "parameters": [

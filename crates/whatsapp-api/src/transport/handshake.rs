@@ -372,6 +372,7 @@ mod tests {
         PartialWrite,
         StreamEnd,
         TruncatedFailure,
+        CapturedActionReply,
         UnreadableThenEnd,
         MediaRefresh {
             delay: u64,
@@ -501,6 +502,28 @@ mod tests {
             }
             let incoming = reader.read_frame(&mut server).await.unwrap().unwrap();
             let plain = transport.decrypt(&incoming).unwrap();
+            if matches!(record_case, RecordCase::CapturedActionReply) {
+                let request = super::super::inbox::decode_frame(&plain).unwrap();
+                let id = request.get_attr("id").unwrap().as_text().unwrap();
+                let mut reply = crate::binary::Encoder::new(
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                )
+                .encode(
+                    &crate::binary::Node::new("iq")
+                        .attr("type", "result")
+                        .attr("id", id)
+                        .children(vec![crate::binary::Node::new("prop")]),
+                )
+                .unwrap();
+                // Keep the entire root header but truncate its child.
+                reply.pop();
+                let record = transport.encrypt(&reply).unwrap();
+                server
+                    .write_all(&codec.encode(&record, None).unwrap())
+                    .await
+                    .unwrap();
+                return;
+            }
             if let RecordCase::MediaRefresh { delay, .. } = record_case {
                 let request = super::super::inbox::decode_frame(&plain).unwrap();
                 assert_eq!(
@@ -847,6 +870,11 @@ mod tests {
                     Err(TransportError::Closed)
                 ));
                 assert!(matches!(channel.read().await, Err(TransportError::Closed)));
+            } else if matches!(record_case, RecordCase::CapturedActionReply) {
+                super::super::connection::tests::assert_reader_captures_action_before_dispatch(
+                    channel,
+                )
+                .await;
             } else if matches!(
                 record_case,
                 RecordCase::TruncatedFailure | RecordCase::UnreadableThenEnd
@@ -1054,6 +1082,11 @@ mod tests {
                 .await;
             }
         }
+    }
+
+    #[tokio::test]
+    async fn encrypted_reader_binds_unreadable_reply_before_actor_dispatch() {
+        exchange(false, false, RecordCase::CapturedActionReply).await;
     }
 
     #[tokio::test]

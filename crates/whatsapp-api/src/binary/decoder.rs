@@ -427,6 +427,25 @@ impl<'a> Decoder<'a> {
         if depth > limit {
             return Err(CodecError::DepthLimit { limit });
         }
+        let (mut node, has_content) = self.read_header(depth)?;
+        if has_content {
+            node.content = self.read_content(depth)?;
+        }
+        Ok(node)
+    }
+
+    /// Read the complete root header using ordinary attribute validation. The
+    /// body is deliberately unread and cannot be dispatched from this result.
+    #[cfg(all(
+        feature = "experimental-noise",
+        feature = "experimental-transport",
+        feature = "experimental-signal-crypto"
+    ))]
+    pub(crate) fn peek_header(mut self) -> Option<Node> {
+        self.read_header(0).ok().map(|(node, _)| node)
+    }
+
+    fn read_header(&mut self, depth: usize) -> Result<(Node, bool), CodecError> {
         let offset = self.pos;
         let size_tag = self.byte()?;
         let list_size = self.list_size(size_tag)?;
@@ -494,16 +513,14 @@ impl<'a> Decoder<'a> {
             };
             attributes.push(Attribute { name, value });
         }
-        let content = if list_size % 2 == 1 {
-            NodeContent::Empty
-        } else {
-            self.read_content(depth)?
-        };
-        Ok(Node {
-            description,
-            attributes,
-            content,
-        })
+        Ok((
+            Node {
+                description,
+                attributes,
+                content: NodeContent::Empty,
+            },
+            list_size.is_multiple_of(2),
+        ))
     }
 }
 

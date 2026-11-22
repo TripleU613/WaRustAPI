@@ -1,3 +1,5 @@
+**Offline IQ reply recovery.** An unreadable reply can settle only the action already reserved when it was first captured. Conflicting replies leave that action pending across restart. [Regression and APK evidence](docs/protocol/replay-safety-audit.md#offline-recovery-of-an-unreadable-iq-reply).
+
 **Unreadable session endings (offline).** The Rust listener stops automatic reconnects after a damaged terminal stanza or a stream end immediately following an unidentified stanza. Encrypted split-reader tests cover capture across restart and a competing writer failure. [APK evidence and local policy](docs/protocol/frame-admission.md#reconnect-after-an-unreadable-session-ending).
 
 **Media routes in large stores (offline).** Upload preparation survives 10,000 unrelated checkpoints. Deadline recovery validates more than 10,000 actual route receipts and refuses incomplete history. [Evidence and limits](docs/protocol/media-network-outcomes.md#media-route-selection-and-wait-recovery-in-large-stores).

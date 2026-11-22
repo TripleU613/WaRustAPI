@@ -628,6 +628,8 @@ const UNDECODABLE_PREFIX: &str = "inbound-undecodable:";
 
 #[derive(serde::Deserialize)]
 struct StoredUndecodable {
+    #[serde(default)]
+    reservation: Option<super::actions::CapturedReservation>,
     frame: Vec<u8>,
     class: String,
     epoch: Option<super::ConnectionEpoch>,
@@ -640,6 +642,10 @@ struct StoredUndecodable {
 /// address are returned.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct UndecodableFrame {
+    /// The first capture saved a matching reserved action and account.
+    /// A later change to either still prevents offline settlement.
+    #[serde(default)]
+    pub reservation_at_capture: bool,
     /// `inbound-undecodable:sha256:<digest of the decrypted frame>`.
     pub capture: String,
     /// Fixed class when captured (`CodecError::class`), including `stream_end`.
@@ -679,6 +685,7 @@ pub fn undecodable_frames(store: &ProtocolStore) -> Result<Vec<UndecodableFrame>
                     continue;
                 };
                 out.push(UndecodableFrame {
+                    reservation_at_capture: saved.reservation.is_some(),
                     capture: name.to_owned(),
                     class: saved.class,
                     bytes: saved.frame.len(),
@@ -696,44 +703,79 @@ pub fn undecodable_frames(store: &ProtocolStore) -> Result<Vec<UndecodableFrame>
     })
 }
 
-/// Settle captured `iq` replies that the current decoder now reads to the
-/// one-shot action still waiting for them (`actions::record_reply`, the same
-/// call the live loop makes). An IQ result is never redelivered, so a reply
-/// refused by an older local decoder bound (for example the child count of a
-/// large `abt` reply, 2026-11-01) is otherwise lost. Only actions still
-/// reserved as sent accept a reply; nothing is sent or decrypted.
+/// Reconcile a newly decodable IQ with the reservation bound to its first
+/// capture. Historical captures without this evidence remain inspectable.
 pub fn settle_undecodable_replies(store: &ProtocolStore) -> Result<usize> {
-    let frames: Vec<Vec<u8>> = store.read(|tx| {
-        let mut out = Vec::new();
-        let mut cursor = None;
-        loop {
-            let rows = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
-            let done = rows.len() < 256;
-            cursor = rows.last().map(|(key, _)| key.clone());
-            for (key, _) in rows {
-                if !key.starts_with(UNDECODABLE_PREFIX.as_bytes()) {
-                    continue;
+    Ok(recover_undecodable_replies(store)?.settled)
+}
+
+/// Counts for explicit offline IQ recovery.
+#[derive(Debug, Default)]
+pub struct CapturedReplyRecovery {
+    /// Newly settled one-shot actions.
+    pub settled: usize,
+    /// Bound reservations with different decoded replies in the inspected snapshot.
+    pub conflicting: usize,
+}
+
+/// Reconcile unambiguous captures. Digest key order cannot select between two
+/// different replies to the same reservation.
+pub fn recover_undecodable_replies(store: &ProtocolStore) -> Result<CapturedReplyRecovery> {
+    store.write(|tx| {
+        #[derive(serde::Deserialize)]
+        struct Metadata {
+            reservation: Option<super::actions::CapturedReservation>,
+        }
+        // Release the table's range handle before looking up action rows inside
+        // this same write transaction. Historical frame bodies need not accumulate.
+        let mut bound = Vec::new();
+        tx.fold_checkpoints(UNDECODABLE_PREFIX.as_bytes(), (), |(), key, bytes| {
+            let meta: Metadata = serde_json::from_slice(bytes)
+                .map_err(|_| Error::invalid("undecodable", "invalid saved frame record"))?;
+            if let Some(owner) = meta.reservation {
+                bound.push((key.to_vec(), owner));
+            }
+            Ok(())
+        })?;
+        let mut by_id = std::collections::BTreeMap::new();
+        let mut candidates: Vec<(super::actions::CapturedReservation, Option<Node>)> = Vec::new();
+        for (key, owner) in bound {
+            if !owner.is_current(tx)? {
+                continue;
+            }
+            let saved: StoredUndecodable = tx
+                .get_json(Table::Checkpoints, &key, 1)?
+                .ok_or_else(|| Error::invalid("undecodable", "bound capture is missing"))?;
+            let Ok(node) = decode_frame(&saved.frame) else {
+                continue;
+            };
+            if super::actions::reply_id(&node) != Some(owner.id.as_str()) {
+                continue;
+            }
+            match by_id.entry(owner.id.clone()) {
+                std::collections::btree_map::Entry::Vacant(entry) => {
+                    entry.insert(candidates.len());
+                    candidates.push((owner, Some(node)));
                 }
-                if let Some(saved) =
-                    tx.get_json::<StoredUndecodable>(Table::Checkpoints, &key, 1)?
-                {
-                    out.push(saved.frame);
+                std::collections::btree_map::Entry::Occupied(entry) => {
+                    let previous = &mut candidates[*entry.get()].1;
+                    if previous.as_ref() != Some(&node) {
+                        *previous = None;
+                    }
                 }
             }
-            if done {
-                return Ok(out);
+        }
+        let mut report = CapturedReplyRecovery::default();
+        for (owner, candidate) in candidates {
+            if let Some(node) = candidate {
+                report.settled +=
+                    usize::from(super::actions::record_captured_reply_in(tx, &node, &owner)?);
+            } else {
+                report.conflicting += 1;
             }
         }
-    })?;
-    let mut settled = 0;
-    for frame in frames {
-        if let Ok(node) = decode_frame(&frame)
-            && super::actions::record_reply(store, &node)?
-        {
-            settled += 1;
-        }
-    }
-    Ok(settled)
+        Ok(report)
+    })
 }
 
 /// Capture a decrypted frame whose payload did not unpack or decode, so it can
@@ -747,27 +789,56 @@ pub fn preserve_undecodable(
     class: &'static str,
     epoch: Option<super::ConnectionEpoch>,
 ) -> Result<String> {
+    preserve_undecodable_for_account(store, frame, class, epoch, None)
+}
+
+pub(super) fn preserve_undecodable_for_account(
+    store: &ProtocolStore,
+    frame: &[u8],
+    class: &'static str,
+    epoch: Option<super::ConnectionEpoch>,
+    epoch_account: Option<&[u8; 32]>,
+) -> Result<String> {
     use sha2::{Digest, Sha256};
     let key = format!(
         "{UNDECODABLE_PREFIX}sha256:{}",
         hex::encode(Sha256::digest(frame))
     );
     store.write(|tx| {
-        if tx.get(Table::Checkpoints, key.as_bytes(), 1)?.is_none() {
-            tx.put_json(
-                Table::Checkpoints,
-                key.as_bytes(),
-                1,
-                &serde_json::json!({
-                    "frame": frame,
-                    "class": class,
-                    "epoch": epoch,
-                    "observed_at": crate::model::time::Timestamp::now(),
-                }),
-            )?;
+        if tx.get(Table::Checkpoints, key.as_bytes(), 1)?.is_some() {
+            return Ok(Ok(()));
         }
-        Ok(())
-    })?;
+        let limits = crate::profile::Limits::default();
+        let header = crate::binary::unpack_frame_payload(frame, &limits)
+            .ok()
+            .and_then(|raw| {
+                crate::binary::Decoder::new(
+                    &raw,
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                    &limits,
+                )
+                .peek_header()
+            });
+        let reservation = match header.as_ref().and_then(super::actions::reply_id) {
+            Some(id) => super::actions::capture_reservation_in(tx, id, epoch_account),
+            None => Ok(None),
+        };
+        // Keep the original frame even if inspecting the local action failed.
+        // Return that fault only after the raw capture transaction commits.
+        tx.put_json(
+            Table::Checkpoints,
+            key.as_bytes(),
+            1,
+            &serde_json::json!({
+                "frame": frame,
+                "class": class,
+                "epoch": epoch,
+                "observed_at": crate::model::time::Timestamp::now(),
+                "reservation": reservation.as_ref().ok().and_then(|owner| owner.as_ref()),
+            }),
+        )?;
+        Ok(reservation.map(|_| ()))
+    })??;
     Ok(key)
 }
 
@@ -6771,30 +6842,51 @@ mod settle_tests {
     use crate::binary::{Encoder, TokenDictionary};
     use crate::store::{MasterKey, OpenOptions, StaticKeySource};
 
-    /// A reply kept as undecodable settles its still-sent action once; it is
-    /// never applied twice and never to an action that was not reserved.
-    #[test]
-    fn captured_replies_settle_their_waiting_action_once() {
-        let dir = tempfile::tempdir().unwrap();
-        let store = ProtocolStore::open(OpenOptions {
-            path: dir.path().join("s.redb"),
+    fn open(path: &std::path::Path) -> ProtocolStore {
+        ProtocolStore::open(OpenOptions {
+            path: path.to_owned(),
             account_id: crate::model::ids::AccountId::new("t").unwrap(),
             key_source: std::sync::Arc::new(StaticKeySource::new(MasterKey::from_bytes([5; 32]))),
             create: true,
         })
-        .unwrap();
-        let id = super::super::actions::queue(&store, "abprops_query", "test", |id| {
+        .unwrap()
+    }
+
+    fn queue(store: &ProtocolStore) -> String {
+        super::super::actions::queue(store, "abprops_query", "test", |id| {
             Ok(Node::new("iq").attr("id", id).attr("type", "get"))
         })
-        .unwrap();
-        let reply = Node::new("iq")
-            .attr("id", id.as_str())
-            .attr("type", "result");
-        let frame = Encoder::new(TokenDictionary::comparison_2_26_37_71())
-            .encode(&reply)
-            .unwrap();
-        preserve_undecodable(&store, &frame, "length_limit", None).unwrap();
-        // Queued but never sent: a reply cannot settle it.
+        .unwrap()
+    }
+
+    fn encode(node: &Node) -> Vec<u8> {
+        Encoder::new(TokenDictionary::comparison_2_26_37_71())
+            .encode(node)
+            .unwrap()
+    }
+
+    fn compressed_frame(node: &Node) -> Vec<u8> {
+        // APK 2.26.43.72 123.A08 selects zlib with header bit 0x02.
+        let mut frame = vec![0x02];
+        frame.extend(miniz_oxide::deflate::compress_to_vec_zlib(
+            &encode(node)[1..],
+            6,
+        ));
+        frame
+    }
+
+    fn result(id: &str) -> Node {
+        Node::new("iq").attr("id", id).attr("type", "result")
+    }
+
+    #[test]
+    fn captured_replies_settle_their_waiting_action_once() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("capture.redb");
+        let store = open(&path);
+        let id = queue(&store);
+        let early = encode(&result(&id));
+        preserve_undecodable(&store, &early, "length_limit", None).unwrap();
         assert_eq!(settle_undecodable_replies(&store).unwrap(), 0);
         assert_eq!(
             super::super::actions::reserve_pending(&store)
@@ -6802,9 +6894,162 @@ mod settle_tests {
                 .len(),
             1
         );
-        assert_eq!(settle_undecodable_replies(&store).unwrap(), 1);
+        drop(store);
+        let store = open(&path);
+        preserve_undecodable(&store, &early, "length_limit", None).unwrap();
+        assert!(!undecodable_frames(&store).unwrap()[0].reservation_at_capture);
         assert_eq!(settle_undecodable_replies(&store).unwrap(), 0);
-        let outcome = &super::super::actions::outcomes(&store).unwrap()[0];
-        assert_eq!(outcome.status, super::super::actions::ActionStatus::Ok);
+
+        // The old child limit refuses the body of this compressed result.
+        // Fully decoding with today's limits must select exactly the same reply.
+        let reply = result(&id).children(vec![Node::new("prop"); 4097]);
+        let compressed = compressed_frame(&reply);
+        let old = crate::profile::Limits {
+            max_children: 4096,
+            ..Default::default()
+        };
+        let plain = crate::binary::unpack_frame_payload(&compressed, &old).unwrap();
+        let error =
+            crate::binary::Decoder::new(&plain, TokenDictionary::comparison_2_26_37_71(), &old)
+                .decode_node()
+                .unwrap_err();
+        assert_eq!(error.class(), "length_limit");
+        preserve_undecodable(&store, &compressed, error.class(), None).unwrap();
+        drop(store);
+        let store = open(&path);
+        assert_eq!(
+            undecodable_frames(&store)
+                .unwrap()
+                .iter()
+                .filter(|f| f.reservation_at_capture)
+                .count(),
+            1
+        );
+        assert_eq!(settle_undecodable_replies(&store).unwrap(), 1);
+        assert_eq!(
+            super::super::actions::reply(&store, &id).unwrap(),
+            Some(reply)
+        );
+        assert_eq!(settle_undecodable_replies(&store).unwrap(), 0);
+    }
+
+    #[test]
+    fn recovery_leaves_legacy_stale_and_incomplete_evidence_unsettled() {
+        for cut in [
+            "legacy",
+            "changed_row",
+            "changed_account",
+            "wrong_epoch_account",
+            "unreadable_header",
+            "incomplete_body",
+            "corrupt_action",
+        ] {
+            let dir = tempfile::tempdir().unwrap();
+            let path = dir.path().join("stale.redb");
+            let store = open(&path);
+            let id = queue(&store);
+            store
+                .write(|tx| super::super::actions::reserve_one_in(tx, &id))
+                .unwrap();
+            let row_key = format!("action-outbox:{id}");
+            let mut wire = encode(&result(&id).children(vec![Node::new("prop")]));
+            if cut == "unreadable_header" {
+                wire.truncate(4);
+            }
+            if cut == "incomplete_body" {
+                wire.pop();
+            }
+            if cut == "corrupt_action" {
+                store
+                    .write(|tx| tx.put(Table::Checkpoints, row_key.as_bytes(), 1, b"{"))
+                    .unwrap();
+            }
+            let wrong = [99; 32];
+            let binding = preserve_undecodable_for_account(
+                &store,
+                &wire,
+                "length_limit",
+                Some(super::super::ConnectionEpoch(1)),
+                (cut == "wrong_epoch_account").then_some(&wrong),
+            );
+            if cut == "corrupt_action" {
+                assert!(binding.is_err());
+            } else {
+                let key = binding.unwrap();
+                store
+                    .write(|tx| {
+                        match cut {
+                            "legacy" | "changed_row" => {
+                                let target = if cut == "legacy" { &key } else { &row_key };
+                                let mut row: serde_json::Value = tx
+                                    .get_json(Table::Checkpoints, target.as_bytes(), 1)?
+                                    .unwrap();
+                                if cut == "legacy" {
+                                    row.as_object_mut().unwrap().remove("reservation");
+                                } else {
+                                    row["label"] = "later".into();
+                                }
+                                tx.put_json(Table::Checkpoints, target.as_bytes(), 1, &row)?;
+                            }
+                            "changed_account" => {
+                                AccountRecord::save(&AccountRecord::default(), tx)?
+                            }
+                            _ => {}
+                        }
+                        Ok(())
+                    })
+                    .unwrap();
+            }
+            drop(store);
+            let store = open(&path);
+            let frames = undecodable_frames(&store).unwrap();
+            assert_eq!(frames.len(), 1, "{cut}");
+            assert_eq!(
+                frames[0].reservation_at_capture,
+                matches!(cut, "changed_row" | "changed_account" | "incomplete_body"),
+                "{cut}"
+            );
+            assert_eq!(settle_undecodable_replies(&store).unwrap(), 0, "{cut}");
+            if cut != "corrupt_action" {
+                assert_eq!(
+                    super::super::actions::outcomes(&store).unwrap()[0].status,
+                    super::super::actions::ActionStatus::Sent
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn conflicting_captures_hold_only_their_reservation() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("conflict.redb");
+        let store = open(&path);
+        let held = queue(&store);
+        let accepted = queue(&store);
+        super::super::actions::reserve_pending(&store).unwrap();
+        for node in [
+            result(&held),
+            result(&held).attr("type", "error"),
+            result(&accepted),
+        ] {
+            preserve_undecodable(&store, &encode(&node), "length_limit", None).unwrap();
+        }
+        let compressed = compressed_frame(&result(&accepted));
+        preserve_undecodable(&store, &compressed, "length_limit", None).unwrap();
+        drop(store);
+        let store = open(&path);
+        let report = recover_undecodable_replies(&store).unwrap();
+        assert_eq!((report.settled, report.conflicting), (1, 1));
+        assert!(
+            super::super::actions::reply(&store, &held)
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(
+            super::super::actions::reply(&store, &accepted).unwrap(),
+            Some(result(&accepted))
+        );
+        let repeat = recover_undecodable_replies(&store).unwrap();
+        assert_eq!((repeat.settled, repeat.conflicting), (0, 1));
     }
 }

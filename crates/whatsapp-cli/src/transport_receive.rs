@@ -874,8 +874,11 @@ pub(super) fn undecodable_status(cli: &super::Cli, settle_replies: bool) -> Resu
         create: false,
     })?;
     if settle_replies {
-        let settled = whatsapp_api::transport::inbox::settle_undecodable_replies(&store)?;
-        eprintln!("undecodable: settled {settled} captured IQ reply(ies) to waiting actions");
+        let report = whatsapp_api::transport::inbox::recover_undecodable_replies(&store)?;
+        eprintln!(
+            "undecodable: settled {} captured IQ reply(ies) to waiting actions; {} reservation(s) have conflicting captures",
+            report.settled, report.conflicting
+        );
     }
     let frames = whatsapp_api::transport::inbox::undecodable_frames(&store)?;
     if cli.json {
@@ -892,20 +895,18 @@ pub(super) fn undecodable_status(cli: &super::Cli, settle_replies: bool) -> Resu
     }
     for frame in &frames {
         println!(
-            "undecodable: {} class={} now={} bytes={} epoch={}",
+            "undecodable: {} class={} now={} bytes={} reservation_at_capture={} epoch={}",
             frame.capture,
             frame.class,
             frame.current_class.as_deref().unwrap_or("decodes"),
             frame.bytes,
+            frame.reservation_at_capture,
             frame
                 .epoch
                 .map_or_else(|| "lab".to_owned(), |epoch| epoch.0.to_string())
         );
     }
-    println!(
-        "undecodable: {} captured; not acknowledged, so the server may redeliver; nothing is reprocessed here",
-        frames.len()
-    );
+    println!("undecodable: {} captured frame(s)", frames.len());
     Ok(())
 }
 

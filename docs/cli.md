@@ -176,7 +176,7 @@ Usage: whatsapp-cli undecodable [OPTIONS]...
 
 | Flag | Value | Required | Default | Env | Values | Help |
 |------|-------|----------|---------|-----|--------|------|
-| --settle-replies | SETTLE_REPLIES | no |  |  | `true`, `false` | Also settle captured IQ replies that now decode to the one-shot action still waiting for them (offline; sends nothing) |
+| --settle-replies | SETTLE_REPLIES | no |  |  | `true`, `false` | Settle unambiguous IQ replies bound to a pending action at first capture (offline) |
 
 ## whatsapp-cli identity-conflicts
 

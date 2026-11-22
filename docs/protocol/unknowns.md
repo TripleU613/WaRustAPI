@@ -430,14 +430,12 @@ native global reconnect policy for these sequences remains **unknown**.
 
 ### Offline settlement of previously unreadable replies
 
-**Confirmed in the Rust fixture.** In
-`inbox::settle_tests::captured_replies_settle_their_waiting_action_once`,
-the fixture saves a reply while its action is queued. The first recovery skips
-the reply. Once the fixture reserves the action, the next recovery settles it
-from those same saved bytes. The action ID and its current state therefore
-do not prove that the capture followed the reservation. This concerns explicit
-`undecodable --settle-replies`. The live actor requires a connection-local
-written callback. How to establish causal order for older captures is **unknown**.
+**Resolved for new captures, offline.** A queued action observed before
+reservation can no longer be settled later from that capture. The first
+capture must bind the already reserved action and account, and offline
+recovery rechecks both. Older captures lack this evidence and remain
+inspectable. Actual write completion and native offline recovery are
+**unknown**. [Evidence and restart tests](replay-safety-audit.md#offline-recovery-of-an-unreadable-iq-reply).
 
 ## Comparison token dictionary: double-byte page 0 index 1
 

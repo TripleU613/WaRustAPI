@@ -277,8 +277,7 @@ enum Cmd {
     /// current decoder (offline, redacted: digest, error class, size).
     #[cfg(feature = "experimental-transport")]
     Undecodable {
-        /// Also settle captured IQ replies that now decode to the one-shot
-        /// action still waiting for them (offline; sends nothing).
+        /// Settle unambiguous IQ replies bound to a pending action at first capture (offline).
         #[arg(long)]
         settle_replies: bool,
     },

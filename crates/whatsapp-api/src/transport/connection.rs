@@ -870,6 +870,7 @@ fn link_from<S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin + Send + 's
     channel: EncryptedConnection<S>,
     store: Arc<ProtocolStore>,
     epoch: ConnectionEpoch,
+    epoch_account: [u8; 32],
 ) -> Result<(NodeLink, LinkTasks)> {
     let (mut reader, mut writer) = channel.into_split()?;
     let (incoming_tx, incoming_rx) = mpsc::channel(64);
@@ -908,16 +909,16 @@ fn link_from<S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin + Send + 's
                 // write remains uncertain; closure cannot retract its bytes.
                 reader.close();
             }
-            // Preserve the evidence for either half of an ambiguous close even
-            // if the actor exits on an earlier pending write. Capture is idempotent.
-            if let Ok(Inbound::Undecodable {
-                frame,
-                class,
-                description,
-            }) = &next
-                && (ended || description.is_none())
-                && let Err(error) =
-                    super::inbox::preserve_undecodable(&store, frame, class, Some(epoch))
+            // Bind any recoverable IQ at first capture, before queueing to the
+            // actor. Its reservation can change while the actor drains its queue.
+            if let Ok(Inbound::Undecodable { frame, class, .. }) = &next
+                && let Err(error) = super::inbox::preserve_undecodable_for_account(
+                    &store,
+                    frame,
+                    class,
+                    Some(epoch),
+                    Some(&epoch_account),
+                )
             {
                 reader.close();
                 tracing::warn!("could not preserve unreadable frame; epoch closed");
@@ -980,7 +981,7 @@ pub async fn run(
 ) -> Result<()> {
     let (channel, expected) = connect_with_authority(&store, &config, epoch).await?;
     // Abort-on-drop also covers callers cancelling this whole future.
-    let (mut link, tasks) = link_from(channel, store.clone(), epoch)?;
+    let (mut link, tasks) = link_from(channel, store.clone(), epoch, expected)?;
     link.epoch_authority = Some(EpochWriteAuthority {
         store: store.clone(),
         expected,
@@ -1331,7 +1332,7 @@ pub(crate) async fn drive(
                     // Continuing is local policy: where the APK catches a
                     // decode error is not traced.
                     Inbound::Undecodable { frame, class, .. } => {
-                        super::inbox::preserve_undecodable(&store, &frame, class, Some(epoch))?;
+                        super::inbox::preserve_undecodable_for_account(&store, &frame, class, Some(epoch), Some(&epoch_authority.expected))?;
                         epoch_authority.check()?;
                         if let Some(reason) = reason {
                             return Err(Error::invalid("connection", reason));
@@ -1946,6 +1947,51 @@ pub(super) mod tests {
             .unwrap();
         Arc::new(store)
     }
+    fn fixture_reader(
+        channel: EncryptedConnection<tokio::io::DuplexStream>,
+        store: &Arc<ProtocolStore>,
+    ) -> (NodeLink, LinkTasks) {
+        let authority = store
+            .read(|tx| {
+                let account = AccountRecord::load(tx)?;
+                super::super::account_authority::fingerprint(tx.generation(), account.as_ref())
+            })
+            .unwrap();
+        link_from(channel, store.clone(), ConnectionEpoch(3), authority).unwrap()
+    }
+
+    pub(in crate::transport) async fn assert_reader_captures_action_before_dispatch(
+        channel: EncryptedConnection<tokio::io::DuplexStream>,
+    ) {
+        use super::super::{actions, inbox};
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("split-action.redb");
+        let store = open(&path);
+        let id = actions::queue(&store, "abprops_query", "test", |id| {
+            Ok(Node::new("iq").attr("id", id).attr("type", "get"))
+        })
+        .unwrap();
+        let action = actions::reserve_next_owned(&store).unwrap().unwrap();
+        let (link, mut tasks) = fixture_reader(channel, &store);
+        link.send_action(&store, &action).await.unwrap();
+        // Intentionally never drain link.incoming: only the socket reader can
+        // create this capture or bind it before process restart.
+        tokio::time::timeout(Duration::from_secs(2), &mut tasks.reader)
+            .await
+            .unwrap()
+            .unwrap();
+        drop(link);
+        drop(tasks);
+        drop(store);
+        let reopened = open(&path);
+        let frames = inbox::undecodable_frames(&reopened).unwrap();
+        assert_eq!(frames.len(), 1);
+        assert!(frames[0].reservation_at_capture);
+        assert_eq!(frames[0].current_class.as_deref(), Some("unexpected_eof"));
+        assert_eq!(inbox::settle_undecodable_replies(&reopened).unwrap(), 0);
+        assert!(actions::reply(&reopened, &id).unwrap().is_none());
+    }
+
     // Exercise the production split reader without polling the actor's input.
     // A write that loses to the reader's close still reports the refusal.
     pub(in crate::transport) async fn assert_unreadable_split_close(
@@ -1955,7 +2001,7 @@ pub(super) mod tests {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("split-terminal.redb");
         let store = open(&path);
-        let (link, mut tasks) = link_from(channel, store.clone(), ConnectionEpoch(3)).unwrap();
+        let (link, mut tasks) = fixture_reader(channel, &store);
         tokio::time::timeout(Duration::from_secs(2), &mut tasks.reader)
             .await
             .unwrap()

@@ -1801,3 +1801,51 @@ and request ID to a document raises a conflict and preserves the saved intent
 and journal position. This test exercises local request identity. APK
 2.26.37.71 distinguishes ordinary video in the `BZc` Message descriptor
 (field 9, type `BZE`), as recorded in [video media](video-media.md#schema-and-type-evidence).
+
+
+## Offline recovery of an unreadable IQ reply
+
+**Confirmed static, APK 2.26.43.72.** `0ln.A02` removes the pending callback
+by IQ ID before dispatch. `0ln.A01` then selects the result or error callback
+from the outer IQ type. The Rust listener has its own connection-local callback
+registry. Offline recovery is a Rust feature. Whether the APK attempts a
+comparable recovery after restart is **unknown**.
+[Callback claim](apk/2.26.43.72-iq-response-ownership/registry-A02.txt) ·
+[Response dispatch](apk/2.26.43.72-iq-response-ownership/registry-A01.txt).
+
+**Confirmed in Rust, offline.** Previously a reply saved while its action
+was still queued could settle it after a later reservation. The regression
+also reproduced this with a second observation of the original bytes. Local
+wall-clock time cannot establish which operation happened first.
+
+On the first capture the client reads the full root attribute list under the
+normal decoder limits. An IQ result or error with a recognized action ID can
+be bound to the exact reserved action row and the current account in the same
+store transaction as the captured frame. The network reader captures before
+queueing to the actor and checks the account that opened its connection.
+An unreadable header or a missing reservation leaves the frame unbound.
+A repeat preserves its first observation. Inspection reports the boolean
+`reservation_at_capture`. Older records without this evidence return false.
+
+`undecodable --settle-replies` requires the entire frame to decode. One
+transaction compares the saved evidence with the current action and account,
+checks for conflicting replies, and settles each eligible action once. Two
+wire encodings of the same decoded reply agree. Differing decoded replies to
+the same reservation leave it pending and the CLI reports the conflict count.
+Raw frames remain available for inspection. A reservation proves local state
+at first capture. Socket-write completion, callback timing, and the relative
+network arrival order of replies to different actions remain unverified by
+this evidence.
+
+Restart tests cover an early capture followed by a reservation, a compressed
+4,097-child reply refused by the old 4,096-child limit, changed account or
+action, a stale connection account, missing historical metadata, incomplete
+headers and bodies, a damaged local action, and conflicting result/error
+captures alongside a separate unambiguous reply. A local CLI fixture recovered
+one valid reply, reported one conflict, and settled zero on a second run.
+The loopback HTTP inspection returned four redacted captures from that store.
+Three carried first-capture reservation evidence.
+The encrypted peer fixture sends a real reserved IQ over an in-memory stream
+and returns a result truncated inside its child. Before the actor dequeues
+anything, the reader saves the binding. The incomplete result stays pending
+after restart. No WhatsApp account was contacted.
