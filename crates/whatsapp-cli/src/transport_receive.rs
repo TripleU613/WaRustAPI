@@ -953,11 +953,21 @@ pub(super) fn peer_keys(
     show: bool,
     refresh: bool,
     preview_identity_change: bool,
+    preview_pq_upgrade: bool,
 ) -> Result<(), Error> {
     let peer = whatsapp_api::model::jid::Jid::parse(chat)
         .map_err(|_| Error::invalid("peer_keys", "invalid chat JID"))?;
     if preview_identity_change {
         let preview = whatsapp_api::transport::peer_keys::identity_change_preview(&peer)?;
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&preview)
+                .map_err(|_| Error::invalid("peer_keys", "cannot encode request preview"))?
+        );
+        return Ok(());
+    }
+    if preview_pq_upgrade {
+        let preview = whatsapp_api::transport::peer_keys::pq_upgrade_preview(&peer)?;
         println!(
             "{}",
             serde_json::to_string_pretty(&preview)

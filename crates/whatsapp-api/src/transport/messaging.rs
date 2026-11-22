@@ -681,7 +681,7 @@ pub fn key_request_many_with_context(
     pq_support: bool,
     context: Option<&Jid>,
 ) -> crate::Result<Node> {
-    key_request_many_selected(recipients, &[], id, pq_support, context)
+    key_request_many_selected(recipients, &[], id, pq_support, context, false)
 }
 
 /// Build the legacy directory query, marking exactly the affected devices.
@@ -693,7 +693,29 @@ pub fn key_request_many_with_identity_changes(
     changed: &[Jid],
     id: &str,
 ) -> crate::Result<Node> {
-    key_request_many_selected(recipients, changed, id, false, None)
+    key_request_many_selected(recipients, changed, id, false, None, false)
+}
+
+/// Identity-change query that is also the APK's PQ session upgrade
+/// (`isPqSessionUpgrade=true`).
+///
+/// 43.72 writer `X.0v0.A00` marks a user `reason="pq"` when the job is a PQ
+/// session upgrade and the user is not in the identity-change set, and it
+/// throws before writing when the job does not also fetch PQ prekeys
+/// (`"a PQ session upgrade must fetch PQ prekeys"`, offsets 1706..171e). The
+/// native producer never supplies identity users on this path, but the writer
+/// checks identity first, so that precedence is preserved.
+///
+/// This client does not generate or upload KEM prekeys yet, so it cannot
+/// complete a PQ upgrade; the builder exists for the exact wire and is exposed
+/// as an offline preview only. No send path selects it.
+pub fn key_request_many_with_pq_upgrade(
+    recipients: &[Jid],
+    changed: &[Jid],
+    id: &str,
+    pq_support: bool,
+) -> crate::Result<Node> {
+    key_request_many_selected(recipients, changed, id, pq_support, None, true)
 }
 
 fn key_request_many_selected(
@@ -702,7 +724,15 @@ fn key_request_many_selected(
     id: &str,
     pq_support: bool,
     context: Option<&Jid>,
+    pq_upgrade: bool,
 ) -> crate::Result<Node> {
+    // Native X.0v0.A00 1706..171e refuses this combination before building.
+    if pq_upgrade && !pq_support {
+        return Err(crate::Error::invalid(
+            "key_request",
+            "a PQ session upgrade must fetch PQ prekeys",
+        ));
+    }
     if recipients.is_empty() || recipients.len() > KEY_QUERY_MAX_DEVICES {
         return Err(crate::Error::invalid(
             "key_request",
@@ -743,8 +773,12 @@ fn key_request_many_selected(
             .iter()
             .map(|jid| {
                 let node = Node::new("user").attr("jid", jid.clone());
+                // Writer order: identity membership first, then the PQ
+                // session-upgrade mark (170e..1806).
                 if changed.iter().any(|peer| same(jid, peer)) {
                     node.attr("reason", "identity")
+                } else if pq_upgrade {
+                    node.attr("reason", "pq")
                 } else {
                     node
                 }
@@ -3912,6 +3946,56 @@ mod tests {
                 "too-wide"
             )
             .is_err()
+        );
+    }
+
+    #[test]
+    fn pq_upgrade_marks_each_user_with_reason_pq_after_identity() {
+        let peer = Jid::parse("15551234567@s.whatsapp.net").unwrap();
+        let device = Jid::parse("15551234567:2@s.whatsapp.net").unwrap();
+        // 43.72 X.0v0.A00: pqsupport first, then per-user reason; identity
+        // membership is checked before the PQ upgrade mark.
+        let node = key_request_many_with_pq_upgrade(
+            &[peer.clone(), device.clone()],
+            std::slice::from_ref(&device),
+            "PQ-UPGRADE",
+            true,
+        )
+        .unwrap();
+        let key = node.child("key").expect("key child");
+        assert_eq!(
+            key.get_attr("pqsupport").and_then(|v| v.as_text()),
+            Some("true")
+        );
+        assert_eq!(key.get_attr("context_jid"), None);
+        let users = key.child_nodes();
+        assert_eq!(users.len(), 2);
+        assert_eq!(users[0].description, "user");
+        assert_eq!(
+            users[0].get_attr("reason").and_then(|v| v.as_text()),
+            Some("pq")
+        );
+        assert_eq!(
+            users[1].get_attr("reason").and_then(|v| v.as_text()),
+            Some("identity")
+        );
+        // Native guard 1706..171e: an upgrade without PQ prekey fetch throws.
+        let error =
+            key_request_many_with_pq_upgrade(std::slice::from_ref(&peer), &[], "PQ-REFUSE", false)
+                .unwrap_err();
+        assert!(error.to_string().contains("must fetch PQ prekeys"));
+        // The ordinary identity-change producer never emits reason="pq".
+        let plain = key_request_many_with_identity_changes(
+            &[peer.clone(), device.clone()],
+            std::slice::from_ref(&device),
+            "IDENTITY-ONLY",
+        )
+        .unwrap();
+        assert_eq!(
+            plain.child("key").unwrap().child_nodes()[0]
+                .get_attr("reason")
+                .and_then(|v| v.as_text()),
+            None
         );
     }
 

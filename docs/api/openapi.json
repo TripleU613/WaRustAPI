@@ -5970,6 +5970,45 @@
         },
         "additionalProperties": false
       },
+      "PqUpgradePreview": {
+        "type": "object",
+        "description": "Redacted offline PQ session-upgrade key-query preview (APK 43.72 X.0v0.A00 isPqSessionUpgrade path); not server acceptance, not a PQ session, and not sent.",
+        "required": [
+          "namespace",
+          "iq_type",
+          "user_reason",
+          "pq_support",
+          "encoded_bytes"
+        ],
+        "properties": {
+          "namespace": {
+            "type": "string",
+            "const": "encrypt",
+            "description": "Fixed request namespace."
+          },
+          "iq_type": {
+            "type": "string",
+            "const": "get",
+            "description": "Fixed IQ operation type."
+          },
+          "user_reason": {
+            "type": "string",
+            "const": "pq",
+            "description": "Reason on each user child when the job is a PQ session upgrade (identity membership takes precedence)."
+          },
+          "pq_support": {
+            "type": "boolean",
+            "const": true,
+            "description": "pqsupport=\"true\" is mandatory: the native writer throws when an upgrade does not fetch PQ prekeys."
+          },
+          "encoded_bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Comparison-dictionary encoded bytes with a fixed offline selector; excludes output of address/wire content."
+          }
+        },
+        "additionalProperties": false
+      },
       "IdentityNotificationKeyReadInspection": {
         "type": "object",
         "description": "Offline CLI actions --show response for an identity_refresh action only; no HTTP serving or session adoption is asserted.",
@@ -14968,7 +15007,7 @@
           "Account Safety"
         ],
         "summary": "Queue or inspect one peer directory key query (offline)",
-        "description": "peer-keys queues a normal encrypt/key IQ on the existing once-only action queue; listen transmits it over authenticated Noise. Repeated queueing returns the original action ID locally. --show inspects the latest saved result and current PN/LID pin matches without adopting a key, deriving a session or sending a chat. --refresh is explicit and permitted only after a successful valid signed prior bundle; all old replies remain encrypted. Queued, uncertain, refused, invalid and missing prior queries cannot be refreshed. Output omits peer addresses, public key bytes and raw server error text. Fingerprints are SHA-256 diagnostics, not safety numbers or human verification. This is CLI-only; no HTTP route exists. This full prekey-bundle query does not implement APK 37.71 encrypt/identity recovery after ADV verification failure; peer-identity-query now stages that distinct read without adopting keys; automatic recovery/application remains unfinished. See docs/protocol/cross-device-sync.md#adv-identity-follow-up-and-raw-id-cleanup-2026-10-07. Shared directory bundle parsing now requires one exact user/server/agent/device match, ignores only wire-encoding kind, rejects duplicate requested-user rows or optional one-time keys and contradictory outer errors, while allowing other devices in a batch. These are local ambiguity guards; APK duplicate-reply policy remains unknown. Parsing failure never authorizes pin/session mutation, replay or query reset; peer-keys inspection reports existing invalid_reply. Evidence docs/protocol/peer-identity.md#exact-directory-bundle-selection-2026-10-07. Primary address correlation now compares exact user/server/agent/device components across supported Plain and AD_JID encodings, rather than comparing JidKind as an identity. Zero-component AD_JID is a primary wire encoding; unrelated PN/LID/hosted namespaces, users, agents and companions remain distinct. Unsupported FB/interop kinds are refused locally before queueing. Identity-only inspection still requires exactly one user and never adopts keys or creates aliases. The key-directory per-user refusal path now uses the same component comparison so a matching AD_JID-zero refusal is server_refused instead of invalid_reply. Successful signed-key parsing already used component matching and is unchanged. This is a local correlation correction, not complete native APK wire factory recovery or a new HTTP route. Evidence docs/protocol/peer-identity.md#primary-wire-address-correlation-2026-10-08. Offline retained-state validation after rebuilding left the existing PN identity-only result primary_identity_received/no failure and the LID staged inspection absent; action rows, receipts and pending outbox unchanged. No new identity query or live session was run for this correction. Fresh AD identity replies remain unverified. Saved refusal inspection now requires correlated IQ evidence and an unambiguous refusal context: a unique root error, or exactly one list, one matching primary user and one selected error child. Explicit IQ type error may omit its numeric code. Foreign users may coexist but cannot supply the selected peer code. Malformed/ambiguous replies expose invalid_reply with failure envelope, user_set or error_node; unsupported successful bundles expose failure bundle. These are local read-only guards, not APK duplicate-policy claims. Existing generic action history and retry reservations remain unchanged. Exposed through existing peer-keys --show; no new network request or HTTP route. Evidence docs/protocol/peer-identity.md#directory-refusal-attribution-2026-10-08. Identity-change privacy-token refresh remains unported: APK 37.71 GeneratePrivacyTokenJob uses separate outbound issue/send timestamps, not our incoming token byte records. Threshold formulas and job callback/retry branches are now traced in docs/protocol/identity-token-refresh.md; active properties, canonical counterpart gates and base terminal recovery remain unknown. This offline operation creates no refresh job or request. Requires a nonempty peer user in addition to the primary PN namespace/components; server-only destinations refuse locally before store access. The peer-key normal/refresh queue and directory/pin inspection share this prerequisite. Fixed local diagnostic: requires a nonempty peer user; server-only JID is not a peer. Offline regression preserves stored pins/sessions and uncertain query reservations across reopen. No new HTTP route or live validation. Evidence: docs/protocol/peer-identity.md#empty-peer-guard-on-key-queries-and-pin-inspection-2026-10-09. --preview-identity-change invokes the APK 2.26.37.71 legacy key-query builder with user/@reason=identity before opening a store; no action, transmission or pin adoption. Output is a redacted IdentityChangePreview with namespace, iq_type, user_reason and encoded_bytes using a fixed offline selector. Conflicts with --show and --refresh. The public messaging::key_request_many_with_identity_changes marks only devices in its changed subset; unknown/mismatched changes and local bounds refuse with fixed diagnostics. Native bulk callback authentication, automatic notification refresh, PQ/context and deferred ACK are still unported. Offline fixture/codec/CLI tested; fresh live refresh unverified. Evidence: docs/protocol/bulk-prekey-refresh.md. Key-directory parsing now defaults only an absent selected-user type node to classic key type 5 (APK 2.26.37.71 Bot.A03). Present malformed, duplicate or unsupported types still refuse; exact peer correlation and signed-key verification/pin policy are unchanged separate gates. Failing-before synthetic regression verifies absent/explicit 5 and forged-signature refusal. No fresh live absent-type reply was observed. Native Cio prerequisite sync, CPB hybrid admission and automatic bulk notification refresh remain unported; callback success alone is not key adoption. Evidence: docs/protocol/bulk-prekey-processing.md. IQ settlement correction (2026-11-04, offline): only result/error settle an original sent action. Missing, unknown, get or set types with a matching ID leave the action sent with an unknown outcome and cannot authorize a repeat query; valid later responses may still settle. App-state patch reservation additionally requires reverified prepared state and held baseline. See docs/protocol/app-state-patch-atomicity.md.",
+        "description": "peer-keys queues a normal encrypt/key IQ on the existing once-only action queue; listen transmits it over authenticated Noise. Repeated queueing returns the original action ID locally. --show inspects the latest saved result and current PN/LID pin matches without adopting a key, deriving a session or sending a chat. --refresh is explicit and permitted only after a successful valid signed prior bundle; all old replies remain encrypted. Queued, uncertain, refused, invalid and missing prior queries cannot be refreshed. Output omits peer addresses, public key bytes and raw server error text. Fingerprints are SHA-256 diagnostics, not safety numbers or human verification. This is CLI-only; no HTTP route exists. This full prekey-bundle query does not implement APK 37.71 encrypt/identity recovery after ADV verification failure; peer-identity-query now stages that distinct read without adopting keys; automatic recovery/application remains unfinished. See docs/protocol/cross-device-sync.md#adv-identity-follow-up-and-raw-id-cleanup-2026-10-07. Shared directory bundle parsing now requires one exact user/server/agent/device match, ignores only wire-encoding kind, rejects duplicate requested-user rows or optional one-time keys and contradictory outer errors, while allowing other devices in a batch. These are local ambiguity guards; APK duplicate-reply policy remains unknown. Parsing failure never authorizes pin/session mutation, replay or query reset; peer-keys inspection reports existing invalid_reply. Evidence docs/protocol/peer-identity.md#exact-directory-bundle-selection-2026-10-07. Primary address correlation now compares exact user/server/agent/device components across supported Plain and AD_JID encodings, rather than comparing JidKind as an identity. Zero-component AD_JID is a primary wire encoding; unrelated PN/LID/hosted namespaces, users, agents and companions remain distinct. Unsupported FB/interop kinds are refused locally before queueing. Identity-only inspection still requires exactly one user and never adopts keys or creates aliases. The key-directory per-user refusal path now uses the same component comparison so a matching AD_JID-zero refusal is server_refused instead of invalid_reply. Successful signed-key parsing already used component matching and is unchanged. This is a local correlation correction, not complete native APK wire factory recovery or a new HTTP route. Evidence docs/protocol/peer-identity.md#primary-wire-address-correlation-2026-10-08. Offline retained-state validation after rebuilding left the existing PN identity-only result primary_identity_received/no failure and the LID staged inspection absent; action rows, receipts and pending outbox unchanged. No new identity query or live session was run for this correction. Fresh AD identity replies remain unverified. Saved refusal inspection now requires correlated IQ evidence and an unambiguous refusal context: a unique root error, or exactly one list, one matching primary user and one selected error child. Explicit IQ type error may omit its numeric code. Foreign users may coexist but cannot supply the selected peer code. Malformed/ambiguous replies expose invalid_reply with failure envelope, user_set or error_node; unsupported successful bundles expose failure bundle. These are local read-only guards, not APK duplicate-policy claims. Existing generic action history and retry reservations remain unchanged. Exposed through existing peer-keys --show; no new network request or HTTP route. Evidence docs/protocol/peer-identity.md#directory-refusal-attribution-2026-10-08. Identity-change privacy-token refresh remains unported: APK 37.71 GeneratePrivacyTokenJob uses separate outbound issue/send timestamps, not our incoming token byte records. Threshold formulas and job callback/retry branches are now traced in docs/protocol/identity-token-refresh.md; active properties, canonical counterpart gates and base terminal recovery remain unknown. This offline operation creates no refresh job or request. Requires a nonempty peer user in addition to the primary PN namespace/components; server-only destinations refuse locally before store access. The peer-key normal/refresh queue and directory/pin inspection share this prerequisite. Fixed local diagnostic: requires a nonempty peer user; server-only JID is not a peer. Offline regression preserves stored pins/sessions and uncertain query reservations across reopen. No new HTTP route or live validation. Evidence: docs/protocol/peer-identity.md#empty-peer-guard-on-key-queries-and-pin-inspection-2026-10-09. --preview-identity-change invokes the APK 2.26.37.71 legacy key-query builder with user/@reason=identity before opening a store; no action, transmission or pin adoption. Output is a redacted IdentityChangePreview with namespace, iq_type, user_reason and encoded_bytes using a fixed offline selector. Conflicts with --show and --refresh. The public messaging::key_request_many_with_identity_changes marks only devices in its changed subset; unknown/mismatched changes and local bounds refuse with fixed diagnostics. Native bulk callback authentication, automatic notification refresh, PQ/context and deferred ACK are still unported. Offline fixture/codec/CLI tested; fresh live refresh unverified. Evidence: docs/protocol/bulk-prekey-refresh.md. Key-directory parsing now defaults only an absent selected-user type node to classic key type 5 (APK 2.26.37.71 Bot.A03). Present malformed, duplicate or unsupported types still refuse; exact peer correlation and signed-key verification/pin policy are unchanged separate gates. Failing-before synthetic regression verifies absent/explicit 5 and forged-signature refusal. No fresh live absent-type reply was observed. Native Cio prerequisite sync, CPB hybrid admission and automatic bulk notification refresh remain unported; callback success alone is not key adoption. Evidence: docs/protocol/bulk-prekey-processing.md. IQ settlement correction (2026-11-04, offline): only result/error settle an original sent action. Missing, unknown, get or set types with a matching ID leave the action sent with an unknown outcome and cannot authorize a repeat query; valid later responses may still settle. App-state patch reservation additionally requires reverified prepared state and held baseline. See docs/protocol/app-state-patch-atomicity.md. --preview-pq-upgrade builds the APK 43.72 PQ session-upgrade key query offline: pqsupport=true on key plus reason=pq on each user child (identity membership takes precedence), with the native refusal when an upgrade does not also fetch PQ prekeys. This client cannot complete a PQ upgrade until it generates/uploads KEM prekeys, so no send path selects this builder; preview only. The earlier <user><pq/></user> guess is refuted by the 43.72 smali. Evidence docs/protocol/key-query-context.md#pq-session-upgrade-marker-2026-11-22.",
         "operationId": "peerKeys",
         "x-cli": "whatsapp-cli peer-keys",
         "x-transport": [
@@ -15022,7 +15061,16 @@
           {
             "name": "preview-identity-change",
             "in": "query",
-            "description": "Offline request-shape preview before store access; mutually exclusive with show/refresh. Does not queue or transmit.",
+            "description": "Offline request-shape preview before store access; mutually exclusive with show/refresh/preview-pq-upgrade. Does not queue or transmit.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "preview-pq-upgrade",
+            "in": "query",
+            "description": "Offline PQ session-upgrade request-shape preview (pqsupport=true plus reason=pq per user) before store access; mutually exclusive with show/refresh/preview-identity-change. Does not queue or transmit, and requires no KEM material.",
             "schema": {
               "type": "boolean",
               "default": false
@@ -15057,6 +15105,9 @@
                     },
                     {
                       "$ref": "#/components/schemas/IdentityChangePreview"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PqUpgradePreview"
                     }
                   ]
                 }
@@ -15068,7 +15119,9 @@
           "whatsapp_api::transport::peer_keys::queue",
           "whatsapp_api::transport::peer_keys::inspect",
           "whatsapp_api::transport::peer_keys::identity_change_preview",
-          "whatsapp_api::transport::messaging::key_request_many_with_identity_changes"
+          "whatsapp_api::transport::peer_keys::pq_upgrade_preview",
+          "whatsapp_api::transport::messaging::key_request_many_with_identity_changes",
+          "whatsapp_api::transport::messaging::key_request_many_with_pq_upgrade"
         ]
       }
     },

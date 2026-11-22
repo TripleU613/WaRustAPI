@@ -56,6 +56,47 @@ pub struct IdentityChangePreview {
     pub encoded_bytes: usize,
 }
 
+/// Redacted offline preview of the PQ session-upgrade key query. No store,
+/// action or account is opened.
+#[derive(Debug, Serialize)]
+pub struct PqUpgradePreview {
+    /// Fixed IQ namespace.
+    pub namespace: &'static str,
+    /// Fixed IQ type.
+    pub iq_type: &'static str,
+    /// Fixed selected-user reason; no peer address is printed.
+    pub user_reason: &'static str,
+    /// `pqsupport="true"` is mandatory on this path.
+    pub pq_support: bool,
+    /// Encoded comparison request size with a fixed offline selector.
+    pub encoded_bytes: usize,
+}
+
+/// Build the 43.72 PQ session-upgrade query offline (`isPqSessionUpgrade`):
+/// `pqsupport="true"` on `<key>` and `reason="pq"` on each user. The native
+/// writer refuses the request without PQ prekeys (1706..171e), so the same
+/// combination is refused here. Preview only: this client cannot complete a PQ
+/// upgrade until it generates and uploads KEM prekeys, so no send path selects
+/// this builder.
+pub fn pq_upgrade_preview(peer: &Jid) -> Result<PqUpgradePreview> {
+    validate(peer)?;
+    let node = messaging::key_request_many_with_pq_upgrade(
+        std::slice::from_ref(peer),
+        &[],
+        "offline-pq-upgrade",
+        true,
+    )?;
+    let wire = crate::binary::Encoder::new(crate::binary::TokenDictionary::comparison_2_26_37_71())
+        .encode(&node)?;
+    Ok(PqUpgradePreview {
+        namespace: "encrypt",
+        iq_type: "get",
+        user_reason: "pq",
+        pq_support: true,
+        encoded_bytes: wire.len(),
+    })
+}
+
 /// Inspect the missing native identity-change request shape without queueing.
 /// APK 37.71 0y0.A00 17b6..17c8; bulk-prekey-refresh.md records authority gaps.
 pub fn identity_change_preview(peer: &Jid) -> Result<IdentityChangePreview> {
@@ -410,6 +451,28 @@ mod tests {
         store::{MasterKey, OpenOptions, StaticKeySource},
     };
     use wacore_libsignal::protocol::{IdentityKeyPair, KeyPair};
+    #[test]
+    fn pq_upgrade_preview_requires_pq_support_and_prints_no_address() {
+        let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();
+        let preview = pq_upgrade_preview(&peer).unwrap();
+        assert_eq!(preview.user_reason, "pq");
+        assert!(preview.pq_support);
+        assert!(preview.encoded_bytes > 0);
+        let json = serde_json::to_string(&preview).unwrap();
+        assert!(!json.contains(&peer.user));
+        assert!(!json.contains("offline-pq-upgrade"));
+        // Native X.0v0.A00 refuses a PQ upgrade that does not fetch PQ prekeys.
+        let error = messaging::key_request_many_with_pq_upgrade(
+            std::slice::from_ref(&peer),
+            &[],
+            "offline-pq-upgrade",
+            false,
+        )
+        .unwrap_err()
+        .to_string();
+        assert!(error.contains("must fetch PQ prekeys"), "{error}");
+    }
+
     #[test]
     fn identity_change_preview_is_redacted_and_has_no_store_dependency() {
         let peer = Jid::parse("15555550100@s.whatsapp.net").unwrap();

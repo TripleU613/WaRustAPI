@@ -302,8 +302,12 @@ enum Cmd {
     #[cfg(feature = "experimental-transport")]
     PeerKeys {
         /// Preview the identity-change request offline without opening a store.
-        #[arg(long, conflicts_with_all = ["show", "refresh"])]
+        #[arg(long, conflicts_with_all = ["show", "refresh", "preview_pq_upgrade"])]
         preview_identity_change: bool,
+        /// Preview the PQ session-upgrade request (pqsupport + reason=pq)
+        /// offline without opening a store or sending.
+        #[arg(long, conflicts_with_all = ["show", "refresh", "preview_identity_change"])]
+        preview_pq_upgrade: bool,
         /// Primary phone-number chat JID, never printed in output.
         #[arg(long)]
         chat: String,
@@ -1943,7 +1947,15 @@ async fn run(cli: Cli) -> Result<(), Error> {
             show,
             refresh,
             preview_identity_change,
-        } => transport_receive::peer_keys(&cli, chat, *show, *refresh, *preview_identity_change),
+            preview_pq_upgrade,
+        } => transport_receive::peer_keys(
+            &cli,
+            chat,
+            *show,
+            *refresh,
+            *preview_identity_change,
+            *preview_pq_upgrade,
+        ),
         #[cfg(feature = "experimental-transport")]
         Cmd::PeerIdentityQuery { chat, show } => {
             transport_receive::peer_identity_query(&cli, chat, *show)
