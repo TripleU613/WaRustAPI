@@ -454,7 +454,7 @@ async fn read_nonempty_record<S: AsyncRead + AsyncWrite + Unpin>(
             return Ok(frame);
         }
         // Buffered empty records must still allow cancellation and deadline polling.
-        tokio::task::yield_now().await;
+        channel.yield_after_empty_record().await;
     }
 }
 

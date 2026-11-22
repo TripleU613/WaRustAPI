@@ -181,6 +181,14 @@ impl<S: AsyncRead + AsyncWrite + Unpin> EncryptedConnection<S> {
         self.inner = None;
     }
 
+    /// Keep cancellation between records consistent with cancellation inside a read.
+    #[cfg(feature = "experimental-signal-crypto")]
+    pub(crate) async fn yield_after_empty_record(&mut self) {
+        let connection = self.inner.take();
+        tokio::task::yield_now().await;
+        self.inner = connection;
+    }
+
     /// Send one encrypted binary record. An error permanently consumes the channel.
     pub async fn write(&mut self, plaintext: &[u8]) -> Result<(), TransportError> {
         let (mut socket, mut noise) = self.inner.take().ok_or(TransportError::Closed)?;
@@ -368,6 +376,7 @@ mod tests {
     enum RecordCase {
         Exchange,
         CancelRead,
+        CancelAfterEmpty,
         ExpiredPrewrite,
         PartialWrite,
         StalledWrite,
@@ -608,12 +617,20 @@ mod tests {
             } else {
                 assert_eq!(plain.as_slice(), b"local record fixture");
             }
-            if matches!(record_case, RecordCase::EmptyRecord { .. }) {
+            if matches!(
+                record_case,
+                RecordCase::EmptyRecord { .. } | RecordCase::CancelAfterEmpty
+            ) {
                 let empty = transport.encrypt(&[]).unwrap();
                 server
                     .write_all(&codec.encode(&empty, None).unwrap())
                     .await
                     .unwrap();
+            }
+            if matches!(record_case, RecordCase::CancelAfterEmpty) {
+                cut_ready.send(()).unwrap();
+                assert!(reader.read_frame(&mut server).await.unwrap().is_none());
+                return;
             }
             if matches!(record_case, RecordCase::EmptyRecord { timeout: true, .. }) {
                 assert!(reader.read_frame(&mut server).await.unwrap().is_none());
@@ -881,6 +898,22 @@ mod tests {
                     writer.write(b"closed").await,
                     Err(TransportError::Closed)
                 ));
+            } else if matches!(record_case, RecordCase::CancelAfterEmpty) {
+                channel.write(b"local record fixture").await.unwrap();
+                cut_started.await.unwrap();
+                // The peer has already buffered the complete empty record. Poll through
+                // decryption to the cooperative yield, then drop the pending stanza read.
+                tokio::select! {
+                    biased;
+                    _ = tokio::task::unconstrained(super::super::messaging::read_frame(&mut channel)) => {
+                        panic!("an empty record completed the stanza read");
+                    }
+                    () = std::future::ready(()) => {}
+                }
+                assert!(matches!(
+                    channel.write(b"after cancellation").await,
+                    Err(TransportError::Closed)
+                ));
             } else if let RecordCase::EmptyRecord {
                 timeout: true,
                 direct,
@@ -1115,6 +1148,11 @@ mod tests {
             )
             .await;
         }
+    }
+
+    #[tokio::test]
+    async fn cancellation_after_buffered_empty_record_closes_channel() {
+        exchange(false, false, RecordCase::CancelAfterEmpty).await;
     }
 
     #[tokio::test]

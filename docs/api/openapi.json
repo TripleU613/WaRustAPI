@@ -20340,7 +20340,7 @@
       "whatsapp_api::transport::messaging::read_node",
       "whatsapp_api::transport::messaging::read_frame"
     ],
-    "description": "Pinned123.A08 skips authenticated zero-length plaintext. Normal split reader and both stanza receive APIs now skip before decoding/capture/routing, retaining crypto counter consumption and caller-owned deadlines with cooperative cancellation. Raw encrypted read and pure offline decoder semantics unchanged. Failing-before local encrypted IQ fixture and bounded pending-read cancellation controls retained; no new send, retry, settlement or live operation. New encrypted fixtures cover low-level APIs, not an end-to-end actor/socket empty-record test.",
+    "description": "Pinned123.A08 skips authenticated zero-length plaintext. Cancelling read_node or read_frame during the yield between empty records closes the low-level encrypted connection. Normal split reader and both stanza receive APIs now skip before decoding/capture/routing, retaining crypto counter consumption and caller-owned deadlines with cooperative cancellation. Raw encrypted read and pure offline decoder semantics unchanged. Failing-before local encrypted IQ fixture and bounded pending-read cancellation controls retained; no new send, retry, settlement or live operation. New encrypted fixtures cover low-level APIs, not an end-to-end actor/socket empty-record test.",
     "evidence": "docs/protocol/frame-admission.md#authenticated-empty-records-are-skipped-2026-11-06"
   },
   "x-compression-failure-admission": {

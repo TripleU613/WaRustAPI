@@ -134,7 +134,9 @@ literal IQ through BOTH read_node and read_frame, demonstrating consecutive
 record decryption with correct counters. A second fixture supplies an empty
 record and no stanza: both bounded reads expire instead of returning a false
 diagnostic; cancellation during the following pending read consumes the channel
-and later writes refuse. Existing request-deadline regression also remains.
+and later writes refuse. The same close applies if cancellation arrives during
+the cooperative yield after decryption. The fixture buffers the complete empty
+record before polling and dropping the stanza read at that yield.
 These encrypted fixtures exercise low-level APIs; the normal split-reader guard
 is code-reviewed and covered by the broader workspace suite, not claimed as a
 new end-to-end actor/socket empty-record test.
