@@ -368,7 +368,8 @@ fn listen_terminal_error(state: &whatsapp_api::runtime::ConnectionState) -> Erro
             // runtime::sanitized supplies these local labels. Do not echo an
             // arbitrary reason (even a bounded string can contain a credential).
             let cause = match reason.as_str() {
-                "invalid input for `connection`: server ended session; reason preserved encrypted; no reconnect" => {
+                "invalid input for `connection`: server ended session; reason preserved encrypted; no reconnect"
+                | "invalid input for `connection`: server ended session; no reconnect" => {
                     "server_ended_session"
                 }
                 "transport: peer closed the connection" => "peer_closed",
@@ -3155,6 +3156,10 @@ mod tests {
                 "transport_failure",
             ),
             ("timeout after 20s", "timeout"),
+            (
+                "invalid input for `connection`: server ended session; no reconnect",
+                "server_ended_session",
+            ),
             ("operation cancelled", "cancelled_or_worker_stopped"),
             ("PRIVATE TOKEN 15555550101", "unknown"),
         ] {

@@ -372,6 +372,10 @@ mod tests {
         PartialWrite,
         StreamEnd,
         TruncatedFailure,
+        DecodedEnd {
+            tag: &'static str,
+            damaged_observation: bool,
+        },
         CapturedActionReply,
         UnreadableThenEnd,
         MediaRefresh {
@@ -609,6 +613,14 @@ mod tests {
                     .await
                     .unwrap();
             }
+            let terminal = match record_case {
+                RecordCase::DecodedEnd { tag, .. } => crate::binary::Encoder::new(
+                    crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                )
+                .encode(&crate::binary::Node::new(tag).attr("appeal_token", "offline-test-token"))
+                .unwrap(),
+                _ => Vec::new(),
+            };
             let reply: &[u8] = match record_case {
                 RecordCase::MediaRefresh { .. } => &media_reply,
                 RecordCase::MalformedStructure { .. } => &malformed,
@@ -627,6 +639,7 @@ mod tests {
                     checksum: false, ..
                 } => &[2, 0],
                 RecordCase::EmptyRecord { .. } => &[0, 0xF8, 1, 25],
+                RecordCase::DecodedEnd { .. } => &terminal,
                 RecordCase::TruncatedFailure => b"\x00\xf8\x02\xfc\x07failure",
                 RecordCase::StreamEnd | RecordCase::UnreadableThenEnd => &[0, 0xF8, 1, 2],
                 RecordCase::InvalidFrame {
@@ -648,6 +661,10 @@ mod tests {
                     }
             ) {
                 written.unwrap();
+            }
+            if matches!(record_case, RecordCase::DecodedEnd { .. }) {
+                // Keep the peer open: the client must close its own writer.
+                assert!(reader.read_frame(&mut server).await.unwrap().is_none());
             }
         });
         let mut socket_limits = SocketLimits::default();
@@ -870,6 +887,18 @@ mod tests {
                     Err(TransportError::Closed)
                 ));
                 assert!(matches!(channel.read().await, Err(TransportError::Closed)));
+            } else if let RecordCase::DecodedEnd {
+                tag,
+                damaged_observation,
+            } = record_case
+            {
+                channel.write(b"local record fixture").await.unwrap();
+                super::super::connection::tests::assert_decoded_split_close(
+                    channel,
+                    tag,
+                    damaged_observation,
+                )
+                .await;
             } else if matches!(record_case, RecordCase::CapturedActionReply) {
                 super::super::connection::tests::assert_reader_captures_action_before_dispatch(
                     channel,
@@ -1087,6 +1116,25 @@ mod tests {
     #[tokio::test]
     async fn encrypted_reader_binds_unreadable_reply_before_actor_dispatch() {
         exchange(false, false, RecordCase::CapturedActionReply).await;
+    }
+
+    #[tokio::test]
+    async fn decoded_server_end_outweighs_concurrent_writer_failure() {
+        for (tag, damaged_observation) in [
+            ("failure", false),
+            ("stream:error", false),
+            ("failure", true),
+        ] {
+            exchange(
+                false,
+                false,
+                RecordCase::DecodedEnd {
+                    tag,
+                    damaged_observation,
+                },
+            )
+            .await;
+        }
     }
 
     #[tokio::test]

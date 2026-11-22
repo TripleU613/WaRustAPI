@@ -876,6 +876,10 @@ fn link_from<S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin + Send + 's
     let (incoming_tx, incoming_rx) = mpsc::channel(64);
     let reconnect_stop = Arc::new(OnceLock::new());
     let reader_stop = reconnect_stop.clone();
+    let authority = EpochWriteAuthority {
+        store,
+        expected: epoch_account,
+    };
     let reader_task = tokio::spawn(async move {
         let mut unreadable = UnreadableStanza::default();
         loop {
@@ -891,6 +895,19 @@ fn link_from<S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin + Send + 's
                 Ok(None) => Err(Error::Transport(super::TransportError::PeerClosed)),
                 Err(e) => Err(e.into()),
             };
+            if let Ok(Inbound::Node(node)) = &next
+                && is_server_end(node)
+            {
+                // The writer may fail while the actor is still draining earlier
+                // traffic. Publish the stop before closing either socket half.
+                let _ = reader_stop.set(SERVER_ENDED);
+                reader.close();
+                let error = record_server_end(&authority, epoch, node)
+                    .err()
+                    .unwrap_or_else(|| Error::invalid("connection", SERVER_END_CAPTURED));
+                let _ = incoming_tx.send(Err(error)).await;
+                break;
+            }
             let reason = unreadable.observe(&next);
             if let Some(reason) = reason {
                 // Publish before closing the writer. Its Closed error may reach
@@ -913,7 +930,7 @@ fn link_from<S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin + Send + 's
             // actor. Its reservation can change while the actor drains its queue.
             if let Ok(Inbound::Undecodable { frame, class, .. }) = &next
                 && let Err(error) = super::inbox::preserve_undecodable_for_account(
-                    &store,
+                    &authority.store,
                     frame,
                     class,
                     Some(epoch),
@@ -1002,20 +1019,40 @@ pub async fn run(
     tasks.finish(result)
 }
 
+const SERVER_ENDED: &str = "server ended session; no reconnect";
+const SERVER_END_CAPTURED: &str = "server ended session; reason preserved encrypted; no reconnect";
+
+fn is_server_end(node: &Node) -> bool {
+    matches!(node.description.as_str(), "failure" | "stream:error")
+}
+
+fn record_server_end(
+    authority: &EpochWriteAuthority,
+    epoch: ConnectionEpoch,
+    node: &Node,
+) -> Result<()> {
+    super::inbox::preserve_in_epoch(&authority.store, node, epoch)?;
+    authority.check()?;
+    if node.description == "failure"
+        && let Some(token) = node.get_attr("appeal_token").and_then(|v| v.as_text())
+    {
+        persist_live_failure_token(&authority.store, &authority.expected, token)?;
+    }
+    Ok(())
+}
+
 // The authenticated failure was captured before this optional credential update.
 // Never attach its token to another account or synthesize a replacement account.
 fn persist_live_failure_token(
     store: &ProtocolStore,
-    initiating_account: &AccountRecord,
+    expected: &[u8; 32],
     token: &str,
 ) -> Result<()> {
-    let expected =
-        super::account_authority::fingerprint(store.generation(), Some(initiating_account))?;
     let token_bytes = zeroize::Zeroizing::new(token.as_bytes().to_vec());
     let now = Timestamp::now();
     store.write(|tx| {
         let mut account = AccountRecord::load_in_write(tx)?.ok_or(Error::NotRegistered)?;
-        if super::account_authority::fingerprint(tx.generation(), Some(&account))? != expected {
+        if super::account_authority::fingerprint(tx.generation(), Some(&account))? != *expected {
             return Err(Error::invalid(
                 "connection",
                 "account changed before failure token persistence",
@@ -1346,6 +1383,12 @@ pub(crate) async fn drive(
                         continue;
                     }
                 };
+                if is_server_end(&node) {
+                    // Node-only links inject here. The encrypted reader handles
+                    // its own terminal nodes before queueing the resulting error.
+                    record_server_end(&epoch_authority, epoch, &node)?;
+                    return Err(Error::invalid("connection", SERVER_END_CAPTURED));
+                }
                 let capture = super::inbox::preserve_in_epoch(&store, &node, epoch)?;
                 // Raw evidence survives a stale connection. Its old account may
                 // not authorize clock, response, crypto or notification effects.
@@ -1364,14 +1407,6 @@ pub(crate) async fn drive(
                         .attr("to", crate::model::jid::Jid::parse("s.whatsapp.net")?);
                     link.send(&pong).await?;
                     continue;
-                }
-                if matches!(node.description.as_str(), "failure" | "stream:error") {
-                    if node.description == "failure"
-                        && let Some(token) = node.get_attr("appeal_token").and_then(|v| v.as_text())
-                    {
-                        persist_live_failure_token(&store, &account, token)?;
-                    }
-                    return Err(Error::invalid("connection", "server ended session; reason preserved encrypted; no reconnect"));
                 }
                 // A reserved group reaction waits for each out-of-band
                 // distribution's ACK; the ACK is then processed as usual.
@@ -2030,6 +2065,99 @@ pub(super) mod tests {
             .collect::<Vec<_>>();
         classes.sort_unstable();
         assert_eq!(classes, expected_classes);
+    }
+
+    pub(in crate::transport) async fn assert_decoded_split_close(
+        channel: EncryptedConnection<tokio::io::DuplexStream>,
+        tag: &str,
+        damaged_observation: bool,
+    ) {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("decoded-end.redb");
+        let store = open(&path);
+        let node = Node::new(tag).attr("appeal_token", "offline-test-token");
+        let capture = format!(
+            "inbound:sha256:{}",
+            hex::encode(sha2::Sha256::digest(encode(&node).unwrap()))
+        );
+        if damaged_observation {
+            let digest = capture.strip_prefix("inbound:sha256:").unwrap();
+            store
+                .write(|tx| {
+                    tx.put(
+                        Table::Checkpoints,
+                        format!("terminal-observation:{digest}").as_bytes(),
+                        1,
+                        b"broken",
+                    )
+                })
+                .unwrap();
+        }
+        let (mut link, mut tasks) = fixture_reader(channel, &store);
+        // A busy actor has not read its input, and loses a concurrent write.
+        tokio::time::timeout(Duration::from_secs(2), &mut tasks.reader)
+            .await
+            .unwrap()
+            .unwrap();
+        let write = link.send(&Node::new("presence")).await;
+        assert!(matches!(
+            write,
+            Err(Error::Transport(TransportError::Closed))
+        ));
+        let error = tasks.finish(write).unwrap_err();
+        assert!(
+            !error.is_recoverable_by_reconnect(),
+            "{tag} lost to a write: {error}"
+        );
+        assert!(!error.to_string().contains("offline-test-token"));
+        let received = link
+            .incoming
+            .recv()
+            .await
+            .expect("reader reported terminal outcome");
+        match received {
+            Err(Error::Storage(_)) if damaged_observation => {}
+            Err(Error::InvalidInput {
+                field: "connection",
+                reason,
+            }) if !damaged_observation => assert_eq!(reason, SERVER_END_CAPTURED),
+            _ => panic!("unexpected terminal outcome"),
+        }
+        assert!(link.incoming.recv().await.is_none());
+        drop(link);
+        drop(tasks);
+        drop(store);
+        let reopened = identity_store(&path);
+        let wire: Option<Vec<u8>> = reopened
+            .read(|tx| tx.get_json(Table::Checkpoints, capture.as_bytes(), 1))
+            .unwrap();
+        if damaged_observation {
+            assert!(wire.is_none(), "failed capture transaction rolled back");
+            assert!(
+                reopened
+                    .read(AccountRecord::load)
+                    .unwrap()
+                    .unwrap()
+                    .credentials
+                    .is_empty()
+            );
+            return;
+        }
+        assert_eq!(wire.unwrap(), encode(&node).unwrap());
+        let observation = super::super::inbox::terminal_observation(&reopened, capture.as_bytes())
+            .unwrap()
+            .unwrap();
+        assert_eq!(observation.observations, 1);
+        assert_eq!(observation.last_epoch, ConnectionEpoch(3));
+        assert!(observation.latest_terminal);
+        let saved = reopened.read(AccountRecord::load).unwrap().unwrap();
+        assert_eq!(
+            saved
+                .credentials
+                .iter()
+                .any(|c| c.name == "noise_appeal_token"),
+            tag == "failure"
+        );
     }
 
     fn identity_store(path: &std::path::Path) -> ProtocolStore {

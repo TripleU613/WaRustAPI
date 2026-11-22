@@ -1,3 +1,5 @@
+**Server-ended sessions (offline).** The encrypted reader now stops reconnects when it receives a decoded server end while the listener is busy writing. Both terminal roots survived restart as a single observation in the local peer tests. [Race reproduction and APK anchors](terminal-errors.md#server-end-received-during-a-competing-write).
+
 **Incoming receipt lookup (offline).** Direct and group receipt lists check the outbox once and skip archived checkpoint values. A local 32-message receipt took 31 ms with 8 MiB of unrelated history, down from 1,623 ms. [Measurement and attribution tests](direct-receipts.md#matching-incoming-receipts-in-large-stores).
 
 **Keepalive queue lookup (offline).** The listener now checks its three queues without decrypting unrelated inbox history. On an 8 MiB synthetic store the combined median fell from 3.34 s to 0.19 ms. [Measurements and acknowledgement tests](messaging-transport.md#keepalive-queue-lookup-in-large-stores).

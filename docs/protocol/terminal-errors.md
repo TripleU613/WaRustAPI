@@ -1,5 +1,43 @@
 # Terminal stream errors and ACK diagnostics
 
+## Server end received during a competing write
+
+**Confirmed in Rust, offline.** On commit `8f4c215b`, an encrypted local peer
+sent a fully decoded `failure`. With the listener busy and its input queue
+unread, a subsequent write returned `Closed`. The session classified that
+error as recoverable. The decoded server end had reached the socket reader
+but had yet to reach the listener's capture and stop logic.
+
+The authenticated socket reader now marks `failure` and `stream:error` as
+terminal as soon as it identifies the root. It closes the transport, records
+the node and its observation, and reports the result to the listener. A
+competing transport error can no longer schedule a reconnect once the reader
+has marked the server end. A write already in progress can have an uncertain
+outcome. A failure token can be applied only under the original account
+authority. `listen` reports `cause=server_ended_session` for the competing
+write path. `lab-inbox --inspect` shows the stored observation when capture
+succeeded.
+
+The encrypted-peer regression keeps the peer socket open, leaves actor input
+unread and attempts another write. For each terminal root the peer receives
+zero further records, the error suppresses reconnect, and reopening finds the
+original encoded node and exactly one observation. A second failure fixture
+supplies damaged observation metadata. The reader reports the storage error,
+the capture transaction rolls back and the competing write still suppresses
+reconnect.
+
+**Confirmed in APK 2.26.43.72**, SHA-256
+`887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+An exact `apk-xref --anchor 'stream:error'` found three methods in
+`classes2.dex`. In `1rA.A02` at `006a..0088`, the selector for `1rL`
+lists `stream:error` and `error`. In `1rL.A03` at `000a..0022`, it tests
+the node root. Its diagnostic at `002a` identifies the companion interceptor.
+Under the `0GS.A02` predicate, `0060..0090` reads the code and dispatches
+selected values to `1lZ.A1C`. The third reference is `1ro.<clinit>`.
+These anchors establish companion-side recognition. The primary APK's behavior
+in the simultaneous-write case and the incidence on live accounts remain
+**unknown**. The Rust change enforces its existing stop policy.
+
 ## Saved-capture attribution (2026-10-08)
 
 **Confirmed implementation:** `transport::inbox::preserve` saves encoded nodes
