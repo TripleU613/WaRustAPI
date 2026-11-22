@@ -564,8 +564,7 @@ That is a useful negative result rather than a wasted send: emitting
 eliminated as *the* cause. The correction stays — it makes our patch match the
 builder — but it is not what the server objects to.
 
-**Live patch attempts stop here again.** What remains is what was already
-listed, minus the version question:
+Open questions after the third attempt:
 
 * the **first-patch/snapshot precondition** — this account's `return_snapshot`
   fetch returned an empty `<sync/>`, so it has no snapshot for any collection,

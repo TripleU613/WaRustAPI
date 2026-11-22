@@ -44,7 +44,7 @@ The factory performs no network I/O and is never installed by the default
 client or ordinary registration CLI. The explicit experimental CLI below pairs
 it with `ComparisonHttpFlow` and real HTTPS only when requested. Resetting only the registration
 state does not rotate its keys: a different attempt requires a fresh store or
-account generation. Never delete an existing account to retry a transient error.
+account generation.
 
 ## Experimental signup CLI
 
@@ -104,7 +104,7 @@ commits before I/O and prevents repetition, including after restart; previous
 diagnostic reservations are not cleared. Other refusals, cooldowns and unknown
 outcomes remain ineligible. This is not a full attested Android request.
 
-The first authorized encrypted experiment returned HTTP 200 / fail / bad_param:
+The first encrypted experiment returned HTTP 200 / fail / bad_param:
 884-byte outer request, 58-byte response, no recognized parameter hint or wait.
 Encryption alone did not improve the observed result. No automatic retry followed.
 
@@ -220,13 +220,12 @@ the historical named diagnostic commands retain their explicit encoding.
 Run `lab-signup --config <private-request.json> preview` before sending.
 
 A different phone requires its own APK-derived `token` and separate attempt
-storage; do not copy another number's token or failure counters. These are
+storage. These are
 private data changes, not per-number source changes. Once prepared, a saved
-attempt's JSON is frozen. Never delete its store or cooldown to repeat a test.
+attempt's JSON is frozen.
 
 The sole token-correction exception is `retry-corrected-token`: supply a private
-JSON differing **only** in `token`, then explicitly authorize the command with
-`--allow-live-request`. It requires a saved HTTP 200 / `bad_token` refusal,
+JSON differing **only** in `token` and pass `--allow-live-request`. It requires a saved HTTP 200 / `bad_token` refusal,
 rejects unchanged tokens and unrelated edits, and commits the corrected token
 and one-use reservation atomically before sending. It preserves the attempt,
 keys, other fields and history. No reset or automatic retry is performed.
@@ -334,8 +333,7 @@ both `/v2/exist` (preflight) and `/v2/code`.
 **Root cause**: wrong-build token and missing recipe — our inputs, not an
 established requirement about the numbers. Both attempts are frozen as
 `ServerRefused/bad_param`; no correction command accepts `bad_param` with a
-changed token. A new attempt for those numbers needs a fresh store and explicit
-operator authorization. Also: an `UnsupportedStep` preflight block on `bad_param`
+changed token. An `UnsupportedStep` preflight block on `bad_param`
 has no resume path.
 
 Build with `cargo build --locked -p whatsapp-cli --features experimental-signup`.
@@ -347,11 +345,9 @@ Keep the JSON `LabRegistrationConfig` in `lab/signup.json` with mode 0600,
 outside Git. Its keys are `phone` (object with `country_code` and
 `national_number`), `language`, `locale`, `token`, `registration_id`, and
 `signed_pre_key_id`. Derive the phone-bound token from the exact comparison
-APK with `xtask apk-registration-token`; do not paste it into issues or chat.
+APK with `xtask apk-registration-token`.
 The config must stay unchanged when resuming. Supply the encrypted store's
 master key through `WHATSAPP_API_MASTER_KEY`, not command-line arguments.
-
-After independently checking the inputs and authorizing use of the test number:
 
 ```sh
 target/debug/whatsapp-cli --store lab/signup.redb lab-signup \
@@ -541,8 +537,7 @@ investigation. Do not infer delivery, number blocking, or IP throttling from
 
 ## Corrected voice resend (2026-11-02)
 
-**Observed (live):** after the owner authorized another signup attempt, the
-saved pending voice challenge had one preparation and no remaining wait. One
+**Observed (live):** the saved pending voice challenge had one preparation and no remaining wait. One
 `lab-signup --allow-live-request resend-code --method voice` used the rebuilt
 client, the existing 2.26.37.70/enc_empty_h profile and the existing keys. The
 counter correction therefore supplied 2 for this second preparation. The inner
@@ -555,7 +550,7 @@ No automatic retries or requests for other numbers followed.
 registration. `sent` does not establish either. This answer also does not
 establish that the counter correction changed server behavior: the previous
 first voice request had already returned `sent`. Enter the OTP locally without
-echo; do not put it in chat, command arguments, tracked files or logs.
+echo.
 
 ## Blocked batch observation (2026-11-22)
 

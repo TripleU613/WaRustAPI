@@ -807,7 +807,7 @@ impl LabRegistrationConfig {
                 "server_acceptance": "unverified",
                 "note": "Configured values do not prove genuine device provenance or server acceptance"
             },
-            "invariants": ["TLS verification on", "fixed comparison origin", "no redirects/proxies/automatic retries", "no reset/wipe", "live actions require explicit authorization"]
+            "invariants": ["TLS verification on", "fixed comparison origin", "no redirects/proxies/automatic retries", "no reset/wipe"]
         })
     }
 }

@@ -461,8 +461,7 @@ outgoing pin was adopted. Private evidence: `lab/accounts/l/peer-keys-live-2026-
 One new private outgoing test JSON is prepared with a stable ID and text
 "WaRustAPI identity recovery test.", plus an independent config enabling the
 outgoing policy. It is not queued or sent. All previously saved test sends are
-acknowledged and cannot be replayed. The new chat send awaits explicit operator
-authorization, while other protocol work may continue.
+acknowledged and cannot be replayed.
 
 **Attribution correction:** `MessageRequest::recipient` still repeated the old
 unqualified `CPQ.A00` address-producer citation. Its comment now points to the

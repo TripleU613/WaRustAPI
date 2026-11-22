@@ -1783,7 +1783,7 @@
   "info": {
     "title": "WaRustAPI control API",
     "version": "0.0.1",
-    "description": "This document describes every operation of the whatsapp-api library and whatsapp-cli. The x-transport field indicates whether an operation is served by whatsapp-cli serve over HTTP today or invoked through the CLI. The x-cli field gives the exact command. The x-library field names the Rust entry points behind each operation (crate path form); the whatsapp-cli test `openapi_library_symbols_exist` verifies they exist. The x-live field marks operations that contact WhatsApp servers and require explicit authorization via --allow-live-request. The HTTP control plane has no authentication and binds to loopback only. Feature-boundary correction (2026-11-04): library presence::held_tctoken requires experimental-signal-crypto as well as the presence module's experimental-noise/experimental-transport features, because PN/LID lookup uses the encrypted inbox. Reduced Noise/transport builds omit this helper instead of silently dropping its lookup. No HTTP route or full-client wire behavior changes.",
+    "description": "This document describes every operation of the whatsapp-api library and whatsapp-cli. The x-transport field indicates whether an operation is served by whatsapp-cli serve over HTTP today or invoked through the CLI. The x-cli field gives the exact command. The x-library field names the Rust entry points behind each operation (crate path form); the whatsapp-cli test `openapi_library_symbols_exist` verifies they exist. The x-live field marks operations that contact WhatsApp servers. The HTTP control plane has no authentication and binds to loopback only. Feature-boundary correction (2026-11-04): library presence::held_tctoken requires experimental-signal-crypto as well as the presence module's experimental-noise/experimental-transport features, because PN/LID lookup uses the encrypted inbox. Reduced Noise/transport builds omit this helper instead of silently dropping its lookup. No HTTP route or full-client wire behavior changes.",
     "license": {
       "name": "MIT OR Apache-2.0"
     }
@@ -3369,8 +3369,9 @@
             "description": "Compatibility checks"
           },
           "invariants": {
-            "type": "object",
-            "description": "Protocol invariants verified"
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Registration transport and store invariants shown in the request preview."
           },
           "key_ids": {
             "type": "string",
@@ -15604,7 +15605,7 @@
               "type": "boolean",
               "const": true
             },
-            "description": "Explicit authorization for the one-shot media download; absence refuses before config or account access."
+            "description": "Enables the one-shot media download. The CLI checks this flag before opening the config or account."
           }
         ],
         "responses": {
