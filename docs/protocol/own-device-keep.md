@@ -64,8 +64,7 @@ regression covers missing, malformed and unsupported remote keys.
 
 Fresh live interoperability, native permission/expiry/conflict enforcement,
 special/group/status own synchronization, bootstrap and complete APK parity
-remain unfinished or unverified. No live account was changed and no ban immunity
-is established.
+remain unfinished or unverified. No live account was changed.
 
 Validation passed 956 workspace/all-feature tests, strict workspace Clippy
 and warnings-denied Rustdoc, the Signal regression with only TCP/Noise/Signal

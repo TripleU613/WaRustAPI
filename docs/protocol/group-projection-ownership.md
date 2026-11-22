@@ -37,7 +37,7 @@ account drift and a changed settlement sequence after candidate loading. Both
 refuse with every checkpoint row and journal head unchanged and no new group
 snapshot. Existing successful group-info/invite/leave/refresh, rollback, restart,
 ambiguity and consumed-marker tests remain active. This closes a demonstrated
-local ownership/concurrency defect; no new APK field or server ban cause is
+local ownership/concurrency defect; no new APK field is
 inferred. Existing native group parser/completeness policy remains unchanged.
 
 A bounded read-consumer review also found abprops::inspect_in feeding the

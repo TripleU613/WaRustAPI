@@ -78,4 +78,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/2p3;
 
 Existing linked A0A/writer exports have their own exact recipes/checksums.
 PCs are bytes; branch deltas code units. Static boundaries and local refusal
-are not complete runtime/admission/parity or ban guarantees.
+are not complete runtime/admission/parity.

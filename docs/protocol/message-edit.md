@@ -133,7 +133,7 @@ projection gate; merged replacement fragments with one content field are covered
 Replacement text with an unresolved expiration declines projection under the
 existing guard. Fresh live edit interoperability and a
 second APK release comparison remain unverified. No live account operation ran
-for this change; these results do not establish ban immunity.
+for this change.
 
 Validation passed 966 workspace/all-feature tests, strict Clippy and
 warnings-denied Rustdoc, the real Signal regression with TCP/Noise/Signal

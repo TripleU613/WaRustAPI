@@ -68,7 +68,7 @@ The red regression observed no deadline before correction. Green paused-clock
 coverage accepts result/error at31,999ms, expires at32,000ms, rejects late reply,
 preserves the unsettled row/reply absence and survives encrypted-store reopen
 without resend. A ping labeled report keeps its own untimed policy. No live
-account operation or inferred cause of account restrictions.
+account operation.
 
 ## Reproduce
 

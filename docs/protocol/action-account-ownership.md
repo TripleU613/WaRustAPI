@@ -61,7 +61,7 @@ reserve_limit_owned/reserve_one_in, ActionWriteGuard, record_reply_inner and
 view_in_write. Existing native exact IQ callback/disconnect and feature response
 policies remain unchanged; see [action response and timing boundaries](network-correctness-audit.md).
 This local ownership defect needed no new APK disassembly; APK2.26.43.72 remains
-pinned for protocol comparisons. No server behavior/ban cause is inferred.
+pinned for protocol comparisons.
 
 Tests: action_account_owner_survives_queue_handoff_and_live_reply checks changed
 account refusal at reservation, write admission, live/captured reply settlement

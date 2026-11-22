@@ -85,8 +85,8 @@ that dereference register-relative operands are not runtime memory observations.
 
 **Remaining:** resolve the intermediate dispatcher and actual callback captures,
 then follow response parsing, persistence, retries and cache activation. Owner
-lifetime guarding does not establish account-generation guarding. No Rust runtime
-change, live operation, server-acceptance claim or zero-ban guarantee follows.
+lifetime guarding does not establish account-generation guarding. No runtime
+change or live operation.
 
 Follow-up: [requester dispatch](../2.26.43.72-mobileconfig-requester-dispatch/README.md)
 now resolves the intermediate dispatcher for the selected default-updater route

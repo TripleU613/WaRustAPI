@@ -92,8 +92,7 @@ Rust remains200-only with full ciphertext/MAC/plaintext validation and no replay
 particular ordinary image/view-once profile, native200 response to a nonzero range,
 complete Content-Range rejection/recovery semantics, native crypto/result source
 binding, cancellation/account replacement, final viewer/export ownership and
-runtime server interoperability. No mandatory-header, zero-ban or complete
-media coverage claim is made.
+runtime server interoperability. Header requirements and full media coverage remain unverified.
 
 Reproduce exact caller censuses with `apk-callers <apk> --class 'LX/MuY;'
 --method A03` (and MuZ); export `apk-smali <apk> --class '<descriptor>'

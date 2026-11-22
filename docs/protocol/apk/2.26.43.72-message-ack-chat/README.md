@@ -75,8 +75,7 @@ target/debug/xtask apk-smali "$APK" --class 'Lcom/whatsapp/infra/core/jid/UserJi
 target/debug/xtask apk-smali "$APK" --class 'LX/0EG;' --signatures --exceptions
 ```
 
-checksums.json covers every other file in this bundle. No account-restriction
-outcome or actual server acceptance is proven by static construction.
+checksums.json covers every other file in this bundle. No server acceptance is proven by static construction.
 
 ## Plain LID constructor follow-up
 

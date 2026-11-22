@@ -3490,4 +3490,4 @@ reused; no fresh live account operation or server acceptance claim.
 
 Missing query/targets, non-group children and unconstructible group targets produce a redacted local error. A stored-input fault propagates and rolls back the reservation transaction, including earlier valid rows in the same batch. No payload rewrite, server-refusal classification, provenance backfill or uncertain-action reset occurs. Already-sent rows are skipped. The reopen regression first failed with an invalid legacy target being reserved; it now checks both entry points, exact checkpoint/journal preservation, and an uncertain-row control alongside a valid request reserved once.
 
-**Unknown:** this target check does not prove all arbitrary historical stanza fields, final frame identity, native wire ordering, or server acceptance. No live operation was performed; account restriction prevention cannot be guaranteed.
+**Unknown:** this target check does not prove all arbitrary historical stanza fields, final frame identity, native wire ordering, or server acceptance. No live operation was performed.

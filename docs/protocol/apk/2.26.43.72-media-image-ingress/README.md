@@ -118,6 +118,5 @@ Export `apk-smali <apk> --class '<descriptor>' --method <name> --signatures
 **Still unknown:** complete envelope/receive dispatch, current audio/document/
 sticker projection, update-mode inputs, concrete sidecar provider/loader, exact
 native full-file request/response range semantics, account/output authority and
-live interoperability. No mandatory-header, automatic retry,206/416 relaxation,
-restriction-cause or zero-ban claim is introduced. Rust change is provenance
+live interoperability. No mandatory header, automatic retry or 206/416 relaxation is introduced. Rust change is provenance
 comments only; its established descriptor behavior remains intact.

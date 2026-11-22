@@ -63,8 +63,7 @@ mutation. The production key-error fixtures explicitly select missing IDs instea
 
 Reproduce: cargo test --locked -p whatsapp-api --all-features signal::direct::tests
 and undecryptable_message_requests_once_before_write_cut_and_never_replays.
-No server acceptance, full count/key/routing/ACK policy or zero-ban guarantee is
-established; the broad network audit remains unfinished.
+Server acceptance and the full count/key/routing/ACK policy remain unverified; the broad network audit remains unfinished.
 
 Validation:1329 workspace/all-feature tests passed after correcting the nested
 MAC fixtures. Formatting, strict workspace/all-target/all-feature Clippy, CLI

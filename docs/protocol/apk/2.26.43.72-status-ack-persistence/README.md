@@ -114,4 +114,4 @@ cargo test --locked -p whatsapp-api --all-features status_edit_
 
 No new tests purport to reproduce the unported native DB. Remaining work includes
 hash repair producers, complete storage/callback authority, multipart operations,
-scheduled-newsletter state and operation-bound404 handling. No live/no-ban claim.
+scheduled-newsletter state and operation-bound404 handling. No live result.

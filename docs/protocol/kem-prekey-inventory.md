@@ -275,7 +275,7 @@ still shows a malformed version-3 envelope with KEM fields preserved unchanged.
 KEM generation, signing, ID allocation, upload and server acceptance;
 own-device and companion KEM admission; native outer-caller error handling and
 retry behavior for hybrid failures; same-key classic-to-hybrid migration;
-live Android/server interoperability. Ban immunity is not established.
+live Android/server interoperability.
 
 ## When the APK uploads Kyber prekeys and sends `pqsupport` (2026-11-01, APK on disk)
 

@@ -39,4 +39,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/0Sf;
 ```
 
 Linked complete methods retain their own recipes/identities. checksums.json
-covers every other file here. No live account operation or ban guarantee.
+covers every other file here. No live account operation.

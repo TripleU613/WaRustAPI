@@ -49,4 +49,4 @@ Android/other variant fields, ABJ exception behavior, header helper details,
 duplicate semantics, resource limits and complete durable reconciliation remain
 open. The internal Bundle projection keys remain insufficient to define the
 wire parser. No Rust sender/parser, replay authority, HTTP route or live account
-operation is added. No claim about ban prevention follows from this static trace.
+operation is added.

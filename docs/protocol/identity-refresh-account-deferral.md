@@ -14,7 +14,7 @@ The regression changed saved Signal registration ID after valid reply settlement
 and asserted a finished Deferred(action_account_changed) preparation. This failed
 before the change. The source chain above identifies the later rejection point;
 the pre-fix assertion did not separately measure a live connection termination.
-No server restriction cause or runtime APK behavior is inferred.
+No runtime APK behavior is inferred.
 
 ## Same immutable snapshot, final fence retained
 

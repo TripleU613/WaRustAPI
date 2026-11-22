@@ -129,5 +129,5 @@ future metrics port; resetting these fields at restart would differ from this
 selected load. **Observed live:** none. **Unknown:** complete credential algorithm,
 atomicity/recovery guarantees, load scheduling/timer semantics and deployment
 necessity. Endpoint-list production is still open; the callback followed here
-proved to be persistence, not endpoint construction. No mandatory telemetry,
-automatic retry or restriction-avoidance guarantee follows from this evidence.
+proved to be persistence, not endpoint construction. No mandatory telemetry or
+automatic retry follows from this evidence.

@@ -99,4 +99,4 @@ PYCODE
 ```
 
 checksums.json binds every other bundle file. No new REA record or runtime,
-complete interface dispatch, ban-rate or full APK equivalence is claimed.
+complete interface dispatch or full APK equivalence is claimed.

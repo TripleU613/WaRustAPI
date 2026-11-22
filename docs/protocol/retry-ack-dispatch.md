@@ -489,7 +489,7 @@ its existing reserved query/ACK/refetch sequence. A pure ACK regression verifies
 fresh487 omits it, a handled candidate omits it, and generic valid-retry handling
 still emits no success ACK before work. Full workspace tests retain write-cut,
 reopen, duplicate, owner-change and refetch-ownership coverage. No live account
-operation, identity adoption, server acceptance or restriction guarantee.
+operation, identity adoption or server acceptance.
 
 
 ## Definite-null unknown optional text uses shared factory rules (2026-11-06)

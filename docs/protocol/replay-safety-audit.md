@@ -978,7 +978,7 @@ non-replies/late replies and unowned IQs retain existing admission. No clock,
 account, request retry or restriction-reset authority is added.
 [Callback binding, red/green regression and open cadence/schema gaps](apk/2.26.43.72-client-ping-errors/README.md).
 Full native keepalive scheduling/configuration and successful-result schema
-remain unported; no live account operation or causal ban-prevention claim.
+remain unported; no live account operation.
 
 
 ## Client pong success schema and consumed callback — 2026-11-05
@@ -1253,7 +1253,7 @@ No HTTP request or account operation ran in these tests.
 
 **Limits:** snapshot checks are local transaction boundaries, not atomic HTTP/store
 operations or proof of successful server adoption. This is not a new Android
-upload schema or ban-prevention guarantee. The added observation artifacts do not
+upload schema. The added observation artifacts do not
 permit retransmission or clearing an uncertain upload.
 
 ## Receipt writer owns every reserved batch member (2026-11-06)
@@ -1577,8 +1577,7 @@ printed; unbound legacy counts refuse rather than being guessed.
 **Remaining timing gap:** current-build full prekey-query callback duration is
 not mapped by the identity-only32s trace. This path retains the existing generic
 30s captured wait and configured I/O caps as local bounds. No32s timeout is
-inferred for it, no native scheduler is copied, and no live account operation or
-restriction-prevention guarantee is established.
+inferred for it, no native scheduler is copied, and no live account operation took place.
 
 ## Retry preparation precedes reservation ownership (2026-11-07)
 
@@ -1684,7 +1683,7 @@ Before capture succeeds, the original must still have server acceptance, no fail
 
 For immediate answers, capture occurs before ACK handoff and writer recheck occurs after ACK completion. A subsequent message refusal leaves the successful ACK intact. Fresh-bundle callback completion uses the same guarded writer after committing its attempt/session. Pinned ACK-before-query ordering remains unchanged. No durable schema or wire fields changed.
 
-The expanded paired-write regression covers altered resend ID/destination/body and unchanged ordering/socket-error controls. A separate fresh-path actor regression covers changed ID/ciphertext, modified/deleted committed attempt, late delivery and account replacement, unchanged success, exact account/outbox/checkpoint/session and journal preservation through reopen. This proves local committed-payload admission; it does not prove complete native resend policy (count-2 base-key gating, groups and counts above two remain unported), server acceptance, or protection from all account restrictions. No live operation was performed.
+The expanded paired-write regression covers altered resend ID/destination/body and unchanged ordering/socket-error controls. A separate fresh-path actor regression covers changed ID/ciphertext, modified/deleted committed attempt, late delivery and account replacement, unchanged success, exact account/outbox/checkpoint/session and journal preservation through reopen. This proves local committed-payload admission; it does not prove complete native resend policy (count-2 base-key gating, groups and counts above two remain unported) or server acceptance. No live operation was performed.
 
 
 ## Ordinary direct-message committed writer binding (2026-11-07)
@@ -1750,7 +1749,7 @@ The final Step now carries FinalRoutingGuard: the original final-node encoding d
 
 Existing routing semantics still exclude receive-ratchet advances and same-chain ACK bookkeeping. No final-message deadline is invented; no wire field, persistent schema, rotation, reset or replay path changes. Refusal preserves committed ciphertext, key state and uncertainty.
 
-The regression drives actual membership, usync, key replies and group crypto preparation. It covers late membership, device routing, sender-chain, account, missing preparation/ACK owner/outbox, altered ID/destination/body, missing final guard and wrong root. Unchanged and same-chain ACK controls remain admitted. Every store table and journal is compared through preflight and reopen, with no extra envelope or automatic reselection. This replaces a synthetic final-message fixture with the real preparation pipeline. Full native scheduling/lifecycle and server acceptance remain unverified; no live account operation was performed and this does not establish ban immunity.
+The regression drives actual membership, usync, key replies and group crypto preparation. It covers late membership, device routing, sender-chain, account, missing preparation/ACK owner/outbox, altered ID/destination/body, missing final guard and wrong root. Unchanged and same-chain ACK controls remain admitted. Every store table and journal is compared through preflight and reopen, with no extra envelope or automatic reselection. This replaces a synthetic final-message fixture with the real preparation pipeline. Full native scheduling/lifecycle and server acceptance remain unverified; no live account operation was performed.
 
 
 ## Authenticated epoch account authority for every writer handoff (2026-11-07)
@@ -1761,7 +1760,7 @@ At drive startup, the account loaded for the authenticated actor is frozen with 
 
 This is an additional local ownership invariant, not a native stanza field or proof that account persistence alone describes the socket's cryptographic identity. It does not modify ACK construction, inbound persistence, timer scheduling, callbacks, replay decisions, durable schemas or request-specific guards. There is no account reload that blesses later work under a replacement identity, and no automatic resend on refusal. Handshake-to-drive account changes and inbound settlement authority remain separate audit scope.
 
-The real actor regression covers activation, post-activation availability, server-ping response and picture-notification ACK queue boundaries. Each has unchanged and observation-only success controls plus account-change/removal refusals. All store tables and journal remain unchanged by preflight and through reopen; rejected writes terminate the actor. Existing request-specific tests remain. Full native lifecycle and server acceptance are unverified; no live account operation was performed and no ban guarantee follows.
+The real actor regression covers activation, post-activation availability, server-ping response and picture-notification ACK queue boundaries. Each has unchanged and observation-only success controls plus account-change/removal refusals. All store tables and journal remain unchanged by preflight and through reopen; rejected writes terminate the actor. Existing request-specific tests remain. Full native lifecycle and server acceptance are unverified; no live account operation was performed.
 
 
 ## Login settlement authority survives actor startup (2026-11-07)
@@ -1783,7 +1782,7 @@ Drive now retains the bound epoch authority for inbound admission too. Decoded f
 
 Raw capture is evidence, not receipt, delivery, callback or state-application authority. Existing terminal capture metadata remains part of raw observation. Parsing, native timing and wire formats are unchanged. Observation-only authentication timestamps remain excluded by the existing fingerprint. This is an entry admission check, not a global lock across all handlers/awaits or a claim of atomic account fencing in every downstream transaction. Concurrent changes after admission, fields outside that fingerprint and offline reprocessing remain separate audit scope.
 
-The actor regression uses actual server-ping clock and account_sync privacy producers. Unchanged and observation-only controls must produce a reply and change protocol state. Changed/removed accounts must end without an outbound envelope; every table is compared excluding only raw inbound captures, which are independently checked against exact encoded input. Reopen preserves protocol state and journal. Existing undecodable-capture and callback tests remain. No live account operation was performed; server acceptance, complete native lifecycle and ban immunity are not established.
+The actor regression uses actual server-ping clock and account_sync privacy producers. Unchanged and observation-only controls must produce a reply and change protocol state. Changed/removed accounts must end without an outbound envelope; every table is compared excluding only raw inbound captures, which are independently checked against exact encoded input. Reopen preserves protocol state and journal. Existing undecodable-capture and callback tests remain. No live account operation was performed; server acceptance and the complete native lifecycle are not established.
 
 ## Reopening a video send
 

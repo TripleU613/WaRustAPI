@@ -88,4 +88,4 @@ target/debug/xtask apk-smali "$APK" --class 'LX/0TV;' --method A03 --signatures 
 ```
 
 checksums.json covers every other file. Other complete evidence is linked
-instead of duplicated. Static findings cannot prove account restrictions.
+instead of duplicated.

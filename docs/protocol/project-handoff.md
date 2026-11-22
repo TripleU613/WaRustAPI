@@ -46,7 +46,7 @@ Default and all-feature builds/tests must both be kept in the continuation gate.
    saved voice resend returned `sent`, with completed registration unconfirmed.
    These are historical reports, not current account inspections. The version
    mismatch correction and volume/pattern hypotheses do not establish why the
-   service restricted the accounts. No causal or ban-prevention claim is justified.
+   service restricted the accounts.
 2. **Protocol parity remains selective.** The ordinary driver implements only
    evidenced branches. Retry paths, identity/companion lifecycle, effective
    feature configuration, receipt policy and disappearing-message behavior have

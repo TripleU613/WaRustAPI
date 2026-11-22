@@ -61,7 +61,7 @@ untraced. Normal execute return is local scheduling, not delivery proof.
 This resolves the selected factory and closes primary entry sampling/queue
 admission, while keeping alternate routing predicates and transport explicit.
 The current trace supplies no basis for mandatory made-up startup telemetry,
-synthetic metric values, a per-connect network write or a ban-prevention claim.
+synthetic metric values or a per-connect network write.
 Full metric-source authority, sink predicates, queue durability, network schema,
 flush timing, responses, generation handling and recovery remain incomplete.
 No Rust behavior, telemetry event, sender, retry, HTTP route or live account/

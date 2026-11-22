@@ -26,7 +26,7 @@ Full2p3, bot/interop target behavior and all class factories are not reconstruct
 0Tk.A03 uses Class.isAssignableFrom over the provided list and invokes00L.A0C
 on mismatch. Reuse [assertion helper](../2.26.43.72-report-response-bounds/bound-assertion.txt):
 it logs an AssertionError without an explicit throw. These are expected native
-types, not proof of a hard server rejection or account-restriction trigger.
+types, not proof of a hard server rejection.
 Rust enforces its declared supported primary-chat subset before construction.
 
 ## Subscription writer re-anchor

@@ -96,4 +96,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/Ewq;
 Displayed offsets are bytes, branch deltas code units. Existing sender-key stanza
 regressions check current Rust emission, not full native renderer parity. Next
 work is metadata/operation producers and actual0Sf registration/writer admission.
-No runtime change, live operation, replay authority or no-ban claim.
+No runtime change, live operation or replay authority.

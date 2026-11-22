@@ -96,4 +96,4 @@ target/debug/xtask apk-field-refs ../android-lab/apks/WhatsApp.1.apk --class 'LX
 
 PCs are byte offsets; branch deltas are code units. Direct field references do
 not establish alias/reflection or full runtime coverage. No observed server
-result, native runtime test, ban guarantee or general serializer parity claim.
+result, native runtime test or general serializer parity claim.

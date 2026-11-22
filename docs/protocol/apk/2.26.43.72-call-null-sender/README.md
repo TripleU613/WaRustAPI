@@ -59,4 +59,4 @@ cmp /tmp/call-null-reader.txt docs/protocol/apk/2.26.43.72-about-callback-lifeti
 ```
 
 checksums.json covers every other file here. Complete caller/accessor/set
-exports are linked rather than duplicated. No zero-ban or server-acceptance proof.
+exports are linked rather than duplicated. Server acceptance remains unverified.

@@ -98,4 +98,4 @@ Checksums cover all other files.
 durable buffer deletion must be separate stages in a future port. **Observed
 live:** none. **Unknown:** full status/callback binding, stale completion fencing,
 persistent retry/ownership, cancellation completion and deployment necessity.
-No retry, re-send, identity reset or account-restriction guarantee follows.
+No retry, re-send or identity reset follows.

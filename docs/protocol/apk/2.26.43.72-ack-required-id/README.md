@@ -33,4 +33,4 @@ target/debug/xtask apk-smali "$APK" --class 'LX/0Tp;' --method A0M --signatures 
 ```
 
 checksums.json covers every other file here. Existing complete handler and
-reader exports are linked instead of duplicated. No restriction guarantee.
+reader exports are linked instead of duplicated.

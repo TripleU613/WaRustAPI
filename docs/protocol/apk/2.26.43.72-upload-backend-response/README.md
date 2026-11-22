@@ -65,7 +65,7 @@ no-proxy policy documented in [HTTP boundaries](../../http-client-boundaries.md)
 No setting is changed, no header/proxy identity is invented and no replay added.
 Remaining work includes effective selector/configuration, Tigon enforcement,
 platform redirects/proxies, complete upstream status provenance and durable
-result/retry lifecycle. No server acceptance or zero-restriction guarantee.
+result/retry lifecycle. No server acceptance.
 
 Reproduce new exports and byte-check the two reused concrete backend methods:
 

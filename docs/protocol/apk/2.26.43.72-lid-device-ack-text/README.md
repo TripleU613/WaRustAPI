@@ -71,4 +71,4 @@ target/debug/xtask apk-smali "$APK" --class 'Lcom/whatsapp/infra/core/jid/Device
 ```
 
 checksums.json covers every other file. Existing parser/user/type/cast exports
-are linked instead of duplicated. Static parsing is not zero-ban proof.
+are linked instead of duplicated.

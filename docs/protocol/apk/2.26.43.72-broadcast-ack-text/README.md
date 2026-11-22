@@ -44,4 +44,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/2p5;
 ```
 
 Binary typed-JID admission, generic receipt routes, full cache/reader recovery
-and actual server policy remain unproven. Static admission is not no-ban proof.
+and actual server policy remain unproven.

@@ -119,7 +119,7 @@ their stateful lifecycle ports; no generic ACK was added. Relevant API is sessio
 operation `listen`, CLI `whatsapp-cli listen`). No API or code behavior changed
 in this audit. The missing network obligations above remain actionable gaps;
 retained source/constructor inventories are research coverage, not completed
-ports. No live acceptance or ban-related outcome is established.
+ports. No live acceptance is established.
 
 ## Blocklist continuation (2026-11-06)
 

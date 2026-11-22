@@ -73,5 +73,4 @@ target/debug/xtask apk-smali "$APK" --class 'LX/1lX;' --signatures --exceptions
 ```
 
 The existing linked bundle retains complete1s2.run; it is not duplicated here.
-checksums.json covers every other file in this bundle. No live acceptance or
-restriction-prevention guarantee follows from static routing.
+checksums.json covers every other file in this bundle. No live acceptance follows from static routing.

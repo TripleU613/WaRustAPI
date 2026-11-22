@@ -63,4 +63,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/F2a;
 target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/1dX;' --method A0A --signatures --exceptions > revoke-edit.txt
 ```
 
-Displayed PCs are bytes, branch deltas code units. No live or zero-ban claim.
+Displayed PCs are bytes, branch deltas code units. No live verification.

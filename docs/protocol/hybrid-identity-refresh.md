@@ -110,4 +110,4 @@ classic and hybrid replies: preview outcome, deferral, `recover()` returning
 
 Companion and attestation-bearing PQ refresh; native `CPB.A00` admission
 state persistence; outbox same-key classic-to-hybrid migration (the outbox
-still refuses it); live interoperability. Ban immunity is not established.
+still refuses it); live interoperability.

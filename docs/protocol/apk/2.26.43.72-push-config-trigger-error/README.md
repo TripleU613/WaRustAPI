@@ -69,5 +69,4 @@ failures can return normally. No code409 SET policy is borrowed for this GET.
 Complete upstream startup gates,0Sb traffic,404 provider reconciliation,1uo
 side effects, timeouts/cancellation, malformed-error handling outside this reader,
 header validation, generation binding and durable recovery remain incomplete.
-No Rust request, retry, route or live account operation is added. This evidence
-cannot establish a server restriction cause or a zero-ban guarantee.
+No Rust request, retry, route or live account operation is added.

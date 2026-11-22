@@ -99,7 +99,7 @@ target/debug/xtask apk-smali "$APK" --class 'LX/1ud;' --method A01 --signatures 
 Compare the first five exports to this bundle and the last two to the reused
 files above. checksums.json binds every other file in this bundle. Native
 migration, full notification processing and every other request family remain
-outside this correction; no complete audit or ban-prevention guarantee.
+outside this correction; no complete audit.
 
 ## Signed blocklist error diagnostic follow-up
 

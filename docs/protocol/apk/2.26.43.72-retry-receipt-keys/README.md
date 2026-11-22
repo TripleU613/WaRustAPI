@@ -74,4 +74,4 @@ method. Checksums cover the README and complete exports.
 **Inferred:** explicit unsupported handling avoids conflating this branch with
 supported retries. **Observed live:** none. **Unknown:** full key-policy parity,
 AEA/PQ/legacy fallbacks, higher-count base-key state and root normalization.
-No zero-ban or server-acceptance conclusion follows from this offline correction.
+No server-acceptance conclusion follows from this offline correction.

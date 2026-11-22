@@ -55,4 +55,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/0Dn;
 DEX displayed offsets are bytes; branch deltas are code units, multiplied by2.
 Binary admission, status/group/newsletter asynchronous processing, scheduled
 state transitions, generic callback/receipt authority and server policy remain
-open. No live operations, replay authority or no-ban proof.
+open. No live operations or replay.

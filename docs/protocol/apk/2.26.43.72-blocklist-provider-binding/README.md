@@ -110,4 +110,4 @@ PYCODE
 ```
 
 checksums.json binds every other bundle file. No new REA source-body claim or
-live/ban-rate result follows from these static registry exports.
+live result follows from these static registry exports.

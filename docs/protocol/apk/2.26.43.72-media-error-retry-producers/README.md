@@ -93,4 +93,4 @@ Reproduce `apk-smali <apk> --class '<descriptor>' --method <name> --signatures
 2L9.A1W,F1Z.A0A. Direct reference files use `apk-callers` or `apk-field-refs` with
 exact class/member, field type Z and writes-only for EmK. Referenced earlier
 bundles retain their own manifests. [checksums.json](checksums.json) pins this
-bundle. No server acceptance or restriction/zero-ban guarantee is established.
+bundle. Server acceptance remains unverified.

@@ -12,7 +12,7 @@ then separately wrote contact-check-req:<id>. That second record is needed to
 attribute a top-level IQ refusal, which has no per-user phone node. Failure at
 the second commit left a Queued action eligible for later transmission without
 its original correlation provenance. This is a local state defect, not a
-claimed native wire requirement or established restriction cause.
+claimed native wire requirement.
 
 The new fault regression arms a real redb storage backend when a page contains
 the correlation prefix. Before the fix it failed: failed correlation commit

@@ -111,8 +111,7 @@ arbitrary data; it establishes no dedicated implementation for this obligation.
 This closes selected worker/mode/request/response links and adds a named outbound
 request obligation. Full identifier authority/serialization, runtime mode,
 nested lookup/adoption, scheduler/deadline, callback/account generation and
-native rollback semantics remain open before implementation. No account-ban
-cause or prevention guarantee is inferred from this static evidence.
+native rollback semantics remain open before implementation.
 
 ## Reproduction
 

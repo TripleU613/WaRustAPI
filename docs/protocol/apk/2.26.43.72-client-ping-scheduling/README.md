@@ -85,7 +85,7 @@ and subsequent durations and ping timeout still derive from the existing local
 I/O-timeout policy; the15s/240s/32s packaged entries and alarm/Runnable modes are
 not yet ported as effective policy. Full initial connected-state eligibility,
 configuration hydration, native cadence/timeout and all on-demand paths remain
-open. No completeClientPingManager or ban-prevention claim follows.
+open. The complete ClientPingManager remains untraced.
 
 ## Reproduction and verification
 

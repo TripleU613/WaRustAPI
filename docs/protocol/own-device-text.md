@@ -117,4 +117,4 @@ formatting and diff checks passed. The seven-topic APK bundle reproduced all
 alternate attributes, migration-state import, special/hosted routes, admission
 and lifecycle of new own devices, primary echo reconciliation with existing
 outgoing intents, and native read-self/retry behavior. No fresh
-live own-device text sample was observed. No claim of ban immunity is made.
+live own-device text sample was observed.

@@ -105,7 +105,7 @@ Malformed/missing PQ material continues to leave saved state unchanged.
 This is offline coordinator validation; there was no live directory or socket
 operation. Incoming KEM inventory, upload, lookup/consumption and bootstrap,
 companion authority, attestation admission, same-key classic migration and live
-Android/server interoperability remain incomplete. Ban immunity is not established.
+Android/server interoperability remain incomplete.
 
 Validation passed 978 workspace/all-feature tests, both crypto-only hybrid
 fixtures, strict all-target Clippy, warnings-denied Rustdoc, 26 default CLI/API

@@ -70,7 +70,7 @@ cmp /tmp/receipt-ack-handler.txt docs/protocol/apk/2.26.43.72-distribution-ack-a
 ```
 
 checksums.json covers every other file here. Existing complete handler and ACK
-parser are linked rather than duplicated. Static evidence cannot prove bans.
+parser are linked rather than duplicated.
 
 ## Producer follow-up
 

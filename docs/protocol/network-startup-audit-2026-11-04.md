@@ -4,8 +4,7 @@
 `transport/login.rs` and `runtime/comparison.rs`, against the attributed
 [comparison transport evidence](messaging-transport.md) and
 [login identity contract](login-identity-updates.md). No account, socket, login,
-OTP request or message was used for this audit. No causal explanation or
-prevention guarantee for account restrictions is established.
+OTP request or message was used for this audit.
 
 ## Evidence identities and scope
 
@@ -431,7 +430,7 @@ Host comes from selector 0x1a; access_token from selector 0x17. Endpoint index
 zero is removed before construction. Credential/provider decoding, metadata
 semantics and complete transport ownership remain open.
 [Digest-bound literal/relocation resolver, helper bodies and limits](apk/2.26.43.72-metrics-native-request-builder/README.md).
-No Rust runtime or live traffic changed; no mandatory telemetry or ban guarantee.
+No Rust runtime or live traffic changed; mandatory telemetry remains unverified.
 
 ### Native metrics credential lifecycle (2026-11-05)
 
@@ -934,7 +933,7 @@ non-replies/late replies and unowned IQs retain existing admission. No clock,
 account, request retry or restriction-reset authority is added.
 [Callback binding, red/green regression and open cadence/schema gaps](apk/2.26.43.72-client-ping-errors/README.md).
 Full native keepalive scheduling/configuration and successful-result schema
-remain unported; no live account operation or causal ban-prevention claim.
+remain unported; no live account operation.
 
 
 ## Client pong success schema and consumed callback — 2026-11-05

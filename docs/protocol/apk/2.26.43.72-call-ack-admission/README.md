@@ -54,7 +54,7 @@ target/debug/xtask apk-smali "$APK" --class 'LX/0Dn;' --method A0R --signatures 
 ```
 
 checksums.json covers every other file. Existing full parser/census/catch exports
-are linked instead of duplicated. Static evidence cannot establish zero bans.
+are linked instead of duplicated.
 
 ## Known-null sender ordering follow-up
 

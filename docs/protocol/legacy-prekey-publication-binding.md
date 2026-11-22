@@ -64,8 +64,7 @@ Required regression coverage: same-ID well-formed replacement, missing row
 without consumption evidence, mismatched consumed fingerprint, conflicting
 restored row, legitimate direct and group consumption before ACK, transaction
 rollback, reopen, and unchanged uncertainty/refusal holds. Those new legacy guarantees were not implemented at the initial audit revision. Whole-store rollback remains
-outside the local consistency model. This finding does not establish a ban
-cause or server acceptance requirement.
+outside the local consistency model. This finding does not establish server acceptance requirement.
 
 ## Implemented public binding and atomic consumption (2026-11-05)
 

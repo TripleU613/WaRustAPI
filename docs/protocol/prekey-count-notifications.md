@@ -642,8 +642,7 @@ row handling remain unchanged.
 Confirmed static source remains pinned APK 2.26.43.72 EqE/Dfd signature storage
 and Fdf digest preimage (see the prekey-upload-replies evidence bundle). This is
 partial storage parity: Rust signs at reservation, whereas native generation
-stores the signature earlier. No live verification, recovery, retry-policy or
-ban-prevention guarantee is implied.
+stores the signature earlier. Recovery and retry policy remain unverified.
 
 Validation: workspace/all-feature tests passed with two test threads, strict
 Clippy, CLI reference, fmt, coverage freshness and hygiene passed. The initial
@@ -930,8 +929,8 @@ identical instead of storing a late503 refusal.
 
 **Limits:** awaited writes may still delay observing expiry. Device admission
 and unrelated maintenance remain on their existing cadence. Outgoing/group
-waits and other request families are not converted by this chunk; no full
-network/timing or ban-prevention guarantee is claimed. No live operations.
+waits and other request families are not converted by this chunk; full
+network timing remains unverified. No live operations.
 
 Validation: both new regressions reproduced late settlement before the fix
 and passed afterward. All 1,302 workspace/all-feature tests passed with two
@@ -1374,7 +1373,7 @@ the test to continue independent cases; production never repairs them. Existing
 published-wire digest and saved-signature/no-resigning controls remain intact.
 No wire fields, digest request admission, synchronization/reset authority, replay
 or live account operation is added. Matches remains offline comparison evidence,
-not authenticated server acceptance or a guarantee against restrictions.
+not authenticated server acceptance.
 
 Validation: the alias regression reproduced a false Matches result before the
 fix. All 1,401 workspace/all-feature tests, strict Clippy, CLI reference, OpenAPI
@@ -1600,7 +1599,7 @@ outbound queue until its30-second reply deadline, then still reach encoding and
 transmission. Separately, PendingUpload.settle itself did not check that deadline;
 only the actor's reply dispatch did, so direct library callers could adopt an
 expired result/error. These are local claim-lifetime gaps, not newly inferred
-APK timeout values or observed server restriction causes.
+APK timeout values.
 
 A shared check_deadline rejects Instant::now() >= the original pending deadline.
 Writer preflight checks before store/material inspection and again at its end,

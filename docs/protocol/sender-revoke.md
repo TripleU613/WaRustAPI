@@ -107,8 +107,7 @@ content guard refuses it and does not confirm it.
 Native physical deletion, time/type/terminal policy, orphan reconciliation,
 mutable receipt/cache cleanup, full ProtobufValidator/participant/namespace
 policy, outgoing revoke/edit and group/admin/status receive remain incomplete.
-Fresh live revocation and official-client rendering are unverified. No ban
-immunity or complete APK parity is established.
+Fresh live revocation and official-client rendering are unverified. No complete APK parity is established.
 
 Validation passed 959 workspace/all-feature tests, strict Clippy and
 warnings-denied Rustdoc, the real Signal regression with only TCP/Noise/Signal

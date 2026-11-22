@@ -127,7 +127,7 @@ consumers described above remain a different, partial port. **Open:** native
 challenge producer/map ownership/recovery, complete sender admission, malformed/
 out-of-range numeric ACK error admission and native exception handling. This
 exclusion does not implement or bypass a challenge, create another request,
-retry uncertain traffic, clear history or claim restriction prevention. No new
+retry uncertain traffic or clear history. No new
 APK trace or live account operation.
 
 Validation:1,454 workspace/all-feature tests passed. Strict workspace/all-target/

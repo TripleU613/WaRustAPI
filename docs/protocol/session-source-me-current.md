@@ -167,4 +167,4 @@ are retained, with full ordering and account-generation scope still unresolved.
   completed native primary pairing remain distinct authorities. Existing
   negative automatic normal-read privacy guard is not read-self completion.
 
-All findings are static. No account restriction cause or guarantee is inferred.
+All findings are static.

@@ -32,7 +32,7 @@ The separate MetaAI direct-constructor null-map branches cannot establish that.
 paths, effective newsletter entries and callbacks, JAT platform User-Agent
 injection, complete runtime transport selection and mandatory server checks.
 No Rust header changed: these findings do not establish a missing universal
-header or ban prevention. Continue upstream from the original MJe.A02 descriptor.
+header. Continue upstream from the original MJe.A02 descriptor.
 
 ## Reproduction
 

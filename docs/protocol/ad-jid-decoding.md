@@ -117,7 +117,7 @@ The generated nine files / 56,482 bytes reproduce exactly from the pinned APK.
 For another release, review/remap these four methods before exporting a new
 generation and using apk-research-diff; these topics have no automatic anchors.
 No live request, saved identity/key operation, ID regeneration, reservation
-rewrite or server-wait change ran. Static evidence does not prove ban immunity.
+rewrite or server-wait change ran.
 
 Validation: **926 workspace/all-feature tests** passed, plus default CLI/API-symbol
 checks, strict workspace Clippy, warnings-denied Rustdoc, CLI build, formatting,

@@ -1,7 +1,7 @@
 # App-state patch queue and settlement atomicity
 
 2026-11-04. **Confirmed source defects and offline corrections** in the Rust
-comparison client; no account traffic or restriction causation is established.
+comparison client; offline tests only.
 Current APK2.26.43.72 transaction evidence is retained in
 [server-sync lifecycle](server-sync-lifecycle.md): verified patch application
 calls `0mj.A00` before transaction success. The outgoing/incoming version

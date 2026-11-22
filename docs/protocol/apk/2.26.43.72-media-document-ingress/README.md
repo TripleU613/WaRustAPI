@@ -99,7 +99,7 @@ or sender-controlled path adoption is introduced.
 **Unknown:** complete wrapper/medianotify routing and update modes, zero-byte
 crypto/transfer end state, contactVcard/thumbnail/provider handling, native URL/
 range/status recovery, account/output authority and live interoperability.
-No server acceptance, restriction-cause or zero-ban claim is made.
+Server acceptance remains unverified.
 
 Reproduce `apk-field-refs <apk> --class 'LX/Di0;' --field fileEncSha256_
 --type 'Lcom/google/protobuf/ByteString;'`; `apk-callers <apk> --class 'LX/Eel;'

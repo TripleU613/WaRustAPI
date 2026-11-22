@@ -54,7 +54,7 @@ that true does not mean a positive affected-row count); it is not proof
 that every successful set without dhash should clear the Rust checkpoint.
 This correction changes full fetch snapshots only. Full native set hash-gating,
 alias/migration and metadata parity remain open. Old already-projected histories
-are not rewritten. No live acceptance or zero-restriction result is claimed.
+are not rewritten. No live acceptance is claimed.
 
 ## Reproduction
 

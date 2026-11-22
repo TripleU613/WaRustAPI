@@ -231,8 +231,7 @@ check, matching existing reservation behavior. No new duration is invented.
 [reach-out lifecycle and limits](rea/2.26.43.72-reachout-state/README.md)
 and [FUc.Bvj explicit backoff and durable Rust boundary](app-state-patch-atomicity.md#explicit-server-backoff)
 remain the evidence. This correction carries already implemented admission to
-the final local writer boundary; no new APK trace, global outbound restriction
-policy or causal restriction-prevention claim is made.
+the final local writer boundary; no new APK trace was added.
 
 Regression: `queued_action_rechecks_later_restrictions_and_server_wait_without_mutation`
 holds the actual NodeLink write queue, then records the gate after reservation.

@@ -72,4 +72,4 @@ start after the state monitor is released.
 No Rust sender, automatic replay, route or live account operation is added.
 Uncertain holds remain. This evidence supports retaining a lifecycle recheck
 at the eventual send boundary; it does not justify enabling automatic token
-recovery or claiming ban prevention.
+recovery.

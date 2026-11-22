@@ -103,7 +103,7 @@ peer-vote behavior and owned parent-secret precedence remain shared.
 Fresh live own-device vote interoperability is unverified. Edited/suffixed
 parents, special poll lifecycles, own group/status routes, cross-source duplicate
 reconciliation, bootstrap and complete APK/native crypto parity remain unfinished.
-No live account or request was changed; no ban-immunity claim is made.
+No live account or request was changed.
 
 Validation: 948 workspace/all-feature tests, strict workspace Clippy and
 warnings-denied Rustdoc passed. The real Signal regression also passed with

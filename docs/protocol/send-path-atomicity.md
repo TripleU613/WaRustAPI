@@ -24,8 +24,7 @@ outbox rows and journal head, verified again after reopening the encrypted store
 After rollback, a fresh valid claim succeeds and prevents the alternate path.
 Existing historical/restart tests continue to cover committed legacy records.
 
-This is local duplicate-send prevention, not an APK wire field or evidence of
-server restriction causality. An unrelated writer can still create historical state after a claim. Each implementation's reservation and uncertain
+This is local duplicate-send prevention, not an APK wire field. An unrelated writer can still create historical state after a claim. Each implementation's reservation and uncertain
 outcome checks remain necessary. No live network/account operation is performed.
 
 ## Historical pagination and entry-point check

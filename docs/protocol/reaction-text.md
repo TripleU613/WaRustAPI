@@ -86,8 +86,7 @@ intent with a fixed diagnosis and preserves all tables/journal/idempotent ticket
 on rejection and identical repeat. Existing malformed key, parent attribution,
 removal, namespace and transport tests remain active.
 
-No live account was opened or request sent. Full APK parity and ban immunity
-remain unproven; source-backed local validation is not fresh server acceptance.
+No live account was opened or request sent. Full APK parity remains unproven; source-backed local validation is not fresh server acceptance.
 
 Validation: 950 workspace/all-feature tests, strict workspace Clippy,
 warnings-denied Rustdoc, 11 feature-minimal reaction tests, 26 default CLI tests

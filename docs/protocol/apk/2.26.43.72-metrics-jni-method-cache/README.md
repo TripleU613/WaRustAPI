@@ -84,4 +84,4 @@ Checksums cover all other files in this bundle.
 already traced Java IQ producer without relying only on matching selector names.
 **Observed live:** none. **Unknown:** runtime availability, whole-loader recovery,
 credential blinding/verification, generation fencing and deployment necessity.
-No Rust client runtime or mandatory telemetry added; no restriction guarantee.
+No Rust client runtime or mandatory telemetry added.

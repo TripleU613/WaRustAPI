@@ -46,4 +46,4 @@ APK --class 'LX/1rA;' --method A03 --signatures --exceptions; selected byte-PC
 ranges and full-export hash are retained. Prior full legacy-IQ/JAj exports prove
 callback binding and forwarding. Checksums cover every other file. Raw APK and
 bulk exports stay local. Full UI failure behavior, server error prevalence and
-other producers' integer/error grammars are not generalized. No ban guarantee.
+other producers' integer/error grammars are not generalized.

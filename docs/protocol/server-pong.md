@@ -9,8 +9,8 @@ keepalive `iq/get xmlns=w:p`, and it does not copy a request ID.
 
 No service connection or real account was used. An unanswered native ping is a
 confirmed compatibility omission; its effect on a particular account restriction
-or server disconnect is **unknown**. This correction guarantees neither full
-startup parity nor freedom from restrictions.
+or server disconnect is **unknown**. Full
+startup parity remains unverified.
 
 ## Current reader-to-writer path
 

@@ -50,7 +50,7 @@ Regression failed against the old guard, then passed across four action outcomes
 and encrypted-store reopen. The actor test covers both classic and MEX refused
 setters, no fresh notification ACK/adoption, continued ping handling and no
 resend. Workspace:1534 passing tests across nine suites including doc tests.
-No live account operation or ban-rate claim.
+No live account operation.
 
 ## Reproduce
 

@@ -35,7 +35,7 @@ The initHybrid census finds RlW and SZl forwarding. The lambda-factory window
 is copying/cloning context, not the invocation. Small helper windows can include
 the next prologue; nearest exported-symbol headings are not function identity.
 There is no observed registration success, effective interceptor activation,
-server requirement, ban cause, or guarantee of avoiding bans.
+or server requirement.
 
 ## Reproduction
 

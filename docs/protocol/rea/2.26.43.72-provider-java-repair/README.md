@@ -45,4 +45,4 @@ JAVA_HOME=/home/tripleu/.local/share/mise/installs/java/temurin-21.0.13+9.0.LTS 
 Use inspect-android-method APK X.Dxh '<init>' --overload-index 0 for the
 other body, or search-android-classes APK 00D for the exact alias census,
 with the same environment and --format json --full-output options. Full static decompiler limitations remain, including no APK
-signature/runtime/whole-call-flow proof. No traffic-reliability or ban guarantee.
+signature/runtime/whole-call-flow proof. Traffic reliability remains unverified.

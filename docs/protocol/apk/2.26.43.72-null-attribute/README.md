@@ -51,7 +51,7 @@ Literal synthetic web-dictionary fixture `f8 03 19 08 00` (iq/id/null) must
 refuse; before correction it decoded successfully and the new test failed.
 Control `f8 03 19 08 fc 00` keeps present emptyid, and `f8 02 19 00` keeps an
 empty body. These are uncompressed node payloads, without transport flag byte,
-used directly byDecoder. No server rejection, native runtime or ban outcome
+used directly byDecoder. No server rejection or native runtime
 is inferred. Decoder applies this boundary across attribute names/families;
 it does not implement each ACK/notification handler's semantic rules.
 

@@ -47,8 +47,7 @@ per-request APK construction and response/order/persistence audits from
 [network correctness](network-correctness-audit.md),
 [media network outcomes](media-network-outcomes.md),
 [registration lab](registration-lab.md) and [appeal evidence](ban-appeal.md).
-Neither zero bans nor exhaustive coverage of all possible dependency/feature
-transport paths follows from three text matches. The selected scope is the
+The three text matches do not exhaust all dependency and feature transport paths. The selected scope is the
 explicit builders and their direct source callers inspected here.
 
 Reproduce the bounded discovery from the repository root:

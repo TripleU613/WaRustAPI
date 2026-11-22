@@ -76,4 +76,4 @@ absent; never substitute another build's library.
 Next: native stored-callable construction, captured account/config owner,
 response parsing, retry policy, file commit and cache notifications. No Rust
 request or persistent account state changed. No live operation, private account
-read, native execution or zero-ban/server-acceptance claim.
+read, native execution or server-acceptance claim.

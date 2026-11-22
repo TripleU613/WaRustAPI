@@ -61,4 +61,4 @@ limits are not established by this one method. No ID bound was relaxed.
 
 **Unknown:** all subtype/parser parity, effective handler gates, downstream
 state adoption and live ACK acceptance. This fix creates no requests, retries,
-recipient authority, native work completion or ban-risk guarantee.
+recipient authority or native work completion.

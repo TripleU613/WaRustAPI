@@ -2299,8 +2299,8 @@ identical instead of storing a late503 refusal.
 
 **Limits:** awaited writes may still delay observing expiry. Device admission
 and unrelated maintenance remain on their existing cadence. Outgoing/group
-waits and other request families are not converted by this chunk; no full
-network/timing or ban-prevention guarantee is claimed. No live operations.
+waits and other request families are not converted by this chunk; full
+network timing remains unverified. No live operations.
 
 ## Current APK device-hash format comparison (2026-11-06)
 

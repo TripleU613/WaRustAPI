@@ -71,4 +71,4 @@ Selected failure effects are now distinguished; global backoff, shutdown
 flushing, callback races, complete wire promotion and durable recovery remain
 open. In particular, timeout does not establish rejection or safe replay.
 No Rust sender, automatic retry, route or live account operation is added.
-Existing uncertain holds remain unchanged. No ban-prevention claim follows.
+Existing uncertain holds remain unchanged.

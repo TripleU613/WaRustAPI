@@ -100,7 +100,7 @@ support is claimed merely because Rust protobuf skips unknown field26.
 audio handling, zero-byte full transfer, complete Java Unicode case behavior,
 request URL/range/status recovery, account/output authority and live interoperability.
 No206/416 relaxation, fabricated field/header, automatic request/resume or account
-operation is introduced. No server acceptance, ban trigger or zero-ban claim.
+operation is introduced. No live acceptance result.
 
 Reproduce `apk-smali <apk> --class '<descriptor>' --method <name> --signatures
 --exceptions` for Di4.dynamicMethod,DBe.A1T,DBg.A1H/A1J,Exd.A01,FPx.A00,FQe.A00;

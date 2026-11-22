@@ -44,7 +44,7 @@ metadata/alias stores remain gaps; no claim of full6qD admission parity.
 Fetch no-list/unchanged compatibility is unchanged. No-list old saved set
 histories now refuse rather than automatically skip/quarantine/repair; already
 projected historical state is not rewritten. Full migration and live provider
-acceptance remain unproven. No new sender, retry or zero-restriction guarantee.
+acceptance remain unproven. No new sender or retry.
 
 ## Reproduction
 

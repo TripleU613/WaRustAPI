@@ -93,7 +93,7 @@ separate writer drop/drain evidence; cancellation of this job map does not clear
 Remaining: original status callback CmQ/effective flag, complete job-queue policy,
 0TX admission/disposal, cancellation after map removal/before write, already-claimed
 callback ordering and durable ambiguous-commit recovery. Dynamic aliases and
-reflection are not excluded by a physical field census. No ban guarantee follows.
+reflection are not excluded by a physical field census.
 
 ## Reproduce
 

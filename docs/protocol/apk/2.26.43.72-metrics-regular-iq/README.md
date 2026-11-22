@@ -140,4 +140,4 @@ files. These are static contracts, not execution tests or server observations.
 ownership are separate milestones. **Observed live:** none. **Unknown:** effective
 eligibility configs, full buffer framing, upper callback/durable ownership,
 regular retry scheduling and generation fencing. No full transport parity,
-server restriction rule or ban-prevention guarantee follows.
+server restriction rule follows.

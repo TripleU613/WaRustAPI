@@ -92,8 +92,7 @@ write uncertainty and cumulative durable retirement separate. Do not add automat
 replay/deletion, treat IQ error as confirmation, or copy manager-only stale-response
 behavior without closing registry lifecycle. Remaining work includes coroutine
 entry/cancellation, callback cleanup across replacement, arbitrary A0A callbacks,
-complete replay admission/load and ambiguous-commit recovery. No server acceptance
-or ban-prevention guarantee follows.
+complete replay admission/load and ambiguous-commit recovery. No server acceptance follows.
 
 ## Reproduce
 

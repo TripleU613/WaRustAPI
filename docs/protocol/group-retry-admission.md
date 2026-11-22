@@ -55,8 +55,7 @@ or proof; this admission change does not close them:
   [count follow-up](group-retry-count.md). Full root/routing policy remains open.
 
 Full group/status retry eligibility, base-key/receipt-key semantics, successful
-write/delivery and restart behavior remain unverified. No ban/acceptance claim
-follows from this offline source correction.
+write/delivery and restart behavior remain unverified. Server acceptance remains unverified.
 
 Validation: `1314` workspace/all-feature tests, strict workspace/all-target/
 all-feature Clippy, formatting and CLI-reference regeneration passed. APK

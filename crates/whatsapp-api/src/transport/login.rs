@@ -200,8 +200,7 @@ pub fn parse_app_version(text: &str) -> Option<[u32; 4]> {
 
 /// Version selected by the comparison driver's saved recipe: a consistent
 /// recorded registration build, else the configured User-Agent's build, else
-/// the historical comparison default. This is a local selection contract, not
-/// proof that matching a registration build prevents account restrictions.
+/// the historical comparison default.
 /// Explicit malformed/conflicting facts must not silently become another build.
 fn login_app_version(account: &AccountRecord, config: &LabRegistrationConfig) -> Result<[u32; 4]> {
     let mut saved = None;

@@ -133,7 +133,7 @@ not synthetic execution tests or live interoperability.
 **Unknown:** live Java method-cache availability, blinded-credential/verification
 algorithms, full error/timeout dispatcher, retry waits, callback generation and
 durability, and whether this metrics subsystem is required for a deployment.
-No mandatory telemetry, server restriction policy or ban guarantee is inferred.
+No mandatory telemetry or server restriction policy is inferred.
 The method-cache static binding and selected timeout/error dispatch are now
 retained in subsequent sections/bundles. Next useful work is provider recovery,
 followed by evidence-backed Rust behavior only where a real surface exists.

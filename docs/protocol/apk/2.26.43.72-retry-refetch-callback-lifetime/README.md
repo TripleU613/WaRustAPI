@@ -57,8 +57,7 @@ Disconnect/error drops the set; a new drive/process does not repopulate it from
 saved jobs. Pending durable reservations remain held/uncertain without replay,
 reset, new fetch or session/pin changes. Existing pending-job ownership/original/
 peer-state guards still apply after the live callback check. This is not full
-native job cancellation/retry recovery. No guessed timeout, sender provenance,
-server acceptance or ban-prevention guarantee is added.
+native job cancellation/retry recovery. No guessed timeout, sender provenance or server acceptance is added.
 
 The public low-level complete_refetch API remains available for callers that
 already own a live query; normal runtime now supplies that authority through

@@ -89,4 +89,4 @@ target/debug/xtask apk-research-bundle ~/Downloads/WhatsApp.apk \
 ```
 
 No fresh live validation was performed. This is a static dispatch checkpoint,
-not a claim of broadcast-list parity or account-ban immunity.
+not a claim of broadcast-list parity.

@@ -146,8 +146,7 @@ Compatibility: unknown preference retains existing behavior; old unclassified
 played rows are not relabeled. Explicit read override and group behavior stay
 separate. This is a necessary negative privacy gate, not full positive native
 admission, blocklist synchronization, played-self implementation, cross-device
-opened synchronization or safe native retry. No server acceptance or ban-rate
-claim. The first parallel workspace run hit an unrelated handshake cancellation
+opened synchronization or safe native retry. No server acceptance. The first parallel workspace run hit an unrelated handshake cancellation
 test failure; it passed alone and in the four-thread API rerun. That failure's
 scheduling cause remains unproven. The subsequent workspace run passed API/CLI
 suites but found the coverage report stale after adding new retained evidence;

@@ -83,7 +83,7 @@ model the complete contact protocol integrity/backoff result or observer-scoped
 absolute waits. actions::record_reply's generic nested-error inspection does
 not reach this third-level protocol metadata. A successful outer IQ therefore
 is not proof that contact protocol succeeded. This is a confirmed local coverage
-gap, not proof of a server restriction cause or a completed runtime correction.
+gap, not proof of a completed runtime correction.
 
 Next port requirements: bind the contact-check native factory/observer policy;
 trace each applicable read gate and reset authority; model protocol metadata

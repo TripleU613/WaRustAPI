@@ -10,7 +10,7 @@ Queued standalone/group usync nodes used unguarded NodeLink.send, so a request
 could be encoded after its live reply claim had already expired.
 
 These are Rust callback/queue lifetime defects. The existing30-second monotonic
-window is unchanged; this is not a new APK timeout claim, server ban cause or
+window is unchanged; this is not a new APK timeout claim or
 live observation. Native device parsing and verification evidence remains in
 [messaging transport](messaging-transport.md).
 

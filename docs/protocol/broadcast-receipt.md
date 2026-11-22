@@ -105,4 +105,4 @@ cargo test --locked -p whatsapp-api --all-features ordinary_broadcast_list_confi
 ```
 
 No fresh live validation was performed; ordinary broadcast receipt shape is
-verified offline, not full broadcast-list behavior or ban immunity.
+verified offline, not full broadcast-list behavior.

@@ -1063,7 +1063,7 @@ wire change or live operation. [Evidence and remaining scheduling boundary](medi
 APK native HTTPS interceptor fills a missing header; Rust now refuses missing
 client.user_agent before new upload state or transmission. Saved outcomes remain
 unchanged. [Evidence, regression and boundaries](media-network-outcomes.md#new-media-upload-user-agent-preflight-2026-11-06).
-1,509 workspace tests and strict Clippy pass; no live operation or ban guarantee.
+1,509 workspace tests and strict Clippy pass; no live operation.
 
 2026-11-06 — **Native request header member and timeout conversion traced.**
 
@@ -1717,7 +1717,7 @@ Malformed known expiry previously became0 and could replace an active local
 restriction. Parser now refuses before write; receive skips ACK and continues
 while storage failures remain fatal.
 [Scope and regression](network-correctness-audit.md#malformed-reach-out-expiry-preservation-2026-11-04).
-No new native grammar/ban-cause claim or live account traffic.
+No new native grammar claim or live account traffic.
 
 2026-11-04 — **Confirmed mismatch corrected offline: ordinary path query fields.**
 Pinned2.26.43.72 M0g.A00 requires nonnull oe/oh query values; Rust now
@@ -6181,8 +6181,7 @@ row handling remain unchanged.
 Confirmed static source remains pinned APK 2.26.43.72 EqE/Dfd signature storage
 and Fdf digest preimage (see the prekey-upload-replies evidence bundle). This is
 partial storage parity: Rust signs at reservation, whereas native generation
-stores the signature earlier. No live verification, recovery, retry-policy or
-ban-prevention guarantee is implied.
+stores the signature earlier. Recovery and retry policy remain unverified.
 
 ### PQ gate and key transaction consistency (2026-11-04)
 
@@ -6422,8 +6421,8 @@ identical instead of storing a late503 refusal.
 
 **Limits:** awaited writes may still delay observing expiry. Device admission
 and unrelated maintenance remain on their existing cadence. Outgoing/group
-waits and other request families are not converted by this chunk; no full
-network/timing or ban-prevention guarantee is claimed. No live operations.
+waits and other request families are not converted by this chunk; full
+network timing remains unverified. No live operations.
 
 ### Outgoing preparation owns its deadline (2026-11-04)
 
@@ -6476,7 +6475,7 @@ distributions still completing the existing crypto and reopen/no-replay test.
 [Retained methods, error459 qualification and unknowns](apk/2.26.43.72-distribution-ack-admission/README.md).
 Native distribution callback registration, address normalization and complete
 durable confirmation remain open; no raw sender-equality rule or retry was added.
-No live operations or complete ban-prevention claim.
+No live operations.
 
 ### Sender-key ACK marking, one-time reset and callback ownership (2026-11-04)
 
@@ -6714,7 +6713,7 @@ stays captured rather than becoming a refusal; if no timely valid
 response arrives, activation remains unconfirmed. Existing account/key/send
 reservations are not cleared by expiry. Other reply families, awaited-write
 responsiveness and full native request-address policy remain separate audits.
-No live operations or complete ban-prevention guarantee.
+No live operations.
 
 ### Comparison request deadlines start before write (2026-11-04)
 
@@ -7357,7 +7356,7 @@ Host comes from selector 0x1a; access_token from selector 0x17. Endpoint index
 zero is removed before construction. Credential/provider decoding, metadata
 semantics and complete transport ownership remain open.
 [Digest-bound literal/relocation resolver, helper bodies and limits](apk/2.26.43.72-metrics-native-request-builder/README.md).
-No Rust runtime or live traffic changed; no mandatory telemetry or ban guarantee.
+No Rust runtime or live traffic changed; mandatory telemetry remains unverified.
 
 ### Native metrics credential lifecycle (2026-11-05)
 
@@ -8080,7 +8079,7 @@ non-replies/late replies and unowned IQs retain existing admission. No clock,
 account, request retry or restriction-reset authority is added.
 [Callback binding, red/green regression and open cadence/schema gaps](apk/2.26.43.72-client-ping-errors/README.md).
 Full native keepalive scheduling/configuration and successful-result schema
-remain unported; no live account operation or causal ban-prevention claim.
+remain unported; no live account operation.
 
 
 ## Client pong success schema and consumed callback — 2026-11-05
@@ -9229,7 +9228,7 @@ outbound queue until its30-second reply deadline, then still reach encoding and
 transmission. Separately, PendingUpload.settle itself did not check that deadline;
 only the actor's reply dispatch did, so direct library callers could adopt an
 expired result/error. These are local claim-lifetime gaps, not newly inferred
-APK timeout values or observed server restriction causes.
+APK timeout values.
 
 A shared check_deadline rejects Instant::now() >= the original pending deadline.
 Writer preflight checks before store/material inspection and again at its end,
@@ -9593,7 +9592,7 @@ Local public upload eligibility omission corrected at shared entry, including ca
 - Confirmed Rust source gap at `985bbae9`: ordinary media download awaited HTTP
   without rechecking operation account authority at settlement. Corrected with
   existing local fingerprint and offline encrypted-store reopen/rollback regression.
-  This is not an APK wire requirement or observed ban cause. See
+  This is not an APK wire requirement. See
   [media lifecycle](media-network-outcomes.md#ordinary-download-account-fencing).
 
 - Confirmed Rust source gap at `bcb45a5d`: view-once HTTP download settlement

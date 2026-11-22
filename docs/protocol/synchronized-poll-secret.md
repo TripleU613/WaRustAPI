@@ -104,7 +104,7 @@ poll decoder/projection tests remain shared.
 No saved live account or request was changed. Own-device vote updates, edits,
 quiz/timed/anonymous/add-option/results lifecycle, special/group routing and
 complete native parent/migration parity remain unfinished. Fresh synchronized
-poll/vote interoperability and ban immunity are unverified.
+poll/vote interoperability is unverified.
 
 Validation: 947 workspace/all-feature tests, strict workspace Clippy,
 warnings-denied Rustdoc, 26 default CLI tests, experimental CLI build and the

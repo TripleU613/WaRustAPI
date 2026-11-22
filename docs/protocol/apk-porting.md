@@ -4,8 +4,7 @@ Owner steering, 2026-10-07: prioritize comprehensive APK reverse engineering int
 Rust and a quick, file-based comparison/patch workflow for new releases. The
 normal client remains the result; repeated isolated live probes are not the main
 work queue. Existing saved identities, keys, requests and server waits remain
-preserved. APK-derived compatibility does not establish immunity from account
-restrictions, and does not authorize avoiding verification, challenges or limits.
+preserved.
 
 ## Current priority
 

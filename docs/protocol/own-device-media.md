@@ -86,7 +86,7 @@ view-once, expiry, URL, reference and retrieval boundaries shared by this path.
 New own-device bootstrap, alternate-recipient mapping, control synchronization,
 quoted media, view-once lifecycle, primary echo reconciliation and native
 read-self/retry recovery remain open. There was no fresh live own-device media
-sample or download. This port does not prove full APK parity or ban immunity.
+sample or download. This port does not prove full APK parity.
 
 Local validation passed all 944 workspace/all-feature tests, strict workspace
 Clippy, warnings-denied Rustdoc, 26 default CLI tests and the experimental CLI

@@ -83,7 +83,7 @@ variants did not consume its ratchet. Existing consumed/redelivery behavior stay
 covered. A table test covers ordered defaults, signed boundaries, Unicode digits,
 invalid spellings and mixed versions. Broader native duplicate/type selection,
 frskmsg/msmsg/otsk support, nested recipient parsing, transactions and response
-ownership are not claimed complete. No server/restriction causality is established.
+ownership are not claimed complete.
 
 Reproduce `apk-smali <apk> --class '<descriptor>' --method <name> --signatures
 --exceptions` for Dxs.<init>,Ewa.A01,EuN.A01,EIM.A00,Ezj.<init>,0Tp.A05/A06;

@@ -108,4 +108,4 @@ PYCODE
 
 checksums.json binds every other bundle file. Full unrelated synthetic task and
 comparator branches remain outside Git. Static evidence cannot prove live
-protocol correctness, backend success or zero restrictions.
+protocol correctness or backend success.

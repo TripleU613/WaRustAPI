@@ -78,4 +78,4 @@ cargo test --locked -p whatsapp-api --all-features set_hash_updates_only -- --no
 Compare the last two exports to the linked retained methods. checksums.json
 binds every other bundle file. No duplicate REA record or source-body claim.
 Full typed-null parser fallback, metadata stores, alias/migration state and live
-acceptance remain open; this does not establish zero account restrictions.
+acceptance remain open.

@@ -60,7 +60,7 @@ fact parsing and attribution, other address families, typed binary constructor
 validation, cache-derived addresses, writer recovery and live acceptance remain
 separate. In particular this change does not normalize frozen selectors, grant
 new sender/identity authority, change receipt facts or implement a new request.
-No live account operation. Static fidelity cannot guarantee no restrictions.
+No live account operation.
 
 ## Reproduction
 

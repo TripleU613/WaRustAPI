@@ -66,7 +66,7 @@ round trips remain covered by the workspace suite. Tests do not execute Android.
 Recheck EHq via xtask apk-smali APK --class 'LX/EHq;' --method A00
 --signatures --exceptions, and Eyj/A01 for separate crypto failure paths. Complete
 route/key/count progression, other typed failures, native commit/ACK policy and
-server acceptance remain open. No zero-ban guarantee or full audit completion.
+server acceptance remain open. The audit remains incomplete.
 
 Test-harness follow-up: a concurrent workspace run reported an unexpected write
 in the inventory policy test. That test now uses Tokio's paused clock, keeping

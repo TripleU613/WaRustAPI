@@ -65,4 +65,4 @@ cargo test --locked -p whatsapp-api --all-features blank_hash_units
 Compare the four DEX exports to the linked retained query/set/blank/space files.
 checksums.json binds every other bundle file; no duplicate REA or DEX copy is
 added. Native alias/migration/metadata parity, set-result hash gates and actual
-provider acceptance remain open. This does not claim zero restrictions.
+provider acceptance remain open.

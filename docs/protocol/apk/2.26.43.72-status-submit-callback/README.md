@@ -84,5 +84,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/FfK;
 
 PCs are bytes; deltas code units. Remaining work: concrete1A0/writer registration,
 last encoding/prewrite owner checks, ciphertext transaction and full callback/
-disconnect lifecycle. No live execution, generic receipt producer claim or no-ban
-proof; local Rust controls are not tests of native callback futures.
+disconnect lifecycle. No live execution or generic receipt producer claim; local Rust controls are not tests of native callback futures.

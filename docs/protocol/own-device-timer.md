@@ -106,7 +106,7 @@ clears all own rows and continues the held ratchet. Existing text/media/poll/
 vote/reaction/echo tests remain active. No live account or server request changed.
 Fresh live interoperability, after-read/default/privacy state, full timestamp/
 origin/ordering/expiry policy, bootstrap and complete native parity remain
-unfinished or unverified. No ban immunity is established.
+unfinished or unverified.
 
 Validation: 955 workspace/all-feature tests, strict workspace Clippy,
 warnings-denied Rustdoc, the real Signal test with only TCP/Noise/Signal

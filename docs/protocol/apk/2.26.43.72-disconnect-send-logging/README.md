@@ -94,4 +94,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/2Aj;
 
 PCs are bytes, branch deltas code units. Consumer retained whole; selected
 blocks and bounded negative direct searches do not establish transitive/runtime
-completeness. No server behavior, account-restriction or complete RE claim.
+completeness. Server behavior and full coverage remain unverified.

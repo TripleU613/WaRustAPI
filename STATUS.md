@@ -1095,7 +1095,7 @@ wire change or live operation. [Evidence and remaining scheduling boundary](docs
 APK native HTTPS interceptor fills a missing header; Rust now refuses missing
 client.user_agent before new upload state or transmission. Saved outcomes remain
 unchanged. [Evidence, regression and boundaries](docs/protocol/media-network-outcomes.md#new-media-upload-user-agent-preflight-2026-11-06).
-1,509 workspace tests and strict Clippy pass; no live operation or ban guarantee.
+1,509 workspace tests and strict Clippy pass; no live operation.
 
 2026-11-06 — **Native request header member and timeout conversion traced.**
 
@@ -2422,7 +2422,7 @@ Typed direct crypto rejection continues receive without retry or delivery ACK;
 authenticated stored duplicates keep their existing confirmation behavior.
 [APK evidence, offline regression and remaining gaps](docs/protocol/outgoing-retry-receipts.md#old-counters-no-longer-request-retries--2026-11-05).
 Validation:1327 workspace tests, strict Clippy, fmt, CLI reference, coverage
-and hygiene passed. No live traffic or zero-ban guarantee.
+and hygiene passed. No live traffic.
 
 2026-11-05 — **Outgoing retry error domains/eligibility mapped.**
 
@@ -3281,7 +3281,7 @@ no-retry behavior remain. Distribution ACK ownership is a retained audit lead.
 Validation: workspace/all-feature tests (bounded concurrency), strict Clippy,
 CLI reference regeneration, formatting, JSON, coverage freshness and repository
 hygiene passed.
-No live traffic or ban-prevention guarantee.
+No live traffic.
 
 2026-11-04 — **Offline digest inspection implemented.**
 
@@ -4630,7 +4630,7 @@ tests**, strict workspace/all-target/all-feature Clippy, CLI-reference
 regeneration, formatting, coverage freshness and repository hygiene passed.
 Retained research now contains 721 distinct REA records, 365 for the current
 APK, with 68 explicit Rust ownership mappings. These counts are not a port
-percentage or proof against account restrictions.
+percentage.
 
 Current read-self evidence now closes the Me gate, logout filtering and writer
 route, but the existing contact device list cannot supply own-companion authority.
@@ -4663,7 +4663,7 @@ percentages. [Current read-policy evidence](docs/protocol/read-receipt-policy-cu
 and [logical-index defect](docs/protocol/app-state-logical-index.md).
 
 No live account traffic occurred. These are protocol-correctness improvements,
-not evidence of server acceptance or a guarantee against restrictions.
+not evidence of server acceptance.
 
 2026-11-04 — **Atomic patch lifecycle, explicit server waits and privacy adoption:**
 
@@ -4725,7 +4725,7 @@ Clippy, CLI-reference regeneration, formatting, coverage freshness and repositor
 hygiene passed. Twelve focused request-builder tests cover native snapshot
 branches, exact large-integer wire roundtrips, signed overflow and duplicate
 inputs. Evidence accounting retains 560 distinct REA records (204 current build),
-52 with explicit Rust ownership. Counts are not conversion or ban-risk metrics.
+52 with explicit Rust ownership. Counts measure inventory.
 No live account request, token fabrication or key rotation occurred. The full
 network audit remains active. Previous source commit 6de02da passed remote CI.
 
@@ -4754,7 +4754,7 @@ Clippy passed; standalone Noise tests, reduced Noise/transport checks/tests,
 CLI-reference regeneration, formatting, coverage freshness and repository hygiene
 were checked. The research report retains 500 distinct REA records (144 current
 build) and 45 explicit Rust ownership mappings. Counts do not establish completed
-ports or ban protection. No live account request or key rotation occurred.
+ports. No live account request or key rotation occurred.
 The full network audit remains active and incomplete.
 
 2026-11-04 — **Current server-ping response fixed; deeper network gaps retained:**
@@ -4780,8 +4780,7 @@ Validation: **1,127 workspace/all-feature tests** and strict all-target/all-feat
 Clippy passed. CLI-reference, formatting, coverage freshness, whitespace and
 repository hygiene were checked. Retained evidence now totals 430 distinct REA
 records (74 current-build), with 45 explicit Rust ownership mappings. These are
-research counts, not completion or restriction-risk percentages. No live account
-traffic occurred and no zero-ban guarantee or causal ban diagnosis is established.
+research counts, not completion percentages. No live account traffic occurred.
 First hardening batch af2f31a also passed remote CI. Continue from the
 [network ledger](docs/protocol/network-correctness-audit.md), prioritizing protocol
 obligations over feature breadth.
@@ -4806,8 +4805,7 @@ those suites). Strict all-target/all-feature Clippy, CLI-reference regeneration,
 formatting, 16 CI-routing tests and whitespace checks passed. New evidence raises
 retained REA records to 387, including 31 current-build records, and explicit Rust
 ownership records to 25. These counts do not measure protocol completeness.
-No live registration, login or message request occurred. No cause of account
-restrictions or zero-ban guarantee is established. The [network audit ledger](docs/protocol/network-correctness-audit.md)
+No live registration, login or message request occurred. The [network audit ledger](docs/protocol/network-correctness-audit.md)
 tracks remaining request/response families, ordering, acknowledgements and durable
 state obligations; full current bootstrap and optional-traffic classification
 remain open.
@@ -9190,7 +9188,7 @@ redacting all echoed identifiers/unknown values and diagnosing duplicate ACKs.
 Saved captures are content-addressed without timestamps/epochs, and inspection
 covers all history. The stored notification-ACK stream:error cannot therefore
 be attributed to the latest receive window from this inspection alone; prior
-wording was too strong. No causal query/ban/retry interpretation is established.
+wording was too strong. The causal relationship between the query and retry remains unknown.
 No login, query replay, key change or capture mutation occurred in this chunk.
 See [terminal evidence and scope](docs/protocol/terminal-errors.md).
 
@@ -10353,8 +10351,7 @@ row handling remain unchanged.
 Confirmed static source remains pinned APK 2.26.43.72 EqE/Dfd signature storage
 and Fdf digest preimage (see the prekey-upload-replies evidence bundle). This is
 partial storage parity: Rust signs at reservation, whereas native generation
-stores the signature earlier. No live verification, recovery, retry-policy or
-ban-prevention guarantee is implied.
+stores the signature earlier. Recovery and retry policy remain unverified.
 
 ### PQ gate and key transaction consistency (2026-11-04)
 
@@ -10594,8 +10591,8 @@ identical instead of storing a late503 refusal.
 
 **Limits:** awaited writes may still delay observing expiry. Device admission
 and unrelated maintenance remain on their existing cadence. Outgoing/group
-waits and other request families are not converted by this chunk; no full
-network/timing or ban-prevention guarantee is claimed. No live operations.
+waits and other request families are not converted by this chunk; full
+network timing remains unverified. No live operations.
 
 - Confirmed selected APK 2.26.43.72 post-publication follow-up: `0xc4338`
   looks up `mc_1st_set_latest_cache`, checks a version predicate and dispatches

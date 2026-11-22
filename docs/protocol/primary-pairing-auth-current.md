@@ -132,5 +132,4 @@ Required next work, before an integrated own-device/read-self port:
    conflicts and restart between metadata/identity/bootstrap milestones.
    Keep unknown outcomes unresolved and block receipt eligibility until proven.
 
-All findings are static. There is no live pairing validation, account restriction
-causation claim, automatic read-self implementation, or new inspection capability.
+All findings are static. There is no live pairing validation, automatic read-self implementation, or new inspection capability.

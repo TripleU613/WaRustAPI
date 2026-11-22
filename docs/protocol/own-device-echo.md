@@ -97,7 +97,7 @@ Cross-own-source reconciliation, legacy lab sends, placeholder/futureproof
 replacement, native ephemeral replacement and asynchronous status effects,
 alternate-recipient migration, new own-device admission and full native retry/
 read-self policy remain unported. No fresh live echo was observed, and this
-does not prove complete APK parity or ban immunity.
+does not prove complete APK parity.
 
 Local validation passed 945 workspace/all-feature tests, strict workspace Clippy
 and warnings-denied Rustdoc, the actual Signal regression with only TCP/Noise/

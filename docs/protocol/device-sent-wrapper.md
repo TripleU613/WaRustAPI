@@ -105,8 +105,7 @@ retrieval; [sender confirmations](own-device-confirmation.md) are also implement
 recipient namespace mapping, own-device session bootstrap, complete synchronized
 content effects and primary echo reconciliation, and native read-self receipt
 selection. Unsupported recipient-qualified
-stanzas remain raw captures. No fresh live wrapper
-sample or ban-immunity claim follows from this offline trace.
+stanzas remain raw captures. No fresh live wrapper sample.
 
 2026-10-11 validation: all 939 workspace/all-feature tests, strict workspace
 Clippy, warning-denying Rustdoc, default CLI tests, experimental CLI build and

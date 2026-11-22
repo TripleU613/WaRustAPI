@@ -84,4 +84,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/FLk;
 
 PCs are bytes; deltas code units. The bounded evidence identifies actual network-
 related repair producers and replay-admission prerequisites. It does not
-implement them or authorize uncertain Rust sends to replay. No live/no-ban claim.
+implement them or authorize uncertain Rust sends to replay. No live result.

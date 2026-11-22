@@ -3639,7 +3639,7 @@ redacting all echoed identifiers/unknown values and diagnosing duplicate ACKs.
 Saved captures are content-addressed without timestamps/epochs, and inspection
 covers all history. The stored notification-ACK stream:error cannot therefore
 be attributed to the latest receive window from this inspection alone; prior
-wording was too strong. No causal query/ban/retry interpretation is established.
+wording was too strong. The causal relationship between the query and retry remains unknown.
 No login, query replay, key change or capture mutation occurred in this chunk.
 See [terminal evidence and scope](protocol/terminal-errors.md).
 

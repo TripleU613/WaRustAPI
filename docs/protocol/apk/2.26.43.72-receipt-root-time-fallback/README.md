@@ -48,8 +48,7 @@ separately require487 for proven per-item failures.
 **Unverified/separate:** full native storage/row admission, opaque binary/string
 carrier equivalence, other handlers and time fields, clock authority/preference,
 all request families and live acceptance. No new request, query, resend, identity
-change or account operation. This does not establish human viewing or guarantee
-that any account avoids restrictions.
+change or account operation. This does not establish human viewing.
 
 ## Reproduction
 

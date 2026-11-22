@@ -54,4 +54,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/Dv4;
 
 Binary JID equivalence, full cache behavior, service-chat application handling,
 other native families and server acceptance remain unproven. This establishes
-selected text construction/classification, not full APK parity or no-ban proof.
+selected text construction/classification, not full APK parity.

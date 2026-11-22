@@ -85,7 +85,7 @@ Source inspection found `connection::login_material` reconstructed persisted
 Noise halves without checking their relationship. `classic::ClassicFinish::finish`
 sends the saved public half and computes DH with the saved private half; a
 mismatch can reach the socket before cryptographic failure. This is a local
-consistency defect, independent of any ban claim.
+consistency defect.
 
 Preflight now derives the Curve25519 public half using the configured Snow
 backend and compares it with the saved half before endpoint/DNS/TCP/Noise. It

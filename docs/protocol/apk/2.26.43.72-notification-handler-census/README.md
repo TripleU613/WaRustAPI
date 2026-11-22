@@ -89,7 +89,7 @@ obligations unimplemented. Native helper jobs, supported primary/companion roles
 ACK timing, error policy and current Rust app-state integration must be
 reconciled before porting. This research changes no runtime behavior, identity,
 server waits, outbound request or live account. Constructor counts do not prove
-ban causes or complete notification coverage.
+complete notification coverage.
 
 Checksums record every other file's bytes and SHA-256.
 

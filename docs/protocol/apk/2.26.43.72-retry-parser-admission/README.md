@@ -29,5 +29,5 @@ target/debug/xtask apk-smali /path/to/WhatsApp.1.apk \
 
 Stdout matches count-default-reader.txt and count-present-reader.txt. The linked
 parser has its own bundle checksums and full signature. Checksums here cover this
-README and the two complete exports. Full server acceptance/ban behavior remains
+README and the two complete exports. Full server acceptance remains
 unknown; no mandatory request or telemetry is inferred.

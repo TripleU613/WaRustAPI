@@ -100,7 +100,7 @@ ordinary response adoption, choose a supported elapsed/uptime/reboot policy, and
 retain capture, failure and uncertain-write/no-replay semantics. The HTTP upload
 preparation-to-transfer window needs a separate current-auth review; do not
 silently switch URLs/tokens or invent account credentials. No global timer or
-new request is authorized merely by finding these methods. No ban guarantee.
+new request is authorized merely by finding these methods.
 
 ## Reproduction
 

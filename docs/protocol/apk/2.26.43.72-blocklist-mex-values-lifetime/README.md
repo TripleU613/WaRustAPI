@@ -114,4 +114,4 @@ Linked0iq constructor/ARv and0id adapter were freshly exported and compared
 with their retained methods. Complete synthetic methods retain all selectors
 so the identified branches can be checked; other selectors are not interpreted
 as this operation. checksums.json binds every other file here by bytes/SHA256.
-Static evidence does not prove live acceptance, non-delivery or zero bans.
+Static evidence does not prove live acceptance, non-delivery.

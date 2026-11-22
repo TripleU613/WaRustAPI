@@ -112,5 +112,4 @@ this review does not prove all Rust reply-origin handling correct.
 credential-file recovery are different state machines. **Observed live:** none.
 **Unknown:** complete callback registration/status producers, generation fencing,
 concurrent cancellation and queue delay guarantees, account policy, cryptography
-and mandatory deployment scope. No Rust retry, identity reset or restriction
-avoidance guarantee is established.
+and mandatory deployment scope. Rust adds no retry or identity reset.

@@ -40,7 +40,7 @@ strict policy; full native typed-null fallback/skip, dirty migration and metadat
 adoption remain open. No receive-time field, sender, retry, automatic fetch or
 historical repair is introduced. Old valid unprojected duplicate-list histories
 can now project once using their original first direct list; already projected
-state is not rewritten. This does not establish live acceptance or zero bans.
+state is not rewritten. This does not establish live acceptance.
 
 ## Reproduction
 

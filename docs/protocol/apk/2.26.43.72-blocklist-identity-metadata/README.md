@@ -80,4 +80,4 @@ target/debug/xtask apk-smali "$APK" --class 'LX/0Dw;' --method getType --signatu
 ```
 
 checksums.json binds every other bundle file. Reproduction of static exports
-is not execution of the APK, protocol acceptance or proof of zero restrictions.
+is not execution of the APK or protocol acceptance.

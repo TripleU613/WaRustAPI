@@ -39,7 +39,7 @@ records native per-user scheduled timestamp handling and fallback policy in
 APK37.71 and43.72. No new APK extraction was needed for this Rust cache-ownership
 defect. Configured bucket properties, producer exclusions and complete clock
 parity remain unported; this fix does not fill them or establish server acceptance.
-The wider inbound/outbound protocol audit and zero-ban aspiration remain unproven.
+The wider inbound/outbound protocol audit remains incomplete.
 
 Verification: **1,611 workspace/all-feature tests passed**, plus strict
 all-target/all-feature Clippy, formatting, CLI/OpenAPI checks, APK coverage

@@ -33,4 +33,4 @@ AQY constructs0id, applies the supplied callback initializer, callsAQV, and retu
 
 ## Boundaries
 
-Effective isPando selection, Pando cancellation and deadlines,0mb reply/timeout cleanup, operation aliasing, request identity serialization/query hash, late callback suppression and mapping adoption remain untraced. The absence of a retained cancellation handle in this path does not establish a native race or ban cause. No Rust timeout/request/retry behavior was changed; request-owned callbacks and uncertain-state/no-replay rules remain. No live account operation.
+Effective isPando selection, Pando cancellation and deadlines,0mb reply/timeout cleanup, operation aliasing, request identity serialization/query hash, late callback suppression and mapping adoption remain untraced. The absence of a retained cancellation handle in this path does not establish a native race. No Rust timeout/request/retry behavior was changed; request-owned callbacks and uncertain-state/no-replay rules remain. No live account operation.

@@ -55,8 +55,7 @@ unknown here; do not turn this conditional path into a universal ACK rule.
 | every other value in this selected helper | 491 |
 
 Thus13/14/16/17 map to491, not487, in this helper. These are protocol ACK error
-attributes in the selected construction chain, not HTTP response statuses or
-proof of an account-restriction cause. The helper itself does not validate the
+attributes in the selected construction chain, not HTTP response statuses. The helper itself does not validate the
 entire reason domain. [ExA.A02](reason-observation.txt) separately records failure
 observations, with special classifications for other reasons; its full telemetry
 semantics are not classified as network protocol here.
@@ -119,4 +118,4 @@ Reproduce `apk-smali <apk> --class '<descriptor>' --method <name> --signatures
 F1Z.A0B,Efa.A00/A01,1i8.A02; export Dxp/Eoh without method filters.
 Use `apk-field-refs <apk> --class 'LX/Dxp;' --field e2eFailureReason --type I`.
 [checksums.json](checksums.json) pins all new files. Referenced writer files have
-their own previously verified bundle checksum manifests. No ban/zero-ban claim.
+their own previously verified bundle checksum manifests.

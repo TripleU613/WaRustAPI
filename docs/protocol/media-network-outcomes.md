@@ -25,7 +25,7 @@ only affects ordinary media.
 expiry, native retry scheduling, account-specific transport choices and complete
 2.26.43.72 download call flow remain untraced. Existing 2.26.37.71 media schema and
 crypto evidence does not establish current-build HTTP behavior. No new APK
-evidence, server acceptance or restriction-cause claim is introduced.
+evidence or server acceptance claim is introduced.
 
 ## View-once preflight (2026-11-04)
 
@@ -197,7 +197,7 @@ selection, account logout teardown and upload select/reserve concurrency recheck
 The durable current object is an explicit local continuity policy, not proof that
 every native startup would restore it. Preparation alone neither sends nor replays
 a request; the existing explicit CLI operation sends one. No automatic refresh,
-key installation, identity reset, guessed historical request time or ban guarantee.
+key installation, identity reset, guessed historical request time.
 
 ## Explicit media throttle (2026-11-04)
 
@@ -623,7 +623,7 @@ Validation reran all 19 refresh/recovery tests and the pure first/new projection
 regression. No runtime correction was found in this audit. **Unknown/unported:**
 complete sender admission, native elapsed-clock/reboot parity, automatic native
 refresh scheduling and complete host policy. The conservative local wall-clock
-boundary remains; these checks do not prove server acceptance or prevent bans.
+boundary remains; these checks do not prove server acceptance.
 No live operations occurred.
 
 ## Media refresh reply window (2026-11-06)
@@ -867,7 +867,7 @@ strict all-target/all-feature Clippy passed. No live account operations.
 **Unknown:** category meanings (native request values 3/5 choose second string),
 full primary/secondary UA formatting, full lazy client selection and effective
 runtime activation, server acceptance/requirements and account restriction
-causes. Static compatibility work cannot establish zero bans. A zero physical
+causes. A zero physical
 constructor census was not absence proof: optimized allocation uses Object.init
 and explicit initHybrid, corroborated by checked DEX and complete REA output.
 
@@ -888,8 +888,7 @@ directly inserting a request header. It does not establish a missing Priority
 header in Rust. No speculative header, scheduling value, deadline, retry or
 persistence change was made. **Unknown:** provider activation, flag selection,
 context numeric enum meanings, downstream HTTP/2/3 priority serialization and
-server policy. No target execution/live account operation, acceptance or ban
-claim. This resolves the immediate interceptor's direct-write scope; downstream
+server policy. No target execution/live account operation or acceptance result. This resolves the immediate interceptor's direct-write scope; downstream
 middleware and scheduling remain open.
 
 Next concrete static boundary: retained `0eB.A00` at DEX byte0x059c..0x05ac
@@ -1099,7 +1098,7 @@ binds the selected source, not a transaction-wide snapshot of every inbox
 candidate or every account/session-generation race. Database-page secure erasure,
 viewer success and server-open synchronization remain separate. No repeat GET,
 consumption reset, retry or new opened receipt is introduced. This is a Rust
-state-identity correction; no new APK policy or ban-cause claim is made.
+state-identity correction; no new APK policy is made.
 
 ## Opened-receipt collision and replay audit (2026-11-06)
 
@@ -1122,7 +1121,7 @@ Limits: this verifies local queue state, not actual viewer rendering, stanza
 transmission, server acceptance, every PN/LID/group routing identity, or account
 generation replacement. The ticket remains derived from the inbox key; no new
 ticket generation policy is inferred. No viewer, user content, account or network
-operation was used. No new APK or ban-cause claim is made.
+operation was used. No new APK claim is made.
 
 Validation: 1,513 workspace tests (9 result suites), strict all-target/all-feature
 Clippy, formatting, OpenAPI library coverage, CLI reference regeneration, APK
@@ -1185,7 +1184,7 @@ legacy provenance and refresh-ownership cases remain in the workspace suite.
 reboot parity against the local wall-clock age model, complete TTL-versus-auth
 consumers, native refresh scheduling and live host/auth acceptance. This correction
 is specifically the seconds-to-ms conversion within the existing local guard;
-it does not establish complete native deadline parity or make a ban guarantee.
+it does not establish complete native deadline parity.
 Route selection runs before upload encryption/seed/reservation in the existing
 new-upload path. No live HTTP/account operation or state migration was performed.
 
@@ -1325,7 +1324,7 @@ network route. This avoids falsely relying on the initial config mismatch guard.
 HTTP cancellation/ownership after commit, store-generation loss/removal, and full
 native upload/account/queue behavior. Observation retention never bypasses store
 lease/authentication failures. These tests perform no HTTP/account operation and
-prove neither server acceptance nor freedom from restrictions.
+leave server acceptance unverified.
 
 ## Ordinary download source binding (2026-11-06)
 
@@ -1357,7 +1356,7 @@ HTTP refusal retention. No live request is made.
 wall-clock expiry crossing inside a transaction, historical cache provenance,
 and mutation after the final eligibility snapshot or between return and external
 file/viewer use. This check does not establish atomic ownership of an external
-consumer or a zero-restriction guarantee.
+consumer.
 
 ## Pinned shared download HTTP leaves (2026-11-06)
 
@@ -1508,7 +1507,7 @@ content, and refused operations preserve checkpoint/journal state, including
 after cache removal/reopen without a new reservation. Uncached bad fixtures have
 an unapproved-host backstop; no live HTTP exchange is involved. Full native
 update/error/ACK behavior, URL/range handling and provider/output ownership remain
-open; no server acceptance or restriction-cause claim is made.
+open; no server acceptance is made.
 
 ## Pinned current document ingress (2026-11-06)
 
@@ -1704,7 +1703,7 @@ A real encrypted-store regression demonstrated the bug before the fix: valid
 skmsg plus an enc with no type returned Decrypted instead of Unsupported. This
 could advance the sender key and authorize a stanza-level response without
 processing all of its encrypted children. This is confirmed local behavior, not
-evidence of server rejection or account restriction causality.
+evidence of server rejection.
 
 The shared immediate-child gate now requires each enc to use a supported exact
 msg/pkmsg/skmsg type before direct/group/recipient routing, duplicate lookup or
@@ -1782,7 +1781,7 @@ native-invalid versus unsupported application classification, direct writer and
 durable response ownership. Native-recognized frskmsg/msmsg/otsk stay explicit
 local coverage gaps. Ordinary direct/recipient paths still enforce their existing
 single-ciphertext bounds; this change does not claim native duplicate parity
-for those paths. No account traffic, server acceptance or restriction causality
+for those paths. No account traffic or server acceptance
 is established. Existing pinned exports/manifests are reused without duplicate
 evidence files.
 
@@ -1840,8 +1839,7 @@ existing Unsupported path, and native live-location processing remains unported.
 
 Native LIL response handling, later-pass permission, full nested parser behavior,
 other unported ciphertext types, and durable error491 response ownership remain
-open. No new parser error/retry code, automatic network operation or server
-restriction causality is inferred. Existing complete DEX exports and their
+open. No new parser error/retry code or automatic network operation is inferred. Existing complete DEX exports and their
 checksum manifest are reused without duplication.
 
 Verification: the missing-first-body regression reproduced Decrypted on the
@@ -1858,7 +1856,7 @@ and awaiting HTTPS. Its reservation and settlement checked source/reservation
 identity but not the account authority. A concurrent same-generation account
 record replacement could therefore adopt a downloaded/refused outcome after the
 operation owner changed. This is a local lifecycle defect, not APK evidence of a
-mandatory wire field or a known account-restriction cause.
+mandatory wire field.
 
 The operation now captures the existing account-authority fingerprint together
 with its initial account read. It rechecks before reservation, immediately before
@@ -1887,8 +1885,7 @@ No live CDN request or account operation is part of this regression.
 `download_view_once` checked the account before HTTP but its exact source and
 reservation guards did not recheck the account at completion. A same-generation
 account-record change could therefore adopt an old operation's ciphertext or
-HTTP refusal. This is a local ownership defect, not a new APK wire requirement
-or observed restriction cause.
+HTTP refusal. This is a local ownership defect, not a new APK wire requirement.
 
 New view-once reservations retain the original local account-authority digest.
 Reservation creation checks that owner transactionally; the operation checks it
@@ -1951,7 +1948,7 @@ no-backfill behavior and malformed digest refusal. No live POST is performed.
 sealed reference integrity but did not apply the saved upload owner. Direct
 bridge reference creation/resolution could therefore reuse an identity-bound
 upload after same-store account change, bypassing upload preparation's owner
-check. This is a local adoption defect, not a new APK field or observed ban cause.
+check. This is a local adoption defect, not a new APK field.
 
 Both public content-key uploads and message-bound uploads now load the upload
 row and current account in one read transaction and apply the shared upload-owner
@@ -2021,7 +2018,7 @@ The offline regression verifies a missing upload remains unsupported, writes a
 synthetic malformed JSON upload into the encrypted store, reopens it and checks
 that preflight returns Storage error without changing checkpoint rows or journal
 head. No live account/network operation is performed. This is source-level
-error-propagation evidence, not APK evidence of server restriction causality.
+error-propagation evidence.
 
 ## Group-media preflight corruption boundary verified
 

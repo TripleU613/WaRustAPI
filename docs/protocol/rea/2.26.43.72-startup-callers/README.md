@@ -59,8 +59,7 @@ device-query ordering is the complete current native bootstrap order. Conditiona
 pre-ack draining, effective remote configuration, reconnect-specific login flags,
 keepalive cadence, full passive exit and the downstream BqT/A1S/A1R helpers remain
 follow-up questions. A decoded success node or one matching IQ builder cannot
-promote the entire startup path to parity. No causal link to account restrictions
-is established.
+promote the entire startup path to parity.
 
 ## Reproduction and source identities
 

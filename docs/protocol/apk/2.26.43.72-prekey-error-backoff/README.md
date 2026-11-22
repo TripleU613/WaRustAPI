@@ -79,7 +79,7 @@ No Rust retry/admission/identity/key/persistence behavior changes here. No gener
 cooldown or automatic same-ID replay is added from partial source. Native ingress,
 5xx attribution to original devices, EX8 lifetime, outer job scheduling, all reset
 authority and durable recovery must be bound before implementing parity. Runtime
-server acceptance or any causal ban-prevention effect is unverified.
+server acceptance is unverified.
 
 ## Reproduce
 

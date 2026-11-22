@@ -153,8 +153,7 @@ legacy default does not justify overriding a hydrated SDK mode, and no existing
 Rust privacy checkpoint owns the complete reply's effects. The next useful
 port needs an explicit configuration owner and category state, not an
 unreferenced request-builder utility. This chunk changes evidence only; it does
-not claim protocol equivalence, live acceptance or any account-restriction
-causation. No live requests, state resets or fabricated provenance occurred.
+not claim protocol equivalence or live acceptance. No live requests, state resets or fabricated provenance occurred.
 
 ## Token MobileConfig binding and one ready transition — 2026-11-05
 

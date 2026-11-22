@@ -46,4 +46,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/0Di;
 
 Native values outside existing Rust Jid limits retain uncertainty; binary typed
 JIDs, cache/reflection completeness, bare aliases, generic receipt routes and
-full recovery/payload parsing remain open. No live or zero-ban claim.
+full recovery/payload parsing remain open. No live verification.

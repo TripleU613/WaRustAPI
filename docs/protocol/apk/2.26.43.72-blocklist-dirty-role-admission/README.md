@@ -102,7 +102,7 @@ target/debug/xtask apk-smali "$APK" --class 'LX/6p9;' --method CK4 --signatures 
 ```
 
 Compare last three to linked retained files. checksums.json binds every other
-bundle file. No duplicate role/callback DEX copy, live acceptance or ban-rate claim.
+bundle file. Live acceptance remains unverified. The bundle reuses the role/callback DEX export.
 
 The callback offsets are byte offsets, but relative branch operands are signed
 DEX code units (multiply by2). Verify the decisive destinations explicitly;

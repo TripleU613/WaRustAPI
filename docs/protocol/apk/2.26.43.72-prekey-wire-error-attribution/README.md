@@ -89,4 +89,4 @@ bulk writer export stay local.
 
 Remaining: complete job scheduling and durable backoff/retry ownership, per-user
 no-prekey effects, duplicate handling, every JID grammar branch and cancellation
-across write uncertainty. No causal restriction-prevention or zero-ban claim.
+across write uncertainty.

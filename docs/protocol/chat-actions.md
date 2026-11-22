@@ -1087,7 +1087,7 @@ current first-list admission is still a separate gap. The shared native A0U
 source has multiple writers/alias paths, so no new played-receipt block guard
 is inferred from an unproven globally equivalent Rust cache. Source census
 and positive set-success/replacement paths are retained, not called optimistic
-pre-send state without evidence. Zero bans/live correctness remain unproven.
+pre-send state without evidence. Live correctness remains unverified.
 
 Validation:1,516 workspace tests pass (9 result suites, four test threads);
 strict workspace/all-target/all-feature Clippy, formatting, CLI reference
@@ -1115,7 +1115,7 @@ rather than quarantine/skip them. At this checkpoint native duplicates used map 
 adapter refused duplicates; the later repeated-identity correction below
 supersedes that refusal. Full typed fallback, conditional metadata/alias,
 migration and previously projected bad-cache repair are separate gaps. No
-complete native blocklist/played-policy equivalence or ban-rate claim follows.
+complete native blocklist/played-policy equivalence follows.
 
 Validation:1,517 workspace tests pass (9 result suites, four test threads);
 strict workspace/all-target/all-feature Clippy, formatting, CLI reference
@@ -1236,8 +1236,7 @@ The corrected projector checks final membership and supplied last-block metadata
 hash, once-only projection, unchanged journal and no recreated pending request,
 including reopening the encrypted store. Missing/invalid identity admission,
 conditional metadata merging, alias/migration state, malformed-history recovery
-and repair of already projected histories remain separate gaps. No live result
-or ban-rate claim follows.
+and repair of already projected histories remain separate gaps. No live result.
 
 Validation:1,517 workspace tests pass (9 result suites, four test threads),
 including the five-case ordering/reopen regression. The old projector fails
@@ -1726,7 +1725,7 @@ Results/other owners/mismatched namespaces do not acquire this metadata.
 Seventeen-case fetch/block/unblock regression covers signs, limits, Unicode,
 empty/invalid/overflow, encrypted-store reopen, ordered views, legacy absence
 and no replay/cache mutation. No native runtime, new request, automatic400
-reconciliation or recovery/ban-policy guarantee is claimed.
+reconciliation or recovery policy is claimed.
 
 Validation:1,530 workspace tests pass (9 result suites, four threads), including
 the two new diagnostic/scope regressions and existing Java numeric reference
@@ -1762,7 +1761,7 @@ duplicate settlement, legacy serde and encrypted-store reopen with no resend.
 No native photo/cache adoption, image transformation, request construction,
 source/callback lifetime, retry, timer or HTTP-route behavior was added. Downstream
 ITY/8pX state effects and the meaning of the saved callback long remain unknown.
-No live account operation or claim that these codes cause account restrictions.
+No live account operation.
 
 ## Photo lookup result extensions (2026-11-06)
 

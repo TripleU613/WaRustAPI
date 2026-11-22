@@ -119,7 +119,7 @@ Checksums cover all other files.
 metrics path is ported. **Observed live:** none. **Unknown:** upstream product
 value, general formatting/escaping/allocation behavior, metadata clock/mode
 semantics, actual Host/fallback selector plaintext, cryptography and deployment
-necessity. No full metrics parity or account-restriction guarantee is claimed.
+necessity. No full metrics parity is claimed.
 
 ## Complete selected serialization fixtures (2026-11-05)
 

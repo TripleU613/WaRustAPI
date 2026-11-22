@@ -148,7 +148,7 @@ construction, retry policy and server acceptance unknowns otherwise remain.
 then copied appeal_token into whichever AccountRecord existed at that moment,
 creating a default account when missing and discarding persistence errors.
 The fake-link regression reproduced token attachment after a changed own JID.
-This is local credential misattribution, not a proven server restriction cause.
+This is local credential misattribution.
 
 The credential update now compares the initiating receive session's existing
 account-authority fingerprint with the current saved account in the same write
@@ -178,8 +178,7 @@ operation or retry is added.
 `4c8624b6`: recovery decoded a preserved failure token, then persisted it into
 whatever AccountRecord existed in a later write transaction, using a default
 record if absent. The failing-before regression reproduced creation of an
-account from a capture alone. This is local misattribution, not a confirmed
-server restriction cause or a newly established native recovery policy.
+account from a capture alone. This is local misattribution, not a newly established native recovery policy.
 
 Candidate selection now loads the existing account and computes the shared
 account-authority fingerprint in the same read snapshot as capture decoding.

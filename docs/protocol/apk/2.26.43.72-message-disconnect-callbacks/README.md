@@ -74,7 +74,7 @@ not native Android execution or full reconnect equivalence.
 
 Open: completeF1z persistence/retry effects, A05 producers, shutdown/ACK races,
 account/generation binding, replacement/restart and all reconnect paths. No
-live operation, new retry, acceptance result or account-restriction guarantee.
+live operation, new retry or acceptance result.
 
 ## Reproduce
 

@@ -99,4 +99,4 @@ target/debug/xtask apk-mex-queries ../android-lab/apks/WhatsApp.1.apk --operatio
 No Rust request or persistent setting changed. Producers, request envelope/null
 serialization, full WWW/error paths, native persistence, cache readiness and
 effective timing remain unfinished. No private account files, live traffic,
-resets or account operations. Full protocol parity and zero bans are unproven.
+resets or account operations. Full protocol parity is unproven.

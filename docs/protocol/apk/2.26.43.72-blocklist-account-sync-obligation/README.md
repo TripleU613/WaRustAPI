@@ -125,7 +125,7 @@ PYCODE
 The selected tail's queue instruction starts0940; the preceding093a..0940
 constructor is intentionally not included because case1 already constructs
 its own task at0898. checksums.json binds every other bundle file. No full
-notification compatibility or zero-restriction result follows from this trace.
+notification compatibility follows from this trace.
 
 Verify the key callback/worker branch destinations (signed code units times2):
 

@@ -53,4 +53,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/2LK;
 ```
 
 Previously retained complete parser/factories/predicates/dispatch are linked
-above. Static failure paths do not establish server acceptance or no-ban proof.
+above. Static failure paths do not establish server acceptance.

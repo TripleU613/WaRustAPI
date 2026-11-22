@@ -97,7 +97,7 @@ the paging fixture now places padding within the scanned own prefix.
 No live account or server request was changed. Fresh live own-device reaction
 interoperability, encrypted reactions, special/group/status synchronization,
 full canonical author/orphan/ordering policy, bootstrap and complete APK parity
-remain unfinished or unverified. No ban immunity is established.
+remain unfinished or unverified.
 
 Validation passed 951 workspace/all-feature tests, strict workspace Clippy,
 warnings-denied Rustdoc, the real Signal regression with only TCP/Noise/Signal

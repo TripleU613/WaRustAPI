@@ -89,7 +89,7 @@ low-level encryptor can still use an established classic session without a new
 bundle; any path requesting a consumable bundle from a PQ reply now refuses,
 including legacy callers holding a session. Per-send directory query policy
 is not changed by this guard. No live account
-operation or new key lookup ran for this change; no ban-immunity claim follows.
+operation or new key lookup ran for this change.
 
 Validation passed 970 workspace/all-feature tests, strict all-target Clippy,
 warnings-denied Rustdoc, the outbox refusal/reopen test with TCP/Noise/Signal

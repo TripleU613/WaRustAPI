@@ -66,8 +66,7 @@ and an encoded/decoded ACK with matching user namespaces. Existing ACK tests
 cover nonzero device, group, type, recipient and edit behavior.
 
 No live request, account mutation, key/ID regeneration, reservation replay or
-server-wait change ran. Offline checks do not establish server acceptance or
-ban immunity. Real cross-release comparison still needs another APK.
+server-wait change ran. Offline checks do not establish server acceptance. Real cross-release comparison still needs another APK.
 
 Validation: 927 workspace/all-feature tests passed, plus default CLI/API-symbol
 checks, strict workspace Clippy, warnings-denied Rustdoc, experimental CLI build,

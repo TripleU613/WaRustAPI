@@ -75,7 +75,7 @@ release; old obfuscated names alone are not cross-release authority. Full specia
 grammar, symbolic server-only aliases, native binary subtype construction,
 self-status state processing and complete ACK dispatch remain unfinished.
 No live request, account-key operation or server-wait change ran. Static class
-agreement does not establish effective privacy settings or ban immunity.
+agreement does not establish effective privacy settings.
 
 Validation: **924 workspace/all-feature tests** passed, plus default CLI/API-symbol
 checks. Strict workspace Clippy, warnings-denied Rustdoc, CLI-reference/OpenAPI

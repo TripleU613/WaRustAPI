@@ -125,7 +125,7 @@ participant codec test incorrectly expected 123@call and 123@temp to remain nonn
 Dv5/7Kr constructor evidence. Codec tests encode the resulting ACKs. These are
 local offline guarantees, not server acceptance.
 Complete binary/string/cache/native scheduling parity and other sender grammars
-remain open. No live account operation or account-restriction guarantee.
+remain open. No live account operation.
 
 
 ## Shared definite-null text factory/cache boundary (2026-11-06)

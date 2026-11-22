@@ -14,7 +14,7 @@ registers through A0B before calling0Sf.A05 with both booleans false. In A05,
 channel A0J absent plus readiness A06=false and A02=12 logs a drop and returns
 at0020..002c. Other absent-channel readiness combinations throw at009a..00aa.
 No callback completion/removal is present in that initial return branch. State12
-is a local field value here, not an inferred server refusal or ban cause.
+is a local field value here, not an inferred server refusal.
 
 With a channel, played selector38 enters the A00-provider side effect at003e.
 The supplied false final boolean selects0Sf.A00 preparation at0070..0076.
@@ -57,7 +57,7 @@ error and preserves uncertainty. APK drop/exception/future completion does not
 justify resetting that reservation, dropping its durable callback or retrying.
 No runtime behavior change, new deadline, send or retry added. Full A05-provider
 side effects, all failure producers, native scheduling/retry policy, shutdown
-ordering and account-generation authority remain open. No zero-ban claim.
+ordering and account-generation authority remain open.
 
 ## Reproduction
 

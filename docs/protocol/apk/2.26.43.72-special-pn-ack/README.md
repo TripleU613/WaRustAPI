@@ -50,4 +50,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/0EB;
 ```
 
 Compare each output byte-for-byte; previously retained parser/predicates/accessors
-are linked above. Static behavior is not server acceptance or zero-ban proof.
+are linked above. Static behavior is not server acceptance.

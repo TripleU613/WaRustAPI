@@ -65,8 +65,7 @@ Existing direct identity-policy, crypto, media, ACK and no-replay tests remain.
 suspension, selected resume; connection.rs Outbound.prepare and normal direct
 query/message handoffs. This local ownership defect needed no new APK
 instruction exports. Existing native directory/ACK/timing policies remain;
-APK2.26.43.72 is still pinned for protocol research. No server restriction cause
-or acceptance is established.
+APK2.26.43.72 is still pinned for protocol research. No server acceptance is established.
 
 The turn's bounded app-state review confirmed that ingest_action's mutable
 patch/error/catch-up path obtains actions::view_in_write before applying state.

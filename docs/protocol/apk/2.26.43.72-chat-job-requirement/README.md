@@ -95,4 +95,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/1iM;
 For the negative comparison, exportBulk A0L with the same flags and cmp the
 linked prior file. PCs are bytes; deltas code units. Retained complete selector
 is interpreted only for identified requirement/handoff/diagnostic boundaries.
-No dynamic/alias/global completeness or account-restriction guarantee.
+No dynamic/alias/global completeness.

@@ -1,7 +1,7 @@
 # Registration network audit — 2026-11-04
 
 Offline request ownership review. This ledger concerns correctness and conditional
-traffic, not adding registration methods or establishing ban causation.
+traffic, not adding registration methods.
 
 ## Confirmed Rust request surface
 
@@ -74,7 +74,7 @@ The keys, values, provenance and native/runtime conditions are unknown here.
 The Rust recipe does not establish equivalence to this native-generated map.
 An empty-H envelope is not proof of satisfying any of these native prerequisites.
 Trace that native producer and relevant gates before deciding what can honestly
-be implemented in Rust. No claim that these omissions caused a ban follows.
+be implemented in Rust.
 
 Checked DEX was retained for all four helpers. The `A0S` Java rendering itself
 shows suspicious boolean/int coercion; no scalar encoding was ported from it.
@@ -98,7 +98,7 @@ or synthesized from this table.
 | A0c | `rc` from RELEASE enum; numeric binding and applicability remain open |
 
 Effective flags, provider data, encoding helpers and downstream native map are
-still open. The field list cannot establish that omissions are ban triggers.
+still open.
 
 ## Current APK autoconf lead and decompiler limitation
 

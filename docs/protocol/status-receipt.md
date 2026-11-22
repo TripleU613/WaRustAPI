@@ -55,8 +55,7 @@ changing message receipt primary address encoding. This chunk makes no such
 conversion. Cp2.A01's error shape is source evidence, not new error support.
 
 Bp1.A05 producer authority, primary device encoding and full native status
-receipt policy remain unported. No live window ran; server acceptance and ban
-immunity are not established by static/offline checks.
+receipt policy remain unported. No live window ran; server acceptance is not established by static/offline checks.
 
 Validation: 929 workspace/all-feature tests passed, plus strict workspace
 Clippy, warnings-denied Rustdoc, default CLI/API-symbol checks, experimental CLI

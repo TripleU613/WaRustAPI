@@ -6,7 +6,7 @@ pinned APK SHA256 `887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530
 [Recovery provenance](../2.26.43.72-superpack-reconstructed-members/README.md).
 No request or native request-builder execution was observed. Local Rizin exports
 are not REA Evidence envelopes. This is metrics-specific construction evidence,
-not proof of mandatory telemetry or protection from account restrictions.
+not proof of mandatory telemetry.
 
 ## Method and header sources
 
@@ -86,5 +86,4 @@ sites. Checksums cover all other files in this bundle.
 **Inferred:** explicit framing and admission order are useful Rust compatibility
 inputs. **Observed live:** none. **Unknown:** complete request validity, selector
 decoding, credential cryptography/provider, metadata/analytics schema, transport
-ownership and every server requirement. No reverse-engineering percentage or
-ban-prevention guarantee follows from this chunk.
+ownership and every server requirement.

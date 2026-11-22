@@ -117,5 +117,5 @@ prototype from the prefix-matched export. Checksums cover all other files.
 fallback behavior. **Observed live:** none. **Unknown:** actual dynamic endpoints,
 selector22 plaintext, upstream provider policy, full retry scheduling and
 stale-completion ownership, credential crypto and deployment necessity. These
-findings narrow endpoint production; they do not establish full transport parity,
-server restriction policy or a ban-prevention guarantee.
+findings narrow endpoint production; they do not establish full transport parity or
+server restriction policy.

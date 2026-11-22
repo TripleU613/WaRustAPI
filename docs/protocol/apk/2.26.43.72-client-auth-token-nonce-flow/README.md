@@ -58,4 +58,4 @@ origin verification, replay freshness or complete push eligibility. Other
 push producers, account/generation binding, executor completion ordering,
 request failure/backoff and durable recovery remain open. No Rust sender,
 automatic replay, route or live account operation is added. Uncertain holds
-remain unchanged. This evidence does not establish ban prevention.
+remain unchanged.

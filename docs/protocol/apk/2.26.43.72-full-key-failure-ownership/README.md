@@ -97,4 +97,4 @@ REA attempted inspect_android_method(class_name=X.Dxh, method_name=<init>,
 overload_index=0) against the same pinned local APK. PCs are bytes; branches and
 catch coordinates use code units. Complete methods are retained or linked;
 checksums.json covers every other file here. No native whole-app deadline,
-replay authority, runtime parity or restriction-prevention guarantee follows.
+replay authority or runtime parity follows.

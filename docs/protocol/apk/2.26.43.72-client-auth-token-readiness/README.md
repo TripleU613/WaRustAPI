@@ -50,4 +50,4 @@ are confirmed, but actual registration/delivery is not established here.
 No Rust sender, automatic replay, route or live operation is added. Existing
 uncertain holds remain. Trusted push provenance, the consumer's v31 control-flow
 join, complete lifecycle eligibility and failure/backoff still block faithful
-automatic token recovery. This evidence does not establish zero-ban behavior.
+automatic token recovery.

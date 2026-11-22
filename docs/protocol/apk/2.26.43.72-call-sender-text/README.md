@@ -78,4 +78,4 @@ target/debug/xtask apk-smali "$APK" --class 'LX/0Dd;' --method A01 --signatures 
 ```
 
 checksums.json covers every other file. Existing parser/type/factory/catch
-exports are linked, not duplicated. Static parity does not establish zero bans.
+exports are linked, not duplicated.

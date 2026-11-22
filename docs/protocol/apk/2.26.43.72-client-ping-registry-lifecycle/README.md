@@ -91,4 +91,4 @@ Open: pre-send queued A0I disposal, executor/handler ordering across new channel
 registration, already-claimed completion cancellation and effective dispatch flag.
 Native durable pre-ACK replay/retirement remains unported. Existing Rust claims
 stay local to drive; no live-account operation, automatic replay or durable-state
-reset is introduced. This is not complete lifecycle parity or a ban guarantee.
+reset is introduced. This is not complete lifecycle parity.

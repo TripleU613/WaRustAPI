@@ -79,8 +79,7 @@ Existing audio/sticker/document tests cover shared-helper compatibility.
 **Unknown:** full native update/error/envelope dispatch, exact WebP config/subtype
 binding, generic3GPP/PTV/native codec behavior, Java Unicode image matching,
 URL/range/status recovery, account/output authority and live interoperability.
-No206/416 relaxation, retry/resume, new field/header, native-global allowlist or
-restriction-cause/zero-ban claim is introduced.
+No206/416 relaxation, retry/resume, new field/header or native-global allowlist is introduced.
 
 Reproduce `apk-smali <apk> --class 'LX/0jZ;' --method A09 --signatures --exceptions`
 and A0E for the new leaves. Earlier complete EwA.A03/F1B.A05 exports are linked

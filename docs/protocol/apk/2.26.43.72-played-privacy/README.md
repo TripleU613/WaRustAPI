@@ -69,4 +69,4 @@ target/debug/xtask apk-smali "$APK" --class 'LX/1dH;' --method A0T --signatures 
 ```
 
 checksums.json binds every other bundle file. Reused sources retain their
-original checksum/REA provenance. Static parity is not proof of zero bans.
+original checksum/REA provenance.

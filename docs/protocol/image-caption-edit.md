@@ -63,7 +63,7 @@ Literal guard cases cover view-once, quoted, mixed and malformed replacements.
 Fresh live caption-edit delivery, peer configured window 2983, media hooks,
 video/document captions, special/orphan/expiry lifecycles and a second APK release
 comparison remain unfinished or unverified. No live account operation ran for
-this change, and these checks do not establish ban immunity.
+this change.
 
 Validation passed 967 workspace/all-feature tests, strict all-target Clippy,
 warnings-denied Rustdoc, the real Signal regression with TCP/Noise/Signal only,

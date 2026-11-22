@@ -86,7 +86,7 @@ Fresh live video/document edits, native media hooks, modeled document title,
 PTV/audio/sticker and special/orphan/expiry lifecycles, peer property 2983 and a
 second APK comparison remain unfinished or unverified. Historical events from
 the earlier permissive build are not erased or automatically reclassified.
-No live account operation ran for this change; no ban-immunity claim follows.
+No live account operation ran for this change.
 
 Validation passed 969 workspace/all-feature tests, strict all-target Clippy,
 warnings-denied Rustdoc, the real Signal receive regression with TCP/Noise/Signal

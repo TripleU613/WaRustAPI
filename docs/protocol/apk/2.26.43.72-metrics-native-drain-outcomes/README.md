@@ -97,7 +97,7 @@ Checksums cover every other file.
 ownership must remain separate porting concerns. **Observed live:** none.
 **Unknown:** upper callback binding, full regular job/send schema, backoff,
 generation fencing and persistent deletion/recovery. No server restriction
-policy, automatic retry or ban-prevention guarantee is inferred.
+policy or automatic retry is inferred.
 
 ## Later recovery entry
 

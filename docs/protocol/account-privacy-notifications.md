@@ -128,8 +128,7 @@ refresh retry/dirty completion. Existing generic MEX JSON inspection is not a
 correlated privacy refresh consumer. Those dependencies still prevent a faithful
 modify-refresh implementation, even though its selected transport is now known.
 
-This remains static/offline work; no account-restriction causation, live success
-or guarantee against restrictions is inferred.
+This remains static/offline work; live acceptance remains unverified.
 
 Offline inspection: `whatsapp-cli account-privacy-inspect` reads the stored
 server category and its Boolean conversion from an existing store. Missing stays

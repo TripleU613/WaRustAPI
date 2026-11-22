@@ -82,5 +82,4 @@ Reproduce `apk-smali <apk> --class '<descriptor>' --method <name> --signatures
 --exceptions` for F0b.<init>/A02,FKc.<init>/BLW,FSC.BLN,EuT.A01. The copied direct
 reference censuses retain their full selected output; prior EdS/failure bodies
 stay pinned by their original bundle. [checksums.json](checksums.json) covers
-all files here. This is protocol research, not evidence of ban causality or any
-zero-ban guarantee.
+all files here.

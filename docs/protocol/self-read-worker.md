@@ -72,7 +72,7 @@ last-read-row/position state, failure reconciliation and special ACK dispatch.
 The existing parser's read-self fromMe=false rule remains separate from
 played-self. Neither receipt is a remote outbox recipient read/playback fact.
 No Rust behavior, public API, saved identity, key, request ID, wait, reservation
-or live request changes in this chunk. Full client parity and ban immunity are
+or live request changes in this chunk. Full client parity is
 not established by static source agreement.
 
 ```sh

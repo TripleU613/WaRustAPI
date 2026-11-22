@@ -64,7 +64,7 @@ Final compiled defaults are not effective account configuration. The
 saved preferences, SDK readiness/selection, direct versus comparison precedence,
 first-access caching and owner lifetime must be respected. This research does not
 change Rust timer values or claim server acceptance, native effective timing,
-complete protocol parity or a guarantee against bans.
+complete protocol parity.
 
 The optional `--policy token-buckets` selection reuses this complete constructor
 model for865/909/996/997, retaining the original default client-ping output. Its

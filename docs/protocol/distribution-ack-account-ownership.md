@@ -40,7 +40,7 @@ SendE2EMessageJob.A06 / 0bA after-ACK sent_sender_key behavior. No new APK expor
 was used for this Rust-only ownership correction; pinned APK2.26.43.72 evidence
 is unchanged. This is not a newly discovered server requirement or proof of
 server acceptance. No live traffic, identity reset, query replay or account
-operation was performed. Zero bans remains unproven.
+operation was performed.
 
 Regressions cover refusal before consumption, unchanged checkpoint/journal data,
 refusal across reopen, and original-owner once-only completion. Verification: **1,609 workspace/all-feature tests passed**, plus strict

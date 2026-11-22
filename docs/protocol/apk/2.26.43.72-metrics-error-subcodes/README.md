@@ -104,4 +104,4 @@ number coercion/range behavior.
 this local boundary. **Observed live:** none. **Unknown:** authoritative server
 meanings, frequency/mandatory telemetry, callback generations, exact renewal
 outcomes, complete endpoint retry policy, durable buffer removal/recovery and
-whether any of this affects restrictions. No zero-ban guarantee follows.
+whether any of this affects restrictions.

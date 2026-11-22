@@ -80,7 +80,7 @@ native execution or full lifecycle equivalence.
 Next gaps: completeRF1 list/provider binding and observer dispatch lifecycle,
 persistentqueue failure/dedup/restore semantics, rejection/defer handoff and
 operation-specific restart/account-generation authority. The broader network
-audit remains incomplete; no ban or delivery guarantee is made.
+audit remains incomplete; no delivery guarantee is made.
 
 ## Reproduce
 

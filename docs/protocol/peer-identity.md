@@ -2808,7 +2808,7 @@ The read-only peer directory inspector now derives outer refusal, uniquely selec
 
 Regression covers root503 before/after valid and invalid signed lists, new settlement and synthetic historical Error rows, reopen, signature verdict, no false server error code, unchanged checkpoints/pins/sessions and journal, redaction, retained original reply, and no automatic replay. New verified results permit the existing explicit refresh; historical Error rows remain unchanged and **do not** gain refresh authority. Existing per-user refusal matrix now includes two root errors surrounding the selected user's480.
 
-**Limits:** generic action error attribution can still select a foreign user refusal; original typed request correlation is not redesigned here. Identity-only queries use a different callback and remain a separate pending audit. This does not alter pins, derive sessions, send traffic or establish server acceptance or ban prevention.
+**Limits:** generic action error attribution can still select a foreign user refusal; original typed request correlation is not redesigned here. Identity-only queries use a different callback and remain a separate pending audit. This does not alter pins, derive sessions, send traffic or establish server acceptance.
 
 ## Identity-only reply context and signed codes (2026-11-06)
 
@@ -2818,7 +2818,7 @@ Regression covers root503 before/after valid and invalid signed lists, new settl
 
 Reopen regressions retain raw correlated reply privately, unchanged checkpoints/pins/sessions/journal across inspection, redaction and once-only query reservation. Outer errors, duplicate/foreign rows, unsupported type/key shapes and exact namespace guards remain covered. Generic action Ok does not prove usable identity. No pin adoption, session creation, automatic refresh or replay is added.
 
-**Limits:** FUP now schedules FdC case1 with additional EHZ metadata, rather than the older DNk worker; downstream current-build adoption/companion verification remains untraced.32-second producer timer is retained evidence, not a claim that Rust's identity-only action queue implements that callback timer. Static source does not establish live server acceptance or restriction avoidance. Generic action foreign-user attribution remains separate.
+**Limits:** FUP now schedules FdC case1 with additional EHZ metadata, rather than the older DNk worker; downstream current-build adoption/companion verification remains untraced.32-second producer timer is retained evidence, not a claim that Rust's identity-only action queue implements that callback timer. Static source does not establish live server acceptance. Generic action foreign-user attribution remains separate.
 
 ## Full-directory action errors belong to the original peer (2026-11-06)
 
@@ -2840,7 +2840,7 @@ Read-only directory inspection validates the same original single-peer request i
 
 Regression mutates one saved component at a time after legitimate signed settlement: action kind, request ID, target peer, type, namespace, destination, width, or reply ID. After reopen, refresh refuses and inspection cannot report VerifiedBundle; checkpoints, pins, sessions, outbox and journal remain unchanged, the original marker remains and no query can be reserved. Existing signed-success and wire-encoding tests remain positive controls.
 
-**Limits:** this validates current stored ownership, not a cryptographic seal against coordinated rewriting of all store records. Historical Error/uncertain rows remain blocked. Other action families using completed_reply_in, multi-peer batches, account-generation/socket ownership and live callback lifetimes remain separate boundaries. No network/account operation or APK execution occurred; no restriction-prevention guarantee follows.
+**Limits:** this validates current stored ownership, not a cryptographic seal against coordinated rewriting of all store records. Historical Error/uncertain rows remain blocked. Other action families using completed_reply_in, multi-peer batches, account-generation/socket ownership and live callback lifetimes remain separate boundaries. No network/account operation or APK execution occurred.
 
 ## Outer directory errors cannot inherit nested refusal diagnostics (2026-11-06)
 
@@ -2852,7 +2852,7 @@ Regression mutates one saved component at a time after legitimate signed settlem
 
 Regression spans both affected producers, zero/one/two root errors, root/list order, a nested private user error, reopen, recognized root429/text, no nested text attribution, retained original raw reply, unchanged inspection/checkpoints/journal and no new reservation. Full-directory explicit refresh remains blocked; identity-only repeat remains the original action. Existing identity-refresh end-to-end outer-error controls cover that shared branch with valid signed data and still prevent adoption. No network request, automatic retry, pin/session adoption or live account operation was performed.
 
-**Limits:** this corrects diagnostic context without implementing native retry/backoff behavior or widening generic error-code representation. Other producers' nested-error semantics and effective callback timing remain separate audits. No guarantee against restrictions or live server acceptance follows.
+**Limits:** this corrects diagnostic context without implementing native retry/backoff behavior or widening generic error-code representation. Other producers' nested-error semantics and effective callback timing remain separate audits. Live server acceptance remains unverified.
 
 ## Identity-only callback lifetime (2026-11-06)
 
@@ -2864,4 +2864,4 @@ The existing timer/response competing-claim policy is preserved. [Callback-map e
 
 Paused-clock regression covers PN and LID, a five-second delay between captured start and callback registration,31-second result/error claims, exact32-second expiry rejecting result/error, duplicate claims, overdue response before expiry dispatch, unchanged expired reservation, original-marker repeats and reopen with no callback resurrection/replay. A separate full key query still has no mapped deadline in this table: this change does not infer its native timeout from identity-only evidence. Reply payload crypto validity remains separately inspected; callback settlement alone does not mean a received identity is valid.
 
-**Limits:** native Handler clock/suspend behavior and actual runtime scheduling are not measured. Awaited writer work can delay expiration observation; this does not add a before-encoding deadline fence to the general action writer. Native multi-user identity requests and other key/request timers remain outside this implemented single-primary recognition. No live account traffic, identity adoption, native scheduler reconstruction or general zero-restriction guarantee.
+**Limits:** native Handler clock/suspend behavior and actual runtime scheduling are not measured. Awaited writer work can delay expiration observation; this does not add a before-encoding deadline fence to the general action writer. Native multi-user identity requests and other key/request timers remain outside this implemented single-primary recognition. No live account traffic, identity adoption or native scheduler reconstruction.

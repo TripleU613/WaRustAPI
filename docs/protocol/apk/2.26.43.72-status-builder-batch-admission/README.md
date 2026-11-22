@@ -88,5 +88,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/2A1;
 ```
 
 PCs are bytes, deltas code units. Native DB/job behavior remains static evidence;
-local Rust controls are not native execution or complete status parity. No live
-or no-ban claim.
+local Rust controls are not native execution or complete status parity. No live result.

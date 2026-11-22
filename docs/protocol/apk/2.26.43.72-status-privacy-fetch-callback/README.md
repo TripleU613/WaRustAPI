@@ -83,4 +83,4 @@ for full GetStatusPrivacyJob/7pl, 8RJ.<init>/BsS/Bvj/CK4/CmQ, 6ok.A0f,
 0Tp.A0G, 6oj.A05/A1Q, 6oe.A1T, 6oh.A1R/A1L, 1ud.A00/A01, 0HF.A00 and
 1Xl.A1Y. Selected callback ranges retain the full-class export SHA256 and original
 full-method exception metadata. Checksums cover every other file. Raw APK and
-bulk 8RJ export stay outside Git. No claim of server acceptance or zero bans.
+bulk 8RJ export stay outside Git. No claim of server acceptance.

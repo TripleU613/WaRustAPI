@@ -47,7 +47,7 @@ No new APK export was needed for this Rust ownership defect. Existing
 [message ACK grammar](message-ack.md), pinned APK2.26.43.72 evidence and
 [distribution-specific ACK ownership](distribution-ack-account-ownership.md)
 remain separate evidence. No new wire field, invented server rule, identity reset,
-replay or live account operation. Server acceptance and zero bans are unproven.
+replay or live account operation. Server acceptance remains unverified.
 
 Verification: **1,610 workspace/all-feature tests passed**, plus the expanded
 group ACK regression, strict all-target/all-feature Clippy, formatting, CLI/OpenAPI

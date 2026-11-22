@@ -68,8 +68,7 @@ metadata-matching files for analysis. Selected dynamic-symbol outputs retain
 JNI_OnLoad addresses. Neither selected dynamic table exports a name containing
 jvidispatch; this does not prove absence of those methods or native registration.
 Full JNI mapping, native metrics schema/storage/transport and server-response
-behavior still need investigation. None of this is a Rust behavior fix or a ban
-prevention guarantee.
+behavior still need investigation. None of this is a Rust behavior fix.
 
 ## Reproduction
 

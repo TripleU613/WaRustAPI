@@ -380,9 +380,7 @@ covers replacement/removal/metadata changes and reopen. Native lifecycle remains
 unverified. [Details](media-network-outcomes.md#ordinary-download-source-binding-2026-11-06).
 
 Owner priority, 2026-11-04: strengthen request/response correctness before adding
-features. Avoiding account restrictions is the objective; zero bans is not a
-measurable guarantee from static analysis. No restriction cause has been proven
-by this audit. No live account traffic was sent.
+features. No live account traffic was sent.
 
 ## Audit ledger
 
@@ -504,8 +502,7 @@ missing entire preparations or retry uncertain sends; see
 
 **Confirmed** means traced source or reproducible local behavior; **inferred**
 means a compatibility implication; **observed** requires actual server evidence;
-**unknown** stays open. A local correctness fix does not prove server acceptance
-or quantify restriction risk. No unsolicited replay, identity reset, fabricated
+**unknown** stays open. A local correctness fix does not prove server acceptance. No unsolicited replay, identity reset, fabricated
 telemetry or ignored cooldown is authorized by this queue. Existing histories,
 keys, uncertain outcomes and challenge requirements remain authoritative.
 
@@ -522,8 +519,7 @@ string); missing/null/malformed/negative/overflow/fractional input refuses
 before storage. The connection catches this InvalidInput, preserves capture
 and prior restriction, skips that MEX ACK and continues receiving. Storage
 errors still propagate; valid updates keep commit-before-ACK ordering. This
-is a local integrity correction, not a newly proven native timestamp grammar,
-ban cause or full restriction-policy implementation. Existing enforcement
+is a local integrity correction, not a newly proven native timestamp grammar or full restriction-policy implementation. Existing enforcement
 coverage outside group preparation remains an audit obligation.
 
 Real-store regression checks active and inactive malformed updates cannot
@@ -690,8 +686,7 @@ checked the restriction at queue time, but actions.reserve_limit decoded
 and marked every queued create sent without another restriction check.
 connection's action-drain branch calls reserve_next then link.send. A
 create queued before a received active update could therefore bypass the
-existing guard. This is a local ordering defect, not evidence of a new
-server ban cause or identical native group-create policy.
+existing guard. This is a local ordering defect, not evidence of identical native group-create policy.
 
 Both reserve_limit (bulk and actor reserve_next) and reserve_one_in now
 read the recorded active restriction in their reservation transaction
@@ -1650,8 +1645,7 @@ row handling remain unchanged.
 Confirmed static source remains pinned APK 2.26.43.72 EqE/Dfd signature storage
 and Fdf digest preimage (see the prekey-upload-replies evidence bundle). This is
 partial storage parity: Rust signs at reservation, whereas native generation
-stores the signature earlier. No live verification, recovery, retry-policy or
-ban-prevention guarantee is implied.
+stores the signature earlier. Recovery and retry policy remain unverified.
 
 ### PQ gate and key transaction consistency (2026-11-04)
 
@@ -1891,8 +1885,8 @@ identical instead of storing a late503 refusal.
 
 **Limits:** awaited writes may still delay observing expiry. Device admission
 and unrelated maintenance remain on their existing cadence. Outgoing/group
-waits and other request families are not converted by this chunk; no full
-network/timing or ban-prevention guarantee is claimed. No live operations.
+waits and other request families are not converted by this chunk; full
+network timing remains unverified. No live operations.
 
 ### Outgoing preparation owns its deadline (2026-11-04)
 
@@ -1945,7 +1939,7 @@ distributions still completing the existing crypto and reopen/no-replay test.
 [Retained methods, error459 qualification and unknowns](apk/2.26.43.72-distribution-ack-admission/README.md).
 Native distribution callback registration, address normalization and complete
 durable confirmation remain open; no raw sender-equality rule or retry was added.
-No live operations or complete ban-prevention claim.
+No live operations.
 
 ### Sender-key ACK marking, one-time reset and callback ownership (2026-11-04)
 
@@ -2193,7 +2187,7 @@ stays captured rather than becoming a refusal; if no timely valid
 response arrives, activation remains unconfirmed. Existing account/key/send
 reservations are not cleared by expiry. Other reply families, awaited-write
 responsiveness and full native request-address policy remain separate audits.
-No live operations or complete ban-prevention guarantee.
+No live operations.
 
 ### Comparison request deadlines start before write (2026-11-04)
 
@@ -2836,7 +2830,7 @@ Host comes from selector 0x1a; access_token from selector 0x17. Endpoint index
 zero is removed before construction. Credential/provider decoding, metadata
 semantics and complete transport ownership remain open.
 [Digest-bound literal/relocation resolver, helper bodies and limits](apk/2.26.43.72-metrics-native-request-builder/README.md).
-No Rust runtime or live traffic changed; no mandatory telemetry or ban guarantee.
+No Rust runtime or live traffic changed; mandatory telemetry remains unverified.
 
 ### Native metrics credential lifecycle (2026-11-05)
 
@@ -3658,7 +3652,7 @@ non-replies/late replies and unowned IQs retain existing admission. No clock,
 account, request retry or restriction-reset authority is added.
 [Callback binding, red/green regression and open cadence/schema gaps](apk/2.26.43.72-client-ping-errors/README.md).
 Full native keepalive scheduling/configuration and successful-result schema
-remain unported; no live account operation or causal ban-prevention claim.
+remain unported; no live account operation.
 
 
 ## Client pong success schema and consumed callback — 2026-11-05
@@ -4807,7 +4801,7 @@ outbound queue until its30-second reply deadline, then still reach encoding and
 transmission. Separately, PendingUpload.settle itself did not check that deadline;
 only the actor's reply dispatch did, so direct library callers could adopt an
 expired result/error. These are local claim-lifetime gaps, not newly inferred
-APK timeout values or observed server restriction causes.
+APK timeout values.
 
 A shared check_deadline rejects Instant::now() >= the original pending deadline.
 Writer preflight checks before store/material inspection and again at its end,
@@ -5081,7 +5075,7 @@ duplicate settlement, legacy serde and encrypted-store reopen with no resend.
 No native photo/cache adoption, image transformation, request construction,
 source/callback lifetime, retry, timer or HTTP-route behavior was added. Downstream
 ITY/8pX state effects and the meaning of the saved callback long remain unknown.
-No live account operation or claim that these codes cause account restrictions.
+No live account operation.
 
 ## Photo lookup result extensions (2026-11-06)
 
@@ -5906,7 +5900,7 @@ and awaiting HTTPS. Its reservation and settlement checked source/reservation
 identity but not the account authority. A concurrent same-generation account
 record replacement could therefore adopt a downloaded/refused outcome after the
 operation owner changed. This is a local lifecycle defect, not APK evidence of a
-mandatory wire field or a known account-restriction cause.
+mandatory wire field.
 
 The operation now captures the existing account-authority fingerprint together
 with its initial account read. It rechecks before reservation, immediately before
@@ -5935,8 +5929,7 @@ No live CDN request or account operation is part of this regression.
 `download_view_once` checked the account before HTTP but its exact source and
 reservation guards did not recheck the account at completion. A same-generation
 account-record change could therefore adopt an old operation's ciphertext or
-HTTP refusal. This is a local ownership defect, not a new APK wire requirement
-or observed restriction cause.
+HTTP refusal. This is a local ownership defect, not a new APK wire requirement.
 
 New view-once reservations retain the original local account-authority digest.
 Reservation creation checks that owner transactionally; the operation checks it
@@ -5999,7 +5992,7 @@ no-backfill behavior and malformed digest refusal. No live POST is performed.
 sealed reference integrity but did not apply the saved upload owner. Direct
 bridge reference creation/resolution could therefore reuse an identity-bound
 upload after same-store account change, bypassing upload preparation's owner
-check. This is a local adoption defect, not a new APK field or observed ban cause.
+check. This is a local adoption defect, not a new APK field.
 
 Both public content-key uploads and message-bound uploads now load the upload
 row and current account in one read transaction and apply the shared upload-owner
@@ -6069,7 +6062,7 @@ The offline regression verifies a missing upload remains unsupported, writes a
 synthetic malformed JSON upload into the encrypted store, reopens it and checks
 that preflight returns Storage error without changing checkpoint rows or journal
 head. No live account/network operation is performed. This is source-level
-error-propagation evidence, not APK evidence of server restriction causality.
+error-propagation evidence.
 
 ## Group-media preflight corruption boundary verified
 

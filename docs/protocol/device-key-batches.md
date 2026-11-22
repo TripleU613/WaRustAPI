@@ -193,8 +193,8 @@ closes/reopens the store; settles one valid response; rejects its duplicate;
 and assembles the complete page without a new request or state mutation. The
 nontext type fixture moved from terminal-invalid reply cases to this ignored
 input test, preserving coverage with the corrected meaning. These controlled
-store fixtures do not establish native execution, server acceptance, full key
-policy parity or restriction prevention. No timeout, retry, reset, new command
+store fixtures do not establish native execution, server acceptance or full key
+policy parity. No timeout, retry, reset, new command
 or HTTP write route is added. Full native durable backoff, device/session
 installation and callback lifetime remain separate unresolved requirements.
 
@@ -205,7 +205,7 @@ shape and target set, then skipped Answered pages without decoding their retaine
 replies. A corrupted earlier page could authorize reserving another network query;
 an all-Answered corrupt plan could return None as if complete. Final assembled
 already refused those bytes, but that check happened too late to stop an extra
-query from being reserved. No actual socket transmission or ban cause was observed.
+query from being reserved. No actual socket transmission was observed.
 
 Batch.answered_reply is now shared by continuation and final assembly. It requires
 an Answered page, decodes the retained bytes, checks exact IQ/query-ID ownership
@@ -253,4 +253,4 @@ refusal reason or require another group-path classification change.
 
 The shared selected-device bundle parser and frozen directory-key batch classifier now ignore stray root errors after requiring outer result. Outer error remains query refusal; selected-user error, missing/duplicate/foreign coverage, malformed bundles and invalid signatures retain their guards. Regression covers code-less/503 root errors before/after a valid signed list, durable settlement/reopen/assembly and outer-error/missing-list controls. Existing negative tests cover user errors and bad signatures. No wire request or replay policy changes.
 
-**Negative source follow-through:** batch settlement selects the uniquely pending page by its original query ID; no later-page overwrite of an earlier answer was found. **Remaining separate diagnostic gap:** peer_keys and identity_query inspections (and generic action status) still have root-error attribution rules; this chunk does not claim their mixed-result classification is corrected. No live operations or guarantee against restrictions.
+**Negative source follow-through:** batch settlement selects the uniquely pending page by its original query ID; no later-page overwrite of an earlier answer was found. **Remaining separate diagnostic gap:** peer_keys and identity_query inspections (and generic action status) still have root-error attribution rules; this chunk does not claim their mixed-result classification is corrected. No live operations.

@@ -93,5 +93,4 @@ duplicate and error rows; the CLI window itself has no offline socket test.
 ## Remaining
 
 `pqsupport` request semantics; an end-to-end normal group outbox test with PQ rows;
-companion PQ in the direct outbox; live interoperability. Ban immunity is not
-established.
+companion PQ in the direct outbox; live interoperability.

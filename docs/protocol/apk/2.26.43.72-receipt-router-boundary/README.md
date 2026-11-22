@@ -95,7 +95,7 @@ test capture-before-write, no fact/query/resend/identity work and no uncertain
 write replay. It must not treat every valid native special receipt as an unknown
 or a malformed ordinary one. Readiness, feature state, wrapper scheduling,
 class/provider/cache/binary completeness and live acceptance remain unverified.
-This research adds no live request or account operation and makes no ban claim.
+This research adds no live request or account operation.
 
 ## Reproduction
 

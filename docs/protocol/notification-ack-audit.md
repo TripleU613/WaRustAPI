@@ -77,7 +77,7 @@ The privacy path remains narrower and refuses participant/recipient forms.
 - Native deferrals and full state application are not reproduced merely by
   returning a matching ACK. This audit establishes one known-type ACK omission;
   it is not a blanket claim that all ACK obligations or account-risk causes are
-  resolved. No causal account-ban claim follows from this offline correction.
+  resolved.
 
 ## Verification
 
@@ -696,8 +696,7 @@ PN policy claim. [Evidence and limits](token-notification-peer.md#lid-constructo
 fell back to generic Jid parsing after native class checks and could construct
 ACK destinations or participants containing alphabetic, leading-zero, oversized
 or Unicode-digit LID users. The failing-before regression produced a PSA ACK
-to a malformed LID. This is a local supported-route admission defect, not a
-proven server restriction cause or a new native malformed-envelope ACK policy.
+to a malformed LID. This is a local supported-route admission defect, not a new native malformed-envelope ACK policy.
 
 The existing pinned 0De.A02 ->0Dx constructor chain applies to nonempty lid and
 hosted.lid users and requires 1..15 ASCII digits without leading zero. Shared

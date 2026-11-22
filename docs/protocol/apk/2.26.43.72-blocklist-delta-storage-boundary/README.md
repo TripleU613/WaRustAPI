@@ -117,4 +117,4 @@ PYCODE
 
 The earlier bundle reproduces8al.run; compare its case1 rather than duplicating
 the full synthetic worker. checksums.json binds every other bundle file.
-No live acceptance, full native equivalence or zero-restriction claim follows.
+No live acceptance or full native equivalence was verified.

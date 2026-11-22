@@ -49,5 +49,4 @@ must not authorize a token request in Rust.
 No production sender, automatic challenge replay, route or live operation is
 added. Rust uncertain holds remain. Next proof obligations are the consumer
 control-flow join, trusted input provenance, state-2 producer and lifecycle,
-failure/backoff, generation/account binding and durable recovery. This chunk
-does not establish ban prevention or whole-app reverse-engineering coverage.
+failure/backoff, generation/account binding and durable recovery.

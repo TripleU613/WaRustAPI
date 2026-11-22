@@ -77,7 +77,7 @@ local bounds. These are existing deliberate local limits, separate from native
 idle/request/response fields and per-operation callback deadlines. No native
 1s floor is silently applied to those Rust bounds: extending an explicitly
 short local deadline is not justified by a different layer's request validator.
-No mandatory network mismatch or ban-prevention effect is established here.
+No mandatory network mismatch is established here.
 
 Remaining: downstream property/middleware effects, native automatic headers,
 actual transport/frame construction, effective timeout configuration and all

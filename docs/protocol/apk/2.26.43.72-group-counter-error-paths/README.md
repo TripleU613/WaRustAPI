@@ -63,7 +63,7 @@ and under a fresh inbox stanza ID, verifying typed refusal, unchanged sender
 key/journal and existing consumed-message duplicate handling. Diagnostics test
 covers address/application/backend markers. Complete native old-counter ACK
 policy, full error-code/key/count/routing progression and server acceptance
-remain unverified. Zero bans is not established.
+remain unverified.
 
 Validation:1328 workspace/all-feature tests passed, as did formatting, strict
 workspace/all-target/all-feature Clippy, CLI reference regeneration, APK coverage

@@ -113,7 +113,6 @@ No I/O or real scheduler is supplied to native code.
 **Inferred:** preserving credential-use and refresh ordering is necessary when
 porting this selected metrics path. **Unknown:** whether a particular deployment
 needs this subsystem, complete provider/wire schema, clock units, cryptographic
-contract and all server acceptance requirements. No restriction-avoidance or
-full protocol-coverage guarantee follows. The next trace should bind selector7
+contract and all server acceptance requirements. Full protocol coverage remains unverified. The next trace should bind selector7
 and completion arguments to Java request/response producers, then compare the
 actual Rust surface before adding behavior.

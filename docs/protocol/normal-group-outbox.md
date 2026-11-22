@@ -414,7 +414,7 @@ distributions still completing the existing crypto and reopen/no-replay test.
 [Retained methods, error459 qualification and unknowns](apk/2.26.43.72-distribution-ack-admission/README.md).
 Native distribution callback registration, address normalization and complete
 durable confirmation remain open; no raw sender-equality rule or retry was added.
-No live operations or complete ban-prevention claim.
+No live operations.
 
 ### Sender-key ACK marking, one-time reset and callback ownership (2026-11-04)
 

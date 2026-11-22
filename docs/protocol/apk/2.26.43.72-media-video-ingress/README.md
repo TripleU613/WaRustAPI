@@ -87,8 +87,8 @@ Cdm/provider implementation, current audio/document/sticker ingress, exact nativ
 request profile and range/status adoption, account/cancellation/output authority
 and live interoperability. Rust's200-only full-download policy remains a known
 shared-leaf difference pending supported-operation binding, not silently labelled
-native parity. No206/416 relaxation, guessed sidecar/header, automatic retry/resume,
-account operation or restriction-cause claim is introduced.
+native parity. No206/416 relaxation, guessed sidecar/header, automatic retry/resume or
+account operation is introduced.
 
 Reproduce `apk-smali <apk> --class '<descriptor>' --method <name> --signatures
 --exceptions` for DiM.dynamicMethod,FOr.CR7,FPf.CR7,F1B.A02,F2D.A03,DBg.A0f;

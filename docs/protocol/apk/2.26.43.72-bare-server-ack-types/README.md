@@ -55,4 +55,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/J9P;
 
 Existing complete cache/parser/predicate evidence is linked rather than copied.
 Binary JID equivalence, user cache aliases, all other families, generic receipt
-routes and actual server policy remain open. No live or zero-ban claim.
+routes and actual server policy remain open. No live verification.

@@ -71,7 +71,7 @@ silently become native errors or root-ID fallback facts.
 string conversion, full native key/storage admission, chat canonicalization and
 wrapper/queue recovery, other schema/read-order cases and live acceptance.
 No new fact kind, identity merge, query/resend or account operation. Static/local
-checks do not establish server acceptance or absence of account restrictions.
+checks do not establish server acceptance.
 
 ## Reproduction
 

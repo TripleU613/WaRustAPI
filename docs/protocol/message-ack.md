@@ -709,7 +709,7 @@ boundaries,459 diversion and malformed-error precedence; special names remain
 outside null guesses. Actual in-flight outbox tables cover invalid-recipient
 fallback, device0 class, canonical hosted/device from,20-digit selected chat,
 wrong chat, participant success/refusal distinction, once-only facts, reopen
-and no reselection. These are local correctness checks, not zero-ban proof.
+and no reselection. These are local correctness checks.
 
 
 ## Plain special PN ACK identities preserve native class (2026-11-06)

@@ -78,7 +78,7 @@ valid participant normalization beyond current conservative checks; raw invalid
 aggregate actor conversion; binary constructor validation; required sender grammar;
 other families, cache behavior, native job recovery and live acceptance.
 No fact is inferred from merely matching an ACK or local writer success.
-No live account operation or new request family; no restriction guarantee.
+No live account operation or new request family.
 
 ## Reproduction
 

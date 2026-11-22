@@ -67,7 +67,7 @@ replay checks and aggregate atomic-fact tests remain in the same suite.
 native null-string/opaque binary equivalence; native clock acquisition/preference;
 queue/storage/feature behavior; all request families and live acceptance.
 No global Jid parser, identity change, resend/query authority or account operation.
-No zero-restriction guarantee is inferred from static fidelity or local tests.
+
 
 ## Reproduction
 

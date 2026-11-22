@@ -74,7 +74,7 @@ target/debug/xtask apk-smali "$APK" --class 'LX/2L6;' --method 'A1b' --signature
 ```
 
 checksums.json binds every other bundle file by bytes/SHA256. Static evidence
-and local tests do not prove live server behavior or zero account restrictions.
+and local tests do not prove live server behavior.
 
 ## Later membership correction (2026-11-06)
 

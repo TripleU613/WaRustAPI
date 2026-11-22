@@ -98,7 +98,7 @@ The full router, unknown-type copied487 response, peer retry consumer, special
 call/biz/view/simple/rekey/error processing, complete binary/string equivalence,
 feature/provider state and queue scheduling remain unported or unverified. This
 change fixes two confirmed ordinary-retry misroutes; it does not claim complete
-receipt parity, server acceptance or freedom from account restrictions.
+receipt parity or server acceptance.
 
 ## Reproduction
 

@@ -69,4 +69,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/1qz;
 PCs are bytes; branch deltas are code units. Caller census is physical direct
 references, not runtime coverage. Remaining work: complete context-specific
 string/token/JID emission parity, native parser fault routing, disconnect
-ownership and other outbound/inbound families. No full codec/ban guarantee.
+ownership and other outbound/inbound families. Full codec coverage remains unverified.

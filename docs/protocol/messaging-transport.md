@@ -1714,8 +1714,8 @@ identical instead of storing a late503 refusal.
 
 **Limits:** awaited writes may still delay observing expiry. Device admission
 and unrelated maintenance remain on their existing cadence. Outgoing/group
-waits and other request families are not converted by this chunk; no full
-network/timing or ban-prevention guarantee is claimed. No live operations.
+waits and other request families are not converted by this chunk; full
+network timing remains unverified. No live operations.
 
 ### Preparation expiry hardening (2026-11-04)
 
@@ -1912,7 +1912,7 @@ stays captured rather than becoming a refusal; if no timely valid
 response arrives, activation remains unconfirmed. Existing account/key/send
 reservations are not cleared by expiry. Other reply families, awaited-write
 responsiveness and full native request-address policy remain separate audits.
-No live operations or complete ban-prevention guarantee.
+No live operations.
 
 ### Activation and keepalive during a stalled write
 
@@ -2273,7 +2273,7 @@ non-replies/late replies and unowned IQs retain existing admission. No clock,
 account, request retry or restriction-reset authority is added.
 [Callback binding, red/green regression and open cadence/schema gaps](apk/2.26.43.72-client-ping-errors/README.md).
 Full native keepalive scheduling/configuration and successful-result schema
-remain unported; no live account operation or causal ban-prevention claim.
+remain unported; no live account operation.
 
 
 ## Client pong success schema and consumed callback — 2026-11-05

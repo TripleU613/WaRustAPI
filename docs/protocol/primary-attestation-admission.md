@@ -102,4 +102,4 @@ passed. The default build retains its existing `observe_login` unused warning.
 No fresh qualifying live attestation reply was observed or requested for this
 change. Native C0F storage, full property precedence, companion attestation,
 non-E2EE send routing and complete observer effects remain unported. This change
-does not claim complete native behavior, ban immunity or live interoperability.
+does not claim complete native behavior or live interoperability.

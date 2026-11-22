@@ -412,7 +412,7 @@ prepare old registration bytes and later have them reserved under current
 authority. A pending request could likewise outlive an account change before
 its first reservation. The real-store regression reproduced stale preparation
 on the previous code. This is a local ownership defect, not proof of a native
-server rejection or restriction trigger.
+server rejection.
 
 When a saved account exists, queue_retry_for_incoming_with_cause now verifies
 that the supplied snapshot has the current generation and the existing receipt
@@ -491,7 +491,7 @@ authentication against rewriting both wire and digest. Rows without a preparatio
 digest (including earlier account-bound or account-less records) retain their
 explicit legacy checks; no hash is backfilled as inferred historical proof. Full
 historical preparation provenance and carried-key/count/configuration integration
-remain open. No live account operation or server-restriction causality inferred.
+remain open. No live account operation.
 
 Verification: the valid registration-byte substitution was accepted before the
 fix; the reopen/refusal/restoration/once-only regression now passes. All1,593

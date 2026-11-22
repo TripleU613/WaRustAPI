@@ -144,8 +144,7 @@ by an ACK would be incomplete when MEX/shadow is selected and would have no
 faithful state consumer. No Rust receive behavior or ACK was changed in this
 chunk. Unknown account-sync siblings remain captured and unacknowledged; no
 generic notification ACK was introduced. No account state, live request,
-telemetry/provenance, identity or server cooldown changed. Static omissions do
-not establish ban causation or promise freedom from account restrictions.
+telemetry/provenance, identity or server cooldown changed.
 
 The next implementation gates are concrete: establish configuration ownership
 for property 23463; finish the exact MEX request/enum conversion when selected;

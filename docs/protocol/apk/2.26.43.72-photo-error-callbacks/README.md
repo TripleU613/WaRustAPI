@@ -47,7 +47,7 @@ Legacy absent metadata remains unknown; no backfill or historical rewrite.
 Tests cover upload versus lookup, direct/nested/uncoded competing errors,
 first invalid code before valid410, missing/empty/overflow/signed/Unicode codes,
 legacy optional serde compatibility, duplicate settlement, encrypted-store
-reopen and no resend. No live account operation or inferred ban trigger.
+reopen and no resend. No live account operation.
 
 ## Reproduce
 

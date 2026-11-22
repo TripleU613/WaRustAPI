@@ -91,8 +91,8 @@ the test does not rely on a live CDN failure or claim a captured HTTP exchange.
 **Unknown:** full receive dispatch and error/ACK mapping, exact update-mode
 inputs, generic audio/sidecar provider and waveform storage, native request URL/
 range/status recovery and account/output authority. Rust's8-MiB bound, mono Opus
-page checks and uncertainty/no-replay policy remain local limits. No206/416
-relaxation, automatic request/retry/resume, live acceptance or zero-ban claim.
+page checks and uncertainty/no-replay policy remain local limits. No 206/416
+relaxation, automatic request, retry, or resume. Live acceptance remains unverified.
 
 Reproduce `apk-proto-fields <apk> --class 'LX/Dhn;'` (Di0 for the bounded
 negative); `apk-field-refs <apk> --class 'LX/Dhn;' --field ptt_ --type Z` and

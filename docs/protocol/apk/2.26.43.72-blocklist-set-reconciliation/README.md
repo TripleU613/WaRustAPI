@@ -97,4 +97,4 @@ target/debug/xtask apk-callers "$APK" --class 'LX/1dH;' --method A0O > "$OUT/rep
 ```
 
 checksums.json binds every other file here by bytes/SHA256. Native observations
-cannot establish account-restriction rates or live acceptance.
+cannot establish live acceptance.

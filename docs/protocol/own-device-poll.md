@@ -90,8 +90,7 @@ send-state preservation. Unit coverage retains an ordinary body and rejects
 special poll fields 6..11, vote updates and mixed content. Existing ordinary
 poll decoder/projector checks remain shared.
 
-No saved account or live request was changed. Fresh own-device poll acceptance,
-full APK parity and ban immunity remain unverified.
+No saved account or live request was changed. Fresh own-device poll acceptance and full APK parity remain unverified.
 
 Validation passed 946 workspace/all-feature tests, strict workspace Clippy and
 warnings-denied Rustdoc. The real Signal regression also passed with only TCP,

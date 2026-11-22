@@ -67,4 +67,4 @@ target/debug/xtask apk-smali "$APK" --class 'LX/0x9;' --method A06 --signatures 
 ```
 
 checksums.json covers every other file in this bundle. Complete existing caller
-and type census are linked instead of duplicated. No restriction guarantee.
+and type census are linked instead of duplicated.

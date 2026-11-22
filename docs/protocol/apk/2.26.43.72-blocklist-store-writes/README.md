@@ -71,7 +71,7 @@ backend outcome handling. Previous snapshot parsing/membership corrections do
 not establish these writer semantics. Before installing a metadata adapter,
 resolve active provider binding and concrete0Ws/3LI/0KU/contact-store ownership.
 No production code, sender, retry, migration, alias installation or live request
-is introduced. Static existence is not live commit/acceptance or zero restrictions.
+is introduced. Live commit and acceptance remain unverified.
 
 ## Reproduction
 

@@ -81,4 +81,4 @@ target/debug/xtask apk-smali "$APK" --class 'LX/6ol;' --method A0n --signatures 
 ```
 
 checksums.json binds every other file here. Shared evidence remains in original
-checksum bundles. Source evidence does not establish account restriction rates.
+checksum bundles.

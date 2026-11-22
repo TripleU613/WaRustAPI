@@ -409,4 +409,4 @@ The restored tool also corroborates the provider cache resolver. [Four physical
 cache references and the optional cache-initializer follow-through](apk/2.26.43.72-provider-cache-initialization/README.md)
 show selected get/fill paths, not proof of a cache reset or account switch.
 Static decompilation does not establish runtime behavior, complete ownership,
-APK signature validity, clock/lifecycle parity or restriction prevention.
+APK signature validity or clock/lifecycle parity.

@@ -160,7 +160,7 @@ For nonempty remaining candidates A00 calls0ob.A0A(0vC.A0M,set). A0A selects0vJ.
 
 A00 waits using inherited FfK.get() without a timeout for this null-timeout caller (the separate non-null path uses milliseconds). It casts the returned value to1xM; Bulk ignores the return and proceeds only after the call returns normally. Exceptions can instead enter the already retained job-runner handling. This establishes preflight call/wait ordering; it does not establish successful mapping adoption or that every key fetch emits another network request.
 
-**Unknown / unported:** sync queue coalescing, actual wire selector/body and callback lifetime, response refusal semantics, mapping authentication/adoption and effective per-account filters. No new Rust lookup, automatic retry, timeout or namespace conversion is justified by this partial trace. No live operation or ban-prevention guarantee.
+**Unknown / unported:** sync queue coalescing, actual wire selector/body and callback lifetime, response refusal semantics, mapping authentication/adoption and effective per-account filters. No new Rust lookup, automatic retry, timeout or namespace conversion is justified by this partial trace. No live operation.
 
 ## Missing-LID preset and queue combination (2026-11-06)
 

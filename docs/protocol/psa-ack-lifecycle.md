@@ -60,7 +60,7 @@ or inventing feature values would each choose an unproved native branch. Next
 required evidence/port work is effective feature authority, selected worker
 success/failure completion, transactional work/recovery ownership and the ACK
 writer's captured/live correlation. Existing capture and ACK helpers remain
-bounded legacy behavior, not a complete current-build port or zero-ban proof.
+bounded legacy behavior, not a complete current-build port.
 
 ## Wakeup completion and scheduler follow-up (2026-11-06)
 

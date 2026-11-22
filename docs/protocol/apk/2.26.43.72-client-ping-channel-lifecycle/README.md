@@ -68,7 +68,7 @@ requires actual preference/configuration hydration and SDK selection; native
 first-access owner lifetime remains open. The full on-demand producer graph,
 callback ownership across asynchronous channel replacement, and receiver failure
 paths remain to be audited. The static census is not proof against dynamic
-mutation. No live acceptance or restriction-prevention guarantee follows.
+mutation. No live acceptance follows.
 
 ## Reproduce
 

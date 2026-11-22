@@ -68,5 +68,4 @@ limit is promoted to a native limit.
 
 Reproduce apk-smali with signatures/exceptions for F1Z.A04 and3q5.A0J. Referenced
 same-build exports retain their own checksum manifests.
-[checksums.json](checksums.json) pins all files here. No server acceptance or
-account-restriction causality is established.
+[checksums.json](checksums.json) pins all files here. No server acceptance is established.

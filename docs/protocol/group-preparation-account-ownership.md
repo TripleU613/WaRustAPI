@@ -41,7 +41,7 @@ settlement, every adapter, or full APK/network parity. No reset or replay added.
 
 No new APK export was needed: this is a local Rust ownership defect, not a new
 server rule. Pinned APK 2.26.43.72 evidence is unchanged. No live account operation,
-server acceptance or restriction outcome was observed; zero bans is not proven.
+server acceptance or restriction outcome was observed.
 
 Verification: **1,607 workspace/all-feature tests passed**, plus strict
 workspace/all-target/all-feature Clippy. Formatting, CLI/OpenAPI checks, APK

@@ -97,4 +97,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'Lcom/wh
 PCs are bytes, branch deltas code units. Remaining authority includes exception
 producers/current-batch identities, part-update callers, serialized restart state,
 clock/scheduler domains and actual sync/sender wire construction. No Rust repair
-port, ID-only wake, automatic replay, live operation or no-ban claim.
+port, ID-only wake, automatic replay or live operation.

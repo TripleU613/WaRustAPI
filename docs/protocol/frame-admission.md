@@ -141,8 +141,7 @@ new end-to-end actor/socket empty-record test.
 
 Full fragmentation/reassembly support, native feature-dependent compression
 internals, nested controls, all corruption routing and complete retry/lifecycle
-parity remain outside these corrections. No live account operation or
-ban-prevention guarantee is established.
+parity remain outside these corrections. No live account operation.
 
 ## Compression failure consumes the receive epoch (2026-11-06)
 
@@ -236,8 +235,7 @@ real durable in-flight receipt's matching ACK: the receipt remains uncertain
 through reopen and no replay occurs on the next activation. Actor inputs use
 the existing fake link, not a new full socket integration. Captured-wait tests
 retain exact compressed/uncompressed raw frames and an unchanged synthetic
-uncertain checkpoint, leaving the next matching reply unread. No live account
-operation or restriction-prevention guarantee follows from these controls.
+uncertain checkpoint, leaving the next matching reply unread. These controls ran offline.
 
 ## Selected wire-structure failures are terminal (2026-11-06)
 
@@ -281,7 +279,7 @@ reactivation produces no replay. These actor inputs use the fake node link,
 not a new end-to-end socket test. Captured waits retain exact compressed/
 uncompressed null-attribute frames and an unchanged synthetic uncertain
 checkpoint while leaving the following matching reply unread. No live account
-operation or restriction-prevention guarantee is established.
+operation.
 
 ## Reproduce the evidence
 
@@ -294,4 +292,4 @@ target/debug/xtask apk-smali ../android-lab/apks/WhatsApp.1.apk --class 'LX/1s2;
 ```
 
 PCs are bytes; branch deltas are code units. Static refusal and offline tests
-are not observed server acceptance or a ban-prevention guarantee.
+are not observed server acceptance.
