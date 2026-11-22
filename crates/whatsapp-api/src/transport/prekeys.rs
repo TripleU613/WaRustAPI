@@ -459,6 +459,35 @@ fn key_node(id: u32, public: &[u8], signature: Option<&[u8]>) -> Node {
     Node::new("key").children(children)
 }
 
+/// Native prekey-deletion IQ for the PQ inventory (`C34869FUb.A01` in
+/// 2.26.43.72, called by `DeleteKyberPreKeysJob` with `deleteLegacy=false`,
+/// `deletePq=true`):
+///
+/// ```text
+/// <iq id=… xmlns="encrypt" type="set" to=<server>>
+///   <op mode="delete"/>
+///   <pq_list/>
+/// </iq>
+/// ```
+///
+/// The child order is `op`, then `list` (legacy, omitted here), then
+/// `pq_list`. The native job sends this only when the daily cron finds property
+/// 21198 off while local Kyber rows still exist.
+pub(crate) fn delete_pq_request(id: &str) -> Result<Node> {
+    Ok(Node::new("iq")
+        .attr("id", id)
+        .attr("xmlns", "encrypt")
+        .attr("type", "set")
+        .attr(
+            "to",
+            Jid::parse("s.whatsapp.net").expect("constant server JID"),
+        )
+        .children(vec![
+            Node::new("op").attr("mode", "delete"),
+            Node::new("pq_list"),
+        ]))
+}
+
 /// The post-quantum children of the upload IQ, appended after `skey`
 /// (2.26.37.71 `LX/0y0.A00` case 85, `153c..161c`, confirmed static):
 /// `pq_list` of `key{id,value,signature}` for one-time KEM keys (only when

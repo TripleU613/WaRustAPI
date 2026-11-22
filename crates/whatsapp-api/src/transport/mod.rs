@@ -157,6 +157,12 @@ pub mod peer_verification;
     feature = "experimental-noise",
     feature = "experimental-transport"
 ))]
+pub mod pq_delete;
+#[cfg(all(
+    feature = "experimental-signal-crypto",
+    feature = "experimental-noise",
+    feature = "experimental-transport"
+))]
 pub mod privacy_fetch;
 #[cfg(all(
     feature = "experimental-signal-crypto",

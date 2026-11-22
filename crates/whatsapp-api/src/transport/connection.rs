@@ -1564,6 +1564,14 @@ pub(crate) async fn drive(
                             link.send(&name).await?;
                         }
                         for receipt in super::receipts::reserve_pending_owned(&store)? { link.send_receipt(&store,&receipt).await?; }
+                        // Native daily cron: a settled A/B reply that leaves PQ
+                        // keys disabled while local KEM rows exist queues the
+                        // delete IQ; a crash after reply settlement also finishes
+                        // the local wipe here.
+                        super::pq_delete::settle_pending(&store)?;
+                        if super::pq_delete::queue_if_disabled(&store)?.is_some() {
+                            tracing::info!("PQ disabled with local KEM prekeys; queued the native delete request");
+                        }
                         action_drain.trigger();
                         if let Some(ready) = ready.take() { let _ = ready.send(()); }
                         // LX/DNq.run: unsent prekeys (or a store that never generated any) upload at start.
@@ -1580,6 +1588,7 @@ pub(crate) async fn drive(
                     // Queued one-shot actions (block list, reports, lookups) settle by iq id.
                     if action_replies.record_reply(&store, &node)? {
                         if let Some(id) = node.get_attr("id").and_then(|v| v.as_text()) {
+                            super::pq_delete::settle_reply(&store, id)?;
                             match super::app_state_sync::ingest_action(&store, id) {
                                 Ok(_) => {}
                                 Err(Error::InvalidInput { field, reason }) => tracing::warn!(field, reason, "app-state reply retained without promotion"),
@@ -8950,6 +8959,85 @@ pub(super) mod tests {
                 .unwrap()
                 .is_none()
         );
+        fake.stop_cleanly().await;
+    }
+
+    #[tokio::test]
+    async fn pq_disabled_inventory_is_deleted_once_by_the_native_request() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("pq-delete.redb"));
+        // One last-resort KEM row, as an earlier enabled period would leave,
+        // plus a settled A/B reply that turns property 21198 off.
+        store
+            .write(|tx| super::super::kem_prekeys::generate_in(tx, true))
+            .unwrap();
+        let action = super::super::abprops::queue(&store).unwrap();
+        super::super::actions::reserve_pending(&store).unwrap();
+        super::super::actions::record_reply(
+            &store,
+            &Node::new("iq")
+                .attr("id", action.as_str())
+                .attr("type", "result")
+                .children(vec![Node::new("props").attr("hash", "h").children(vec![
+                        Node::new("prop")
+                            .attr("config_code", "21198")
+                            .attr("config_value", "0"),
+                    ])]),
+        )
+        .unwrap();
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (delete, written) = fake.written().await;
+        assert_eq!(delete.description, "iq");
+        assert_eq!(
+            delete.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("encrypt")
+        );
+        assert_eq!(
+            delete.get_attr("type").and_then(|v| v.as_text()),
+            Some("set")
+        );
+        let children = delete.child_nodes();
+        assert_eq!(
+            children
+                .iter()
+                .map(|child| child.description.as_str())
+                .collect::<Vec<_>>(),
+            ["op", "pq_list"]
+        );
+        assert_eq!(
+            children[0].get_attr("mode").and_then(|v| v.as_text()),
+            Some("delete")
+        );
+        let id = delete
+            .get_attr("id")
+            .and_then(|v| v.as_text())
+            .unwrap()
+            .to_owned();
+        written.send(Ok(())).unwrap();
+        // The reply may race callback registration; redeliver until the wipe.
+        let view = tokio::time::timeout(Duration::from_secs(2), async {
+            loop {
+                fake.deliver(
+                    Node::new("iq")
+                        .attr("id", id.as_str())
+                        .attr("type", "result"),
+                )
+                .await;
+                tokio::time::sleep(Duration::from_millis(10)).await;
+                if let Some(view) = super::super::pq_delete::inspect(&store).unwrap()
+                    && view.status == "deleted"
+                {
+                    return view;
+                }
+            }
+        })
+        .await
+        .expect("delete settles");
+        assert_eq!(view.rows, 0);
+        assert_eq!(view.deleted, Some(1));
+        // The trigger never sends a second request for the emptied inventory.
+        fake.nothing_written(Duration::from_millis(200)).await;
         fake.stop_cleanly().await;
     }
 

@@ -338,6 +338,26 @@ enum Cmd {
     /// Inspect saved clock source and resolution (offline; no timestamps or replay).
     #[cfg(feature = "experimental-transport")]
     ClockInspect,
+    /// Inspect or queue the native PQ prekey deletion (PQ disabled, rows kept).
+    #[cfg(feature = "experimental-transport")]
+    PqDelete {
+        /// Inspect the saved delete lifecycle and automatic trigger without queueing.
+        #[arg(long)]
+        show: bool,
+        /// Queue the native delete request; `listen` transmits it.
+        #[arg(
+            long,
+            conflicts_with = "show",
+            requires_all = ["confirm", "allow_live_request"]
+        )]
+        queue: bool,
+        /// Acknowledge deleting this account's server-side PQ prekeys.
+        #[arg(long, requires = "queue")]
+        confirm: bool,
+        /// Allow the queued deletion to be transmitted by `listen`.
+        #[arg(long, requires = "queue")]
+        allow_live_request: bool,
+    },
     /// Queue one explicit classic privacy setting set; `listen` transmits it.
     #[cfg(feature = "experimental-transport")]
     AccountPrivacySet {
@@ -1963,6 +1983,20 @@ async fn run(cli: Cli) -> Result<(), Error> {
         #[cfg(feature = "experimental-transport")]
         Cmd::AbpropsQuery { show } => transport_receive::abprops_query(&cli, *show),
         #[cfg(feature = "experimental-transport")]
+        Cmd::PqDelete {
+            show,
+            queue,
+            confirm,
+            allow_live_request,
+        } => {
+            if !show && !(*queue && *confirm && *allow_live_request) {
+                return Err(Error::invalid(
+                    "pq_delete",
+                    "choose --show, or --queue with --confirm and --allow-live-request",
+                ));
+            }
+            transport_receive::pq_delete(&cli, *show)
+        }
         Cmd::AccountPrivacySet {
             value,
             confirm,
@@ -3668,6 +3702,54 @@ mod privacy_set_cli_tests {
         assert!(matches!(
             cli.cmd,
             Cmd::AccountPrivacySet {
+                confirm: true,
+                allow_live_request: true,
+                ..
+            }
+        ));
+    }
+    #[test]
+    fn pq_delete_needs_show_or_a_confirmed_queue() {
+        // --queue alone, or without either acknowledgement, is a clap error.
+        assert!(Cli::try_parse_from(["whatsapp-cli", "pq-delete", "--queue"]).is_err());
+        assert!(
+            Cli::try_parse_from(["whatsapp-cli", "pq-delete", "--queue", "--confirm"]).is_err()
+        );
+        assert!(
+            Cli::try_parse_from([
+                "whatsapp-cli",
+                "pq-delete",
+                "--confirm",
+                "--allow-live-request"
+            ])
+            .is_err()
+        );
+        // show is read-only and conflicts with queueing.
+        let cli = Cli::try_parse_from(["whatsapp-cli", "pq-delete", "--show"]).unwrap();
+        assert!(matches!(cli.cmd, Cmd::PqDelete { show: true, .. }));
+        assert!(
+            Cli::try_parse_from([
+                "whatsapp-cli",
+                "pq-delete",
+                "--show",
+                "--queue",
+                "--confirm",
+                "--allow-live-request",
+            ])
+            .is_err()
+        );
+        let cli = Cli::try_parse_from([
+            "whatsapp-cli",
+            "pq-delete",
+            "--queue",
+            "--confirm",
+            "--allow-live-request",
+        ])
+        .unwrap();
+        assert!(matches!(
+            cli.cmd,
+            Cmd::PqDelete {
+                queue: true,
                 confirm: true,
                 allow_live_request: true,
                 ..

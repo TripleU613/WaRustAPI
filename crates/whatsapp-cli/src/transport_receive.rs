@@ -3096,6 +3096,37 @@ pub(super) fn app_state_inspect(
     Ok(())
 }
 
+pub(super) fn pq_delete(cli: &super::Cli, show: bool) -> Result<(), Error> {
+    let store = ProtocolStore::open(OpenOptions {
+        path: cli.store.clone(),
+        account_id: AccountId::new(cli.account.clone())?,
+        key_source: Arc::new(EnvKeySource::new(cli.key_env.clone())),
+        create: false,
+    })?;
+    let queued = if show {
+        None
+    } else {
+        Some(whatsapp_api::transport::pq_delete::queue(&store)?)
+    };
+    let report = serde_json::json!({
+        "queued": queued,
+        "delete": whatsapp_api::transport::pq_delete::inspect(&store)?,
+        "automatic_trigger_ready":
+            whatsapp_api::transport::pq_delete::automatic_trigger_ready(&store)?,
+    });
+    if !cli.json {
+        println!(
+            "PQ delete: native request needs a definite server result before local KEM rows are removed; no retry after a refusal."
+        );
+    }
+    println!(
+        "{}",
+        serde_json::to_string_pretty(&report)
+            .map_err(|_| Error::invalid("pq_delete", "cannot encode inspection"))?
+    );
+    Ok(())
+}
+
 pub(super) fn account_privacy_set(cli: &super::Cli, value: &str) -> Result<(), Error> {
     let store = ProtocolStore::open(OpenOptions {
         path: cli.store.clone(),

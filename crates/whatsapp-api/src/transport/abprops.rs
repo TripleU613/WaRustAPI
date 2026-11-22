@@ -337,6 +337,34 @@ pub(crate) fn pq_keys_upload_enabled_in_write(tx: &crate::store::WriteTx<'_>) ->
     Ok(inspect_saved(&id, outcome, reply)?.pq_keys_upload_value == Some(true))
 }
 
+/// Whether a settled, correlated A/B reply exists. `false` means the variables
+/// are still unknown, which is distinct from a settled reply that omits a code
+/// (the registered default then applies).
+pub(crate) fn settled_reply_in(tx: &crate::store::ReadTx<'_>) -> Result<bool> {
+    for key in [FORCED_MARKER, MARKER] {
+        let Some(id) = tx.get_json::<String>(Table::Checkpoints, key, 1)? else {
+            continue;
+        };
+        let Some((outcome, reply)) = actions::view_in(tx, &id)? else {
+            continue;
+        };
+        if outcome.kind != "abprops_query" || outcome.status != actions::ActionStatus::Ok {
+            continue;
+        }
+        let Some(reply) = reply else {
+            continue;
+        };
+        if reply.description == "iq"
+            && text(&reply, "id") == Some(id.as_str())
+            && text(&reply, "type") == Some("result")
+            && reply.child("error").is_none()
+        {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
 /// `Can.A04(jid)` for a user-addressable peer: the APK's key-fetch
 /// `pqsupport="true"` attribute (writer `X.0v0.A00`) is added only when
 ///

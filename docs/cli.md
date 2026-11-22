@@ -259,6 +259,21 @@ Inspect saved clock source and resolution (offline; no timestamps or replay)
 Usage: whatsapp-cli clock-inspect [OPTIONS]...
 ```
 
+## whatsapp-cli pq-delete
+
+Inspect or queue the native PQ prekey deletion (PQ disabled, rows kept)
+
+```
+Usage: whatsapp-cli pq-delete [OPTIONS]...
+```
+
+| Flag | Value | Required | Default | Env | Values | Help |
+|------|-------|----------|---------|-----|--------|------|
+| --show | SHOW | no |  |  | `true`, `false` | Inspect the saved delete lifecycle and automatic trigger without queueing |
+| --queue | QUEUE | no |  |  | `true`, `false` | Queue the native delete request; `listen` transmits it |
+| --confirm | CONFIRM | no |  |  | `true`, `false` | Acknowledge deleting this account's server-side PQ prekeys |
+| --allow-live-request | ALLOW_LIVE_REQUEST | no |  |  | `true`, `false` | Allow the queued deletion to be transmitted by `listen` |
+
 ## whatsapp-cli account-privacy-set
 
 Queue one explicit classic privacy setting set; `listen` transmits it

@@ -227,7 +227,7 @@ pub(crate) fn all_rows(tx: &impl super::prekeys::Lookup) -> Result<Vec<StoredKem
     }
 }
 
-fn generate_in(tx: &mut WriteTx<'_>, last_resort: bool) -> Result<()> {
+pub(crate) fn generate_in(tx: &mut WriteTx<'_>, last_resort: bool) -> Result<()> {
     let id: u32 = tx.get_json(Table::Checkpoints, NEXT_ID, 1)?.unwrap_or(1);
     if id > 0x00ff_ffff {
         return Err(invalid("KEM prekey id space exhausted"));
@@ -291,6 +291,21 @@ pub(crate) fn upload_rows_in(tx: &mut WriteTx<'_>, batch: usize) -> Result<Vec<S
             .take(1),
     );
     Ok(one_time)
+}
+
+/// Delete every local KEM prekey row, as native
+/// `SignalKyberPreKeyStore/deleteAllKyberPreKeys` does after a PQ delete
+/// request completes. Consumption markers and the next-ID cursor are kept so a
+/// late upload reply can still be validated and IDs are never reused.
+pub(crate) fn delete_all_in(tx: &mut WriteTx<'_>) -> Result<usize> {
+    let rows = all_rows(tx)?;
+    let mut removed = 0;
+    for row in rows {
+        if tx.delete(Table::Prekeys, record_key(row.id).as_bytes())? {
+            removed += 1;
+        }
+    }
+    Ok(removed)
 }
 
 /// Current-build migration predicate is an uploaded last-resort row

@@ -121,6 +121,69 @@ hybrid bootstrap should not arrive. The inbox path exists so that, once an
 evidence-backed producer and upload are implemented, receive is already
 transactional.
 
+## PQ-disabled deletion (implemented 2026-11-22)
+
+**Confirmed static, 43.72:**
+
+- `LX/FKS.onRandomizedDailyCronNoMessageStore` (`PQCheckDailyCron`) checks
+  `C33998Ex8.A04()` = property **21198**. When it is **off** and any local
+  Kyber row exists (`A0g(A02).A0y()`), it logs "PQ disabled but kyber prekeys
+  exist, scheduling deletion" and schedules `DeleteKyberPreKeysJob`.
+- The same cron returns before generating anything when an upload started
+  within 3 minutes (`C241313z.A0Y`, `180000` ms) or when
+  `C33998Ex8.A03()` (21198 **and** a local last-resort row exists). So it
+  creates the last-resort key only when none is stored; it is not a daily
+  rotation.
+- `DeleteKyberPreKeysJob` calls `C34869FUb.A01(false, true, true)`
+  (`deleteLegacy=false`, `deletePq=true`):
+
+  ```text
+  <iq id=… xmlns="encrypt" type="set" to=<server>>
+    <op mode="delete"/>
+    <pq_list/>
+  </iq>
+  ```
+
+  Child order is `op`, then `list` (legacy, omitted), then `pq_list`
+  (`A01` 0026..004c). 5xx errors retry with backoff; 406 and other 4xx are
+  terminal.
+- `C32659EaO.A00` runs after the IQ completes: it deletes every
+  `kyber_prekeys` row, removes `prekey_uploads` rows of key type 1, deletes all
+  PQ sessions, and clears `pq_session_upgrade_device_state`. The wipe is
+  guarded by the `deletedPq` flag, not by IQ success — a terminal 4xx also
+  wipes locally.
+
+Rust (`transport::pq_delete`):
+
+- `prekeys::delete_pq_request` builds the exact stanza.
+- The automatic trigger runs at connection startup: a **settled** A/B reply
+  must leave 21198 off, local KEM rows must exist, and no prekey upload may be
+  unresolved. An absent A/B reply is unknown and never inferred off.
+- A definite `result` wipes all local KEM rows; consumption markers and the
+  next-ID cursor are kept so a late upload reply still validates and IDs are
+  never reused. A refusal keeps the rows and records it; because deletion is
+  idempotent a refused request may be queued again, while a queued or
+  uncertain one blocks a duplicate.
+- **Local differences, deliberate:** no PQ-session deletion and no
+  `pq_session_upgrade_device_state` cleanup (not modelled here), and a
+  terminal 4xx keeps local rows instead of the native wipe because the server
+  deletion is then unconfirmed and the next startup re-queues it.
+- CLI: `pq-delete --show` inspects the lifecycle and whether the automatic
+  trigger is ready; `pq-delete --queue --confirm --allow-live-request` queues
+  it manually.
+
+Tests: `delete_request_is_the_native_pq_delete_shape`,
+`queue_requires_inventory_and_wipes_only_after_a_result`,
+`refusal_keeps_rows_and_allows_a_new_request`,
+`automatic_trigger_needs_a_settled_disabled_property_and_rows`, the fake-link
+`pq_disabled_inventory_is_deleted_once_by_the_native_request`, and the CLI
+guard `pq_delete_needs_show_or_a_confirmed_queue`.
+
+**Still unknown:** the randomized daily timing (we check at each connection
+startup, so a connection left open for days can defer it), server acceptance of
+the delete IQ, and the native reply type (assumed the generic
+`<iq type="result"/>` pipeline). Local stores and injected links only.
+
 ## Inbox routing and classification
 
 | Input | Result | State |
