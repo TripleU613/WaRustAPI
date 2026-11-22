@@ -186,6 +186,7 @@ tracked file must not carry a personal carrier identity):
 "client": {
   "profile_id": "android-2.26.37.70-registration-lab",
   "user_agent": "WhatsApp/2.26.43.72 Android/17 Device/Google-Pixel 4a",
+  "connect_type": "wifi_unknown",
   "device": {
     "os_version": "17",
     "manufacturer": "Google",
@@ -238,6 +239,11 @@ matching the APK's `Random.nextInt()`.
 gateway through the operating system resolver, which is the APK's own system
 fallback path (`X.1je.A03`), not a hardcoded, MNS or cached answer.
 
+`connectType` comes straight from `client.connect_type` when configured,
+mapped to the APK's wire numbers (Wi-Fi is the single `WIFI_UNKNOWN` class,
+cellular classes use their radio numbers); an absent setting leaves the field
+off the wire instead of guessing the host's medium.
+
 `connectionSequenceInfo` is packed from what this client actually does: TCP 443
 to `g.whatsapp.net` resolved by the system, no proxy, no VPN transport, and the
 interactive process that initiated the login. That gives port class 1, host
@@ -265,9 +271,10 @@ hyphens after the first separator.
 ## Gaps still open
 
 - Which fillers the server actually enables (AB props 7482/7483) — unknown.
-- `connectType` (12): the APK reads the live Android network type. A non-Android
-  process has no portable equivalent, so the field stays absent until a truthful
-  value is supplied; no network type is invented.
+- `connectType` (12) is only sent when `client.connect_type` is set: the APK
+  reads the live Android radio, a non-Android process has no portable
+  equivalent, and the value is an explicit operator statement rather than an
+  inference (absent by default).
 - `oc` semantics; this client never sets it.
 - `messageSts` field number, and whether `product`, `shards`, `pull`,
   `paddingBytes`, `lidDbMigrated`, `paaLink`, `preacksCount`,

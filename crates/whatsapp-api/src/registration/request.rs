@@ -29,9 +29,9 @@
 //! Supply observed/real inputs, not invented telemetry or challenge tokens.
 
 pub use super::request_config::{
-    ClientSettings, DeliveryMethod, DeviceSettings, EndpointFields, IdentityChangePolicy,
-    LAB_PROFILE_ID, LabRegistrationConfig, LoginDevice, MAX_CONFIG_BYTES, ProfileSettings,
-    ReconnectSettings, RequestBodyMode, TrafficAnonymization, TransportSettings,
+    ClientSettings, ConnectType, DeliveryMethod, DeviceSettings, EndpointFields,
+    IdentityChangePolicy, LAB_PROFILE_ID, LabRegistrationConfig, LoginDevice, MAX_CONFIG_BYTES,
+    ProfileSettings, ReconnectSettings, RequestBodyMode, TrafficAnonymization, TransportSettings,
 };
 #[cfg(feature = "experimental-signal-crypto")]
 pub(crate) use super::request_config::{append_byte_fields, append_fields};
@@ -54,7 +54,8 @@ pub const TEMPLATE_JSON: &str = r#"{
   "client": {
     "profile_id": "android-2.26.37.70-registration-lab",
     "user_agent": "WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown",
-    "device": null
+    "device": null,
+    "connect_type": null
   },
   "device": {
     "facebook_device_id": null,

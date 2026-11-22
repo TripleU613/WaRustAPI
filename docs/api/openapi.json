@@ -2870,6 +2870,16 @@
                 "description": "User-Agent header value for compatibility",
                 "default": "WhatsApp/2.26.37.70 Android/unknown Device/unknown-unknown"
               },
+              "connect_type": {
+                "type": ["string", "null"],
+                "enum": [
+                  "cellular_unknown", "wifi_unknown", "cellular_edge", "cellular_iden",
+                  "cellular_umts", "cellular_evdo", "cellular_gprs", "cellular_hsdpa",
+                  "cellular_hsupa", "cellular_hspa", "cellular_cdma", "cellular_1xrtt",
+                  "cellular_ehrpd", "cellular_lte", "cellular_hspap", null
+                ],
+                "description": "Truthful network class → ClientPayload.connectType (12). The APK reads the live Android radio; a non-Android process has no portable equivalent, so this stays off the wire unless the operator states it."
+              },
               "device": {
                 "type": [
                   "object",

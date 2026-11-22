@@ -295,6 +295,9 @@ pub fn primary_login(
         short_connect: Some(false),
         // 43.72 `X.1n9`: UNKNOWN unless a user trigger is under ten seconds old.
         connect_reason: Some(connection.reason as i32),
+        // 43.72 `X.1n3` writes the live network class. Only an explicit
+        // operator statement fills it; nothing is inferred from the host.
+        connect_type: config.client.connect_type.map(|kind| kind.as_i32()),
         connect_attempt_count: Some(connection.attempts),
         session_id: Some(connection.session_id),
         lc: Some(connection.lifetime_connections as i32),
@@ -737,6 +740,45 @@ mod tests {
         assert_eq!(
             payload.user_agent.unwrap().device_exp_id.as_deref(),
             Some("DW8PmhwrTD2OT1prfI2eDw")
+        );
+    }
+
+    #[test]
+    fn connect_type_is_sent_only_when_the_operator_states_it() {
+        let (mut config, account) = version_fixture();
+        let payload = ClientPayload::decode(
+            primary_login(&account, &config, None, &connection())
+                .unwrap()
+                .as_slice(),
+        )
+        .unwrap();
+        assert_eq!(payload.connect_type, None, "nothing is inferred");
+        for (name, number) in [
+            ("wifi_unknown", 1),
+            ("cellular_unknown", 0),
+            ("cellular_lte", 111),
+            ("cellular_hspap", 112),
+        ] {
+            config.client.connect_type = Some(
+                serde_json::from_value::<crate::registration::request::ConnectType>(
+                    serde_json::json!(name),
+                )
+                .unwrap(),
+            );
+            let payload = ClientPayload::decode(
+                primary_login(&account, &config, None, &connection())
+                    .unwrap()
+                    .as_slice(),
+            )
+            .unwrap();
+            assert_eq!(payload.connect_type, Some(number), "{name}");
+        }
+        // A typo cannot silently become ANOTHER class.
+        assert!(
+            serde_json::from_value::<crate::registration::request::ConnectType>(serde_json::json!(
+                "wifi"
+            ))
+            .is_err()
         );
     }
 

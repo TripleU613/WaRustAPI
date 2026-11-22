@@ -107,6 +107,72 @@ pub struct ClientSettings {
     /// Android hardware facts for the login `ClientPayload`. Absent keeps the
     /// historical minimal payload; it never invents values on its own.
     pub device: Option<LoginDevice>,
+    /// The network class the APK would report as `connectType` (12). The APK
+    /// reads the live Android network; a non-Android process has no portable
+    /// equivalent, so this is an explicit operator statement and stays off the
+    /// wire when absent.
+    pub connect_type: Option<ConnectType>,
+}
+
+/// Network classes from the comparison `ClientPayload.ConnectType` enum. The
+/// values are the wire numbers; the APK writes `WIFI_UNKNOWN` for any Wi-Fi
+/// connection and `CELLULAR_UNKNOWN` when it cannot classify the radio.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum ConnectType {
+    /// No network or unclassified connection.
+    CellularUnknown,
+    /// Any Wi-Fi network (the APK does not use a subtype).
+    WifiUnknown,
+    /// 2G EDGE.
+    CellularEdge,
+    /// iDEN.
+    CellularIden,
+    /// UMTS.
+    CellularUmts,
+    /// EVDO.
+    CellularEvdo,
+    /// GPRS.
+    CellularGprs,
+    /// HSDPA.
+    CellularHsdpa,
+    /// HSUPA.
+    CellularHsupa,
+    /// HSPA.
+    CellularHspa,
+    /// CDMA.
+    CellularCdma,
+    /// 1xRTT.
+    Cellular1xrtt,
+    /// eHRPD.
+    CellularEhrpd,
+    /// LTE.
+    CellularLte,
+    /// HSPA+.
+    CellularHspap,
+}
+
+impl ConnectType {
+    /// Wire number of the matching `ClientPayload.ConnectType`.
+    pub fn as_i32(self) -> i32 {
+        match self {
+            Self::CellularUnknown => 0,
+            Self::WifiUnknown => 1,
+            Self::CellularEdge => 100,
+            Self::CellularIden => 101,
+            Self::CellularUmts => 102,
+            Self::CellularEvdo => 103,
+            Self::CellularGprs => 104,
+            Self::CellularHsdpa => 105,
+            Self::CellularHsupa => 106,
+            Self::CellularHspa => 107,
+            Self::CellularCdma => 108,
+            Self::Cellular1xrtt => 109,
+            Self::CellularEhrpd => 110,
+            Self::CellularLte => 111,
+            Self::CellularHspap => 112,
+        }
+    }
 }
 impl Default for ClientSettings {
     fn default() -> Self {
@@ -114,6 +180,7 @@ impl Default for ClientSettings {
             profile_id: profile_id(),
             user_agent: None,
             device: None,
+            connect_type: None,
         }
     }
 }
@@ -719,7 +786,8 @@ impl LabRegistrationConfig {
             "location": {"country_code": self.phone.country_code(), "language": self.language, "locale": self.locale},
             "client": {"profile": self.client.profile_id, "version": WHATSAPP_2_26_37_70.version_name,
                 "apk_sha256": WHATSAPP_2_26_37_70.apk_sha256, "user_agent": if self.client.user_agent.is_some() { "<configured, redacted>" } else { "absent" },
-                "login_device": self.client.device.as_ref().map(login_device_presence).unwrap_or_else(|| serde_json::json!({"configured": false}))},
+                "login_device": self.client.device.as_ref().map(login_device_presence).unwrap_or_else(|| serde_json::json!({"configured": false})),
+                "connect_type": self.client.connect_type.map(|kind| kind.as_i32()).map(|number| serde_json::json!({"configured": true, "wire_value": number})).unwrap_or_else(|| serde_json::json!({"configured": false}))},
             "transport": self.transport, "origin": WHATSAPP_2_26_37_70.base_url,
             "extra_fields": {"code": self.fields.code.keys().collect::<Vec<_>>(), "register": self.fields.register.keys().collect::<Vec<_>>(), "security": self.fields.security.keys().collect::<Vec<_>>()},
             "additional_byte_fields": {"code": self.fields.code_bytes.keys().collect::<Vec<_>>(), "register": self.fields.register_bytes.keys().collect::<Vec<_>>(), "security": self.fields.security_bytes.keys().collect::<Vec<_>>()},
