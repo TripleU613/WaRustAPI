@@ -1923,13 +1923,13 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
     // distinct; only an already authenticated association may join them.
     let mut cursor = None;
     while participant.is_none() {
-        let page = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        let page = tx.checkpoint_keys_after(b"message:", cursor.as_deref(), 256)?;
         if page.is_empty() {
             break;
         }
-        cursor = page.last().map(|(key, _)| key.clone());
-        for (key, _) in page {
-            if !key.starts_with(b"message:") || !key.ends_with(b":send") {
+        cursor = page.last().cloned();
+        for key in page {
+            if !key.ends_with(b":send") {
                 continue;
             }
             let Some(mut send): Option<serde_json::Value> =
@@ -1975,19 +1975,16 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
         "played" => crate::model::send::DeliveryFactKind::Played,
         _ => crate::model::send::DeliveryFactKind::Delivered,
     };
-    for wire_id in &wire_ids {
-        let Some(mut entry) = outbox.by_wire_id_in_write(tx, wire_id)? else {
-            continue;
-        };
+    matched += outbox.record_wire_matches(tx, &wire_ids, |tx, _, mut entry| {
         if !super::jid_map::authenticated_direct_chat(tx, &from, entry.intent.chat.jid())? {
-            continue;
+            return Ok(0);
         }
         if participant.is_some() {
             if !super::jid_map::authenticated_direct_chat(tx, &actor.to_non_ad(), &from)? {
-                continue;
+                return Ok(0);
             }
             let Some(targets) = super::send_versions::targets_in(tx, entry.local_id)? else {
-                continue;
+                return Ok(0);
             };
             let mut targeted = false;
             for target in targets {
@@ -2003,7 +2000,7 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
                 }
             }
             if !targeted {
-                continue;
+                return Ok(0);
             }
         }
         super::send_versions::observe_in(tx, entry.local_id, actor, node)?;
@@ -2012,7 +2009,7 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
             .iter()
             .any(|fact| fact.kind == fact_kind && fact.device.as_ref() == Some(&device))
         {
-            continue;
+            return Ok(0);
         }
         outbox.record_fact(
             tx,
@@ -2025,8 +2022,8 @@ fn record_in(tx: &mut crate::store::WriteTx<'_>, node: &Node) -> Result<usize> {
                 code: None,
             },
         )?;
-        matched += 1;
-    }
+        Ok(1)
+    })?;
     Ok(matched)
 }
 #[cfg(test)]
@@ -6972,6 +6969,93 @@ mod tests {
             saved["receipts"],
             serde_json::json!({"delivered":true,"read":false,"played":false})
         );
+    }
+
+    #[test]
+    fn direct_receipt_batch_skips_archives_but_an_unreadable_send_rolls_back_all_facts() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("receipt-batch.redb");
+        let store = open(&path, true);
+        let peer = "15555550100@s.whatsapp.net";
+        let a = saved_receipt_send(&store, "first-namespace", peer, "a");
+        let z = saved_receipt_send(&store, "second-namespace", peer, "z");
+        let receipt = Node::new("receipt")
+            .attr("id", "z")
+            .attr("from", peer)
+            .attr("type", "read")
+            .children(vec![Node::new("list").children(vec![
+                Node::new("item").attr("id", "a"),
+                Node::new("item").attr("id", "unknown"),
+            ])]);
+        let legacy = b"message:middle:send";
+        let unreadable = b"message:z:send";
+        store
+            .write(|tx| {
+                tx.put(Table::Checkpoints, b"inbound:archive", 2, b"archived")?;
+                tx.put(
+                    Table::Checkpoints,
+                    b"message:a:send-response:0",
+                    2,
+                    b"archived",
+                )?;
+                tx.put_json(
+                    Table::Checkpoints,
+                    legacy,
+                    1,
+                    &serde_json::json!({
+                        "wire_id": "a", "to": "+15555550100", "status": "outcome_unknown"
+                    }),
+                )?;
+                tx.put(
+                    Table::Checkpoints,
+                    unreadable,
+                    2,
+                    b"unsupported send version",
+                )
+            })
+            .unwrap();
+        let head = store.read(|tx| tx.journal_head()).unwrap();
+        assert!(record(&store, &receipt).is_err());
+        drop(store);
+        let store = open(&path, false);
+        assert_eq!(store.read(|tx| tx.journal_head()).unwrap(), head);
+        store
+            .write(|tx| {
+                let row: serde_json::Value = tx.get_json(Table::Checkpoints, legacy, 1)?.unwrap();
+                assert!(row.get("receipts").is_none());
+                let key = format!(
+                    "receipt-facts:{}",
+                    hex::encode(Sha256::digest(format!("{peer}:a")))
+                );
+                assert!(tx.get(Table::Checkpoints, key.as_bytes(), 1)?.is_none());
+                tx.delete(Table::Checkpoints, unreadable)?;
+                Ok(())
+            })
+            .unwrap();
+        assert_eq!(record(&store, &receipt).unwrap(), 3);
+        drop(store);
+        let store = open(&path, false);
+        let outbox = crate::outbox::Outbox::new("inspect", crate::profile::Limits::default());
+        store
+            .read(|tx| {
+                for local in [a, z] {
+                    let entry = outbox.get(tx, local)?.unwrap();
+                    assert_eq!(entry.facts.len(), 2);
+                    assert_eq!(
+                        entry.facts[1].kind,
+                        crate::model::send::DeliveryFactKind::Read
+                    );
+                }
+                let row: serde_json::Value = tx.get_json(Table::Checkpoints, legacy, 1)?.unwrap();
+                assert_eq!(row["status"], "outcome_unknown");
+                assert_eq!(row["receipts"]["read"], true);
+                Ok(())
+            })
+            .unwrap();
+        let head = store.read(|tx| tx.journal_head()).unwrap();
+        // The legacy return count includes an already observed fact.
+        assert_eq!(record(&store, &receipt).unwrap(), 1);
+        assert_eq!(store.read(|tx| tx.journal_head()).unwrap(), head);
     }
 
     #[test]

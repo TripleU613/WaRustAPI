@@ -1,3 +1,5 @@
+**Incoming receipt lookup (offline).** Direct and group receipt lists check the outbox once and skip archived checkpoint values. A local 32-message receipt took 31 ms with 8 MiB of unrelated history, down from 1,623 ms. [Measurement and attribution tests](docs/protocol/direct-receipts.md#matching-incoming-receipts-in-large-stores).
+
 **Keepalive queue lookup (offline).** The listener now checks its three queues without decrypting unrelated inbox history. On an 8 MiB synthetic store the combined median fell from 3.34 s to 0.19 ms. [Measurements and acknowledgement tests](docs/protocol/messaging-transport.md#keepalive-queue-lookup-in-large-stores).
 
 **Offline IQ reply recovery.** An unreadable reply can settle only the action already reserved when it was first captured. Conflicting replies leave that action pending across restart. [Regression and APK evidence](docs/protocol/replay-safety-audit.md#offline-recovery-of-an-unreadable-iq-reply).

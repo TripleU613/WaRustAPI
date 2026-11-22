@@ -271,54 +271,52 @@ pub(super) fn record_in(tx: &mut WriteTx<'_>, node: &Node) -> Result<usize> {
         return Ok(0);
     };
     let outbox = Outbox::new("group-receipt-observer", Limits::default());
-    let mut matched = 0;
     let fact_kind = match kind {
         "read" => DeliveryFactKind::Read,
         "played" => DeliveryFactKind::Played,
         _ => DeliveryFactKind::Delivered,
     };
-    for (id, wire_id) in ids.iter().zip(&wire_ids) {
-        if let Some(mut entry) = outbox.by_wire_id_in_write(tx, wire_id)? {
-            if plain(entry.intent.chat.jid()) != plain(&chat) {
-                continue;
-            }
-            let Some(targets) = entry_targets(tx, &entry, &chat, id)? else {
-                continue;
-            };
-            if !targeted(tx, &from, &targets)? {
-                continue;
-            }
-            super::send_versions::observe_in(tx, entry.local_id, &from, node)?;
-            if !entry
-                .facts
-                .iter()
-                .any(|f| f.kind == fact_kind && f.device.as_ref() == Some(&device))
-            {
-                outbox.record_fact(
-                    tx,
-                    &mut entry,
-                    DeliveryFact {
-                        kind: fact_kind,
-                        device: Some(device.clone()),
-                        observed_at: Timestamp::now(),
-                        server_timestamp: super::receipts::server_timestamp(node),
-                        code: None,
-                    },
-                )?;
-                matched += 1;
-            }
+    let mut matched = outbox.record_wire_matches(tx, &wire_ids, |tx, id, mut entry| {
+        if plain(entry.intent.chat.jid()) != plain(&chat) {
+            return Ok(0);
         }
-    }
+        let Some(targets) = entry_targets(tx, &entry, &chat, id.as_str())? else {
+            return Ok(0);
+        };
+        if !targeted(tx, &from, &targets)? {
+            return Ok(0);
+        }
+        super::send_versions::observe_in(tx, entry.local_id, &from, node)?;
+        if !entry
+            .facts
+            .iter()
+            .any(|f| f.kind == fact_kind && f.device.as_ref() == Some(&device))
+        {
+            outbox.record_fact(
+                tx,
+                &mut entry,
+                DeliveryFact {
+                    kind: fact_kind,
+                    device: Some(device.clone()),
+                    observed_at: Timestamp::now(),
+                    server_timestamp: super::receipts::server_timestamp(node),
+                    code: None,
+                },
+            )?;
+            return Ok(1);
+        }
+        Ok(0)
+    })?;
     let mut seen_legacy_ids = std::collections::HashSet::new();
     let mut cursor = None;
     loop {
-        let page = tx.scan_after(Table::Checkpoints, 1, cursor.as_deref(), 256)?;
+        let page = tx.checkpoint_keys_after(b"message:", cursor.as_deref(), 256)?;
         if page.is_empty() {
             break;
         }
-        cursor = page.last().map(|(k, _)| k.clone());
-        for (key, _) in page {
-            if !key.starts_with(b"message:") || !key.ends_with(b":send") {
+        cursor = page.last().cloned();
+        for key in page {
+            if !key.ends_with(b":send") {
                 continue;
             }
             let Some(mut saved): Option<serde_json::Value> =
@@ -1269,12 +1267,12 @@ mod tests {
                 for i in 0..10_000 {
                     tx.put(
                         Table::Checkpoints,
-                        format!("a-history:{i:05}").as_bytes(),
-                        1,
+                        format!("message:archive:send-response:{i:05}").as_bytes(),
+                        2,
                         b"opaque",
                     )?;
                 }
-                Ok(())
+                tx.put(Table::Checkpoints, b"inbound:archived", 2, b"unrelated")
             })
             .unwrap();
         legacy(&store, "first", "wire", &targets, false, false);

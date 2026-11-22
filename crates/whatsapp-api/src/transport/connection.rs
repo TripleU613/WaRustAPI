@@ -4830,6 +4830,64 @@ pub(super) mod tests {
     }
 
     #[tokio::test]
+    async fn incoming_receipt_list_is_recorded_and_acked_with_versioned_history() {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("receipt-history.redb");
+        let store = open(&path);
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        (&mut fake.ready).await.unwrap();
+        store
+            .write(|tx| tx.put(Table::Checkpoints, b"inbound:archived", 2, b"history"))
+            .unwrap();
+        let receipt = Node::new("receipt")
+            .attr("from", peer())
+            .attr("id", "A")
+            .children(vec![
+                Node::new("list").children(vec![Node::new("item").attr("id", "B")]),
+            ]);
+        fake.deliver(receipt).await;
+        let (ack, written) = fake.written().await;
+        assert_eq!(
+            ack,
+            Node::new("ack")
+                .attr("id", "A")
+                .attr("to", peer())
+                .attr("class", "receipt")
+        );
+        written.send(Ok(())).unwrap();
+        fake.deliver(
+            Node::new("iq")
+                .attr("type", "get")
+                .attr("xmlns", "urn:xmpp:ping"),
+        )
+        .await;
+        let (pong, written) = fake.written().await;
+        assert_eq!(
+            pong.get_attr("type").and_then(|v| v.as_text()),
+            Some("result")
+        );
+        written.send(Ok(())).unwrap();
+        fake.stop_cleanly().await;
+        drop(store);
+        let reopened = open(&path);
+        reopened
+            .read(|tx| {
+                for id in ["A", "B"] {
+                    let key = format!(
+                        "receipt-facts:{}",
+                        hex::encode(sha2::Sha256::digest(format!("{}:{id}", peer())))
+                    );
+                    let facts: super::super::receipts::ReceiptFacts =
+                        tx.get_json(Table::Checkpoints, key.as_bytes(), 1)?.unwrap();
+                    assert!(facts.delivered && !facts.read && !facts.played);
+                }
+                Ok(())
+            })
+            .unwrap();
+    }
+
+    #[tokio::test]
     async fn receipt_ack_omits_native_null_participant_after_capture() {
         let dir = tempfile::tempdir().unwrap();
         let path = dir.path().join("null-receipt-participant.redb");

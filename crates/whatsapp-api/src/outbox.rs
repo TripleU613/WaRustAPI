@@ -6,7 +6,7 @@
 //! never transmits. The default profile stays offline; the explicit comparison
 //! runtime can reserve and transmit supported intents from this same outbox.
 
-use std::sync::Arc;
+use std::{collections::BTreeMap, sync::Arc};
 
 use bytes::Bytes;
 use serde::{Deserialize, Serialize};
@@ -94,30 +94,48 @@ struct IdempotencyRecord {
 
 type WireLookupPage = Vec<(Vec<u8>, Vec<u8>)>;
 
-fn find_wire_entry(
-    wire_id: &MessageId,
+fn find_wire_matches<T>(
+    wire_ids: &[MessageId],
     mut page: impl FnMut(Option<&[u8]>) -> Result<WireLookupPage>,
-) -> Result<Option<OutboxEntry>> {
+    select: impl Fn(OutboxEntry) -> T,
+) -> Result<BTreeMap<&MessageId, Option<T>>> {
+    let mut matches: BTreeMap<_, _> = wire_ids.iter().map(|id| (id, None)).collect();
     let mut cursor = None;
-    let mut selected = None;
     loop {
         let rows = page(cursor.as_deref())?;
         let done = rows.len() < 256;
         cursor = rows.last().map(|(key, _)| key.clone());
-        for (_, bytes) in rows {
+        for (key, bytes) in rows {
             let entry: OutboxEntry = serde_json::from_slice(&bytes)
                 .map_err(|_| Error::invalid("outbox", "invalid saved outbox entry"))?;
-            if entry.wire_id.as_ref() == Some(wire_id) {
-                if selected.is_some() {
+            if let Some(slot) = entry.wire_id.as_ref().and_then(|id| matches.get_mut(id)) {
+                if slot.is_some() {
                     return Err(Error::invalid("outbox", "duplicate outbox wire id"));
                 }
-                selected = Some(entry);
+                if key.as_slice() != entry.local_id.0 {
+                    return Err(Error::invalid(
+                        "outbox",
+                        "wire reservation has inconsistent local id",
+                    ));
+                }
+                *slot = Some(select(entry));
             }
         }
         if done {
-            return Ok(selected);
+            return Ok(matches);
         }
     }
+}
+
+fn find_wire_entry(
+    wire_id: &MessageId,
+    page: impl FnMut(Option<&[u8]>) -> Result<WireLookupPage>,
+) -> Result<Option<OutboxEntry>> {
+    Ok(
+        find_wire_matches(std::slice::from_ref(wire_id), page, |entry| entry)?
+            .remove(wire_id)
+            .flatten(),
+    )
 }
 
 fn semantic_hash(req: &SendRequest) -> Result<[u8; 32]> {
@@ -301,6 +319,44 @@ impl Outbox {
         find_wire_entry(wire_id, |cursor| {
             tx.scan_after(Table::Outbox, RECORD_V1, cursor, 256)
         })
+    }
+
+    /// Resolve one receipt's unique wire IDs across all namespaces before
+    /// applying any facts. Keep only local IDs between pages. Visit in the
+    /// same sorted order as the receipt parser, inside the caller's transaction.
+    #[cfg(all(
+        feature = "experimental-signal-crypto",
+        feature = "experimental-noise",
+        feature = "experimental-transport"
+    ))]
+    pub(crate) fn record_wire_matches(
+        &self,
+        tx: &mut WriteTx<'_>,
+        wire_ids: &[MessageId],
+        mut record: impl FnMut(&mut WriteTx<'_>, &MessageId, OutboxEntry) -> Result<usize>,
+    ) -> Result<usize> {
+        if let [id] = wire_ids {
+            return match self.by_wire_id_in_write(tx, id)? {
+                Some(entry) => record(tx, id, entry),
+                None => Ok(0),
+            };
+        }
+        let matches = find_wire_matches(
+            wire_ids,
+            |cursor| tx.scan_after(Table::Outbox, RECORD_V1, cursor, 256),
+            |entry| entry.local_id,
+        )?;
+        let mut count = 0;
+        for (id, local) in matches {
+            if let Some(local) = local {
+                let entry = self
+                    .get_mut(tx, local)?
+                    .filter(|entry| entry.local_id == local && entry.wire_id.as_ref() == Some(id))
+                    .ok_or_else(|| Error::invalid("outbox", "inconsistent receipt reservation"))?;
+                count += record(tx, id, entry)?;
+            }
+        }
+        Ok(count)
     }
 
     /// Look up an immutable intent by its namespace-scoped request ID before
@@ -902,6 +958,44 @@ mod wire_lookup_tests {
                 Ok(())
             })
             .unwrap();
+        let other = MessageId::new("SECOND-WIRE-FIXTURE").unwrap();
+        let missing = MessageId::new("MISSING-WIRE-FIXTURE").unwrap();
+        store
+            .write(|tx| {
+                let mut entry = last.clone();
+                entry.wire_id = Some(other.clone());
+                tx.put_json(Table::Outbox, &entry.local_id.0, RECORD_V1, &entry)?;
+                let mut pages = 0;
+                let ids = [other.clone(), missing.clone(), wire.clone()];
+                let found = find_wire_matches(
+                    &ids,
+                    |cursor| {
+                        pages += 1;
+                        tx.scan_after(Table::Outbox, RECORD_V1, cursor, 256)
+                    },
+                    |entry| entry.local_id,
+                )?;
+                assert_eq!(pages, 2);
+                assert_eq!(found[&other], Some(last.local_id));
+                assert_eq!(found[&missing], None);
+                assert_eq!(found[&wire], Some(first.local_id));
+                Ok(())
+            })
+            .unwrap();
+        // A misfiled row could redirect a receipt to a different local intent.
+        let error = store
+            .write(|tx| {
+                let mut misfiled = last.clone();
+                misfiled.wire_id = Some(wire.clone());
+                tx.put_json(Table::Outbox, &first.local_id.0, RECORD_V1, &misfiled)?;
+                ob.by_wire_id_in_write(tx, &wire)
+            })
+            .unwrap_err();
+        assert!(
+            error
+                .to_string()
+                .contains("wire reservation has inconsistent local id")
+        );
         let before = store
             .read(|tx| tx.scan(Table::Outbox, RECORD_V1, 301))
             .unwrap();

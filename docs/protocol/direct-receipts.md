@@ -18,6 +18,42 @@ The [12-topic source bundle](apk/2.26.37.71-direct-receipts/manifest.json)
 contains complete selected method bodies, operands and exception tables.
 Offsets below are method-relative bytes; prototypes are DEX shorties.
 
+## Matching incoming receipts in large stores
+
+**Confirmed in comparison APK 2.26.37.71.** In `Cmk.A03`, offsets
+`04aa..04be` select the root message ID. At `05be..0668`, a sole list child
+can supply additional IDs. The method retains the remote chat and participant
+separately. [Direct receipt evidence](#incoming-receipt-evidence) and
+[group target evidence](group-receipts.md#what-the-apk-keeps-separate).
+
+**Confirmed in Rust, offline.** Each ordinary direct or group receipt list now
+checks the normal outbox once for all selected IDs. It checks every page for
+duplicate reservations across namespaces, retains the matching local IDs, and
+applies facts in the original sorted order in the same transaction. A historical
+comparison send belongs to a `message:…:send` checkpoint. The lookup enumerates
+keys under `message:` and opens only send records. A different record version in
+archived inbox or send-response history can no longer interrupt this lookup.
+An unreadable send record or an ambiguous normal outbox match still aborts the
+transaction. A matching outbox row must also carry the local ID under which it
+was stored. Direct peer and original group device checks still apply.
+
+**Observed locally.** A direct delivery receipt listed 32 existing sends in
+a synthetic store with 128 normal outbox entries and 1,024 unrelated 8 KiB
+checkpoint values. Reprocessing the same receipt took a median **1,623 ms**
+before the change and **31 ms** on the final build. Both debug binaries used the same
+database. Each median covers five calls to `receipts::record` after warm-up,
+including transaction commit. The baseline was commit `26ad4795`. After all
+runs, `events --summary --limit 200` reported 160 send-status changes from the
+fixture store, accounting for 128 enqueues and 32 first delivery observations.
+
+Regression fixtures cover cross-page matches, absent IDs, duplicate
+reservations, rollback of an earlier legacy fact, and restart. A group fixture
+puts 10,000 archived response keys before a valid send. The listener test
+receives a two-ID receipt, writes its ACK, answers the next ping and retains
+both delivery facts after restart. The normal outbox and
+historical send records still scale with their own history. Timing over a live
+connection and during multi-week use remains **unknown**.
+
 ## Incoming receipt evidence
 
 **Confirmed static:** `CmG.A03(LLLJ)` reads `category`, typed `recipient`
