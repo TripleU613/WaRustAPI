@@ -1,3 +1,5 @@
+**Stalled socket writes (offline).** Activation, keepalives and comparison requests now expire on their original response deadlines even when the encrypted writer stalls. A partially written request retains its uncertain outcome. [Encrypted-peer tests and APK evidence](protocol/messaging-transport.md#activation-and-keepalive-during-a-stalled-write).
+
 **Server-ended sessions (offline).** The encrypted reader now stops reconnects when it receives a decoded server end while the listener is busy writing. Both terminal roots survived restart as a single observation in the local peer tests. [Race reproduction and APK anchors](protocol/terminal-errors.md#server-end-received-during-a-competing-write).
 
 **Incoming receipt lookup (offline).** Direct and group receipt lists check the outbox once and skip archived checkpoint values. A local 32-message receipt took 31 ms with 8 MiB of unrelated history, down from 1,623 ms. [Measurement and attribution tests](protocol/direct-receipts.md#matching-incoming-receipts-in-large-stores).

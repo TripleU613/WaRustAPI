@@ -378,7 +378,47 @@ pub fn update_login_identity(
 
 /// One outbound stanza and where to report the socket write outcome.
 type Written = (Node, oneshot::Sender<Result<()>>);
+
+/// The existing response window also bounds the handoff to the socket writer.
+#[derive(Clone, Copy)]
+enum SessionQueryDeadline {
+    Activation(tokio::time::Instant),
+    Keepalive {
+        at: tokio::time::Instant,
+        period: Duration,
+    },
+}
+
+impl SessionQueryDeadline {
+    fn at(self) -> tokio::time::Instant {
+        match self {
+            Self::Activation(at) | Self::Keepalive { at, .. } => at,
+        }
+    }
+
+    fn expired(self) -> Error {
+        match self {
+            Self::Activation(_) => {
+                Error::invalid("connection", "activation outcome unknown; frames preserved")
+            }
+            Self::Keepalive { period, .. } => Error::Timeout(period),
+        }
+    }
+
+    fn check(self) -> Result<()> {
+        if tokio::time::Instant::now() >= self.at() {
+            return Err(self.expired());
+        }
+        Ok(())
+    }
+
+    async fn wait(self, operation: impl Future<Output = Result<()>>) -> Result<()> {
+        super::messaging::write_before_deadline(self.at(), || self.expired(), operation).await
+    }
+}
+
 enum WriteGuard {
+    SessionQuery(SessionQueryDeadline),
     FinalGroup(
         Arc<ProtocolStore>,
         Box<super::outgoing::MessageWriteGuard>,
@@ -452,6 +492,7 @@ impl Outbound {
             return None;
         }
         let admission = match self.guard {
+            Some(WriteGuard::SessionQuery(deadline)) => deadline.check(),
             Some(WriteGuard::FinalGroup(store, committed, routing)) => committed
                 .check_write_authority(&store, &self.node)
                 .and_then(|()| routing.check_write_authority(&store, &self.node)),
@@ -820,6 +861,22 @@ impl NodeLink {
         )
         .await
     }
+    async fn send_session_query(&self, node: &Node, deadline: SessionQueryDeadline) -> Result<()> {
+        // A blocked channel or missing write completion must not keep the actor
+        // alive past its own timer. Retain the same timer on the queued item.
+        let result = deadline
+            .wait(self.send_guarded(node, Some(WriteGuard::SessionQuery(deadline))))
+            .await;
+        if result
+            .as_ref()
+            .is_err_and(Error::is_recoverable_by_reconnect)
+            && let Some(authority) = &self.epoch_authority
+        {
+            authority.check()?;
+        }
+        result
+    }
+
     async fn send_guarded(&self, node: &Node, guard: Option<WriteGuard>) -> Result<()> {
         let (reply, outcome) = oneshot::channel();
         self.outgoing
@@ -950,11 +1007,21 @@ fn link_from<S: tokio::io::AsyncRead + tokio::io::AsyncWrite + Unpin + Send + 's
     let (outgoing_tx, mut outgoing_rx) = mpsc::channel::<Outbound>(16);
     let writer_task = tokio::spawn(async move {
         while let Some(outbound) = outgoing_rx.recv().await {
+            let deadline = match &outbound.guard {
+                Some(WriteGuard::SessionQuery(deadline)) => Some(*deadline),
+                _ => None,
+            };
             let Some((node, reply)) = outbound.prepare() else {
                 break;
             };
             let result = match encode(&node) {
-                Ok(bytes) => writer.write(&bytes).await.map_err(Error::from),
+                Ok(bytes) => {
+                    let write = async { writer.write(&bytes).await.map_err(Error::from) };
+                    match deadline {
+                        Some(deadline) => deadline.wait(write).await,
+                        None => write.await,
+                    }
+                }
                 Err(e) => Err(e),
             };
             let failed = result.is_err();
@@ -1222,8 +1289,9 @@ pub(crate) async fn drive(
     super::contacts::ingest(&store)?;
     let active_id = super::messaging::new_message_id()?;
     // APK43.72 0Sf.A0A/0ln.A08 register the callback timer before dispatch.
-    let activated_deadline = tokio::time::Instant::now() + Duration::from_secs(30);
-    link.send(&super::messaging::active_request(&active_id))
+    let activation =
+        SessionQueryDeadline::Activation(tokio::time::Instant::now() + Duration::from_secs(30));
+    link.send_session_query(&super::messaging::active_request(&active_id), activation)
         .await?;
     let mut ready = Some(ready);
     let ping_period = Duration::from_millis((config.transport.timeout_ms / 2).clamp(1000, 20000));
@@ -1331,8 +1399,8 @@ pub(crate) async fn drive(
                 }
             }
             changed = stop.changed() => { if changed.is_err() || *stop.borrow() { return Ok(()); } }
-            _ = tokio::time::sleep_until(activated_deadline), if ready.is_some() => {
-                return Err(Error::invalid("connection", "activation outcome unknown; frames preserved"));
+            _ = tokio::time::sleep_until(activation.at()), if ready.is_some() => {
+                return Err(activation.expired());
             }
             _ = tokio::time::sleep_until(maintenance_or_ping_due), if ready.is_none() => {
                 if tokio::time::Instant::now() >= maintenance_due {
@@ -1354,8 +1422,9 @@ pub(crate) async fn drive(
                 // Comparison LX/EIY.<init>(VLI), branch 15, 0x006a..009e.
                 let ping = Node::new("iq").attr("id", id.as_str()).attr("type", "get")
                     .attr("xmlns", "w:p").attr("to", crate::model::jid::Jid::parse("s.whatsapp.net")?);
-                pending_ping = Some(PendingPing { id, deadline: tokio::time::Instant::now() + ping_period, response_claim: true });
-                link.send(&ping).await?;
+                let deadline = SessionQueryDeadline::Keepalive { at: tokio::time::Instant::now() + ping_period, period: ping_period };
+                pending_ping = Some(PendingPing { id, deadline: deadline.at(), response_claim: true });
+                link.send_session_query(&ping, deadline).await?;
             }
             incoming = link.incoming.recv() => {
                 let incoming = incoming.ok_or_else(|| Error::invalid("connection", "reader ended"))?;
@@ -1444,7 +1513,7 @@ pub(crate) async fn drive(
                     }
                     let id = node.get_attr("id").and_then(|v| v.as_text());
                     // A queued late result cannot win readiness by select order.
-                    if ready.is_some() && activation_matches(&node, &active_id, activated_deadline) {
+                    if ready.is_some() && activation_matches(&node, &active_id, activation.at()) {
                         if node.get_attr("type").and_then(|v| v.as_text()) != Some("result") {
                             return Err(Error::invalid("connection", "activation refused"));
                         }
@@ -1993,6 +2062,52 @@ pub(super) mod tests {
             })
             .unwrap();
         link_from(channel, store.clone(), ConnectionEpoch(3), authority).unwrap()
+    }
+
+    pub(in crate::transport) async fn assert_stalled_session_writer(
+        channel: EncryptedConnection<tokio::io::DuplexStream>,
+        activation: bool,
+    ) {
+        let dir = tempfile::tempdir().unwrap();
+        let path = dir.path().join("session-write-timeout.redb");
+        let store = open(&path);
+        let (link, tasks) = fixture_reader(channel, &store);
+        let (_stop, stop_rx) = watch::channel(false);
+        let (ready_tx, mut ready_rx) = oneshot::channel();
+        let started = tokio::time::Instant::now();
+        let result = drive(
+            Session {
+                store,
+                config: config(),
+                epoch: ConnectionEpoch(3),
+                send_outbox: false,
+                ticket: None,
+            },
+            stop_rx,
+            ready_tx,
+            link,
+        )
+        .await;
+        let error = tasks.finish(result).unwrap_err();
+        if activation {
+            assert!(matches!(
+                error,
+                Error::InvalidInput {
+                    field: "connection",
+                    ..
+                }
+            ));
+            assert!(ready_rx.try_recv().is_err());
+            assert_eq!(started.elapsed(), Duration::from_secs(30));
+        } else {
+            assert!(matches!(error, Error::Timeout(d) if d == Duration::from_secs(20)));
+            ready_rx
+                .try_recv()
+                .expect("activated before stalled keepalive");
+            // First send at 20 seconds plus the existing response window.
+            assert_eq!(started.elapsed(), Duration::from_secs(40));
+        }
+        drop(tasks);
     }
 
     pub(in crate::transport) async fn assert_reader_captures_action_before_dispatch(
@@ -5835,13 +5950,136 @@ pub(super) mod tests {
     }
 
     #[tokio::test(start_paused = true)]
+    async fn expired_session_writer_cannot_resume_when_socket_and_timer_are_both_ready() {
+        use std::{
+            cell::Cell,
+            task::{Context, Poll, Waker},
+        };
+        let window = Duration::from_secs(20);
+        let deadline = SessionQueryDeadline::Keepalive {
+            at: tokio::time::Instant::now() + window,
+            period: window,
+        };
+        let polls = Cell::new(0);
+        let write = std::future::poll_fn(|_| {
+            let prior = polls.replace(polls.get() + 1);
+            if prior == 0 {
+                Poll::Pending
+            } else {
+                Poll::Ready(Ok(()))
+            }
+        });
+        let bounded = deadline.wait(write);
+        tokio::pin!(bounded);
+        assert!(
+            bounded
+                .as_mut()
+                .poll(&mut Context::from_waker(Waker::noop()))
+                .is_pending()
+        );
+        tokio::time::advance(window).await;
+        assert!(matches!(bounded.await, Err(Error::Timeout(d)) if d == window));
+        assert_eq!(polls.get(), 1, "socket write was polled again at expiry");
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn stalled_session_queries_expire_before_or_after_writer_admission() {
+        for (activation, window) in [
+            (true, Duration::from_secs(30)),
+            (false, Duration::from_secs(20)),
+        ] {
+            for admitted in [false, true] {
+                let dir = tempfile::tempdir().unwrap();
+                let path = dir.path().join("stalled-query.redb");
+                let store = open(&path);
+                let mut fake = start(&store, false, None);
+                if !activation {
+                    fake.activate().await;
+                    (&mut fake.ready).await.unwrap();
+                }
+                let queued = fake.from_worker.recv().await.unwrap();
+                assert_eq!(
+                    queued.node.get_attr("xmlns").and_then(|v| v.as_text()),
+                    Some(if activation { "passive" } else { "w:p" })
+                );
+                let started = tokio::time::Instant::now();
+                tokio::time::advance(window - Duration::from_millis(1)).await;
+                assert!(!fake.task.is_finished());
+                if admitted {
+                    let (_, completion) = queued.prepare().expect("within the write window");
+                    let error = fake
+                        .finished_within(Duration::from_secs(1))
+                        .await
+                        .unwrap_err();
+                    assert!(
+                        completion.send(Ok(())).is_err(),
+                        "a late writer cannot restore the session"
+                    );
+                    assert_eq!(error.is_recoverable_by_reconnect(), !activation);
+                } else {
+                    tokio::time::advance(Duration::from_millis(1)).await;
+                    assert!(
+                        queued.prepare().is_none(),
+                        "expired query reached the encoder"
+                    );
+                    let error = fake
+                        .finished_within(Duration::from_secs(1))
+                        .await
+                        .unwrap_err();
+                    assert_eq!(error.is_recoverable_by_reconnect(), !activation);
+                }
+                assert_eq!(started.elapsed(), window);
+                drop(store);
+                let reopened = identity_store(&path);
+                assert!(
+                    reopened
+                        .read(AccountRecord::load)
+                        .unwrap()
+                        .unwrap()
+                        .is_registered()
+                );
+            }
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn stalled_keepalive_cannot_reconnect_under_a_replaced_account() {
+        let dir = tempfile::tempdir().unwrap();
+        let store = open(&dir.path().join("keepalive-owner.redb"));
+        let mut fake = start(&store, false, None);
+        fake.activate().await;
+        let (ping, completion) = fake.written_within(Duration::from_secs(30)).await;
+        assert_eq!(
+            ping.get_attr("xmlns").and_then(|v| v.as_text()),
+            Some("w:p")
+        );
+        store
+            .write(|tx| {
+                let mut account = AccountRecord::load_in_write(tx)?.unwrap();
+                account.signal_registration_id = Some(4321);
+                account.save(tx)
+            })
+            .unwrap();
+        let error = fake
+            .finished_within(Duration::from_secs(21))
+            .await
+            .unwrap_err();
+        assert!(!error.is_recoverable_by_reconnect());
+        assert!(
+            error
+                .to_string()
+                .contains("authenticated epoch account changed")
+        );
+        assert!(completion.send(Ok(())).is_err());
+    }
+
+    #[tokio::test(start_paused = true)]
     async fn slow_activation_write_does_not_restart_the_response_deadline() {
         let dir = tempfile::tempdir().unwrap();
         let store = open(&dir.path().join("activation-write-deadline.redb"));
         let mut fake = start(&store, false, None);
         let (_active, written) = fake.written().await;
         tokio::time::advance(Duration::from_secs(31)).await;
-        written.send(Ok(())).unwrap();
         let Fake {
             ready,
             task,
@@ -5860,6 +6098,7 @@ pub(super) mod tests {
                 ..
             }
         ));
+        assert!(written.send(Ok(())).is_err());
         assert!(!error.is_recoverable_by_reconnect());
         assert!(ready.await.is_err());
         assert!(

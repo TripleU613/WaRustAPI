@@ -573,10 +573,49 @@ pub async fn write_node<S: AsyncRead + AsyncWrite + Unpin>(
     channel: &mut EncryptedConnection<S>,
     node: &Node,
 ) -> Result<(), TransportError> {
-    let data = Encoder::new(TokenDictionary::comparison_2_26_37_71())
+    channel.write(&encode_node(node)?).await
+}
+
+fn encode_node(node: &Node) -> Result<Vec<u8>, TransportError> {
+    Encoder::new(TokenDictionary::comparison_2_26_37_71())
         .encode(node)
-        .map_err(|_| error("cannot encode stanza"))?;
-    channel.write(&data).await
+        .map_err(|_| error("cannot encode stanza"))
+}
+
+// A timer and writable socket can both become ready while the process is
+// descheduled. timeout_at polls the inner future first. Check before every
+// poll so even a simultaneously writable socket cannot advance an expired write.
+pub(super) async fn write_before_deadline<E>(
+    deadline: tokio::time::Instant,
+    expired: impl Fn() -> E,
+    operation: impl Future<Output = Result<(), E>>,
+) -> Result<(), E> {
+    tokio::pin!(operation);
+    let guarded = std::future::poll_fn(|cx| {
+        if tokio::time::Instant::now() >= deadline {
+            std::task::Poll::Ready(Err(expired()))
+        } else {
+            operation.as_mut().poll(cx)
+        }
+    });
+    tokio::time::timeout_at(deadline, guarded)
+        .await
+        .map_err(|_| expired())?
+}
+
+/// Write a request within its original response window. Cancellation during
+/// an encrypted record consumes the channel and leaves delivery uncertain.
+pub async fn write_node_until<S: AsyncRead + AsyncWrite + Unpin>(
+    channel: &mut EncryptedConnection<S>,
+    node: &Node,
+    deadline: tokio::time::Instant,
+) -> Result<(), TransportError> {
+    let expired = || TransportError::Deadline("correlated stanza");
+    if tokio::time::Instant::now() >= deadline {
+        return Err(expired());
+    }
+    let bytes = encode_node(node)?;
+    write_before_deadline(deadline, expired, channel.write(&bytes)).await
 }
 
 /// APK 2.26.37.71 0y0.A00 1786..193a: iq/get/encrypt -> key -> user/jid.
@@ -1970,7 +2009,7 @@ pub async fn wait_for_captured<S: AsyncRead + AsyncWrite + Unpin>(
 
 /// Write exactly once and await a captured response under one pre-write deadline.
 /// The caller owns any required durable reservation; this helper never retries.
-/// Awaited writes can delay observing expiry but cannot restart the30s window.
+/// The same 30-second window covers socket write and response admission.
 pub async fn write_and_wait_captured<S: AsyncRead + AsyncWrite + Unpin>(
     store: &crate::store::ProtocolStore,
     channel: &mut EncryptedConnection<S>,
@@ -1991,7 +2030,7 @@ pub async fn write_and_wait_captured<S: AsyncRead + AsyncWrite + Unpin>(
 
 /// Write once and capture replies within a caller-owned absolute deadline.
 /// An expired deadline refuses before write. Write latency never restarts it;
-/// independent socket I/O limits may expire sooner or delay observing expiry.
+/// shorter socket I/O limits can end the write or read sooner.
 /// The caller owns durable reservation and channel disposal on failure. No retry.
 pub async fn write_and_wait_captured_until<S: AsyncRead + AsyncWrite + Unpin>(
     store: &crate::store::ProtocolStore,
@@ -2002,10 +2041,7 @@ pub async fn write_and_wait_captured_until<S: AsyncRead + AsyncWrite + Unpin>(
     deadline: tokio::time::Instant,
 ) -> crate::Result<(Node, Vec<Node>)> {
     // APK43.72 0Sf.A0A registers through0ln.A08 before dispatch.
-    if tokio::time::Instant::now() >= deadline {
-        return Err(TransportError::Deadline("correlated stanza").into());
-    }
-    write_node(channel, request).await?;
+    write_node_until(channel, request, deadline).await?;
     wait_for_captured_until(store, channel, description, id, deadline).await
 }
 

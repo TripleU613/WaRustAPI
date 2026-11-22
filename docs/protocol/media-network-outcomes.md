@@ -634,9 +634,9 @@ the generic30s captured wait. It now calls refresh::write_and_wait_captured,
 which uses public REPLY_TIMEOUT and messaging::write_and_wait_captured_until.
 The absolute deadline starts before write and never restarts afterward. An
 already expired supplied deadline refuses before any request record is written.
-Existing generic callers keep30s. Awaited writes may delay observing expiry;
-independent socket deadlines still apply. **A configured30s I/O cap still wins
-over the32s callback window.** No configuration is silently lengthened.
+Generic callers use a 30-second response window. The request deadline now also
+bounds a stalled encrypted write. A shorter configured socket timeout still
+applies. [Stalled-write behavior and verification](messaging-transport.md#activation-and-keepalive-during-a-stalled-write).
 
 [Exact registration source, shared timer chain and sender-admission negative](apk/2.26.43.72-media-reply-window/README.md).
 Native expiry depends on Handler ownership/scheduling; Rust's absolute32s cut

@@ -1917,6 +1917,50 @@ reservations are not cleared by expiry. Other reply families, awaited-write
 responsiveness and full native request-address policy remain separate audits.
 No live operations or complete ban-prevention guarantee.
 
+### Activation and keepalive during a stalled write
+
+**Confirmed in Rust, offline.** On commit `216d0fe0`, the persistent listener's
+writer admitted an activation request at the instant its response window
+expired. A separate encrypted comparison request had a 30-second callback
+window and a 60-second socket timeout. When the peer stopped reading partway
+through the request and resumed at 40 seconds, the write completed and the
+caller only then reported expiry.
+
+The listener now carries the activation or keepalive deadline from admission to
+writer dequeue and through encrypted I/O. The same deadline bounds the actor's
+wait for writer capacity and completion. A delayed-wakeup regression made
+the socket writable at the exact deadline. The timer wrapper alone resumed
+the write. The writer now checks the deadline on every poll, including that
+wakeup. Expired queued requests are refused
+before encoding. Activation expiry retains its uncertain, terminal outcome.
+Keepalive expiry retains the configured bounded reconnect policy for the same
+account. When the write stalls, a change to the authenticated account or
+a server end already identified by the reader stops automatic reconnect.
+
+The comparison CLI uses `messaging::write_node_until` for receive activation.
+Its correlated request helpers also use this writer, including the media-route
+helper with its separate 32-second callback window. A partial record consumes
+the encrypted channel and leaves the original reservation uncertain. The
+existing shorter socket timeout can still expire first.
+
+**Tested with an encrypted local peer.** A one-byte duplex buffer lets the peer
+read the record header and one byte, then stall an actual listener write. With
+a 60-second socket timeout and a paused Tokio clock, activation ended at 30
+seconds. On a separate connection the peer completed activation and received
+presence. The first keepalive became due at 20 seconds and expired at 40
+seconds from startup. The peer received only a prefix of either stalled
+record. A 32 KiB comparison request expired at 30 seconds, refused a further
+write on that channel, and retained its original reservation across reopen.
+
+**Confirmed in APK 2.26.43.72.** On their ready branches, `0Sf.A0A`
+(`0076..007c`) and `0Sf.A06` (`0052..0058`) call `0ln.A08` before handing
+the message to `0Sf.A05` (`00a6..00ac` and `0080..0086`, respectively).
+These are method-relative byte offsets from `xtask apk-smali`, APK SHA-256
+`887a6f94f6614791cfa845fe0b9990c064326d8b89cd71d81e817fc9fd530c2e`.
+The stalled-write policy and measured intervals describe Rust. Native kernel
+write cancellation and multi-week live behavior remain **unknown**.
+[APK callback registration](rea/2.26.43.72-authkey-outcomes/pending-registration.json).
+
 ### Comparison request deadlines start before write (2026-11-04)
 
 **Confirmed local timing gap / fixed offline:** comparison IQ/message callers

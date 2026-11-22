@@ -370,6 +370,10 @@ mod tests {
         CancelRead,
         ExpiredPrewrite,
         PartialWrite,
+        StalledWrite,
+        StalledSession {
+            activation: bool,
+        },
         StreamEnd,
         TruncatedFailure,
         DecodedEnd {
@@ -429,7 +433,12 @@ mod tests {
         if wrong_root {
             policy.trust_root[0] ^= 1;
         }
-        let (client, mut server) = tokio::io::duplex(8192);
+        let capacity = if matches!(record_case, RecordCase::StalledSession { .. }) {
+            1
+        } else {
+            8192
+        };
+        let (client, mut server) = tokio::io::duplex(capacity);
         let (cut_ready, cut_started) = tokio::sync::oneshot::channel();
         let peer = tokio::spawn(async move {
             let mut header = [0; 4];
@@ -481,7 +490,54 @@ mod tests {
             .concat();
             let (login, mut transport) = noise.finish(&record);
             assert_eq!(login.as_slice(), b"local login fixture");
-            if matches!(record_case, RecordCase::PartialWrite) {
+            if let RecordCase::StalledSession { activation } = record_case {
+                if !activation {
+                    let frame = reader.read_frame(&mut server).await.unwrap().unwrap();
+                    let active =
+                        super::super::inbox::decode_frame(&transport.decrypt(&frame).unwrap())
+                            .unwrap();
+                    assert_eq!(
+                        active.get_attr("xmlns").and_then(|v| v.as_text()),
+                        Some("passive")
+                    );
+                    let reply = crate::binary::Node::new("iq")
+                        .attr("id", active.get_attr("id").unwrap().clone())
+                        .attr("type", "result");
+                    let wire = crate::binary::Encoder::new(
+                        crate::binary::TokenDictionary::comparison_2_26_37_71(),
+                    )
+                    .encode(&reply)
+                    .unwrap();
+                    server
+                        .write_all(
+                            &codec
+                                .encode(&transport.encrypt(&wire).unwrap(), None)
+                                .unwrap(),
+                        )
+                        .await
+                        .unwrap();
+                    let frame = reader.read_frame(&mut server).await.unwrap().unwrap();
+                    let presence =
+                        super::super::inbox::decode_frame(&transport.decrypt(&frame).unwrap())
+                            .unwrap();
+                    assert_eq!(presence.description, "presence");
+                }
+                let mut header = [0; 3];
+                server.read_exact(&mut header).await.unwrap();
+                let length = u32::from_be_bytes([0, header[0], header[1], header[2]]) as usize;
+                let mut first = [0];
+                server.read_exact(&mut first).await.unwrap();
+                // A one-byte duplex buffer stalls the actual encrypted writer.
+                tokio::time::sleep(std::time::Duration::from_secs(40)).await;
+                let mut rest = Vec::new();
+                server.read_to_end(&mut rest).await.unwrap();
+                assert!(first.len() + rest.len() < length);
+                return;
+            }
+            if matches!(
+                record_case,
+                RecordCase::PartialWrite | RecordCase::StalledWrite
+            ) {
                 // Start the next record only after FrameReader has consumed the
                 // finish, so no bytes are hidden in its coalescing buffer.
                 cut_ready.send(()).unwrap();
@@ -493,6 +549,14 @@ mod tests {
                 assert!(length > 8192);
                 let mut prefix = [0; 64];
                 server.read_exact(&mut prefix).await.unwrap();
+                if matches!(record_case, RecordCase::StalledWrite) {
+                    // Keep the peer open beyond the request deadline. Only the
+                    // bytes buffered before cancellation can arrive afterward.
+                    tokio::time::sleep(std::time::Duration::from_secs(40)).await;
+                    let mut remaining = Vec::new();
+                    server.read_to_end(&mut remaining).await.unwrap();
+                    assert!(prefix.len() + remaining.len() < length);
+                }
                 // Dropping this end after only a prefix forces a partial write,
                 // rather than a clean failure before any record bytes arrive.
                 return;
@@ -670,6 +734,12 @@ mod tests {
         let mut socket_limits = SocketLimits::default();
         if let RecordCase::MediaRefresh { io_limit, .. } = record_case {
             socket_limits.io_timeout = std::time::Duration::from_secs(io_limit);
+        }
+        if matches!(
+            record_case,
+            RecordCase::StalledWrite | RecordCase::StalledSession { .. }
+        ) {
+            socket_limits.io_timeout = std::time::Duration::from_secs(60);
         }
         let socket = FramedConnection::new(client, ConnectionEpoch(1), socket_limits).unwrap();
         let result = VerifiedHandshake::start(
@@ -887,6 +957,9 @@ mod tests {
                     Err(TransportError::Closed)
                 ));
                 assert!(matches!(channel.read().await, Err(TransportError::Closed)));
+            } else if let RecordCase::StalledSession { activation } = record_case {
+                super::super::connection::tests::assert_stalled_session_writer(channel, activation)
+                    .await;
             } else if let RecordCase::DecodedEnd {
                 tag,
                 damaged_observation,
@@ -933,7 +1006,10 @@ mod tests {
                     Err(TransportError::Closed)
                 ));
                 assert!(matches!(channel.read().await, Err(TransportError::Closed)));
-            } else if matches!(record_case, RecordCase::PartialWrite) {
+            } else if matches!(
+                record_case,
+                RecordCase::PartialWrite | RecordCase::StalledWrite
+            ) {
                 use crate::store::{MasterKey, OpenOptions, ProtocolStore, StaticKeySource, Table};
                 let dir = tempfile::tempdir().unwrap();
                 let path = dir.path().join("partial-write.redb");
@@ -963,6 +1039,7 @@ mod tests {
                     .attr("type", "get")
                     .bytes(vec![7; 32768]);
                 cut_started.await.unwrap();
+                let started = tokio::time::Instant::now();
                 let result = super::super::messaging::write_and_wait_captured(
                     &store,
                     &mut channel,
@@ -971,12 +1048,22 @@ mod tests {
                     "partial-write",
                 )
                 .await;
-                assert!(matches!(
-                    result,
-                    Err(crate::Error::Transport(TransportError::Io(
-                        std::io::ErrorKind::BrokenPipe
-                    )))
-                ));
+                if matches!(record_case, RecordCase::StalledWrite) {
+                    assert!(matches!(
+                        result,
+                        Err(crate::Error::Transport(TransportError::Deadline(
+                            "correlated stanza"
+                        )))
+                    ));
+                    assert_eq!(started.elapsed(), std::time::Duration::from_secs(30));
+                } else {
+                    assert!(matches!(
+                        result,
+                        Err(crate::Error::Transport(TransportError::Io(
+                            std::io::ErrorKind::BrokenPipe
+                        )))
+                    ));
+                }
                 assert!(matches!(
                     super::super::messaging::write_and_wait_captured(
                         &store,
@@ -1165,6 +1252,18 @@ mod tests {
     #[tokio::test]
     async fn cancelled_split_read_poisons_writer_without_replay() {
         exchange(false, true, RecordCase::CancelRead).await;
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn stalled_encrypted_session_writer_preserves_activation_and_ping_deadlines() {
+        for activation in [true, false] {
+            exchange(false, false, RecordCase::StalledSession { activation }).await;
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn stalled_encrypted_request_ends_at_its_callback_deadline() {
+        exchange(false, false, RecordCase::StalledWrite).await;
     }
 
     #[tokio::test]

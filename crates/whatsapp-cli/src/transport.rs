@@ -624,9 +624,10 @@ pub(super) async fn run(cli: &super::Cli, path: &Path, session: Session<'_>) -> 
                 )
             })?;
             let deadline = tokio::time::Instant::now() + Duration::from_secs(30);
-            whatsapp_api::transport::messaging::write_node(
+            whatsapp_api::transport::messaging::write_node_until(
                 &mut channel,
                 &whatsapp_api::transport::messaging::active_request(&capture),
+                deadline,
             )
             .await?;
             let mut activated = false;
